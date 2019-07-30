@@ -1,5 +1,7 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
-public class StartGUI {
+import net.minecraft.client.gui.GuiScreen;
+
+public class StartGUI extends GuiScreen {
 
 }
