@@ -1,15 +1,15 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
+  "modid": "${modid}",
+  "name": "Tale of Kingdoms",
+  "description": "The Tale of Kingdoms mod, revived.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://www.islandearth.net/taleofkingdoms",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
-  "logoFile": "",
+  "authorList": ["SamB440"],
+  "credits": "tyberalyx for creating the mod in the first place",
+  "logoFile": "assets/636453830200432875.png",
   "screenshots": [],
   "dependencies": []
 }
