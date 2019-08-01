@@ -1,5 +1,8 @@
 package net.islandearth.taleofkingdoms;
 
+import java.io.File;
+import java.util.Optional;
+
 import org.apache.logging.log4j.Logger;
 
 import net.islandearth.taleofkingdoms.client.listener.StartWorldListener;
@@ -10,8 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 
-//TODO make this compatible with server AND client !
-@Mod(modid = TaleOfKingdoms.MODID, name = TaleOfKingdoms.NAME, version = TaleOfKingdoms.VERSION, clientSideOnly = true, acceptedMinecraftVersions = "1.12.2")
+@Mod(modid = TaleOfKingdoms.MODID, name = TaleOfKingdoms.NAME, version = TaleOfKingdoms.VERSION, acceptedMinecraftVersions = "1.12.2")
 public class TaleOfKingdoms {
 	
     public static final String MODID = "taleofkingdoms";
@@ -19,20 +21,41 @@ public class TaleOfKingdoms {
     public static final String VERSION = "1.0.0";
 
     public static Logger logger;
+    
+    @Mod.Instance
+    private TaleOfKingdoms instance;
+    
+    private static TaleOfKingdomsAPI api;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        this.instance = this;
         logger = event.getModLog();
+        File file = new File(this.getDataFolder() + "worlds/");
+        if (!file.exists()) file.mkdirs();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
     	registerEvents();
+    	TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
     }
     
     private void registerEvents() {
     	EventBus bus = MinecraftForge.EVENT_BUS;
     	bus.register(new StartWorldListener());
     }
+    
+    public String getDataFolder() {
+	    return new File(".").getAbsolutePath().toString() + "/mods/" + TaleOfKingdoms.MODID + "/";
+    }
+    
+    /**
+     * Gets the API. This will only be present after the mod has finished the {@link FMLInitializationEvent}.
+     * @return api of {@link TaleOfKingdoms}
+     */
+	public static Optional<TaleOfKingdomsAPI> getAPI() {
+		return Optional.ofNullable(api);
+	}
 }
 

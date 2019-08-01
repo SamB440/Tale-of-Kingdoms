@@ -1,17 +1,24 @@
 package net.islandearth.taleofkingdoms.common.world;
 
-import net.minecraft.world.World;
+import java.util.Optional;
 
-public class ConquestInstance implements ConquestWorld {
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
+
+public class ConquestInstance {
 	
-	private World world;
+	private String world;
 	
-	public ConquestInstance(World world) {
+	public ConquestInstance(String world) {
+		Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
+			.map(TaleOfKingdomsAPI::getConquestInstanceStorage)
+			.orElseThrow(() -> new IllegalArgumentException("API not present"))
+		.getConquestInstance(world);
+		if (instance.isPresent()) throw new IllegalArgumentException("World already registered");
 		this.world = world;
 	}
 
-	@Override
-	public World getWorld() {
+	public String getWorld() {
 		return world;
 	}
 

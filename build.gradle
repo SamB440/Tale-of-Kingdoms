@@ -54,6 +54,8 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    
+    testCompile "org.junit.jupiter:junit-jupiter:5.5.1"
 
 }
 

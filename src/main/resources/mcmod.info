@@ -2,13 +2,13 @@
 {
   "modid": "${modid}",
   "name": "Tale of Kingdoms",
-  "description": "The Tale of Kingdoms mod, revived.",
+  "description": "This mod is in alpha. Use at your own risk! \n\nThe Tale of Kingdoms mod, revived.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://www.islandearth.net/taleofkingdoms",
   "updateUrl": "",
   "authorList": ["SamB440"],
-  "credits": "tyberalyx for creating the mod in the first place",
+  "credits": "tyberalyx for creating the mod in the first place, michaelb229 and his team for building.",
   "logoFile": "assets/636453830200432875.png",
   "screenshots": [],
   "dependencies": []
