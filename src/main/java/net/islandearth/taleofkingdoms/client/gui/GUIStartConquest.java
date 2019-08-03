@@ -10,7 +10,6 @@ import org.lwjgl.input.Keyboard;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -40,13 +39,15 @@ public class GUIStartConquest extends GuiScreen {
 	@Override
 	public void initGui() {
 		super.initGui();
-		this.labelList.add(label = new GuiLabel(fontRenderer, 1, this.width / 2 - 50, this.height / 2 + 40, 300, 20, 0xFFFFFF));
+		this.buttonList.clear();
+		this.labelList.clear();
+		this.labelList.add(label = new GuiLabel(fontRenderer, 1, this.width / 2 - 150, this.height / 2 + 40, 300, 20, 0xFFFFFF));
 		this.buttonList.add(mButtonClose = new GuiButton(0, this.width / 2 - 100, this.height - (this.height / 4) + 10, "Start new Conquest."));
 		this.text = new GuiTextField(2, fontRenderer, this.width / 2 - 68, this.height/2-46, 137, 20);
         text.setMaxStringLength(32);
         text.setText("Name your Kingdom");
         this.text.setFocused(true);
-        label.addLine("Enter the name of your Kingdom, and click done to start a new Conquest...");
+        label.addLine("Enter the name of your Conquest, and click done to begin your journey...");
 	}
 	
 	@Override
@@ -62,14 +63,10 @@ public class GUIStartConquest extends GuiScreen {
     }
 	
 	@Override
-	protected void keyTyped(char par1, int par2) {       
+	protected void keyTyped(char par1, int par2) throws IOException {       
         this.text.textboxKeyTyped(par1, par2);         
-        if (par2== Keyboard.KEY_E && !this.text.isFocused()) {
-			try {
-				super.keyTyped(par1, par2);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+        if (par2 == Keyboard.KEY_E && !this.text.isFocused()) {
+			super.keyTyped(par1, par2);
         }
     }
 	
@@ -81,13 +78,9 @@ public class GUIStartConquest extends GuiScreen {
     }
 	
 	@Override
-	protected void mouseClicked(int x, int y, int btn) {
-        try {
-			super.mouseClicked(x, y, btn);
-	        this.text.mouseClicked(x, y, btn);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	protected void mouseClicked(int x, int y, int btn) throws IOException {
+		super.mouseClicked(x, y, btn);
+        this.text.mouseClicked(x, y, btn);
     }
 	
 	@Override
