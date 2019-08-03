@@ -19,4 +19,8 @@ public class TaleOfKingdomsAPI {
     public String getDataFolder() {
 	    return mod.getDataFolder();
     }
+    
+    public TaleOfKingdoms getMod() {
+    	return mod;
+    }
 }
