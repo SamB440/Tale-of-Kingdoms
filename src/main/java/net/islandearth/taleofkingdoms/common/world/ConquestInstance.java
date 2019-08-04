@@ -33,5 +33,9 @@ public class ConquestInstance {
 	public int getCoins() {
 		return coins;
 	}
+	
+	public void addCoins(int coins) {
+		this.coins = this.coins + coins;
+	}
 
 }

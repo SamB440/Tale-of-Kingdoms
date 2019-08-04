@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.client.listener.StartWorldListener;
+import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
+import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -36,6 +38,7 @@ public class TaleOfKingdoms {
         logger = event.getModLog();
         File file = new File(this.getDataFolder() + "worlds/");
         if (!file.exists()) file.mkdirs();
+        ItemRegistry.init();
     }
 
     @EventHandler
@@ -49,6 +52,7 @@ public class TaleOfKingdoms {
     	EventBus bus = MinecraftForge.EVENT_BUS;
     	bus.register(new StartWorldListener());
     	bus.register(new RenderListener());
+    	bus.register(new CoinListener());
     }
     
     private void registerCommands() {
