@@ -33,12 +33,9 @@ public class StartWorldListener extends Listener {
 	private List<UUID> joined = new ArrayList<>();
 	
 	private boolean load(String worldName, World world) {
-		TaleOfKingdoms.getAPI().get().getMod().logger.info("loading");
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
-		TaleOfKingdoms.getAPI().get().getMod().logger.info("part1");
 		// Check if this world has been loaded or not
 		if (!file.exists()) {
-			TaleOfKingdoms.getAPI().get().getMod().logger.info("noexist");
 			try {
 				// If not, create new file
 				file.createNewFile();
@@ -65,7 +62,6 @@ public class StartWorldListener extends Listener {
 		if (!e.getEntity().getUniqueID().equals(Minecraft.getMinecraft().player.getUniqueID()) || e.getWorld().provider.getDimensionType() != DimensionType.OVERWORLD) return;
 		if (joined.contains(e.getEntity().getUniqueID())) return;
 		joined.add(e.getEntity().getUniqueID());
-		TaleOfKingdoms.getAPI().get().getMod().logger.info("loading");
 		String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
 		boolean loaded = load(worldName, e.getWorld());
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
@@ -76,19 +72,20 @@ public class StartWorldListener extends Listener {
 				// Load from json into class
 				BufferedReader reader = new BufferedReader(new FileReader(file));
 				ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
-				TaleOfKingdoms.getAPI().get().getMod().logger.info("instance: " + instance);
 				Timer timer = new Timer();
 				timer.schedule(new TimerTask() {
 					@Override
 					public void run() {
-						Minecraft.getMinecraft().displayGuiScreen(new GUIContinueConquest(instance));
+						if (instance == null || instance.getName() == null) Minecraft.getMinecraft().displayGuiScreen(new GUIStartConquest(worldName, file));
+						else Minecraft.getMinecraft().displayGuiScreen(new GUIContinueConquest(instance));
+						
 						try {
 							reader.close();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
-				}, 2000);
+				}, 1000);
 			} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e1) {
 				e1.printStackTrace();
 			}
@@ -102,6 +99,6 @@ public class StartWorldListener extends Listener {
 			public void run() {
 				Minecraft.getMinecraft().displayGuiScreen(new GUIStartConquest(worldName, file));
 			}
-		}, 2000);
+		}, 1000);
 	}
 }
