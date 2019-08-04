@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.Logger;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
+import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.client.listener.StartWorldListener;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,6 +48,7 @@ public class TaleOfKingdoms {
     private void registerEvents() {
     	EventBus bus = MinecraftForge.EVENT_BUS;
     	bus.register(new StartWorldListener());
+    	bus.register(new RenderListener());
     }
     
     private void registerCommands() {

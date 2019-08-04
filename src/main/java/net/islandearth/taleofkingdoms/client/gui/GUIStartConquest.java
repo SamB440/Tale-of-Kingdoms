@@ -53,7 +53,7 @@ public class GUIStartConquest extends GuiScreen {
 	@Override
     protected void actionPerformed(GuiButton button) throws IOException {
         if (button == mButtonClose) {
-        	ConquestInstance instance = new ConquestInstance(worldName, text.getText());
+        	ConquestInstance instance = new ConquestInstance(worldName, text.getText(), 0);
 			try (Writer writer = new FileWriter(toSave)) {
 			    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			    gson.toJson(instance, writer);

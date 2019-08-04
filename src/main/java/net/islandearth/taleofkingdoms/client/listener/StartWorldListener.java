@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -51,7 +53,18 @@ public class StartWorldListener extends Listener {
 	
 	@SubscribeEvent
 	public void onLeave(PlayerLoggedOutEvent e) {
-		if (joined.contains(e.player.getUniqueID())) joined.remove(e.player.getUniqueID());
+		if (joined.contains(e.player.getUniqueID())) {
+			joined.remove(e.player.getUniqueID());
+			String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
+			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+			ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(worldName).get();
+			try (Writer writer = new FileWriter(file)) {
+			    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			    gson.toJson(instance, writer);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 	@SubscribeEvent
