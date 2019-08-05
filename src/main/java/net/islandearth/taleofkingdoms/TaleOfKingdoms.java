@@ -7,9 +7,9 @@ import org.apache.logging.log4j.Logger;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
-import net.islandearth.taleofkingdoms.client.listener.StartWorldListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
+import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;

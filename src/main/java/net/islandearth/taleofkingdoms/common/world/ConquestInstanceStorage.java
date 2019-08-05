@@ -15,4 +15,8 @@ public class ConquestInstanceStorage {
 	public void addConquest(String worldName, ConquestInstance instance) {
 		this.conquests.put(worldName, instance);
 	}
+	
+	public void removeConquest(String worldName) {
+		conquests.remove(worldName);
+	}
 }

@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.client.listener;
+package net.islandearth.taleofkingdoms.common.listener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,11 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,18 +19,19 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.gui.GUIContinueConquest;
 import net.islandearth.taleofkingdoms.client.gui.GUIStartConquest;
+import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 
 public class StartWorldListener extends Listener {
 	
-	private List<UUID> joined = new ArrayList<>();
+	private boolean joined;
 	
 	private boolean load(String worldName, World world) {
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
@@ -53,19 +51,22 @@ public class StartWorldListener extends Listener {
 	}
 	
 	@SubscribeEvent
-	public void onLeave(PlayerLoggedOutEvent e) {
-		if (joined.contains(e.player.getUniqueID())) {
-			joined.remove(e.player.getUniqueID());
-			String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
-			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
-			ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(worldName).get();
-			try (Writer writer = new FileWriter(file)) {
-			    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			    gson.toJson(instance, writer);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+	public void onLeave(WorldEvent.Unload e) {
+		TaleOfKingdoms.getAPI().get().getMod().logger.info("t1");
+		if (e.getWorld().provider.getDimensionType() != DimensionType.OVERWORLD) return;
+		if (!joined) return;
+		TaleOfKingdoms.getAPI().get().getMod().logger.info("t2");
+		String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
+		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(worldName).get();
+		try (Writer writer = new FileWriter(file)) {
+		    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		    gson.toJson(instance, writer);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
+		TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(worldName);
+		this.joined = false;
 	}
 	
 	@SubscribeEvent
@@ -74,8 +75,8 @@ public class StartWorldListener extends Listener {
 		// Important: We only want to effect the overworld - so check the dimension type.
 		if (e.getEntity() instanceof EntityPlayer) {
 			if (e.getEntity().getEntityWorld().provider.getDimensionType() != DimensionType.OVERWORLD) return;
-			if (joined.contains(e.getEntity().getUniqueID())) return;
-			joined.add(e.getEntity().getUniqueID());
+			if (joined) return;
+			this.joined = true;
 			//TODO support for server
 			String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
 			boolean loaded = load(worldName, e.getEntity().getEntityWorld());

@@ -27,8 +27,7 @@ public class CoinListener {
 		ItemStack item = e.getStack();
 		if (item.getItem().equals(ItemRegistry.items.get("coin"))) {
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getMinecraft().getIntegratedServer().getFolderName()).get().addCoins(random.nextInt(50));;
-			e.getStack().setCount(0);
-			//TODO find new method to consume inventory item
+			e.player.inventory.clearMatchingItems(item.getItem(), -1, -1, null);
 		}
 	}
 }
