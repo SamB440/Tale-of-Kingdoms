@@ -24,6 +24,6 @@ public class ItemHelper {
 	}
 	
 	private static void dropItem(Item item, int meta, EntityLivingBase livingBase) { 
-		livingBase.dropItem(item, meta); 
+		livingBase.entityDropItem(item, meta); 
 	}
 }
