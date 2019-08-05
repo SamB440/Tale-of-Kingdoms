@@ -41,7 +41,12 @@ public class ItemRegistry extends Listener {
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
-		TaleOfKingdoms.LOGGER.info("load items");
-		items.values().forEach(item -> event.getRegistry().register(item));
+		TaleOfKingdoms.LOGGER.info("Loading items...");
+		int index = 1;
+		for (Item item : items.values()) {
+			TaleOfKingdoms.LOGGER.info("[" + index + "/" + items.values().size() + "] Loading item: " + item.getClass().getName());
+			event.getRegistry().register(item);
+			index++;
+		}
 	}
 }
