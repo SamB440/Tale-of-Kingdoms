@@ -11,6 +11,7 @@ import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
+import net.islandearth.taleofkingdoms.schematic.Schematic;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +42,11 @@ public class TaleOfKingdoms {
         if (!file.exists()) file.mkdirs();
     	registerEvents();
     	TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
+    	try {
+			Schematic.saveAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
     
     public void serverStarting(FMLServerStartingEvent evt) {

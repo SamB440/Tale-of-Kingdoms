@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
@@ -46,7 +47,11 @@ public class TestCommand {
 
 			@Override
 			public void run() {
-				Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file));
+				try {
+					Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, source.asPlayer()));
+				} catch (CommandSyntaxException e) {
+					e.printStackTrace();
+				}
 			}
 			
 		}, 1000);

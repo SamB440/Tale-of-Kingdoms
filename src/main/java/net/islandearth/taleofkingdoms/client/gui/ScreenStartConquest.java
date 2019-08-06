@@ -8,9 +8,13 @@ import java.io.Writer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.schematic.Schematic;
+import net.islandearth.taleofkingdoms.schematic.SchematicHandler;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class ScreenStartConquest extends ScreenTOK {
 	
@@ -23,10 +27,12 @@ public class ScreenStartConquest extends ScreenTOK {
 	// Other
 	private String worldName;
 	private File toSave;
+	private PlayerEntity player;
 	
-	public ScreenStartConquest(String worldName, File toSave) {
+	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
 		this.worldName = worldName;
 		this.toSave = toSave;
+		this.player = player;
 	}
 	
 	@Override
@@ -42,6 +48,10 @@ public class ScreenStartConquest extends ScreenTOK {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+			// Load guild castle schematic
+			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player);
+			this.onClose();
 		}));
 		this.text.setMaxStringLength(32);
 		this.text.setText("Sir Punchwood");

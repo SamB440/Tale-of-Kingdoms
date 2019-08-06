@@ -54,6 +54,7 @@ public class StartWorldListener extends Listener {
 	public void onLeave(WorldEvent.Unload e) {
 		if (e.getWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 		if (!joined) return;
+		if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
 		try (Writer writer = new FileWriter(file)) {
@@ -91,11 +92,11 @@ public class StartWorldListener extends Listener {
 						@Override
 						public void run() {
 							// Check if file exists, but values don't. Game probably crashed?
-							if (instance == null || instance.getName() == null) Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file));
-							else {
+							if (instance == null || instance.getName() == null) 
+								Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
+							else 
 								Minecraft.getInstance().displayGuiScreen(new ScreenContinueConquest(instance));
 								TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-							}
 							
 							try {
 								reader.close();
@@ -103,7 +104,7 @@ public class StartWorldListener extends Listener {
 								e.printStackTrace();
 							}
 						}
-					}, 1000);
+					}, 2000);
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -115,9 +116,9 @@ public class StartWorldListener extends Listener {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file));
+					Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
 				}
-			}, 1000);
+			}, 2000);
 		}
 	}
 }
