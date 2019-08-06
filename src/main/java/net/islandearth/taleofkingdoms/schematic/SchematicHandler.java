@@ -19,6 +19,9 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.Heightmap;
 
 public class SchematicHandler {
 
@@ -30,8 +33,11 @@ public class SchematicHandler {
 		try (ClipboardReader reader = format.getReader(new FileInputStream(schematic.getFile()))) {
 			Clipboard clipboard = reader.read();
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1)) {
+				BlockVector3 centerY = clipboard.getRegion().getCenter().toBlockPoint();
+				Chunk chunk = player.getEntityWorld().getChunkAt(new BlockPos(player.posX, player.posY, player.posZ));
+				int topY = chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, centerY.getBlockX(), centerY.getBlockZ());
 				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                        .to(BlockVector3.at(player.posX, player.posY, player.posZ))
+                        .to(BlockVector3.at(player.posX, topY, player.posZ))
                         .ignoreAirBlocks(false)
                         .copyBiomes(false)
                         .build();
