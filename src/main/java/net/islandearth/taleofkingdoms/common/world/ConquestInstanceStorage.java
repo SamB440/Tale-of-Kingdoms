@@ -7,16 +7,22 @@ import java.util.Optional;
 public class ConquestInstanceStorage {
 
 	private Map<String, ConquestInstance> conquests = new HashMap<>();
+	private String currentWorldName;
 	
 	public Optional<ConquestInstance> getConquestInstance(String worldName) {
 		return Optional.ofNullable(conquests.get(worldName));
 	}
 	
-	public void addConquest(String worldName, ConquestInstance instance) {
+	public void addConquest(String worldName, ConquestInstance instance, boolean current) {
 		this.conquests.put(worldName, instance);
+		if (current) this.currentWorldName = worldName;
 	}
 	
 	public void removeConquest(String worldName) {
 		conquests.remove(worldName);
+	}
+	
+	public Optional<ConquestInstance> mostRecentInstance() {
+		return Optional.ofNullable(conquests.get(this.currentWorldName));
 	}
 }
