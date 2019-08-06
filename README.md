@@ -3,5 +3,5 @@
 Contributors are very much welcome - and encouraged - to help.
 
 ## Useful links
-**Website:**https://www.islandearth.net/taleofkingdoms
-**Discord:**https://discord.gg/fh62mxU
+__Website:__https://www.islandearth.net/taleofkingdoms
+__Discord:__https://discord.gg/fh62mxU
