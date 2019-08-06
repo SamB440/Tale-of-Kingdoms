@@ -17,17 +17,17 @@ import com.google.gson.JsonSyntaxException;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
-import net.islandearth.taleofkingdoms.client.gui.GUIContinueConquest;
-import net.islandearth.taleofkingdoms.client.gui.GUIStartConquest;
+import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
+import net.islandearth.taleofkingdoms.client.gui.ScreenStartConquest;
 import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.DimensionType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class StartWorldListener extends Listener {
 	
@@ -52,20 +52,18 @@ public class StartWorldListener extends Listener {
 	
 	@SubscribeEvent
 	public void onLeave(WorldEvent.Unload e) {
-		TaleOfKingdoms.getAPI().get().getMod().logger.info("t1");
-		if (e.getWorld().provider.getDimensionType() != DimensionType.OVERWORLD) return;
+		if (e.getWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 		if (!joined) return;
-		TaleOfKingdoms.getAPI().get().getMod().logger.info("t2");
-		String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
-		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(worldName).get();
+		if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
+		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
 		try (Writer writer = new FileWriter(file)) {
 		    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		    gson.toJson(instance, writer);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(worldName);
+		TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(instance.getWorld());
 		this.joined = false;
 	}
 	
@@ -73,12 +71,13 @@ public class StartWorldListener extends Listener {
 	public void onLoad(EntityEvent.EntityConstructing e) {
 		// Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
 		// Important: We only want to effect the overworld - so check the dimension type.
-		if (e.getEntity() instanceof EntityPlayer) {
-			if (e.getEntity().getEntityWorld().provider.getDimensionType() != DimensionType.OVERWORLD) return;
+		if (e.getEntity() instanceof PlayerEntity) {
+			if (e.getEntity().getEntityWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 			if (joined) return;
+			
 			this.joined = true;
 			//TODO support for server
-			String worldName = Minecraft.getMinecraft().getIntegratedServer().getFolderName();
+			String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
 			boolean loaded = load(worldName, e.getEntity().getEntityWorld());
 			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
 			if (loaded) {
@@ -92,11 +91,12 @@ public class StartWorldListener extends Listener {
 					timer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							if (instance == null || instance.getName() == null) Minecraft.getMinecraft().displayGuiScreen(new GUIStartConquest(worldName, file));
-							else {
-								Minecraft.getMinecraft().displayGuiScreen(new GUIContinueConquest(instance));
-								TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance);
-							}
+							// Check if file exists, but values don't. Game probably crashed?
+							if (instance == null || instance.getName() == null) 
+								Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
+							else 
+								Minecraft.getInstance().displayGuiScreen(new ScreenContinueConquest(instance));
+								TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 							
 							try {
 								reader.close();
@@ -104,7 +104,7 @@ public class StartWorldListener extends Listener {
 								e.printStackTrace();
 							}
 						}
-					}, 1000);
+					}, 2000);
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -116,9 +116,9 @@ public class StartWorldListener extends Listener {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					Minecraft.getMinecraft().displayGuiScreen(new GUIStartConquest(worldName, file));
+					Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
 				}
-			}, 1000);
+			}, 2000);
 		}
 	}
 }
