@@ -17,12 +17,12 @@ import com.google.gson.JsonSyntaxException;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
-import net.islandearth.taleofkingdoms.client.gui.GUIContinueConquest;
-import net.islandearth.taleofkingdoms.client.gui.GUIStartConquest;
+import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
+import net.islandearth.taleofkingdoms.client.gui.ScreenStartConquest;
 import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -54,17 +54,15 @@ public class StartWorldListener extends Listener {
 	public void onLeave(WorldEvent.Unload e) {
 		if (e.getWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 		if (!joined) return;
-		
-		String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
-		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(worldName).get();
+		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
 		try (Writer writer = new FileWriter(file)) {
 		    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		    gson.toJson(instance, writer);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-		TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(worldName);
+		TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(instance.getWorld());
 		this.joined = false;
 	}
 	
@@ -72,7 +70,7 @@ public class StartWorldListener extends Listener {
 	public void onLoad(EntityEvent.EntityConstructing e) {
 		// Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
 		// Important: We only want to effect the overworld - so check the dimension type.
-		if (e.getEntity() instanceof EntityPlayer) {
+		if (e.getEntity() instanceof PlayerEntity) {
 			if (e.getEntity().getEntityWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 			if (joined) return;
 			
@@ -92,10 +90,11 @@ public class StartWorldListener extends Listener {
 					timer.schedule(new TimerTask() {
 						@Override
 						public void run() {
-							if (instance == null || instance.getName() == null) Minecraft.getInstance().displayGuiScreen(new GUIStartConquest(worldName, file));
+							// Check if file exists, but values don't. Game probably crashed?
+							if (instance == null || instance.getName() == null) Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file));
 							else {
-								Minecraft.getInstance().displayGuiScreen(new GUIContinueConquest(instance));
-								TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance);
+								Minecraft.getInstance().displayGuiScreen(new ScreenContinueConquest(instance));
+								TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 							}
 							
 							try {
@@ -116,7 +115,7 @@ public class StartWorldListener extends Listener {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					Minecraft.getInstance().displayGuiScreen(new GUIStartConquest(worldName, file));
+					Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file));
 				}
 			}, 1000);
 		}

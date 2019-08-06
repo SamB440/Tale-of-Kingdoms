@@ -3,7 +3,7 @@ package net.islandearth.taleofkingdoms.client.gui;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -11,10 +11,10 @@ public class RenderListener extends Listener {
 
 	@SubscribeEvent
 	public void onRender(GuiScreenEvent.DrawScreenEvent.Post e) {
-		if (e.getGui() instanceof GuiInventory) {
-			GuiInventory gui = (GuiInventory) e.getGui();
+		if (e.getGui() instanceof InventoryScreen) {
+			InventoryScreen gui = (InventoryScreen) e.getGui();
 			String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
-			gui.drawString(gui.mc.fontRenderer, "Gold Coins: " + TaleOfKingdoms
+			gui.drawString(gui.getMinecraft().fontRenderer, "Gold Coins: " + TaleOfKingdoms
 					.getAPI()
 					.get()
 					.getConquestInstanceStorage()

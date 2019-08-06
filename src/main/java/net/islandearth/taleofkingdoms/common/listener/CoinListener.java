@@ -7,17 +7,17 @@ import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 public class CoinListener extends Listener {
 	
 	@SubscribeEvent
 	public void onDeath(LivingDeathEvent e) {
-		if (e.getSource().getTrueSource() instanceof EntityPlayer) {
+		if (e.getSource().getTrueSource() instanceof PlayerEntity) {
 			ItemHelper.dropCoins(e.getEntityLiving());
 		}
 	}
