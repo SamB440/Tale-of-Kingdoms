@@ -14,6 +14,11 @@ public class RenderListener extends Listener {
 		if (e.getGui() instanceof InventoryScreen) {
 			InventoryScreen gui = (InventoryScreen) e.getGui();
 			String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
+			if (!TaleOfKingdoms
+					.getAPI()
+					.get()
+					.getConquestInstanceStorage()
+					.getConquestInstance(worldName).isPresent()) return;
 			gui.drawString(gui.getMinecraft().fontRenderer, "Gold Coins: " + TaleOfKingdoms
 					.getAPI()
 					.get()
