@@ -8,7 +8,8 @@ import org.apache.commons.io.FileUtils;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 
 public enum Schematic {
-	GUILD_CASTLE("/assets/schematics/theguild.schem");
+	GUILD_CASTLE("/assets/schematics/theguild.schem"),
+	GUILD_CASTLE_OLD("/assets/schematics/GuildCastle.schematic");
 	
 	private String path;
 	
