@@ -94,7 +94,7 @@ public class StartWorldListener extends Listener {
 							Minecraft.getInstance().runImmediately(() -> {
 								// Check if file exists, but values don't. Game probably crashed?
 								if (instance == null || instance.getName() == null) 
-									Minecraft.getInstance().runImmediately(() -> Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity())));
+									Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
 								else 
 									Minecraft.getInstance().displayGuiScreen(new ScreenContinueConquest(instance));
 									TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
@@ -106,7 +106,7 @@ public class StartWorldListener extends Listener {
 								e.printStackTrace();
 							}
 						}
-					}, 2000);
+					}, 5000);
 				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e1) {
 					e1.printStackTrace();
 				}
@@ -118,9 +118,9 @@ public class StartWorldListener extends Listener {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
+					Minecraft.getInstance().runImmediately(() -> Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity())));
 				}
-			}, 2000);
+			}, 5000);
 		}
 	}
 }
