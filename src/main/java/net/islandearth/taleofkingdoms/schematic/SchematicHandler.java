@@ -3,6 +3,9 @@ package net.islandearth.taleofkingdoms.schematic;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -13,7 +16,6 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.forge.ForgeAdapter;
 import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 
@@ -25,7 +27,7 @@ import net.minecraft.world.gen.Heightmap;
 
 public class SchematicHandler {
 
-	public static void pasteSchematic(Schematic schematic, PlayerEntity player) {
+	public static OperationInstance pasteSchematic(Schematic schematic, PlayerEntity player) {
 		TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
 		com.sk89q.worldedit.world.World adaptedWorld = ForgeAdapter.adapt(player.getEntityWorld());
 		ClipboardFormat format = ClipboardFormats.findByFile(schematic.getFile());
@@ -41,18 +43,26 @@ public class SchematicHandler {
                         .ignoreAirBlocks(false)
                         .copyBiomes(false)
                         .build();
-				try {
-					Operations.complete(operation);
-					editSession.flushSession();
-
-				} catch (WorldEditException e) {
-					e.printStackTrace();
-				}
+				final UUID uuid = UUID.randomUUID();
+				Timer timer = new Timer();
+				timer.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						try {
+							Operations.complete(uuid, operation);
+							editSession.flushSession();	
+						} catch (WorldEditException e) {
+							e.printStackTrace();
+						}
+					}
+				}, 2000);
+				return new OperationInstance(uuid, clipboard.getRegion().getArea());
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 }

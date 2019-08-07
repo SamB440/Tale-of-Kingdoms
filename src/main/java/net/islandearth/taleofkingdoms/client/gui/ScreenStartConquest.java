@@ -4,17 +4,27 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.schematic.OperationInstance;
+import net.islandearth.taleofkingdoms.schematic.Operations;
 import net.islandearth.taleofkingdoms.schematic.Schematic;
 import net.islandearth.taleofkingdoms.schematic.SchematicHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 public class ScreenStartConquest extends ScreenTOK {
 	
@@ -39,8 +49,9 @@ public class ScreenStartConquest extends ScreenTOK {
 	public void init() {
 		super.init();
 		this.buttons.clear();
-		this.text = new TextFieldWidget(this.font, this.width / 2 - 150, this.height / 2 + 70, 300, 20, "Sir Punchwood");
-		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height - (this.height / 4) + 5, 200, 20, "Start new Conquest.", (button) -> {
+		this.text = new TextFieldWidget(this.font, this.width / 2 - 150, this.height / 2 - 40, 300, 20, "Sir Punchwood");
+		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height / 2 + 30, 200, 20, "Start your Conquest.", (button) -> {
+			if (button.getMessage().equals("Loading, please wait...")) return;
 			ConquestInstance instance = new ConquestInstance(worldName, text.getText(), 0);
 			try (Writer writer = new FileWriter(toSave)) {
 			    Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -49,9 +60,42 @@ public class ScreenStartConquest extends ScreenTOK {
 				e.printStackTrace();
 			}
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+			button.setMessage("Loading, please wait...");
 			// Load guild castle schematic
-			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player);
-			this.onClose();
+			OperationInstance oi = SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player);
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					Minecraft.getInstance().runImmediately(() -> {
+						try {
+							int progress = Operations.getProgress(oi.getOperationId());
+							int blocksDone = progress == 0 ? 0 : (oi.getBlocks() / (100 / progress));
+							button.setMessage("Loading, please wait... (" + Operations.getProgress(oi.getOperationId()) + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
+							if (progress >= 100) {
+								button.setMessage("Reloading chunks...");
+								getChunksAroundPlayer(player).forEach(chunk -> {
+									chunk.setLoaded(false);
+									chunk.setLoaded(true);
+								});
+								Timer timer2 = new Timer();
+								timer2.schedule(new TimerTask() {
+									@Override
+									public void run() {
+										Minecraft.getInstance().runImmediately(() -> {
+											onClose();
+										});
+									}
+								}, 2000);
+								this.cancel();
+							}
+						} catch (Exception e) {
+							button.setMessage("Error: " + e.getCause().getMessage());
+							e.printStackTrace();
+						}
+					});
+				}
+			}, 0, 100);
 		}));
 		this.text.setMaxStringLength(32);
 		this.text.setText("Sir Punchwood");
@@ -65,8 +109,30 @@ public class ScreenStartConquest extends ScreenTOK {
 	@Override
 	public void render(int par1, int par2, float par3) {
         this.renderBackground();
-        this.drawCenteredString(this.font, "Enter the name of your Conquest, and click done to begin your journey...", this.width / 2, this.height / 2 + 50, 0xFFFFFF);
+        this.drawCenteredString(this.font, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
+        this.drawCenteredString(this.font, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);
         this.text.render(par1, par2, par3);
         super.render(par1, par2, par3);
     }
+	
+	@Override
+	public boolean isPauseScreen() {
+		return false;
+	}
+	
+	protected List<Chunk> getChunksAroundPlayer(PlayerEntity player) {
+		int[] offset = {-1,0,1};
+
+		World world = player.world;
+		int ox = player.chunkCoordX;
+		int oz = player.chunkCoordZ;
+
+		List<Chunk> chunks = new ArrayList<Chunk>();
+		for (int x : offset) {
+			for (int z : offset) {
+				Chunk chunk = world.getChunk(ox + x, oz + z);
+				chunks.add(chunk);
+			}
+		} return chunks;
+	}
 }
