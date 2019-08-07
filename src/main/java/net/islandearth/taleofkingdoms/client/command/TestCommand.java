@@ -6,12 +6,14 @@ import java.util.TimerTask;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
 import net.islandearth.taleofkingdoms.client.gui.ScreenStartConquest;
+import net.islandearth.taleofkingdoms.common.entity.EntityFarmer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -40,7 +42,7 @@ public class TestCommand {
 		return 0;
 	}
 	private static int execute_2(CommandSource source) {
-		String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
+		/*String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
@@ -56,6 +58,9 @@ public class TestCommand {
 			
 		}, 1000);
 		
+		return 0;*/
+		
+		source.getEntity().world.addEntity(new EntityFarmer(source.getEntity().world));
 		return 0;
 	}
 }

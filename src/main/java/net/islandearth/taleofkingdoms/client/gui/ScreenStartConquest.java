@@ -38,6 +38,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	private String worldName;
 	private File toSave;
 	private PlayerEntity player;
+	private boolean loading;
 	
 	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
 		this.worldName = worldName;
@@ -51,7 +52,7 @@ public class ScreenStartConquest extends ScreenTOK {
 		this.buttons.clear();
 		this.text = new TextFieldWidget(this.font, this.width / 2 - 150, this.height / 2 - 40, 300, 20, "Sir Punchwood");
 		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height / 2 + 30, 200, 20, "Start your Conquest.", (button) -> {
-			if (button.getMessage().equals("Loading, please wait...")) return;
+			if (loading) return;
 			ConquestInstance instance = new ConquestInstance(worldName, text.getText(), 0);
 			try (Writer writer = new FileWriter(toSave)) {
 			    Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -61,6 +62,7 @@ public class ScreenStartConquest extends ScreenTOK {
 			}
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 			button.setMessage("Loading, please wait...");
+			this.loading = true;
 			// Load guild castle schematic
 			OperationInstance oi = SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player);
 			Timer timer = new Timer();
@@ -84,6 +86,7 @@ public class ScreenStartConquest extends ScreenTOK {
 									public void run() {
 										Minecraft.getInstance().runImmediately(() -> {
 											onClose();
+											loading = false;
 										});
 									}
 								}, 2000);
