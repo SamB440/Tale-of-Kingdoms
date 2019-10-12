@@ -3,20 +3,21 @@ package net.islandearth.taleofkingdoms.client.command;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
-import net.islandearth.taleofkingdoms.client.gui.ScreenStartConquest;
-import net.islandearth.taleofkingdoms.common.entity.EntityFarmer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 public class TestCommand {
     
@@ -60,7 +61,7 @@ public class TestCommand {
 		
 		return 0;*/
 		
-		source.getEntity().world.addEntity(new EntityFarmer(source.getEntity().world));
+		source.getEntity().world.addEntity(FakePlayerFactory.get(ServerLifecycleHooks.getCurrentServer().getWorld(DimensionType.OVERWORLD), new GameProfile(UUID.randomUUID(), "Farmer")));
 		return 0;
 	}
 }

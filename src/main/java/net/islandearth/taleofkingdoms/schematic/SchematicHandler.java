@@ -55,7 +55,7 @@ public class SchematicHandler {
 							e.printStackTrace();
 						}
 					}
-				}, 2000);
+				}, 10);
 				return new OperationInstance(uuid, clipboard.getRegion().getArea());
 			}
 		} catch (FileNotFoundException e) {

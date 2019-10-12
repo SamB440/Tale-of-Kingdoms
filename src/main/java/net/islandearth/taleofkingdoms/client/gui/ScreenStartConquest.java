@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -77,9 +76,9 @@ public class ScreenStartConquest extends ScreenTOK {
 							if (progress >= 100) {
 								button.setMessage("Reloading chunks...");
 								getChunksAroundPlayer(player).forEach(chunk -> {
-									chunk.setLoaded(false);
-									chunk.setLoaded(true);
+									minecraft.worldRenderer.loadRenderers();
 								});
+								
 								Timer timer2 = new Timer();
 								timer2.schedule(new TimerTask() {
 									@Override
@@ -98,7 +97,7 @@ public class ScreenStartConquest extends ScreenTOK {
 						}
 					});
 				}
-			}, 0, 100);
+			}, 0, 10);
 		}));
 		this.text.setMaxStringLength(32);
 		this.text.setText("Sir Punchwood");

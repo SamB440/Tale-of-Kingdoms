@@ -53,7 +53,7 @@ public final class Operations {
     }
     
     public static int getProgress(UUID operationId) {
-    	if (progress.get(operationId) == null) return 0;
+    	if (!progress.containsKey(operationId)) return 0;
     	return progress.get(operationId);
     }
 
