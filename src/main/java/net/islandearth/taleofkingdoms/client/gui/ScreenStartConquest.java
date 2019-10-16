@@ -75,9 +75,7 @@ public class ScreenStartConquest extends ScreenTOK {
 							button.setMessage("Loading, please wait... (" + Operations.getProgress(oi.getOperationId()) + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
 							if (progress >= 100) {
 								button.setMessage("Reloading chunks...");
-								getChunksAroundPlayer(player).forEach(chunk -> {
-									minecraft.worldRenderer.loadRenderers();
-								});
+								minecraft.worldRenderer.loadRenderers();
 								
 								Timer timer2 = new Timer();
 								timer2.schedule(new TimerTask() {

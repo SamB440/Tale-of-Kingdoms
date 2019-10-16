@@ -60,7 +60,8 @@ public class TestCommand {
 		}, 1000);
 		
 		return 0;*/
-		
+
+		System.out.println(ServerLifecycleHooks.getCurrentServer().getWorld(DimensionType.OVERWORLD));
 		source.getEntity().world.addEntity(FakePlayerFactory.get(ServerLifecycleHooks.getCurrentServer().getWorld(DimensionType.OVERWORLD), new GameProfile(UUID.randomUUID(), "Farmer")));
 		return 0;
 	}

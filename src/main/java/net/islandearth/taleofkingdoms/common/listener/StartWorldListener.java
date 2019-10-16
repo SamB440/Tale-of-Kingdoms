@@ -55,6 +55,7 @@ public class StartWorldListener extends Listener {
 		if (e.getWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 		if (!joined) return;
 		if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
+		
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
 		try (Writer writer = new FileWriter(file)) {
