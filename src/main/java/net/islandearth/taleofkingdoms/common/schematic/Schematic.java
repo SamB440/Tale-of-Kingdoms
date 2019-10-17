@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.schematic;
+package net.islandearth.taleofkingdoms.common.schematic;
 
 import java.io.File;
 import java.net.URL;
@@ -7,6 +7,9 @@ import org.apache.commons.io.FileUtils;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 
+/**
+ * An enum of schematics, with file paths, that are available to paste.
+ */
 public enum Schematic {
 	GUILD_CASTLE("/assets/schematics/theguild.schem"),
 	GUILD_CASTLE_OLD("/assets/schematics/GuildCastle.schematic");

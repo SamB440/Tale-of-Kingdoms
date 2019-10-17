@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.entity;
+package net.islandearth.taleofkingdoms.client.entity;
 
 public interface TOKEntity {
 	

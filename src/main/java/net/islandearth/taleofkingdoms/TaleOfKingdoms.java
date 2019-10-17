@@ -7,12 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
+import net.islandearth.taleofkingdoms.client.entity.FarmerEntity;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
-import net.islandearth.taleofkingdoms.entity.FarmerEntity;
-import net.islandearth.taleofkingdoms.schematic.Schematic;
+import net.islandearth.taleofkingdoms.common.schematic.Schematic;
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.PlayerModel;

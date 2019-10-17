@@ -94,7 +94,7 @@ public class StartWorldListener extends Listener {
 						public void run() {
 							Minecraft.getInstance().runImmediately(() -> {
 								// Check if file exists, but values don't. Game probably crashed?
-								if (instance == null || instance.getName() == null) 
+								if ((instance == null || instance.getName() == null) || !instance.isLoaded()) 
 									Minecraft.getInstance().displayGuiScreen(new ScreenStartConquest(worldName, file, (PlayerEntity) e.getEntity()));
 								else 
 									Minecraft.getInstance().displayGuiScreen(new ScreenContinueConquest(instance));

@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.entity;
+package net.islandearth.taleofkingdoms.client.entity;
 
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -48,6 +48,5 @@ public class FarmerEntity extends CreatureEntity implements TOKEntity {
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
 		this.setBoundingBox(this.getBoundingBox().expand(0, 1.5, 0));
-		this.recalculateSize();
 	}
 }

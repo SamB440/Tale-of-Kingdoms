@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.schematic;
+package net.islandearth.taleofkingdoms.common.schematic;
 
 import java.util.UUID;
 

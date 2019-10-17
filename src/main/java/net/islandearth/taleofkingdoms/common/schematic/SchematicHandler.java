@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.schematic;
+package net.islandearth.taleofkingdoms.common.schematic;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,9 +22,14 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
 
+/**
+ * Handles schematics for TaleOfKingdoms.
+ * Works on both SERVER and CLIENT.
+ */
 public class SchematicHandler {
 
 	public static OperationInstance pasteSchematic(Schematic schematic, PlayerEntity player) {
@@ -44,18 +49,34 @@ public class SchematicHandler {
                         .copyBiomes(false)
                         .build();
 				final UUID uuid = UUID.randomUUID();
-				Timer timer = new Timer();
-				timer.schedule(new TimerTask() {
-					@Override
-					public void run() {
-						try {
-							Operations.complete(uuid, operation);
-							editSession.flushSession();	
-						} catch (WorldEditException e) {
-							e.printStackTrace();
-						}
+				
+				
+				if (player.getEntityWorld().isRemote()) {
+					// Server - paste blocks on main thread
+					try {
+						Operations.complete(uuid, operation);
+					} catch (WorldEditException e) {
+						player.sendMessage(new StringTextComponent("A problem occurred whilst pasting the schematic [SIDE=SERVER]"));
+						e.printStackTrace();
 					}
-				}, 1);
+					editSession.flushSession();	
+				} else {
+					// Client - paste blocks on another thread
+					Timer timer = new Timer();
+					timer.schedule(new TimerTask() {
+						@Override
+						public void run() {
+							try {
+								Operations.complete(uuid, operation);
+								editSession.flushSession();	
+							} catch (WorldEditException e) {
+								player.sendMessage(new StringTextComponent("A problem occurred whilst pasting the schematic [SIDE=CLIENT]"));
+								e.printStackTrace();
+							}
+						}
+					}, 1);
+				}
+				
 				return new OperationInstance(uuid, clipboard.getRegion().getArea());
 			}
 		} catch (FileNotFoundException e) {

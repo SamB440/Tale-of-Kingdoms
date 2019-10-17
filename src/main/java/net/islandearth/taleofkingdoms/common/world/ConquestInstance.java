@@ -10,6 +10,7 @@ public class ConquestInstance {
 	private String world;
 	private String name;
 	private int coins;
+	private boolean hasLoaded;
 	
 	public ConquestInstance(String world, String name, int coins) {
 		Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -36,6 +37,14 @@ public class ConquestInstance {
 	
 	public void addCoins(int coins) {
 		this.coins = this.coins + coins;
+	}
+	
+	public boolean isLoaded() {
+		return hasLoaded;
+	}
+	
+	public void setLoaded(boolean loaded) {
+		this.hasLoaded = loaded;
 	}
 
 }

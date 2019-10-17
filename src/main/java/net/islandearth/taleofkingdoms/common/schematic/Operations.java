@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.islandearth.taleofkingdoms.schematic;
+package net.islandearth.taleofkingdoms.common.schematic;
 
 import java.util.HashMap;
 import java.util.Map;

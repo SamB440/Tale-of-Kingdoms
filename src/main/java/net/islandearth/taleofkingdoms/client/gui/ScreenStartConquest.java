@@ -13,11 +13,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.common.schematic.OperationInstance;
+import net.islandearth.taleofkingdoms.common.schematic.Operations;
+import net.islandearth.taleofkingdoms.common.schematic.Schematic;
+import net.islandearth.taleofkingdoms.common.schematic.SchematicHandler;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.islandearth.taleofkingdoms.schematic.OperationInstance;
-import net.islandearth.taleofkingdoms.schematic.Operations;
-import net.islandearth.taleofkingdoms.schematic.Schematic;
-import net.islandearth.taleofkingdoms.schematic.SchematicHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -39,7 +39,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	private PlayerEntity player;
 	private boolean loading;
 	
-	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
+	public ScreenStartConquest( String worldName, File toSave, PlayerEntity player) {
 		this.worldName = worldName;
 		this.toSave = toSave;
 		this.player = player;
@@ -59,6 +59,7 @@ public class ScreenStartConquest extends ScreenTOK {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 			button.setMessage("Loading, please wait...");
 			this.loading = true;
@@ -84,6 +85,7 @@ public class ScreenStartConquest extends ScreenTOK {
 										Minecraft.getInstance().runImmediately(() -> {
 											onClose();
 											loading = false;
+											if (instance != null) instance.setLoaded(true);
 										});
 									}
 								}, 2000);
