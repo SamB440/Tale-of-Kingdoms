@@ -8,14 +8,16 @@ import org.apache.logging.log4j.Logger;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
 import net.islandearth.taleofkingdoms.client.entity.FarmerEntity;
+import net.islandearth.taleofkingdoms.client.entity.render.TOKBipedRender;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
-import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -57,7 +59,10 @@ public class TaleOfKingdoms {
     }
     
     private void clientSetup(FMLClientSetupEvent fcse) {
-    	RenderingRegistry.registerEntityRenderingHandler(FarmerEntity.class, (EntityRendererManager rendererManager) -> new BipedRenderer<>(rendererManager, new PlayerModel<>(0.0F, false), 0.5F));
+    	RenderingRegistry.registerEntityRenderingHandler(FarmerEntity.class, (EntityRendererManager rendererManager) -> {
+    		TOKBipedRender<MobEntity, PlayerModel<MobEntity>> br = new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager, new PlayerModel<>(0.0F, false), 0.5F, new ResourceLocation(MODID, "textures/entity/2012_11_09_skin_20121109195900120255.png"));
+    		return br;
+    	});
     }
     
     private void serverStarting(FMLServerStartingEvent evt) {
