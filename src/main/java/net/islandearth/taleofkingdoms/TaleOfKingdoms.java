@@ -77,6 +77,11 @@ public class TaleOfKingdoms {
     	bus.register(new CoinListener());
     }
     
+    /**
+     * Gets the "data folder" of the mod. This is always the modid as a folder in the mods folder.
+     * You may get the file using this.
+     * @return data folder name
+     */
     public String getDataFolder() {
 	    return new File(".").getAbsolutePath().toString() + "/mods/" + TaleOfKingdoms.MODID + "/";
     }
