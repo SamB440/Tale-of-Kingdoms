@@ -1,0 +1,11 @@
+{
+  "toktheme": {
+    "category": "record",
+    "sounds": [
+      {
+        "name": "taleofkingdoms:music/toktheme",
+        "stream": true
+      }
+    ]
+  }
+}

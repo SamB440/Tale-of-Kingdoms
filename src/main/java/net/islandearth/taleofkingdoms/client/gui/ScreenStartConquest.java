@@ -11,6 +11,7 @@ import java.util.TimerTask;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.schematic.OperationInstance;
@@ -22,6 +23,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -39,7 +41,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	private PlayerEntity player;
 	private boolean loading;
 	
-	public ScreenStartConquest( String worldName, File toSave, PlayerEntity player) {
+	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
 		this.worldName = worldName;
 		this.toSave = toSave;
 		this.player = player;
@@ -49,6 +51,8 @@ public class ScreenStartConquest extends ScreenTOK {
 	public void init() {
 		super.init();
 		this.buttons.clear();
+		Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/1a.png"));
+		this.getMinecraft().getTextureManager().bindTexture(image.getResourceLocation());
 		this.text = new TextFieldWidget(this.font, this.width / 2 - 150, this.height / 2 - 40, 300, 20, "Sir Punchwood");
 		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height / 2 + 30, 200, 20, "Start your Conquest.", (button) -> {
 			if (loading) return;
@@ -111,6 +115,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	@Override
 	public void render(int par1, int par2, float par3) {
         this.renderBackground();
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.drawCenteredString(this.font, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
         this.drawCenteredString(this.font, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);
         this.text.render(par1, par2, par3);

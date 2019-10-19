@@ -60,7 +60,7 @@ public class TaleOfKingdoms {
     
     private void clientSetup(FMLClientSetupEvent fcse) {
     	RenderingRegistry.registerEntityRenderingHandler(FarmerEntity.class, (EntityRendererManager rendererManager) -> {
-    		TOKBipedRender<MobEntity, PlayerModel<MobEntity>> br = new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager, new PlayerModel<>(0.0F, false), 0.5F, new ResourceLocation(MODID, "textures/entity/2012_11_09_skin_20121109195900120255.png"));
+    		TOKBipedRender<MobEntity, PlayerModel<MobEntity>> br = new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager, new PlayerModel<>(0.0F, false), 0.5F, new ResourceLocation(MODID, "textures/entity/knight.png"));
     		return br;
     	});
     }
@@ -82,7 +82,7 @@ public class TaleOfKingdoms {
     }
     
     /**
-     * Gets the API. This will only be present after the mod has finished the {@link FMLInitializationEvent}.
+     * Gets the API. This will only be present after the mod has finished the {@link FMLCommonSetupEvent}.
      * @return api of {@link TaleOfKingdoms}
      */
 	public static Optional<TaleOfKingdomsAPI> getAPI() {
