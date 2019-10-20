@@ -44,22 +44,20 @@ public class SchematicHandler {
 				Chunk chunk = player.getEntityWorld().getChunkAt(new BlockPos(player.posX, player.posY, player.posZ));
 				int topY = chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, centerY.getBlockX(), centerY.getBlockZ());
 				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                        .to(BlockVector3.at(player.posX, player.posY, player.posZ))
+                        .to(BlockVector3.at(player.posX, player.posY + 1, player.posZ))
                         .ignoreAirBlocks(false)
                         .copyBiomes(false)
                         .build();
 				final UUID uuid = UUID.randomUUID();
-				
 				
 				if (player.getEntityWorld().isRemote()) {
 					// Server - paste blocks on main thread
 					try {
 						Operations.complete(uuid, operation);
 					} catch (WorldEditException e) {
-						player.sendMessage(new StringTextComponent("A problem occurred whilst pasting the schematic [SIDE=SERVER]"));
+						player.sendMessage(new StringTextComponent("A problem occurred whilst loading the schematic [SIDE=SERVER]"));
 						e.printStackTrace();
 					}
-					editSession.flushSession();	
 				} else {
 					// Client - paste blocks on another thread
 					Timer timer = new Timer();
@@ -68,9 +66,8 @@ public class SchematicHandler {
 						public void run() {
 							try {
 								Operations.complete(uuid, operation);
-								editSession.flushSession();	
 							} catch (WorldEditException e) {
-								player.sendMessage(new StringTextComponent("A problem occurred whilst pasting the schematic [SIDE=CLIENT]"));
+								player.sendMessage(new StringTextComponent("A problem occurred whilst loading the schematic [SIDE=CLIENT]"));
 								e.printStackTrace();
 							}
 						}

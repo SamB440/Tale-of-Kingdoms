@@ -83,10 +83,12 @@ public final class Operations {
      *
      * @param op operation to execute
      */
-    public static void completeBlindly(Operation op) {
+    public static void completeBlindly(UUID operationId, Operation op) {
         while (op != null) {
             try {
                 op = op.resume(new RunContext());
+            	if (progress.containsKey(operationId)) progress.replace(operationId, progress.get(operationId) + 25);
+            	else progress.put(operationId, 25);
             } catch (WorldEditException e) {
                 throw new RuntimeException(e);
             }

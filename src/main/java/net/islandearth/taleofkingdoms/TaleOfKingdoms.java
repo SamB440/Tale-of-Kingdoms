@@ -60,7 +60,10 @@ public class TaleOfKingdoms {
     
     private void clientSetup(FMLClientSetupEvent fcse) {
     	RenderingRegistry.registerEntityRenderingHandler(FarmerEntity.class, (EntityRendererManager rendererManager) -> {
-    		TOKBipedRender<MobEntity, PlayerModel<MobEntity>> br = new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager, new PlayerModel<>(0.0F, false), 0.5F, new ResourceLocation(MODID, "textures/entity/knight.png"));
+    		TOKBipedRender<MobEntity, PlayerModel<MobEntity>> br = new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager, 
+    				new PlayerModel<>(0.0F, false), 
+    				0.5F, 
+    				new ResourceLocation(MODID, "textures/entity/farmer-2.png"));
     		return br;
     	});
     }
