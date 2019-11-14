@@ -11,7 +11,10 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="srgType" value="SRG" />
+    <option name="mappingFile" value="C:\Users\Samuel\Documents\IntelliJ\tale-of-kingdoms\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="snapshot_20190719-1.14.3" />
+    <option name="minecraftVersion" value="1.14.4" />
+    <option name="srgType" value="TSRG" />
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output-test url="file://$MODULE_DIR$/../../build/classes/java/test" />

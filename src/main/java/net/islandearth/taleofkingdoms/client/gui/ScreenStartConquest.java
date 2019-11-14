@@ -1,22 +1,11 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.forge.ForgeAdapter;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.schematic.OperationInstance;
 import net.islandearth.taleofkingdoms.common.schematic.Operations;
@@ -28,8 +17,13 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ScreenStartConquest extends ScreenTOK {
 	
@@ -70,7 +64,6 @@ public class ScreenStartConquest extends ScreenTOK {
 			
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 			button.setMessage("Loading, please wait...");
-			this.loading = true;
 			// Load guild castle schematic
 			OperationInstance oi = SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player);
 			Timer timer = new Timer();
@@ -86,37 +79,30 @@ public class ScreenStartConquest extends ScreenTOK {
 							com.sk89q.worldedit.world.World adaptedWorld = ForgeAdapter.adapt(player.getEntityWorld());
 							EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
 							editSession.flushSession();
-							
-							UUID pasteOp = UUID.randomUUID();
-							Operations.completeBlindly(UUID.randomUUID(), editSession.commit());
-							
+
 							Timer pastingTimer = new Timer();
 							pastingTimer.schedule(new TimerTask() {
 								@Override
 								public void run() {
-									int progress = Operations.getProgress(pasteOp);
-									int blocksDone = progress == 0 ? 0 : (oi.getBlocks() / (100 / progress));
-									button.setMessage("Finishing pasting... (" + Operations.getProgress(pasteOp) + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
-									if (progress >= 100) {
-										button.setMessage("Loading NPCs...");
-										button.setMessage("Reloading chunks...");
-										minecraft.worldRenderer.loadRenderers();
-										
-										Timer timer2 = new Timer();
-										timer2.schedule(new TimerTask() {
-											@Override
-											public void run() {
-												Minecraft.getInstance().runImmediately(() -> {
-													onClose();
-													loading = false;
-													instance.setLoaded(true);
-												});
-											}
-										}, 2000);
-										this.cancel();
-									}
+									button.setMessage("Finishing pasting... (" + progress + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
+									button.setMessage("Loading NPCs...");
+
+									Timer timer2 = new Timer();
+									timer2.schedule(new TimerTask() {
+										@Override
+										public void run() {
+											Minecraft.getInstance().runImmediately(() -> {
+												button.setMessage("Reloading chunks...");
+												minecraft.worldRenderer.loadRenderers();
+												onClose();
+												loading = false;
+												instance.setLoaded(true);
+												pastingTimer.cancel();
+											});
+										}
+									}, 2000);
 								}
-							}, 0, 10);
+							}, 200);
 							this.cancel();
 						}
 					} catch (Exception e) {
@@ -148,21 +134,5 @@ public class ScreenStartConquest extends ScreenTOK {
 	@Override
 	public boolean isPauseScreen() {
 		return false;
-	}
-	
-	protected List<Chunk> getChunksAroundPlayer(PlayerEntity player) {
-		int[] offset = {-1,0,1};
-
-		World world = player.world;
-		int ox = player.chunkCoordX;
-		int oz = player.chunkCoordZ;
-
-		List<Chunk> chunks = new ArrayList<>();
-		for (int x : offset) {
-			for (int z : offset) {
-				Chunk chunk = world.getChunk(ox + x, oz + z);
-				chunks.add(chunk);
-			}
-		} return chunks;
 	}
 }

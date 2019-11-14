@@ -1,14 +1,7 @@
 package net.islandearth.taleofkingdoms.common.schematic;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
@@ -17,13 +10,15 @@ import com.sk89q.worldedit.forge.ForgeAdapter;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.Heightmap;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Handles schematics for TaleOfKingdoms.
@@ -51,26 +46,16 @@ public class SchematicHandler {
 				
 				if (player.getEntityWorld().isRemote()) {
 					// Server - paste blocks on main thread
-					try {
-						Operations.complete(uuid, operation);
-					} catch (WorldEditException e) {
-						player.sendMessage(new StringTextComponent("A problem occurred whilst loading the schematic [SIDE=SERVER]"));
-						e.printStackTrace();
-					}
+					Operations.completeBlindly(uuid, operation);
 				} else {
 					// Client - paste blocks on another thread
-					Timer timer = new Timer();
-					timer.schedule(new TimerTask() {
-						@Override
-						public void run() {
-							try {
-								Operations.complete(uuid, operation);
-							} catch (WorldEditException e) {
-								player.sendMessage(new StringTextComponent("A problem occurred whilst loading the schematic [SIDE=CLIENT]"));
-								e.printStackTrace();
-							}
-						}
-					}, 1);
+					//Timer timer = new Timer();
+					//timer.schedule(new TimerTask() {
+						//@Override
+						//public void run() {
+							Operations.completeBlindly(uuid, operation);
+						//}
+					//}, 1);
 				}
 				
 				return new OperationInstance(uuid, clipboard.getRegion().getArea());

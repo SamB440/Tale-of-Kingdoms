@@ -1,9 +1,9 @@
 package net.islandearth.taleofkingdoms.common.world;
 
-import java.util.Optional;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
+
+import java.util.Optional;
 
 public class ConquestInstance {
 	
@@ -11,7 +11,7 @@ public class ConquestInstance {
 	private String name;
 	private int coins;
 	private boolean hasLoaded;
-	private int farmerLastBread;
+	private long farmerLastBread;
 	
 	public ConquestInstance(String world, String name, int coins) {
 		Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -48,11 +48,11 @@ public class ConquestInstance {
 		this.hasLoaded = loaded;
 	}
 
-	public int getFarmerLastBread() {
+	public long getFarmerLastBread() {
 		return farmerLastBread;
 	}
 	
-	public void setFarmerLastBread(int day) {
+	public void setFarmerLastBread(long day) {
 		this.farmerLastBread = day;
 	}
 }

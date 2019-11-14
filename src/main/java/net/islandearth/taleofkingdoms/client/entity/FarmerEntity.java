@@ -15,8 +15,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends CreatureEntity implements TOKEntity {
 	
@@ -70,15 +68,15 @@ public class FarmerEntity extends CreatureEntity implements TOKEntity {
 	public EntitySize getSize(Pose poseIn) {
 		return SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
 	}
-	
+
 	@Override
 	public boolean processInteract(PlayerEntity player, Hand hand) {
-		if (hand == Hand.OFF_HAND) return false;
+		if (hand == Hand.OFF_HAND || player.world.isRemote) return false;
 		
 		// Check if there is at least 1 Minecraft day difference
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
-		int day = (int) (player.world.getWorldInfo().getGameTime() / 24000);
-		if (instance.getFarmerLastBread() > day) {
+		long day = player.world.getDayTime() / 24000L;
+		if (instance.getFarmerLastBread() >= day) {
 			player.sendMessage(new StringTextComponent("Farmer: You got your bread for now!"));
 			return false;
 		}

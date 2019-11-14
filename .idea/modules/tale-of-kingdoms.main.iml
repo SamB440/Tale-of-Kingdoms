@@ -11,7 +11,10 @@
     </facet>
   </component>
   <component name="McpModuleSettings">
-    <option name="srgType" value="SRG" />
+    <option name="mappingFile" value="C:\Users\Samuel\Documents\IntelliJ\tale-of-kingdoms\build\createMcpToSrg\output.tsrg" />
+    <option name="mcpVersion" value="snapshot_20190719-1.14.3" />
+    <option name="minecraftVersion" value="1.14.4" />
+    <option name="srgType" value="TSRG" />
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/../../build/classes/java/main" />
@@ -94,13 +97,13 @@
     <orderEntry type="library" name="Gradle: com.mojang:text2speech:natives-windows:1.11.3" level="project" />
     <orderEntry type="library" name="Gradle: org.codehaus.plexus:plexus-utils:3.1.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jline:jline-reader:3.12.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.11.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.sk89q.worldedit:worldedit-forge-mc1.14.4:7.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.sk89q.worldedit.worldedit-libs:core:7.1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: de.schlichtherle:truezip:6.8.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.slf4j:slf4j-api:1.7.26" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.yaml:snakeyaml:1.9" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.mozilla:rhino:1.7.11" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: de.schlichtherle:truezip:6.8.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.sk89q.worldedit.worldedit-libs:core:7.1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.sk89q.worldedit:worldedit-forge-mc1.14.4:7.1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.11.2" level="project" />
   </component>
 </module>
