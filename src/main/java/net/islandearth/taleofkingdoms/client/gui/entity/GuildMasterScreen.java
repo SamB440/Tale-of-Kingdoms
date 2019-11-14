@@ -17,7 +17,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
 		if (instance.isHasContract()) {
 			//TODO has contract gui
-			player.sendMessage(new StringTextComponent(("Guild Master: Welcome to the order, hero."));
+			player.sendMessage(new StringTextComponent(("Guild Master: Welcome to the order, hero.")));
 		} else {
 			//TODO doesn't have contract gui
 		}

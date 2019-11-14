@@ -34,7 +34,7 @@ public class EntityTypes {
 
 			final EntityType<GuildMasterEntity> guildmaster = build(
 					"guild_master",
-					EntityType.Builder.<FarmerEntity>create((GuildMasterEntity::new), EntityClassification.MISC)
+					EntityType.Builder.<GuildMasterEntity>create((GuildMasterEntity::new), EntityClassification.MISC)
 							.size(0.5f, 0.5f)
 			);
 
