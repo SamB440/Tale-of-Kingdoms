@@ -11,14 +11,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SoundManager implements IManager {
 
-	private Map<String, SoundEvent> events = new HashMap<>();
+	private final Map<String, SoundEvent> events = new HashMap<>();
 	
 	public SoundManager(TaleOfKingdoms tok) {
 		TaleOfKingdoms.LOGGER.info("Loading sounds...");
-		TaleOfKingdoms.LOGGER.info("Loading sound: toktheme");
-		ResourceLocation location = new ResourceLocation(TaleOfKingdoms.MODID, "toktheme");
-		SoundEvent event = new SoundEvent(location);
-		events.put("toktheme", event);
+		ResourceLocation toktheme = new ResourceLocation(TaleOfKingdoms.MODID, "toktheme");
+		this.addSound(toktheme);
+	}
+	
+	public void addSound(ResourceLocation location) {
+		TaleOfKingdoms.LOGGER.info("Loading sound: " + location.getPath());
+		events.put(location.getPath(), new SoundEvent(location));
 	}
 	
 	public SoundEvent getSound(String name) {

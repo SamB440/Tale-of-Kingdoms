@@ -19,6 +19,9 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+/**
+ * An entirely useless class that is just here for testing.
+ */
 public class TestCommand {
     
     public TestCommand(CommandDispatcher<CommandSource> commandDispatcher) {

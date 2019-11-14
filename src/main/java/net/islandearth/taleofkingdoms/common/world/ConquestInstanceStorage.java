@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class ConquestInstanceStorage {
 
-	private Map<String, ConquestInstance> conquests = new HashMap<>();
+	private final Map<String, ConquestInstance> conquests = new HashMap<>();
 	private String currentWorldName;
 	
 	public Optional<ConquestInstance> getConquestInstance(String worldName) {

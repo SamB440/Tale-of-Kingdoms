@@ -14,7 +14,7 @@ public enum Schematic {
 	GUILD_CASTLE("/assets/schematics/GuildCastle.schem"),
 	GUILD_CASTLE_OLD("/assets/schematics/GuildCastle.schematic");
 	
-	private String path;
+	private final String path;
 	
 	Schematic(String path) {
 		this.path = path;

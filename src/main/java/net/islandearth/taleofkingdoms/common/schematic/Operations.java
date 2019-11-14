@@ -33,7 +33,7 @@ import com.sk89q.worldedit.function.operation.RunContext;
  */
 public final class Operations {
 
-	private static Map<UUID, Integer> progress = new HashMap<>();
+	private static final Map<UUID, Integer> progress = new HashMap<>();
 	
 	private Operations() {
     }

@@ -12,9 +12,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 
 public class TaleOfKingdomsAPI {
 	
-	private TaleOfKingdoms mod;
-	private ConquestInstanceStorage cis;
-	private Map<String, IManager> managers = new HashMap<>();
+	private final TaleOfKingdoms mod;
+	private final ConquestInstanceStorage cis;
+	private final Map<String, IManager> managers = new HashMap<>();
 	
 	public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
 		this.mod = mod;

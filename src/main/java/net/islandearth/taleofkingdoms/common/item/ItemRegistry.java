@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemRegistry extends Listener {
 
-	public static Map<String, Item> items = new HashMap<>();
+	public static final Map<String, Item> items = new HashMap<>();
 	
 	public static class CreativeTab extends ItemGroup {
 

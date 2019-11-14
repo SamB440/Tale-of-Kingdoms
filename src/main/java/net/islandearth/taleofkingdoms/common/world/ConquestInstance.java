@@ -11,6 +11,7 @@ public class ConquestInstance {
 	private String name;
 	private int coins;
 	private boolean hasLoaded;
+	private int farmerLastBread;
 	
 	public ConquestInstance(String world, String name, int coins) {
 		Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -47,4 +48,11 @@ public class ConquestInstance {
 		this.hasLoaded = loaded;
 	}
 
+	public int getFarmerLastBread() {
+		return farmerLastBread;
+	}
+	
+	public void setFarmerLastBread(int day) {
+		this.farmerLastBread = day;
+	}
 }

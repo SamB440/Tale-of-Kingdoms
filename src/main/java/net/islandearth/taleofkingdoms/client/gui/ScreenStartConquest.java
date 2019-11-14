@@ -40,9 +40,9 @@ public class ScreenStartConquest extends ScreenTOK {
 	private TextFieldWidget text;
 	
 	// Other
-	private String worldName;
-	private File toSave;
-	private PlayerEntity player;
+	private final String worldName;
+	private final File toSave;
+	private final PlayerEntity player;
 	private boolean loading;
 	
 	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {

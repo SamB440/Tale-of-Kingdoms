@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class OperationInstance {
 
-	private UUID operationId;
-	private int blocks;
+	private final UUID operationId;
+	private final int blocks;
 	
 	public OperationInstance(UUID operationId, int blocks) {
 		this.operationId = operationId;

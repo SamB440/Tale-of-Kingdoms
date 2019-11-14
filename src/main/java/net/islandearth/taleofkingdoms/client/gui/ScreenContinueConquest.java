@@ -17,7 +17,7 @@ public class ScreenContinueConquest extends ScreenTOK {
 	private Button mButtonClose;
 	
 	// Other
-	private ConquestInstance instance;
+	private final ConquestInstance instance;
 	
 	public ScreenContinueConquest(ConquestInstance instance) {
 		this.instance = instance;
