@@ -14,7 +14,8 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(TaleOfKingdoms.MODID)
 public class EntityTypes {
 	
-	public static final EntityType<FarmerEntity> FARMER = null;
+	static final EntityType<FarmerEntity> FARMER = null;
+	static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
 
 	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)
 	public static class RegistrationHandler {
@@ -31,8 +32,15 @@ public class EntityTypes {
 							.size(0.5f, 0.5f)
 			);
 
+			final EntityType<GuildMasterEntity> guildmaster = build(
+					"guild_master",
+					EntityType.Builder.<FarmerEntity>create((GuildMasterEntity::new), EntityClassification.MISC)
+							.size(0.5f, 0.5f)
+			);
+
 			event.getRegistry().registerAll(
-					farmer
+					farmer,
+					guildmaster
 			);
 		}
 

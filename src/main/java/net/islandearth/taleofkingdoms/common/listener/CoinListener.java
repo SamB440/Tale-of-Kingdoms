@@ -1,7 +1,5 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
-import java.util.Random;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
@@ -12,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.Random;
 
 public class CoinListener extends Listener {
 	
@@ -29,7 +29,6 @@ public class CoinListener extends Listener {
 		if (item.getItem().equals(ItemRegistry.items.get("coin"))) {
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get().addCoins(random.nextInt(50));
 			e.getPlayer().inventory.clearMatchingItems(predicate -> predicate.getItem().equals(item.getItem()), -1);
-
 		}
 	}
 }

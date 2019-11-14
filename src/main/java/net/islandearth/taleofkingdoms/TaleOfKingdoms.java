@@ -1,13 +1,8 @@
 package net.islandearth.taleofkingdoms;
 
-import java.io.File;
-import java.util.Optional;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
 import net.islandearth.taleofkingdoms.client.entity.FarmerEntity;
+import net.islandearth.taleofkingdoms.client.entity.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.client.entity.render.TOKBipedRender;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
@@ -26,6 +21,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.Optional;
 
 @Mod(TaleOfKingdoms.MODID)
 public class TaleOfKingdoms {
@@ -60,12 +60,18 @@ public class TaleOfKingdoms {
     
     private void clientSetup(FMLClientSetupEvent fcse) {
     	RenderingRegistry.registerEntityRenderingHandler(FarmerEntity.class, (EntityRendererManager rendererManager) -> {
-    		TOKBipedRender<MobEntity, PlayerModel<MobEntity>> br = new TOKBipedRender<>(rendererManager,
+			return new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 					new PlayerModel<>(0.0F, false),
 					0.5F,
 					new ResourceLocation(MODID, "textures/entity/farmer-2.png"));
-    		return br;
     	});
+
+		RenderingRegistry.registerEntityRenderingHandler(GuildMasterEntity.class, (EntityRendererManager rendererManager) -> {
+			return new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
+					new PlayerModel<>(0.0F, false),
+					0.5F,
+					new ResourceLocation(MODID, "textures/entity/guildmaster.png"));
+		});
     }
     
     private void serverStarting(FMLServerStartingEvent evt) {
@@ -86,7 +92,7 @@ public class TaleOfKingdoms {
      * @return data folder name
      */
     public String getDataFolder() {
-	    return new File(".").getAbsolutePath().toString() + "/mods/" + TaleOfKingdoms.MODID + "/";
+	    return new File(".").getAbsolutePath() + "/mods/" + TaleOfKingdoms.MODID + "/";
     }
     
     /**
