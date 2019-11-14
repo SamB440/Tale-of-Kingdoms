@@ -16,7 +16,7 @@ public enum Schematic {
 	
 	private String path;
 	
-	private Schematic(String path) {
+	Schematic(String path) {
 		this.path = path;
 	}
 	

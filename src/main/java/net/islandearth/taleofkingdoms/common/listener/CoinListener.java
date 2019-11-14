@@ -27,7 +27,7 @@ public class CoinListener extends Listener {
 		Random random = new Random();
 		ItemStack item = e.getStack();
 		if (item.getItem().equals(ItemRegistry.items.get("coin"))) {
-			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get().addCoins(random.nextInt(50));;
+			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get().addCoins(random.nextInt(50));
 			e.getPlayer().inventory.clearMatchingItems(predicate -> predicate.getItem().equals(item.getItem()), -1);
 
 		}

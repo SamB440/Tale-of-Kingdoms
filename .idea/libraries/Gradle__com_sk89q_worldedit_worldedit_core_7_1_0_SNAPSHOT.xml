@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.sk89q.worldedit:worldedit-core:7.1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.sk89q.worldedit/worldedit-core/7.1.0-SNAPSHOT/6e00f8151b332ade27ec94ff19c2c01cf2fe1724/worldedit-core-7.1.0-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.sk89q.worldedit/worldedit-core/7.1.0-SNAPSHOT/20bed1da2cde1cb50cd38bdea1dbf920d5cf0a3/worldedit-core-7.1.0-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

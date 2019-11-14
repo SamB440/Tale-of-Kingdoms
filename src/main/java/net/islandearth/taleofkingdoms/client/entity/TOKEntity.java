@@ -2,13 +2,13 @@ package net.islandearth.taleofkingdoms.client.entity;
 
 public interface TOKEntity {
 	
-	public boolean isStationary();
+	boolean isStationary();
 	
-	public default boolean doesLookAtPlayer() {
+	default boolean doesLookAtPlayer() {
 		return true;
 	}
 	
-	public default boolean canBePushed() {
+	default boolean canBePushed() {
 		return false;
 	}
 }

@@ -32,8 +32,6 @@ public class SoundManager implements IManager {
 	
 	@SubscribeEvent
 	public void register(RegistryEvent.Register<SoundEvent> evt) {
-		events.forEach((name, event) -> {
-			evt.getRegistry().register(event);
-		});
+		events.forEach((name, event) -> evt.getRegistry().register(event));
 	}
 }

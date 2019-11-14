@@ -1,0 +1,5 @@
+Args: "--inJar", "C:\Users\Samuel\.gradle\caches\forge_gradle\minecraft_user_repo\net\minecraftforge\forge\1.14.4-28.1.44\forge-1.14.4-28.1.44-injected.jar", "--outJar", "C:\Users\Samuel\.gradle\caches\forge_gradle\minecraft_user_repo\net\minecraftforge\forge\1.14.4-28.1.44_mapped_snapshot_20190719-1.14.3\forge-1.14.4-28.1.44_mapped_snapshot_20190719-1.14.3.jar", "--logFile", "accesstransform.log", "--atFile", "C:\Users\Samuel\IdeaProjects\tale-of-kingdoms\build\_atJar_-279334416_\parent_at.cfg"
+Classpath: C:\Users\Samuel\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\accesstransformers\0.14.4\accesstransformers-0.14.4-fatjar.jar
+WorkDir: C:\Users\Samuel\IdeaProjects\tale-of-kingdoms\build\_atJar_-279334416_
+Main: net.minecraftforge.accesstransformer.TransformerProcessor
+====================================

@@ -4,6 +4,6 @@ import net.minecraft.util.ResourceLocation;
 
 public interface IImage {
 	
-	public ResourceLocation getResourceLocation();
+	ResourceLocation getResourceLocation();
 
 }

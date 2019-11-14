@@ -29,9 +29,7 @@ public class ScreenContinueConquest extends ScreenTOK {
 		this.buttons.clear();
 		Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/title.png"));
 		this.getMinecraft().getTextureManager().bindTexture(image.getResourceLocation());
-		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height - (this.height / 4) + 10, 200, 20, "Continue your Conquest.", (button) -> {
-			this.onClose();
-		}));
+		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height - (this.height / 4) + 10, 200, 20, "Continue your Conquest.", (button) -> this.onClose()));
 	}
 	
 	@Override

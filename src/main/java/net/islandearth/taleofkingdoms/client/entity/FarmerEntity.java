@@ -23,6 +23,11 @@ public class FarmerEntity extends CreatureEntity implements TOKEntity {
 	private static final EntitySize STANDING_SIZE = EntitySize.flexible(0.6F, 1.8F);
 	private static final Map<Pose, EntitySize> SIZE_BY_POSE = ImmutableMap.<Pose, EntitySize>builder().put(Pose.STANDING, STANDING_SIZE).put(Pose.SLEEPING, SLEEPING_SIZE).put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F)).put(Pose.SNEAKING, EntitySize.flexible(0.6F, 1.5F)).put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
 	
+	public FarmerEntity(World worldIn) {
+		super(EntityTypes.FARMER, worldIn);
+		this.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
+	}
+	
 	public FarmerEntity(EntityType<? extends CreatureEntity> type, World worldIn) {
 		super(type, worldIn);
 		this.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));

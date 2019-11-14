@@ -109,7 +109,7 @@ public class ScreenStartConquest extends ScreenTOK {
 												Minecraft.getInstance().runImmediately(() -> {
 													onClose();
 													loading = false;
-													if (instance != null) instance.setLoaded(true);
+													instance.setLoaded(true);
 												});
 											}
 										}, 2000);
@@ -157,7 +157,7 @@ public class ScreenStartConquest extends ScreenTOK {
 		int ox = player.chunkCoordX;
 		int oz = player.chunkCoordZ;
 
-		List<Chunk> chunks = new ArrayList<Chunk>();
+		List<Chunk> chunks = new ArrayList<>();
 		for (int x : offset) {
 			for (int z : offset) {
 				Chunk chunk = world.getChunk(ox + x, oz + z);
