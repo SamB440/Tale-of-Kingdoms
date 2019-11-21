@@ -26,6 +26,10 @@ Q: Where can I donate?
 
 A: Currently you cannot donate simply because I have not set anything up. However, in the future you will be able to, along with purchasing DLC.
 
+Q: What versions will it be for?
+
+A: As I am the only one working on it, only 1.14 will be supported until I find other developers to work on 1.12. 1.13 will never be supported as it is extremely buggy.
+
 Forge Installation
 ==================
 Source installation information for modders
