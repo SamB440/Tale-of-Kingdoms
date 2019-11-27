@@ -5,18 +5,22 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
 
+@OnlyIn(Dist.CLIENT)
 @ObjectHolder(TaleOfKingdoms.MODID)
 public class EntityTypes {
 	
 	static final EntityType<FarmerEntity> FARMER = null;
 	static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
 
+	@OnlyIn(Dist.CLIENT)
 	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)
 	public static class RegistrationHandler {
 		/**

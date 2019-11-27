@@ -6,7 +6,10 @@ import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class TOKBipedRender<T extends MobEntity, M extends BipedModel<T>> extends BipedRenderer<MobEntity, PlayerModel<MobEntity>> {
 	
 	private final ResourceLocation DEFAULT_RES_LOC;

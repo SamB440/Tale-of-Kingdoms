@@ -15,7 +15,7 @@ public class GuildMasterScreen extends ScreenTOK {
 	public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
 		this.entity = entity;
 
-		if (instance.isHasContract()) {
+		if (!instance.isHasContract()) {
 			//TODO has contract gui
 			player.sendMessage(new StringTextComponent("Guild Master: Welcome to the order, hero."));
 		} else {

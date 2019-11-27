@@ -5,9 +5,12 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Map;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class TOKEntity extends CreatureEntity {
 
 	// From PlayerEntity (net.minecraft)
