@@ -49,8 +49,6 @@ public class ScreenStartConquest extends ScreenTOK {
 	public void init() {
 		super.init();
 		this.buttons.clear();
-		Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/1a.png"));
-		this.getMinecraft().getTextureManager().bindTexture(image.getResourceLocation());
 		this.text = new TextFieldWidget(this.font, this.width / 2 - 150, this.height / 2 - 40, 300, 20, "Sir Punchwood");
 		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height / 2 + 30, 200, 20, "Start your Conquest.", (button) -> {
 			if (loading) return;
@@ -124,6 +122,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	@Override
 	public void render(int par1, int par2, float par3) {
         this.renderBackground();
+        this.addImage(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/1a.png"));
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.drawCenteredString(this.font, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
         this.drawCenteredString(this.font, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);

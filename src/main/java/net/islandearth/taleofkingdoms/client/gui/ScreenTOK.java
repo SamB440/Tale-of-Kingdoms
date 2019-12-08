@@ -1,8 +1,8 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,7 +34,7 @@ public abstract class ScreenTOK extends Screen {
 	}
 	
 	public void addImage(ResourceLocation image) {
-		ITextureObject texture = Minecraft.getInstance().getTextureManager().getTexture(image);
-		texture.bindTexture();
+		TaleOfKingdoms.LOGGER.info("Binding texture: " + image.getPath());
+		Minecraft.getInstance().getTextureManager().bindTexture(image);
 	}
 }
