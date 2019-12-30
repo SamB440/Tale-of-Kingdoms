@@ -30,10 +30,9 @@ Q: What versions will it be for?
 
 A: As I am the only one working on it, only 1.14 will be supported until I find other developers to work on 1.12. 1.13 will never be supported as it is extremely buggy.
 
-Sponsor
+Minecraft Server
 =======
-The Dark Age ("The Battle for Conwy Castle") https://discord.thedarkage.nl
-![The Dark Age](https://gitlab.com/SamB440/samb440.gitlab.io/raw/master/public/images/6E524CEB-8595-4981-B4E9-70E4E148AE49.gif?inline=false)
+IslandEarth - https://www.islandearth.net
 
 Forge Installation
 ==================
