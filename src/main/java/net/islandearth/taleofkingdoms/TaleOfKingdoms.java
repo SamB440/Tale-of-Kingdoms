@@ -1,8 +1,7 @@
 package net.islandearth.taleofkingdoms;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
-import net.islandearth.taleofkingdoms.client.entity.FarmerEntity;
-import net.islandearth.taleofkingdoms.client.entity.GuildMasterEntity;
+import net.islandearth.taleofkingdoms.client.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.client.entity.render.TOKBipedRender;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
@@ -80,14 +79,14 @@ public class TaleOfKingdoms {
 	}
 
 	private void clientSetup(FMLClientSetupEvent fcse) {
-		RenderingRegistry.registerEntityRenderingHandler(FarmerEntity.class, (EntityRendererManager rendererManager) -> {
+		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.FARMER, (EntityRendererManager rendererManager) -> {
 			return new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 					new PlayerModel<>(0.0F, false),
 					0.5F,
 					new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
 		});
 
-		RenderingRegistry.registerEntityRenderingHandler(GuildMasterEntity.class, (EntityRendererManager rendererManager) -> {
+		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.GUILD_MASTER, (EntityRendererManager rendererManager) -> {
 			return new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 					new PlayerModel<>(0.0F, false),
 					0.5F,

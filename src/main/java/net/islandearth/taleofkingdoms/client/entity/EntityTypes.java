@@ -17,8 +17,8 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(TaleOfKingdoms.MODID)
 public class EntityTypes {
 	
-	static final EntityType<FarmerEntity> FARMER = null;
-	static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
+	public static final EntityType<FarmerEntity> FARMER = null;
+	public static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
 
 	@OnlyIn(Dist.CLIENT)
 	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)

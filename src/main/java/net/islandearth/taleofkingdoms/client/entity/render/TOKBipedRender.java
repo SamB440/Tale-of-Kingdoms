@@ -21,7 +21,7 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedModel<T>> extend
 	}
 	
 	@Override
-	protected final ResourceLocation getEntityTexture(MobEntity entity) {
+	public ResourceLocation getEntityTexture(MobEntity entity) {
 		return DEFAULT_RES_LOC;
 	}
 }

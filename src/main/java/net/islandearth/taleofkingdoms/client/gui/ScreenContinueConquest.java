@@ -1,14 +1,11 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
 public class ScreenContinueConquest extends ScreenTOK {
@@ -40,11 +37,11 @@ public class ScreenContinueConquest extends ScreenTOK {
 		
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		this.minecraft.getTextureManager().bindTexture(image.getResourceLocation());
+		/*this.minecraft.getTextureManager().bindTexture(image.getResourceLocation());
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 		bufferbuilder.pos(0.0D, (double)this.height, 0.0D).tex(0.0D, (double)((float)this.height / 32.0F + (float)0)).color(64, 64, 64, 255).endVertex();
-		tessellator.draw();
+		tessellator.draw();*/
 		
 		this.drawCenteredString(this.font, Minecraft.getInstance().player.getName().getString() 
 				+ ", your conquest, " 

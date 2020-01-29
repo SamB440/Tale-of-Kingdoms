@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,9 +23,8 @@ public abstract class TOKEntity extends CreatureEntity {
 			.put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F))
 			.put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F))
 			.put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F))
-			.put(Pose.SNEAKING, EntitySize.flexible(0.6F, 1.5F))
-			.put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F))
-			.build();
+			.put(Pose.CROUCHING, EntitySize.flexible(0.6F, 1.5F))
+			.put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
 
 	protected TOKEntity(World worldIn) {
 		super(null, worldIn);
@@ -57,6 +57,7 @@ public abstract class TOKEntity extends CreatureEntity {
 	@Override
 	protected void registerAttributes() {
 		super.registerAttributes();
+		PlayerEntity a;
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0D);
 	}

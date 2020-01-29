@@ -35,10 +35,11 @@ public class SchematicHandler {
 			Clipboard clipboard = reader.read();
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1)) {
 				BlockVector3 centerY = clipboard.getRegion().getCenter().toBlockPoint();
-				Chunk chunk = player.getEntityWorld().getChunkAt(new BlockPos(player.posX, player.posY, player.posZ));
+				BlockPos position = player.getPosition();
+				Chunk chunk = player.getEntityWorld().getChunkAt(position);
 				int topY = chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, centerY.getBlockX(), centerY.getBlockZ());
 				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                        .to(BlockVector3.at(player.posX, player.posY + 1, player.posZ))
+                        .to(BlockVector3.at(position.getX(), position.getY() + 1, position.getZ()))
                         .ignoreAirBlocks(false)
                         .copyBiomes(false)
                         .build();
