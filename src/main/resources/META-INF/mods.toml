@@ -40,7 +40,7 @@ The Tale of Kingdoms mod, revived.
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[7.0.1;61bc012]" #mandatory
+    versionRange="[7.1.0;48cc31c]" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="AFTER"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER

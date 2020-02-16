@@ -113,7 +113,7 @@ dependencies {
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-	compileOnly 'com.sk89q.worldedit:worldedit-forge-mc1.14.4:7.1.0-SNAPSHOT'
+	compileOnly 'com.sk89q.worldedit:worldedit-forge-mc1.15.2:7.1.1-SNAPSHOT'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
