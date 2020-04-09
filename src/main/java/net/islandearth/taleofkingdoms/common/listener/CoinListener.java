@@ -20,6 +20,7 @@ public class CoinListener extends Listener {
 	public void onDeath(LivingDeathEvent e) {
 		if (e.getSource().getTrueSource() instanceof PlayerEntity) {
 			ItemHelper.dropCoins(e.getEntityLiving());
+			//TODO worthiness stuff
 		}
 	}
     

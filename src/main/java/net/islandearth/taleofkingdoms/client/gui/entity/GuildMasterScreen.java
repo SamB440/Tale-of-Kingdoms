@@ -41,7 +41,9 @@ public class GuildMasterScreen extends ScreenTOK {
             }));
         } else {
             this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Cancel Contract.", (button) -> {
-                //TODO cancel contract - what happens?
+                instance.setHasContract(false);
+                button.visible = false;
+                button.active = false;
             }));
         }
 
