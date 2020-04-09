@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -32,23 +33,27 @@ public class GuildMasterScreen extends ScreenTOK {
 	public void init() {
 		super.init();
 		if (!instance.hasContract()) {
-            this.addButton(new Button(this.width / 2 - 50, this.height / 4 + 50, 100, 20, "Sign up contract!", (button) -> {
+            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Sign up contract!", (button) -> {
                 instance.setHasContract(true);
                 player.sendMessage(new StringTextComponent("Guild Master: You are now one of us my friend. Kill monsters and you will soon be worthy of your title."));
                 button.visible = false;
                 button.active = false;
             }));
         } else {
-            this.addButton(new Button(this.width / 2 - 50, this.height / 4 + 50, 100, 20, "Cancel Contract.", (button) -> {
+            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Cancel Contract.", (button) -> {
                 //TODO cancel contract - what happens?
             }));
         }
 
-        this.addButton(new Button(this.width / 2 - 50, this.height / 2 - 13, 100, 20, "Hire Hunters", (button) -> {
+		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + TextFormatting.GREEN + "(1500 gold)" : "Hire Hunters " + TextFormatting.RED + "(1500 gold)";
+        this.addButton(new Button(this.width / 2 - 75, this.height / 2 - 13, 150, 20, hunterText, (button) -> {
             //TODO what happens?
         }));
 
-        this.addButton(new Button(this.width / 2 - 50, this.height / 2 + 20, 100, 20, "Exit", (button) -> this.onClose()));
+        this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 20, 150, 20, "Exit", (button) -> {
+			player.sendMessage(new StringTextComponent("Guild Master: Good hunting."));
+        	this.onClose();
+		}));
 	}
 
 	@Override
