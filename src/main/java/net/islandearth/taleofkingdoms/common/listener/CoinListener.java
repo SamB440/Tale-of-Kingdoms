@@ -12,6 +12,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CoinListener extends Listener {
 	
@@ -24,7 +25,7 @@ public class CoinListener extends Listener {
     
 	@SubscribeEvent
 	public void onPickUp(PlayerEvent.ItemPickupEvent e) {
-		Random random = new Random();
+		Random random = ThreadLocalRandom.current();
 		ItemStack item = e.getStack();
 		if (item.getItem().equals(ItemRegistry.items.get("coin"))) {
 			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get().addCoins(random.nextInt(50));
