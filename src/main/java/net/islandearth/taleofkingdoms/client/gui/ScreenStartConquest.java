@@ -94,6 +94,7 @@ public class ScreenStartConquest extends ScreenTOK {
 												onClose();
 												loading = false;
 												instance.setLoaded(true);
+												instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
 												pastingTimer.cancel();
 											});
 										}

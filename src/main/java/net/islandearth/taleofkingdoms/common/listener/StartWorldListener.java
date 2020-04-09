@@ -1,5 +1,22 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
+import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
+import net.islandearth.taleofkingdoms.client.gui.ScreenStartConquest;
+import net.islandearth.taleofkingdoms.client.listener.Listener;
+import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,30 +27,11 @@ import java.io.Writer;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
-
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
-import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
-import net.islandearth.taleofkingdoms.client.gui.ScreenStartConquest;
-import net.islandearth.taleofkingdoms.client.listener.Listener;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 public class StartWorldListener extends Listener {
 	
 	private boolean joined;
 	
-	private boolean load(String worldName, World world) {
+	private boolean load(String worldName) {
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
 		// Check if this world has been loaded or not
 		if (!file.exists()) {
@@ -79,7 +77,7 @@ public class StartWorldListener extends Listener {
 			this.joined = true;
 			//TODO support for server
 			String worldName = Minecraft.getInstance().getIntegratedServer().getFolderName();
-			boolean loaded = load(worldName, e.getEntity().getEntityWorld());
+			boolean loaded = load(worldName);
 			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
 			if (loaded) {
 				// Already exists
