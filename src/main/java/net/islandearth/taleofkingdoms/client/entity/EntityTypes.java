@@ -1,6 +1,8 @@
 package net.islandearth.taleofkingdoms.client.entity;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.client.entity.guild.FarmerEntity;
+import net.islandearth.taleofkingdoms.client.entity.guild.GuildMasterEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -32,13 +34,13 @@ public class EntityTypes {
 		public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 			final EntityType<FarmerEntity> farmer = build(
 					"farmer",
-					EntityType.Builder.<FarmerEntity>create((FarmerEntity::new), EntityClassification.MISC)
+					EntityType.Builder.<FarmerEntity>create(FarmerEntity::new, EntityClassification.MISC)
 							.size(0.5f, 0.5f)
 			);
 
 			final EntityType<GuildMasterEntity> guildmaster = build(
 					"guild_master",
-					EntityType.Builder.<GuildMasterEntity>create((GuildMasterEntity::new), EntityClassification.MISC)
+					EntityType.Builder.<GuildMasterEntity>create(GuildMasterEntity::new, EntityClassification.MISC)
 							.size(0.5f, 0.5f)
 			);
 

@@ -40,6 +40,7 @@ public class TaleOfKingdoms {
     public TaleOfKingdoms() {
         ItemRegistry.init();
     	FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
+    	FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 		MinecraftForge.EVENT_BUS.addListener(this::serverStarting);
     	MinecraftForge.EVENT_BUS.register(this);
     }
@@ -79,19 +80,17 @@ public class TaleOfKingdoms {
 	}
 
 	private void clientSetup(FMLClientSetupEvent fcse) {
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.FARMER, (EntityRendererManager rendererManager) -> {
-			return new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-					new PlayerModel<>(0.0F, false),
-					0.5F,
-					new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
-		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.FARMER, (EntityRendererManager rendererManager) ->
+				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
+				new PlayerModel<>(0.0F, false),
+				0.5F,
+				new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png")));
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.GUILD_MASTER, (EntityRendererManager rendererManager) -> {
-			return new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-					new PlayerModel<>(0.0F, false),
-					0.5F,
-					new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
-		});
+		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.GUILD_MASTER, (EntityRendererManager rendererManager) ->
+				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
+				new PlayerModel<>(0.0F, false),
+				0.5F,
+				new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png")));
 	}
 
 	private void registerEvents() {

@@ -1,7 +1,7 @@
 package net.islandearth.taleofkingdoms.client.gui.entity;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.islandearth.taleofkingdoms.client.entity.GuildMasterEntity;
+import net.islandearth.taleofkingdoms.client.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
@@ -38,5 +38,10 @@ public class GuildMasterScreen extends ScreenTOK {
 	@Override
 	public boolean isPauseScreen() {
 		return false;
+	}
+
+	@Override
+	public boolean shouldCloseOnEsc() {
+		return true;
 	}
 }

@@ -1,10 +1,13 @@
 package net.islandearth.taleofkingdoms.client.entity;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Pose;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -34,7 +37,7 @@ public abstract class TOKEntity extends CreatureEntity {
 		super(entityType, world);
 	}
 
-	void applyEntityAI() {
+	protected void applyEntityAI() {
 		this.goalSelector.addGoal(1, new SwimGoal(this));
 	}
 
@@ -57,7 +60,6 @@ public abstract class TOKEntity extends CreatureEntity {
 	@Override
 	protected void registerAttributes() {
 		super.registerAttributes();
-		PlayerEntity a;
 		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0D);
 	}

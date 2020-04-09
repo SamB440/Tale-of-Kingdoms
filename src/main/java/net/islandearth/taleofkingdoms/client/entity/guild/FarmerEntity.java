@@ -1,6 +1,8 @@
-package net.islandearth.taleofkingdoms.client.entity;
+package net.islandearth.taleofkingdoms.client.entity.guild;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.client.entity.EntityTypes;
+import net.islandearth.taleofkingdoms.client.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;

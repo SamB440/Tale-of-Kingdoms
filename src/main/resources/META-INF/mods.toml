@@ -24,7 +24,7 @@ displayURL="https://www.islandearth.net" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="636453830200432875.png" #optional
 # A text field displayed in the mod UI
-credits="tyberalyx for creating the mod in the first place, michaelb229 and his team for building." #optional
+credits="Marackai, Aksel, and Pyro for keeping me going (and their translations!). Tyberalyx for creating the mod in the first place. Michaelb229 and his team for building." #optional
 # A text field displayed in the mod UI
 authors="SamB440" #optional
 # The description text for the mod (multi line!) (#mandatory)
