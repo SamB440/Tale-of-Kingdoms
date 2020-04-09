@@ -57,7 +57,7 @@ public class ConquestInstance {
 		this.farmerLastBread = day;
 	}
 
-	public boolean isHasContract() {
+	public boolean hasContract() {
 		return hasContract;
 	}
 
