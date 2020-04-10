@@ -1,12 +1,10 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
 
 public class ScreenContinueConquest extends ScreenTOK {
 	
@@ -25,8 +23,8 @@ public class ScreenContinueConquest extends ScreenTOK {
 	public void init() {
 		super.init();
 		this.buttons.clear();
-		Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/title.png"));
-		this.getMinecraft().getTextureManager().bindTexture(image.getResourceLocation());
+		//Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/title.png"));
+		//this.getMinecraft().getTextureManager().bindTexture(image.getResourceLocation());
 		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height - (this.height / 4) + 10, 200, 20, "Continue your Conquest.", (button) -> this.onClose()));
 	}
 	
@@ -34,7 +32,7 @@ public class ScreenContinueConquest extends ScreenTOK {
 	public void render(int par1, int par2, float par3) {
         this.renderBackground();
         this.renderBackground();
-		Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/title.png"));
+		//Image image = new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/title.png"));
 		
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();

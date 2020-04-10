@@ -6,4 +6,6 @@ public interface IImage {
 	
 	ResourceLocation getResourceLocation();
 
+	void render();
+
 }

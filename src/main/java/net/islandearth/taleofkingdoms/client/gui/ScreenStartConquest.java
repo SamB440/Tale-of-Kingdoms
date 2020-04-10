@@ -15,7 +15,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -123,8 +122,6 @@ public class ScreenStartConquest extends ScreenTOK {
 	@Override
 	public void render(int par1, int par2, float par3) {
         this.renderBackground();
-        this.addImage(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/1a.png"));
-		//GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.drawCenteredString(this.font, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
         this.drawCenteredString(this.font, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);
         this.text.render(par1, par2, par3);

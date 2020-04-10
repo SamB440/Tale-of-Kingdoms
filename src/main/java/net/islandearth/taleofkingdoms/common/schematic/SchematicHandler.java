@@ -44,19 +44,14 @@ public class SchematicHandler {
                         .copyBiomes(false)
                         .build();
 				final UUID uuid = UUID.randomUUID();
-				
+
+				// This will have different things in the future...
 				if (player.getEntityWorld().isRemote()) {
-					// Server - paste blocks on main thread
+					// Server
 					Operations.completeBlindly(uuid, operation);
 				} else {
-					// Client - paste blocks on another thread
-					//Timer timer = new Timer();
-					//timer.schedule(new TimerTask() {
-						//@Override
-						//public void run() {
-							Operations.completeBlindly(uuid, operation);
-						//}
-					//}, 1);
+					// Client
+					Operations.completeBlindly(uuid, operation);
 				}
 				
 				return new OperationInstance(uuid, clipboard.getRegion().getArea());

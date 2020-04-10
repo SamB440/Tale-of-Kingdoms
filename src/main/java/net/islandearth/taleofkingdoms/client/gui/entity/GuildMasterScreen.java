@@ -48,10 +48,7 @@ public class GuildMasterScreen extends ScreenTOK {
             //TODO what happens?
         }));
 
-        this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 20, 150, 20, "Exit", (button) -> {
-			player.sendMessage(new StringTextComponent("Guild Master: Good hunting."));
-        	this.onClose();
-		}));
+        this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 20, 150, 20, "Exit", (button) -> this.onClose()));
 	}
 
 	@Override

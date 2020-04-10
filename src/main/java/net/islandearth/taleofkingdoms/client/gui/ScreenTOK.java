@@ -1,10 +1,6 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,10 +24,5 @@ public abstract class ScreenTOK extends Screen {
 	@Override
 	public boolean isPauseScreen() {
 		return true;
-	}
-	
-	public void addImage(ResourceLocation image) {
-		TaleOfKingdoms.LOGGER.info("Binding texture: " + image.getPath());
-		Minecraft.getInstance().getTextureManager().bindTexture(image);
 	}
 }
