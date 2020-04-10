@@ -39,6 +39,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	private boolean loading;
 	
 	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
+		super("Start Conquest");
 		this.worldName = worldName;
 		this.toSave = toSave;
 		this.player = player;

@@ -1,20 +1,14 @@
 package net.islandearth.taleofkingdoms;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
-import net.islandearth.taleofkingdoms.client.entity.EntityTypes;
-import net.islandearth.taleofkingdoms.client.entity.render.TOKBipedRender;
+import net.islandearth.taleofkingdoms.client.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -80,17 +74,7 @@ public class TaleOfKingdoms {
 	}
 
 	private void clientSetup(FMLClientSetupEvent fcse) {
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.FARMER, (EntityRendererManager rendererManager) ->
-				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-				new PlayerModel<>(0.0F, false),
-				0.5F,
-				new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png")));
-
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.GUILD_MASTER, (EntityRendererManager rendererManager) ->
-				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-				new PlayerModel<>(0.0F, false),
-				0.5F,
-				new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png")));
+		new RenderSetup(this);
 	}
 
 	private void registerEvents() {

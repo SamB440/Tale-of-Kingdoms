@@ -17,16 +17,12 @@ public class GuildMasterScreen extends ScreenTOK {
 	private final ConquestInstance instance;
 
 	public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
-	    this.player = player;
+	    super("Guild Master");
+		this.player = player;
 		this.entity = entity;
 		this.instance = instance;
-
-		if (!instance.hasContract()) {
-			//TODO has contract gui
-			player.sendMessage(new StringTextComponent("Guild Master: Welcome to the order, hero."));
-		} else {
-			//TODO doesn't have contract gui
-		}
+		
+		player.sendMessage(new StringTextComponent("Guild Master: Welcome to the order, hero."));
 	}
 
 	@Override
@@ -63,7 +59,6 @@ public class GuildMasterScreen extends ScreenTOK {
 		super.render(par1, par2, par3);
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
 		this.drawCenteredString(this.font, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-
 	}
 
 	@Override
@@ -74,5 +69,11 @@ public class GuildMasterScreen extends ScreenTOK {
 	@Override
 	public boolean shouldCloseOnEsc() {
 		return true;
+	}
+	
+	@Override
+	public void onClose() {
+		super.onClose();
+		player.sendMessage(new StringTextComponent("Guild Master: Good hunting."));
 	}
 }
