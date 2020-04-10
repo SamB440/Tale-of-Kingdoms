@@ -1,7 +1,7 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -12,8 +12,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public abstract class ScreenTOK extends Screen {
 	
-	protected ScreenTOK(String title) {
-		super(new StringTextComponent(title));
+	protected ScreenTOK(String translation) {
+		super(new TranslationTextComponent(translation));
 	}
 	
 	@Override

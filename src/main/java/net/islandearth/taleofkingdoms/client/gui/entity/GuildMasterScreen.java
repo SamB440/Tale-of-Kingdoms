@@ -17,7 +17,7 @@ public class GuildMasterScreen extends ScreenTOK {
 	private final ConquestInstance instance;
 
 	public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
-	    super("Guild Master");
+	    super("taleofkingdoms.menu.guildmaster.name");
 		this.player = player;
 		this.entity = entity;
 		this.instance = instance;

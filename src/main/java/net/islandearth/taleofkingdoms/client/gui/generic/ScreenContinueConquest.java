@@ -1,5 +1,6 @@
-package net.islandearth.taleofkingdoms.client.gui;
+package net.islandearth.taleofkingdoms.client.gui.generic;
 
+import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;

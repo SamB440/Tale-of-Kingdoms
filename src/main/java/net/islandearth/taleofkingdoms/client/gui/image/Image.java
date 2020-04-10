@@ -1,5 +1,6 @@
-package net.islandearth.taleofkingdoms.client.gui;
+package net.islandearth.taleofkingdoms.client.gui.image;
 
+import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.minecraft.util.ResourceLocation;
 
 public class Image implements IImage {

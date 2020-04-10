@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.client.gui;
+package net.islandearth.taleofkingdoms.client.gui.generic;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,6 +6,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.forge.ForgeAdapter;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.common.schematic.OperationInstance;
 import net.islandearth.taleofkingdoms.common.schematic.Operations;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;

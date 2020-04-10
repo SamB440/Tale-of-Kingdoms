@@ -1,23 +1,22 @@
 package net.islandearth.taleofkingdoms.client.command;
 
-import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
-import net.islandearth.taleofkingdoms.client.gui.ScreenContinueConquest;
+import net.islandearth.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
+
+import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 
 /**
  * An entirely useless class that is just here for testing.
