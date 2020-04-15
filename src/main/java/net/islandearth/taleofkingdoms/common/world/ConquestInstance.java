@@ -13,6 +13,7 @@ public class ConquestInstance {
 	private boolean hasLoaded;
 	private long farmerLastBread;
 	private boolean hasContract;
+	private int worthiness;
 	
 	public ConquestInstance(String world, String name, int coins) {
 		Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -36,7 +37,11 @@ public class ConquestInstance {
 	public int getCoins() {
 		return coins;
 	}
-	
+
+	public void setCoins(int coins) {
+		this.coins = coins;
+	}
+
 	public void addCoins(int coins) {
 		this.coins = this.coins + coins;
 	}
@@ -63,5 +68,17 @@ public class ConquestInstance {
 
 	public void setHasContract(boolean hasContract) {
 		this.hasContract = hasContract;
+	}
+
+	public int getWorthiness() {
+		return worthiness;
+	}
+
+	public void setWorthiness(int worthiness) {
+		this.worthiness = worthiness;
+	}
+
+	public void addWorthiness(int worthiness) {
+		this.worthiness = this.worthiness + worthiness;
 	}
 }

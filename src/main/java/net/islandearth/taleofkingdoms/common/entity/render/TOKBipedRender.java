@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.client.entity.render;
+package net.islandearth.taleofkingdoms.common.entity.render;
 
 import net.minecraft.client.renderer.entity.BipedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;

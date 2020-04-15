@@ -1,8 +1,8 @@
 package net.islandearth.taleofkingdoms;
 
 import net.islandearth.taleofkingdoms.client.command.TestCommand;
-import net.islandearth.taleofkingdoms.client.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
+import net.islandearth.taleofkingdoms.common.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;

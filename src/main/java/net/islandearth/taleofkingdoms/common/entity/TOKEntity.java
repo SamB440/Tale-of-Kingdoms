@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.client.entity;
+package net.islandearth.taleofkingdoms.common.entity;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.entity.CreatureEntity;

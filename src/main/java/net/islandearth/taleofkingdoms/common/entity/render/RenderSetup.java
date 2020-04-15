@@ -1,7 +1,7 @@
-package net.islandearth.taleofkingdoms.client.entity.render;
+package net.islandearth.taleofkingdoms.common.entity.render;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.islandearth.taleofkingdoms.client.entity.EntityTypes;
+import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.entity.MobEntity;
@@ -29,5 +29,10 @@ public final class RenderSetup {
 						new PlayerModel<>(0.0F, false),
 						0.5F,
 						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png")));
+		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.BLACKSMITH, (EntityRendererManager rendererManager) ->
+				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
+						new PlayerModel<>(0.0F, false),
+						0.5F,
+						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/smith-2.png")));
 	}
 }
