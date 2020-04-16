@@ -33,6 +33,6 @@ public final class RenderSetup {
 				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 						new PlayerModel<>(0.0F, false),
 						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/smith-2.png")));
+						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png")));
 	}
 }
