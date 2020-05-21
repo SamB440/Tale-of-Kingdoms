@@ -39,7 +39,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	private boolean loading;
 	
 	public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
-		super("Start Conquest");
+		super("taleofkingdoms.menu.startconquest.name");
 		this.worldName = worldName;
 		this.toSave = toSave;
 		this.player = player;

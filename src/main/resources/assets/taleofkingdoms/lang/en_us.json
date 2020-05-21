@@ -1,5 +1,8 @@
 {
     "itemGroup.taleOfKingdoms": "Tale of Kingdoms: A new Conquest",
     "item.taleofkingdoms.coin": "Coin",
-    "taleofkingdoms.menu.guildmaster.name": "Guild Master"
+    "taleofkingdoms.menu.guildmaster.name": "Guild Master",
+    "taleofkingdoms.menu.blacksmith.name": "Blacksmith",
+    "taleofkingdoms.menu.continueconquest.name": "Continue Conquest",
+    "taleofkingdoms.menu.startconquest.name": "Start Conquest"
 }

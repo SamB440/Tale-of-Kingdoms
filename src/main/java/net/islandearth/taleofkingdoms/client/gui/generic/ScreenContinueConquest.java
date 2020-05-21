@@ -16,7 +16,7 @@ public class ScreenContinueConquest extends ScreenTOK {
 	private final ConquestInstance instance;
 	
 	public ScreenContinueConquest(ConquestInstance instance) {
-		super("Continue Conquest");
+		super("taleofkingdoms.menu.continueconquest.name");
 		this.instance = instance;
 	}
 	
