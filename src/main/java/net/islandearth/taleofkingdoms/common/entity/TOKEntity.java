@@ -37,6 +37,10 @@ public abstract class TOKEntity extends CreatureEntity {
 		super(entityType, world);
 	}
 
+	/**
+	 * Applies default entity AI:
+	 * <br>• {@link SwimGoal}
+	 */
 	protected void applyEntityAI() {
 		this.goalSelector.addGoal(1, new SwimGoal(this));
 	}
@@ -46,17 +50,20 @@ public abstract class TOKEntity extends CreatureEntity {
 		return SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
 	}
 
-	@Override
-	public void setPosition(double x, double y, double z) {
-		super.setPosition(x, y, z);
-	}
-
+	/**
+	 * Registers the goals for this entity, along with the defaults specified in {@link #applyEntityAI()}
+	 */
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
 		applyEntityAI();
 	}
 
+	/**
+	 * Registers default attributes for this entity:
+	 * <br>• {@link SharedMonsterAttributes#MAX_HEALTH} (20.0D)
+	 * <br>• {@link SharedMonsterAttributes#MOVEMENT_SPEED} (1.0D)
+	 */
 	@Override
 	protected void registerAttributes() {
 		super.registerAttributes();
@@ -64,13 +71,25 @@ public abstract class TOKEntity extends CreatureEntity {
 		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0D);
 	}
 
+	/**
+	 * Whether this entity is intended to be stationary or not.
+	 * @return true if intended to be stationary
+	 */
 	public abstract boolean isStationary();
 
+	/**
+	 * Whether this entity is invulnerable.
+	 * @return true if invulnerable
+	 */
 	@Override
 	public boolean isInvulnerable() {
 		return true;
 	}
 
+	/**
+	 * Whether this entity may be pushed by other entities.
+	 * @return true if entity may be pushed
+	 */
 	@Override
 	public boolean canBePushed() {
 		return false;

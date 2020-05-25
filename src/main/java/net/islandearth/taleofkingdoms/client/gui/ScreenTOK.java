@@ -11,16 +11,28 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public abstract class ScreenTOK extends Screen {
-	
+
+	/**
+	 * Constructs a new {@link Screen}
+	 * @param translation the translation key
+	 */
 	protected ScreenTOK(String translation) {
 		super(new TranslationTextComponent(translation));
 	}
-	
+
+	/**
+	 * Whether this {@link Screen} is closeable via the escape key.
+	 * @return true if escapable
+	 */
 	@Override
 	public boolean shouldCloseOnEsc() {
 		return false;
 	}
-	
+
+	/**
+	 * Whether this {@link Screen} pauses the game.
+	 * @return true if it pauses the game
+	 */
 	@Override
 	public boolean isPauseScreen() {
 		return true;
