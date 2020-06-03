@@ -1,11 +1,11 @@
 package net.islandearth.taleofkingdoms.common.schematic;
 
-import java.io.File;
-import java.net.URL;
-
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import org.apache.commons.io.FileUtils;
 
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * An enum of schematics, with file paths, that are available to paste.
@@ -27,8 +27,16 @@ public enum Schematic {
 	public File getFile() {
 		return new File(TaleOfKingdoms.getAPI().get().getDataFolder() + this.getPath());
 	}
-	
-    public static void saveAll() throws Exception {
+
+	/**
+	 * Saves all schematics specified in this enum.
+	 * @throws IOException if <code>source</code> URL cannot be opened
+	 * @throws IOException if <code>destination</code> is a directory
+	 * @throws IOException if <code>destination</code> cannot be written
+	 * @throws IOException if <code>destination</code> needs creating but can't be
+	 * @throws IOException if an IO error occurs during copying
+	 */
+    public static void saveAll() throws IOException {
     	for (Schematic schematic : values()) {
     		URL inputUrl = TaleOfKingdoms.class.getResource(schematic.getPath());
     		File dest = new File(TaleOfKingdoms.getAPI().get().getDataFolder() + schematic.getPath());
