@@ -24,7 +24,7 @@ public class EntityTypes {
 	public static final EntityType<FarmerEntity> FARMER = null;
 	public static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
 	public static final EntityType<BlacksmithEntity> BLACKSMITH = null;
-	public static final EntityType<CityBuilderEntity> CITY_BUILDER_ENTITY = null;
+	public static final EntityType<CityBuilderEntity> CITY_BUILDER = null;
 
 	@OnlyIn(Dist.CLIENT)
 	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)
@@ -55,7 +55,7 @@ public class EntityTypes {
 			);
 
 			final EntityType<CityBuilderEntity> cityBuilder = build(
-					"citybuilder",
+					"city_builder",
 					EntityType.Builder.<CityBuilderEntity>create(CityBuilderEntity::new, EntityClassification.MISC)
 							.size(0.5f, 0.5f)
 			);

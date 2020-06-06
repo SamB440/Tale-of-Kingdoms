@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class CityBuilderEntity extends TOKEntity {
 
     public CityBuilderEntity(World worldIn) {
-        super(EntityTypes.CITY_BUILDER_ENTITY, worldIn);
+        super(EntityTypes.CITY_BUILDER, worldIn);
     }
 
     public CityBuilderEntity(EntityType<CityBuilderEntity> cityBuilderEntityEntityType, World world) {
