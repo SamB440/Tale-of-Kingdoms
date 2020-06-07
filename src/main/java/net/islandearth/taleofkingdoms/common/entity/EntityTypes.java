@@ -1,6 +1,7 @@
 package net.islandearth.taleofkingdoms.common.entity;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.common.entity.generic.KnightEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.FarmerEntity;
@@ -25,6 +26,7 @@ public class EntityTypes {
 	public static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
 	public static final EntityType<BlacksmithEntity> BLACKSMITH = null;
 	public static final EntityType<CityBuilderEntity> CITY_BUILDER = null;
+	public static final EntityType<KnightEntity> KNIGHT = null;
 
 	@OnlyIn(Dist.CLIENT)
 	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)
@@ -60,11 +62,18 @@ public class EntityTypes {
 							.size(0.5f, 0.5f)
 			);
 
+			final EntityType<KnightEntity> knight = build(
+					"knight",
+					EntityType.Builder.<KnightEntity>create(KnightEntity::new, EntityClassification.MISC)
+							.size(0.5f, 0.5f)
+			);
+
 			event.getRegistry().registerAll(
 					farmer,
 					guildmaster,
 					blacksmith,
-					cityBuilder
+					cityBuilder,
+					knight
 			);
 		}
 

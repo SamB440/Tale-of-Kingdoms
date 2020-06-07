@@ -28,18 +28,22 @@ public final class RenderSetup {
 						new PlayerModel<>(0.0F, false),
 						0.5F,
 						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png")));
-		System.out.println(EntityTypes.BLACKSMITH);
 		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.BLACKSMITH, (EntityRendererManager rendererManager) ->
 				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 						new PlayerModel<>(0.0F, false),
 						0.5F,
 						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png")));
 		//TODO update citybuilder skin
-		System.out.println(EntityTypes.CITY_BUILDER);
 		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.CITY_BUILDER, (EntityRendererManager rendererManager) ->
 				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 						new PlayerModel<>(0.0F, false),
 						0.5F,
 						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/builder.png")));
+		//TODO update knight skin
+		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.KNIGHT, (EntityRendererManager rendererManager) ->
+				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
+						new PlayerModel<>(0.0F, false),
+						0.5F,
+						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/knight.png")));
 	}
 }

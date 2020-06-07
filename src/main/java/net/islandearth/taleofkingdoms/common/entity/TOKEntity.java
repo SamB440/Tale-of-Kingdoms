@@ -55,7 +55,7 @@ public abstract class TOKEntity extends CreatureEntity {
 	 */
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(1, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(Integer.MAX_VALUE, new LookRandomlyGoal(this));
 		applyEntityAI();
 	}
 
