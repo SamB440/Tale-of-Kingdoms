@@ -33,12 +33,11 @@ public final class RenderSetup {
 						new PlayerModel<>(0.0F, false),
 						0.5F,
 						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png")));
-		//TODO update citybuilder skin
 		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.CITY_BUILDER, (EntityRendererManager rendererManager) ->
 				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 						new PlayerModel<>(0.0F, false),
 						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/builder.png")));
+						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/builder2.png")));
 		//TODO update knight skin
 		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.KNIGHT, (EntityRendererManager rendererManager) ->
 				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,

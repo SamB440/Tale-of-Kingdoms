@@ -50,7 +50,7 @@ public class StartWorldListener extends Listener {
 	
 	@SubscribeEvent
 	public void onLeave(WorldEvent.Unload e) {
-		if (e.getWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
+		if (e.getWorld().isRemote() || e.getWorld().getDimension().getType() != DimensionType.OVERWORLD) return;
 		if (!joined) return;
 		if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
 		
@@ -68,6 +68,7 @@ public class StartWorldListener extends Listener {
 	
 	@SubscribeEvent
 	public void onLoad(EntityEvent.EntityConstructing e) {
+		if (e.getEntity().getEntityWorld().isRemote()) return;
 		// Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
 		// Important: We only want to effect the overworld - so check the dimension type.
 		if (e.getEntity() instanceof PlayerEntity) {
