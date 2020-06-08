@@ -4,5 +4,7 @@
     "taleofkingdoms.menu.guildmaster.name": "Guild Master",
     "taleofkingdoms.menu.blacksmith.name": "Blacksmith",
     "taleofkingdoms.menu.continueconquest.name": "Continue Conquest",
-    "taleofkingdoms.menu.startconquest.name": "Start Conquest"
+    "taleofkingdoms.menu.startconquest.name": "Start Conquest",
+    "taleofkingdoms.entity.farmer.take_bread": "Farmer: Here, take a bread!",
+    "taleofkingdoms.entity.farmer.got_bread": "Farmer: You got your bread for now!"
 }

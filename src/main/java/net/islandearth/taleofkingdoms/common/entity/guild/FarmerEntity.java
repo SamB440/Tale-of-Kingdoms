@@ -11,12 +11,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class FarmerEntity extends TOKEntity {
 	
 	public FarmerEntity(World worldIn) {
@@ -49,13 +46,13 @@ public class FarmerEntity extends TOKEntity {
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
 		long day = player.world.getDayTime() / 24000L;
 		if (instance.getFarmerLastBread() >= day) {
-			player.sendMessage(new StringTextComponent("Farmer: You got your bread for now!"));
+			player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.farmer.got_bread"));
 			return false;
 		}
 		
 		// Set the current day and add bread to inventory
 		instance.setFarmerLastBread(day);
-		player.sendMessage(new StringTextComponent("Farmer: Here, take a bread!"));
+		player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.farmer.take_bread"));
 		player.inventory.addItemStackToInventory(new ItemStack(Items.BREAD));
 		return true;
 	}
