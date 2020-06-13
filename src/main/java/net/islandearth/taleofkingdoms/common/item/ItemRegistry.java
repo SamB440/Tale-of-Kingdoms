@@ -1,8 +1,5 @@
 package net.islandearth.taleofkingdoms.common.item;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.minecraft.item.Item;
@@ -12,10 +9,13 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemRegistry extends Listener {
 
-	public static final Map<String, Item> items = new HashMap<>();
+	public static final Map<String, Item> ITEMS = new HashMap<>();
 	
 	public static class CreativeTab extends ItemGroup {
 
@@ -26,7 +26,7 @@ public class ItemRegistry extends Listener {
 
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(items.get("coin"));
+			return new ItemStack(ITEMS.get("coin"));
 		}
 		
 		@Override
@@ -36,15 +36,15 @@ public class ItemRegistry extends Listener {
 	}
 	
 	public static void init() {
-		items.put("coin", new ItemCoin(new Item.Properties().group(new CreativeTab())).setRegistryName(TaleOfKingdoms.MODID, "coin"));
+		ITEMS.put("coin", new ItemCoin(new Item.Properties().group(new CreativeTab())).setRegistryName(TaleOfKingdoms.MODID, "coin"));
 	}
 	
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event) {
 		TaleOfKingdoms.LOGGER.info("Loading items...");
 		int index = 1;
-		for (Item item : items.values()) {
-			TaleOfKingdoms.LOGGER.info("[" + index + "/" + items.values().size() + "] Loading item: " + item.getClass().getName());
+		for (Item item : ITEMS.values()) {
+			TaleOfKingdoms.LOGGER.info("[" + index + "/" + ITEMS.values().size() + "] Loading item: " + item.getClass().getName());
 			event.getRegistry().register(item);
 			index++;
 		}
