@@ -6,3 +6,6 @@ taleofkingdoms.menu.continueconquest.name="Continue Conquest"
 taleofkingdoms.menu.startconquest.name="Start Conquest"
 taleofkingdoms.entity.farmer.take_bread="Farmer: Here, take a bread!"
 taleofkingdoms.entity.farmer.got_bread="Farmer: You got your bread for now!"
+taleofkingdoms.entity.guildmaster.contract.sign="Guild Master: You are now one of us my friend. Kill monsters and you will soon be worthy of your title."
+taleofkingdoms.entity.guildmaster.contract.sign_up=Sign up contract!
+taleofkingdoms.entity.guildmaster.contract.cancel=Cancel contract.

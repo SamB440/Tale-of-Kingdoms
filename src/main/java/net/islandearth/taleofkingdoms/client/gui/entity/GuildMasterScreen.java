@@ -9,6 +9,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -29,14 +30,14 @@ public class GuildMasterScreen extends ScreenTOK {
 	public void init() {
 		super.init();
 		if (!instance.hasContract()) {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Sign up contract!", (button) -> {
+            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new TranslationTextComponent("taleofkingdoms.entity.guildmaster.contract.sign_up").getFormattedText(), (button) -> {
                 instance.setHasContract(true);
-                player.sendMessage(new StringTextComponent("Guild Master: You are now one of us my friend. Kill monsters and you will soon be worthy of your title."));
+                player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.guildmaster.contract.sign"));
                 button.visible = false;
                 button.active = false;
             }));
         } else {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Cancel Contract.", (button) -> {
+            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new TranslationTextComponent("taleofkingdoms.entity.guildmaster.contract.cancel").getFormattedText(), (button) -> {
                 instance.setHasContract(false);
                 button.visible = false;
                 button.active = false;
