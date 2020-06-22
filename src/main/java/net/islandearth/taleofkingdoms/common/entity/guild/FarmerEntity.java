@@ -14,6 +14,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class FarmerEntity extends TOKEntity {
 	
 	public FarmerEntity(World worldIn) {
@@ -53,7 +55,8 @@ public class FarmerEntity extends TOKEntity {
 		// Set the current day and add bread to inventory
 		instance.setFarmerLastBread(day);
 		player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.farmer.take_bread"));
-		player.inventory.addItemStackToInventory(new ItemStack(Items.BREAD));
+		int amount = ThreadLocalRandom.current().nextInt(1, 4);
+		player.inventory.addItemStackToInventory(new ItemStack(Items.BREAD, amount));
 		return true;
 	}
 }
