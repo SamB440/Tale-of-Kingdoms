@@ -15,8 +15,12 @@ import java.util.Map;
 @Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ItemRegistry extends Listener {
 
-	public static final Map<String, Item> ITEMS = new HashMap<>();
-	
+	public static final Map<TOKItem, Item> ITEMS = new HashMap<>();
+
+	public enum TOKItem {
+		COIN
+	}
+
 	public static class CreativeTab extends ItemGroup {
 
 		public CreativeTab() {
@@ -26,7 +30,7 @@ public class ItemRegistry extends Listener {
 
 		@Override
 		public ItemStack createIcon() {
-			return new ItemStack(ITEMS.get("coin"));
+			return new ItemStack(ITEMS.get(TOKItem.COIN));
 		}
 		
 		@Override
@@ -36,7 +40,7 @@ public class ItemRegistry extends Listener {
 	}
 	
 	public static void init() {
-		ITEMS.put("coin", new ItemCoin(new Item.Properties().group(new CreativeTab())).setRegistryName(TaleOfKingdoms.MODID, "coin"));
+		ITEMS.put(TOKItem.COIN, new ItemCoin(new Item.Properties().group(new CreativeTab())).setRegistryName(TaleOfKingdoms.MODID, "coin"));
 	}
 	
 	@SubscribeEvent

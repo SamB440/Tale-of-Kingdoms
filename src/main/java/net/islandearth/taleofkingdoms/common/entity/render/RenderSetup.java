@@ -4,6 +4,7 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -18,31 +19,18 @@ public final class RenderSetup {
 	}
 	
 	private void setup() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.FARMER, (EntityRendererManager rendererManager) ->
+		register(EntityTypes.FARMER, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
+		register(EntityTypes.GUILD_MASTER, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
+		register(EntityTypes.BLACKSMITH, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png"));
+		register(EntityTypes.CITY_BUILDER, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/builder2.png"));
+		register(EntityTypes.KNIGHT, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/knight2.png"));
+	}
+
+	private void register(EntityType type, ResourceLocation skin) {
+		RenderingRegistry.registerEntityRenderingHandler(type, (EntityRendererManager rendererManager) ->
 				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
 						new PlayerModel<>(0.0F, false),
 						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png")));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.GUILD_MASTER, (EntityRendererManager rendererManager) ->
-				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-						new PlayerModel<>(0.0F, false),
-						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png")));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.BLACKSMITH, (EntityRendererManager rendererManager) ->
-				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-						new PlayerModel<>(0.0F, false),
-						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png")));
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.CITY_BUILDER, (EntityRendererManager rendererManager) ->
-				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-						new PlayerModel<>(0.0F, false),
-						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/builder2.png")));
-		//TODO update knight skin
-		RenderingRegistry.registerEntityRenderingHandler(EntityTypes.KNIGHT, (EntityRendererManager rendererManager) ->
-				new TOKBipedRender<MobEntity, PlayerModel<MobEntity>>(rendererManager,
-						new PlayerModel<>(0.0F, false),
-						0.5F,
-						new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/knight.png")));
+						skin));
 	}
 }
