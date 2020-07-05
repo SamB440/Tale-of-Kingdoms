@@ -28,10 +28,12 @@ public abstract class TOKEntity extends CreatureEntity {
 
 	protected TOKEntity(World worldIn) {
 		super(null, worldIn);
+		this.enablePersistence();
 	}
 
 	protected TOKEntity(EntityType<? extends TOKEntity> entityType, World world) {
 		super(entityType, world);
+		this.enablePersistence();
 	}
 
 	/**
@@ -91,4 +93,17 @@ public abstract class TOKEntity extends CreatureEntity {
 	public boolean canBePushed() {
 		return false;
 	}
+
+	@Override
+	public boolean preventDespawn() {
+		return true;
+	}
+
+	@Override
+	public boolean canDespawn(double distanceToClosestPlayer) {
+		return false;
+	}
+
+	@Override
+	public void checkDespawn() { }
 }
