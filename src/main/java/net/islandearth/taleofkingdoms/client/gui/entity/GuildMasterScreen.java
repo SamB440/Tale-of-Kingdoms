@@ -2,6 +2,7 @@ package net.islandearth.taleofkingdoms.client.gui.entity;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
+import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
@@ -9,8 +10,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-
+//TODO this class needs more translations
 public class GuildMasterScreen extends ScreenTOK {
 
     private final PlayerEntity player;
@@ -22,7 +22,6 @@ public class GuildMasterScreen extends ScreenTOK {
 		this.player = player;
 		this.entity = entity;
 		this.instance = instance;
-		
 		player.sendMessage(new StringTextComponent("Guild Master: Welcome to the order, hero."));
 	}
 
@@ -30,14 +29,14 @@ public class GuildMasterScreen extends ScreenTOK {
 	public void init() {
 		super.init();
 		if (!instance.hasContract()) {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new TranslationTextComponent("taleofkingdoms.entity.guildmaster.contract.sign_up").getFormattedText(), (button) -> {
+            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getFormatted(), (button) -> {
                 instance.setHasContract(true);
-                player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.guildmaster.contract.sign"));
+				Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
                 button.active = false;
             }));
         } else {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new TranslationTextComponent("taleofkingdoms.entity.guildmaster.contract.cancel").getFormattedText(), (button) -> {
+            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getFormatted(), (button) -> {
                 instance.setHasContract(false);
                 button.visible = false;
                 button.active = false;

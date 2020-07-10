@@ -1,6 +1,7 @@
 package net.islandearth.taleofkingdoms.common.entity.guild;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
@@ -11,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,13 +48,13 @@ public class FarmerEntity extends TOKEntity {
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
 		long day = player.world.getDayTime() / 24000L;
 		if (instance.getFarmerLastBread() >= day) {
-			player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.farmer.got_bread"));
+			Translations.FARMER_GOT_BREAD.send(player);
 			return false;
 		}
 		
 		// Set the current day and add bread to inventory
 		instance.setFarmerLastBread(day);
-		player.sendMessage(new TranslationTextComponent("taleofkingdoms.entity.farmer.take_bread"));
+		Translations.FARMER_TAKE_BREAD.send(player);
 		int amount = ThreadLocalRandom.current().nextInt(1, 4);
 		player.inventory.addItemStackToInventory(new ItemStack(Items.BREAD, amount));
 		return true;
