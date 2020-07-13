@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.client.listener;
+package net.islandearth.taleofkingdoms.common.listener;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 

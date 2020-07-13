@@ -8,7 +8,6 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import net.islandearth.taleofkingdoms.client.gui.generic.ScreenStartConquest;
-import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;

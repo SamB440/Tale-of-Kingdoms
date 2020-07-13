@@ -1,7 +1,6 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.islandearth.taleofkingdoms.client.listener.Listener;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.minecraft.client.Minecraft;
