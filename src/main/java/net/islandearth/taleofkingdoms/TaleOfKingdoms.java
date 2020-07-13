@@ -16,8 +16,8 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Optional;
 
@@ -62,7 +62,7 @@ public class TaleOfKingdoms {
      * You may get the file using this.
      * @return data folder name
      */
-    @Nonnull
+    @NotNull
     public String getDataFolder() {
 	    return new File(".").getAbsolutePath() + "/mods/" + TaleOfKingdoms.MODID + "/";
     }

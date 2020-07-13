@@ -5,9 +5,9 @@ import net.islandearth.taleofkingdoms.managers.IManager;
 import net.islandearth.taleofkingdoms.managers.SoundManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class TaleOfKingdomsAPI {
 		bus.register(sm);
 	}
 
-	@Nonnull
+	@NotNull
     public ConquestInstanceStorage getConquestInstanceStorage() {
     	return cis;
     }
@@ -38,12 +38,12 @@ public class TaleOfKingdomsAPI {
 	 * You may get the file using this.
 	 * @return data folder name
 	 */
-	@Nonnull
+	@NotNull
 	public String getDataFolder() {
 	    return mod.getDataFolder();
     }
 
-    @Nonnull
+    @NotNull
     public TaleOfKingdoms getMod() {
     	return mod;
     }
@@ -58,7 +58,7 @@ public class TaleOfKingdomsAPI {
     	return managers.get(name);
     }
 
-    @Nonnull
+    @NotNull
     public Set<String> getManagers() {
     	return managers.keySet();
     }

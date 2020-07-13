@@ -6,7 +6,7 @@ public class Configuration {
 
 	private static ModConfig clientConfig;
 	private static ModConfig serverConfig;
-	
+
 	public static void bakeClient(final ModConfig config) {
 		clientConfig = config;
 
