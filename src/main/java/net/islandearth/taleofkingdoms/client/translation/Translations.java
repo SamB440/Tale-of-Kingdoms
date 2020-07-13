@@ -8,7 +8,9 @@ public enum Translations {
     FARMER_GOT_BREAD("taleofkingdoms.entity.farmer.got_bread"),
     GUILDMASTER_CONTRACT_SIGN("taleofkingdoms.entity.guildmaster.contract.sign"),
     GUILDMASTER_CONTRACT_SIGN_UP("taleofkingdoms.entity.guildmaster.contract.sign_up"),
-    GUILDMASTER_CONTRACT_CANCEL("taleofkingdoms.entity.guildmaster.contract.cancel");
+    GUILDMASTER_CONTRACT_CANCEL("taleofkingdoms.entity.guildmaster.contract.cancel"),
+    GUILDMASTER_WELCOME("taleofkingdoms.entity.guildmaster.welcome"),
+    GUILDMASTER_GOODHUNTING("taleofkingdoms.entity.guildmaster.good_hunting");
     
     private final String key;
     
