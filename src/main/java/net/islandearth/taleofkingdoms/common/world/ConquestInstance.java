@@ -20,7 +20,7 @@ public class ConquestInstance {
 			.map(TaleOfKingdomsAPI::getConquestInstanceStorage)
 			.orElseThrow(() -> new IllegalArgumentException("API not present"))
 		.getConquestInstance(world);
-		if (instance.isPresent()) throw new IllegalArgumentException("World already registered");
+		if (instance.isPresent() && instance.get().isLoaded()) throw new IllegalArgumentException("World already registered");
 		this.world = world;
 		this.name = name;
 		this.coins = coins;

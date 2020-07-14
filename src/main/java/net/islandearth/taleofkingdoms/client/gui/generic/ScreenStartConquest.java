@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.forge.ForgeAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
+import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.schematic.OperationInstance;
 import net.islandearth.taleofkingdoms.common.schematic.Operations;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
@@ -16,11 +18,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.SignTileEntity;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -84,22 +91,56 @@ public class ScreenStartConquest extends ScreenTOK {
 								public void run() {
 									button.setMessage("Finishing pasting... (" + progress + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
 									button.setMessage("Loading NPCs...");
+									Minecraft.getInstance().runImmediately(() -> {
+										try {
+											BlockVector3 start = oi.getRegion().getMaximumPoint();
+											BlockVector3 end = oi.getRegion().getMinimumPoint();
+											int topBlockX = (Math.max(start.getBlockX(), end.getBlockX()));
+											int bottomBlockX = (Math.min(start.getBlockX(), end.getBlockX()));
 
-									Timer timer2 = new Timer();
-									timer2.schedule(new TimerTask() {
-										@Override
-										public void run() {
-											Minecraft.getInstance().runImmediately(() -> {
-												button.setMessage("Reloading chunks...");
-												minecraft.worldRenderer.loadRenderers();
-												onClose();
-												loading = false;
-												instance.setLoaded(true);
-												instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
-												pastingTimer.cancel();
-											});
+											int topBlockY = (Math.max(start.getBlockY(), end.getBlockY()));
+											int bottomBlockY = (Math.min(start.getBlockY(), end.getBlockY()));
+
+											int topBlockZ = (Math.max(start.getBlockZ(), end.getBlockZ()));
+											int bottomBlockZ = (Math.min(start.getBlockZ(), end.getBlockZ()));
+
+											for (int x = bottomBlockX; x <= topBlockX; x++) {
+												for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+													for (int y = bottomBlockY; y <= topBlockY; y++) {
+														BlockPos blockPos = new BlockPos(x, y, z);
+														TileEntity tileEntity = player.getEntityWorld().getChunkAt(blockPos).getTileEntity(blockPos);
+														if (tileEntity instanceof SignTileEntity) {
+															SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
+															if (signTileEntity.getText(0).getFormattedText().equals("[Spawn]")) {
+																String entityName = signTileEntity.getText(1).getFormattedText();
+																button.setMessage("Loading NPCs: " + entityName);
+																Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("net.islandearth.taleofkingdoms.common.entity.guild." + entityName + "Entity");
+																Constructor constructor = entity.getConstructor(World.class);
+																TOKEntity toSpawn = (TOKEntity) constructor.newInstance(player.getEntityWorld());
+																toSpawn.setLocationAndAngles(x + 0.5, y, z + 0.5, 0, 0);
+																player.getEntityWorld().addEntity(toSpawn);
+																toSpawn.forceSetPosition(x + 0.5, y, z + 0.5);
+																signTileEntity.getBlockState().getBlock().removedByPlayer(signTileEntity.getBlockState(), player.getEntityWorld(), blockPos, null, false, signTileEntity.getBlockState().getFluidState());
+															}
+														}
+													}
+												}
+											}
+										} catch (ReflectiveOperationException e) {
+											button.setMessage("Error: " + e.getCause().getMessage());
+											e.printStackTrace();
 										}
-									}, 2000);
+
+										Minecraft.getInstance().runImmediately(() -> {
+											button.setMessage("Reloading chunks...");
+											minecraft.worldRenderer.loadRenderers();
+											onClose();
+											loading = false;
+											instance.setLoaded(true);
+											instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
+											pastingTimer.cancel();
+										});
+									});
 								}
 							}, 200);
 							this.cancel();

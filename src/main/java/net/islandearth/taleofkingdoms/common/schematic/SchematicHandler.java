@@ -13,8 +13,6 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.Heightmap;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,14 +32,15 @@ public class SchematicHandler {
 		try (ClipboardReader reader = format.getReader(new FileInputStream(schematic.getFile()))) {
 			Clipboard clipboard = reader.read();
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1)) {
-				BlockVector3 centerY = clipboard.getRegion().getCenter().toBlockPoint();
 				BlockPos position = player.getPosition();
-				Chunk chunk = player.getEntityWorld().getChunkAt(position);
-				int topY = chunk.getTopBlockY(Heightmap.Type.WORLD_SURFACE, centerY.getBlockX(), centerY.getBlockZ());
+				clipboard.setOrigin(BlockVector3.at(position.getX(), position.getY(), position.getZ()));
+				BlockVector3 centerY = clipboard.getRegion().getCenter().toBlockPoint();
+				System.out.println(centerY);
 				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
-                        .to(BlockVector3.at(position.getX(), position.getY() + 1, position.getZ()))
+                        .to(BlockVector3.at(position.getX(), position.getY() + 2, position.getZ()))
                         .ignoreAirBlocks(false)
                         .copyBiomes(false)
+						.copyEntities(true)
                         .build();
 				final UUID uuid = UUID.randomUUID();
 
@@ -53,8 +52,8 @@ public class SchematicHandler {
 					// Client
 					Operations.completeBlindly(uuid, operation);
 				}
-				
-				return new OperationInstance(uuid, clipboard.getRegion().getArea());
+
+				return new OperationInstance(uuid, clipboard.getRegion());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
