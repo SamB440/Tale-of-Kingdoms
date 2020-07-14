@@ -11,5 +11,9 @@
     "taleofkingdoms.entity.guildmaster.contract.sign_up": "Sign up contract!",
     "taleofkingdoms.entity.guildmaster.contract.cancel": "Cancel contract.",
     "taleofkingdoms.entity.guildmaster.welcome": "Guild Master: Welcome to the order, hero.",
-    "taleofkingdoms.entity.guildmaster.good_hunting": "Guild Master: Good hunting."
+    "taleofkingdoms.entity.guildmaster.good_hunting": "Guild Master: Good hunting.",
+    "taleofkingdoms.entity.innkeeper.rest": "House Keeper: Would you like to take a rest sir?",
+    "taleofkingdoms.entity.innkeeper.leave": "House Keeper: Have a nice day.",
+    "taleofkingdoms.menu.innkeeper.name": "Innkeeper",
+    "taleofkingdoms.generic.need_contract": "You need a contract for that! Go and visit the GuildMaster upstairs!"
 }

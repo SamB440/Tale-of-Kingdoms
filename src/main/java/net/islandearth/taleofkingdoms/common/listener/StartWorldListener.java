@@ -1,7 +1,6 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
@@ -56,7 +55,7 @@ public class StartWorldListener extends Listener {
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
 		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
 		try (Writer writer = new FileWriter(file)) {
-		    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		    Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
 		    gson.toJson(instance, writer);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -81,7 +80,7 @@ public class StartWorldListener extends Listener {
 			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
 			if (loaded) {
 				// Already exists
-				Gson gson = new GsonBuilder().setPrettyPrinting().create();
+				Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
 				try {
 					// Load from json into class
 					BufferedReader reader = new BufferedReader(new FileReader(file));

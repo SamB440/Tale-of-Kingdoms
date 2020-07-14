@@ -1,7 +1,6 @@
 package net.islandearth.taleofkingdoms.client.gui.generic;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.forge.ForgeAdapter;
@@ -59,18 +58,23 @@ public class ScreenStartConquest extends ScreenTOK {
 		this.text = new TextFieldWidget(this.font, this.width / 2 - 150, this.height / 2 - 40, 300, 20, "Sir Punchwood");
 		this.addButton(mButtonClose = new Button(this.width / 2 - 100, this.height / 2 + 30, 200, 20, "Start your Conquest.", (button) -> {
 			if (loading) return;
-			ConquestInstance instance = new ConquestInstance(worldName, text.getText(), 0);
-			try (Writer writer = new FileWriter(toSave)) {
-			    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			    gson.toJson(instance, writer);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+
 			button.setMessage("Loading, please wait...");
 			// Load guild castle schematic
 			OperationInstance oi = SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player);
+			BlockVector3 max = oi.getRegion().getMaximumPoint();
+			BlockVector3 min = oi.getRegion().getMinimumPoint();
+			BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
+			BlockPos end = new BlockPos(min.getBlockX(), min.getBlockY(), min.getBlockZ());
+			ConquestInstance instance = new ConquestInstance(worldName, text.getText(), start, end);
+			try (Writer writer = new FileWriter(toSave)) {
+				Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+				gson.toJson(instance, writer);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
 				@Override

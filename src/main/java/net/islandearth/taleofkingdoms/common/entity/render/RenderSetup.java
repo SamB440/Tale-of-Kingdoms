@@ -24,6 +24,7 @@ public final class RenderSetup {
 		register(EntityTypes.BLACKSMITH, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png"));
 		register(EntityTypes.CITY_BUILDER, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/builder2.png"));
 		register(EntityTypes.KNIGHT, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/knight2.png"));
+		register(EntityTypes.INNKEEPER, new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
 	}
 
 	private void register(EntityType type, ResourceLocation skin) {

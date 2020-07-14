@@ -6,6 +6,7 @@ import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.FarmerEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -24,6 +25,7 @@ public class EntityTypes {
 	public static final EntityType<BlacksmithEntity> BLACKSMITH = null;
 	public static final EntityType<CityBuilderEntity> CITY_BUILDER = null;
 	public static final EntityType<KnightEntity> KNIGHT = null;
+	public static final EntityType<InnkeeperEntity> INNKEEPER = null;
 
 	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)
 	public static class RegistrationHandler {
@@ -64,12 +66,19 @@ public class EntityTypes {
 							.size(0.5f, 0.5f)
 			);
 
+			final EntityType<InnkeeperEntity> innkeeper = build(
+					"innkeeper",
+					EntityType.Builder.<InnkeeperEntity>create(InnkeeperEntity::new, EntityClassification.MISC)
+							.size(0.5f, 0.5f)
+			);
+
 			event.getRegistry().registerAll(
 					farmer,
 					guildmaster,
 					blacksmith,
 					cityBuilder,
-					knight
+					knight,
+					innkeeper
 			);
 		}
 

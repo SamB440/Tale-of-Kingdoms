@@ -10,7 +10,10 @@ public enum Translations {
     GUILDMASTER_CONTRACT_SIGN_UP("taleofkingdoms.entity.guildmaster.contract.sign_up"),
     GUILDMASTER_CONTRACT_CANCEL("taleofkingdoms.entity.guildmaster.contract.cancel"),
     GUILDMASTER_WELCOME("taleofkingdoms.entity.guildmaster.welcome"),
-    GUILDMASTER_GOODHUNTING("taleofkingdoms.entity.guildmaster.good_hunting");
+    GUILDMASTER_GOODHUNTING("taleofkingdoms.entity.guildmaster.good_hunting"),
+    INNKEEPER_REST("taleofkingdoms.entity.innkeeper.rest"),
+    INNKEEPER_LEAVE("taleofkingdoms.entity.innkeeper.leave"),
+    NEED_CONTRACT("taleofkingdoms.generic.need_contract");
     
     private final String key;
     
