@@ -11,6 +11,7 @@ import net.minecraftforge.event.world.SleepFinishedTimeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -18,10 +19,11 @@ public class SleepListener extends Listener {
 
     @SubscribeEvent
     public void onSleep(SleepFinishedTimeEvent event) {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
+        if (Minecraft.getInstance().getIntegratedServer() == null) return;
+        Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName());
         if (Minecraft.getInstance().isSingleplayer()) {
             PlayerEntity player = Minecraft.getInstance().player;
-            if (player != null && instance.isInGuild(player)) {
+            if (player != null && instance.isPresent() && instance.get().isInGuild(player)) {
                 IWorld world = event.getWorld();
                 if (world.getWorld().getDimension().isDaytime()) {
                     Timer timer = new Timer();
@@ -38,10 +40,11 @@ public class SleepListener extends Listener {
 
     @SubscribeEvent
     public void onSleep(SleepingLocationCheckEvent event) {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
+        if (Minecraft.getInstance().getIntegratedServer() == null) return;
+        Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName());
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            if (instance.isInGuild(playerEntity)) {
+            if (instance.isPresent() && instance.get().isInGuild(playerEntity)) {
                 event.setResult(Event.Result.ALLOW);
             }
         }
@@ -49,10 +52,11 @@ public class SleepListener extends Listener {
 
     @SubscribeEvent
     public void onSleep(SleepingTimeCheckEvent event) {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
+        if (Minecraft.getInstance().getIntegratedServer() == null) return;
+        Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName());
         if (event.getEntityLiving() instanceof PlayerEntity) {
             PlayerEntity playerEntity = (PlayerEntity) event.getEntityLiving();
-            if (instance.isInGuild(playerEntity)) {
+            if (instance.isPresent() && instance.get().isInGuild(playerEntity)) {
                 event.setResult(Event.Result.ALLOW);
             }
         }

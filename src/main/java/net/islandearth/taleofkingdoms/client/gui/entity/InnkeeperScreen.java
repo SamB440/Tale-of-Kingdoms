@@ -47,6 +47,7 @@ public class InnkeeperScreen extends ScreenTOK {
                         BlockState state = player.getEntityWorld().getBlockState(block);
                         if (state.isBed(player.getEntityWorld(), block, null)) {
                             bedHead = block;
+                            break;
                         }
                     }
 

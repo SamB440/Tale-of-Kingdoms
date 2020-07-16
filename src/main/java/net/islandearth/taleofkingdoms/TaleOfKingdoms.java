@@ -7,6 +7,7 @@ import net.islandearth.taleofkingdoms.client.gui.RenderListener;
 import net.islandearth.taleofkingdoms.common.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.common.gson.BlockPosAdapter;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
+import net.islandearth.taleofkingdoms.common.listener.BlockListener;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.MobSpawnListener;
 import net.islandearth.taleofkingdoms.common.listener.SleepListener;
@@ -93,6 +94,7 @@ public class TaleOfKingdoms {
 		bus.register(new CoinListener());
 		bus.register(new SleepListener());
 		bus.register(new MobSpawnListener());
+		bus.register(new BlockListener());
 	}
 
 	public Gson getGson() {

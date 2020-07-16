@@ -1,5 +1,6 @@
 package net.islandearth.taleofkingdoms.common.item;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.item.Item;
@@ -15,7 +16,7 @@ public class ItemHelper {
 	 * @param entityLiving entity to check
 	 * @return true if entity is hostile
 	 */
-	public static boolean isHostileEntity(LivingEntity entityLiving) { 
+	public static boolean isHostileEntity(Entity entityLiving) {
 		return entityLiving instanceof MonsterEntity;
 	}
 

@@ -33,6 +33,8 @@ public class GuildMasterScreen extends ScreenTOK {
 				Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
                 button.active = false;
+                onClose();
+                Minecraft.getInstance().displayGuiScreen(new GuildMasterScreen(player, entity, instance));
             }));
         } else {
             this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getFormatted(), (button) -> {
