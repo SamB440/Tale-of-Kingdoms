@@ -3,20 +3,17 @@ package net.islandearth.taleofkingdoms.client.gui.entity;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
+import net.islandearth.taleofkingdoms.common.utils.BlockUtils;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class InnkeeperScreen extends ScreenTOK {
@@ -41,38 +38,31 @@ public class InnkeeperScreen extends ScreenTOK {
             this.onClose();
         } else {
             this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Rest in a room.", (button) -> {
-                BlockPos rest = this.locateRestingPlace(instance.getStart(), instance.getEnd());
+                this.onClose();
+                BlockPos rest = this.locateRestingPlace(player);
                 if (rest != null) {
-                    player.attemptTeleport(rest.getX(), rest.getY() + 1, rest.getZ(), true);
-                    Timer timer2 = new Timer();
-                    timer2.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            onClose();
-                            player.trySleep(rest);
+                    // Find a valid bedhead.
+                    BlockPos bedHead = null;
+                    for (BlockPos block : BlockUtils.getNearbyBlocks(rest, 3)) {
+                        BlockState state = player.getEntityWorld().getBlockState(block);
+                        if (state.isBed(player.getEntityWorld(), block, null)) {
+                            bedHead = block;
                         }
-                    }, 20);
-                    Timer timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (player.isSleeping()) {
-                                player.getEntityWorld().setDayTime(player.getEntityWorld().getDayTime() + 20);
-                            } else {
-                                this.cancel();
-                            }
-                        }
-                    }, 40, 10);
+                    }
+
+                    if (bedHead == null) {
+                        player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
+                        return;
+                    }
+
+                    player.teleportKeepLoaded(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                    player.trySleep(bedHead);
                 } else {
                     player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
                 }
             }));
 
-            this.addButton(new Button(this.width / 2 - 75, this.height / 2 - 13, 150, 20, "Wait for nighttime.", (button) -> {
-                //TODO
-            }));
-
-            this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 20, 150, 20, "Exit", (button) -> this.onClose()));
+            this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 15, 150, 20, "Exit", (button) -> this.onClose()));
         }
     }
 
@@ -99,31 +89,8 @@ public class InnkeeperScreen extends ScreenTOK {
     }
 
     @Nullable
-    private BlockPos locateRestingPlace(BlockPos start, BlockPos end) {
-        List<BlockPos> validRest = new ArrayList<>();
-        int topBlockX = (Math.max(start.getX(), end.getX()));
-        int bottomBlockX = (Math.min(start.getX(), end.getX()));
-
-        int topBlockY = (Math.max(start.getY(), end.getY()));
-        int bottomBlockY = (Math.min(start.getY(), end.getY()));
-
-        int topBlockZ = (Math.max(start.getZ(), end.getZ()));
-        int bottomBlockZ = (Math.min(start.getZ(), end.getZ()));
-
-        for (int x = bottomBlockX; x <= topBlockX; x++) {
-            for (int z = bottomBlockZ; z <= topBlockZ; z++) {
-                for (int y = bottomBlockY; y <= topBlockY; y++) {
-                    BlockPos blockPos = new BlockPos(x, y, z);
-                    TileEntity tileEntity = player.getEntityWorld().getChunkAt(blockPos).getTileEntity(blockPos);
-                    if (tileEntity instanceof SignTileEntity) {
-                        SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
-                        if (signTileEntity.getText(0).getFormattedText().equals("[Rest]")) {
-                            validRest.add(blockPos);
-                        }
-                    }
-                }
-            }
-        }
+    private BlockPos locateRestingPlace(PlayerEntity player) {
+        List<BlockPos> validRest = instance.getSleepLocations(player);
 
         if (validRest.isEmpty()) return null;
         Random rand = ThreadLocalRandom.current();

@@ -25,7 +25,7 @@ public class InnkeeperEntity extends TOKEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 15.0F));
         applyEntityAI();
     }
 

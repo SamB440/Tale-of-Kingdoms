@@ -8,6 +8,7 @@ import net.islandearth.taleofkingdoms.common.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.common.gson.BlockPosAdapter;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
+import net.islandearth.taleofkingdoms.common.listener.SleepListener;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
 import net.minecraft.util.math.BlockPos;
@@ -89,6 +90,7 @@ public class TaleOfKingdoms {
 		bus.register(new StartWorldListener());
 		bus.register(new RenderListener());
 		bus.register(new CoinListener());
+		bus.register(new SleepListener());
 	}
 
 	public Gson getGson() {

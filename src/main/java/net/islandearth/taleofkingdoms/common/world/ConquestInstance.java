@@ -1,9 +1,18 @@
 package net.islandearth.taleofkingdoms.common.world;
 
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tileentity.SignTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ConquestInstance {
@@ -92,5 +101,57 @@ public class ConquestInstance {
 
 	public BlockPos getEnd() {
 		return end;
+	}
+
+	private List<BlockPos> validRest;
+
+	/**
+	 * Gets valid sleep area locations. This gets the sign, not the bed head.
+	 * @param player the player
+	 * @return list of signs where sleeping is allowed
+	 */
+	@NotNull
+	public List<BlockPos> getSleepLocations(PlayerEntity player) {
+		if (validRest == null) validRest = new ArrayList<>();
+		if (validRest.isEmpty()) { // Find a valid resting place. This will only run if validRest is empty, which is also saved to file.
+			int topBlockX = (Math.max(start.getX(), end.getX()));
+			int bottomBlockX = (Math.min(start.getX(), end.getX()));
+
+			int topBlockY = (Math.max(start.getY(), end.getY()));
+			int bottomBlockY = (Math.min(start.getY(), end.getY()));
+
+			int topBlockZ = (Math.max(start.getZ(), end.getZ()));
+			int bottomBlockZ = (Math.min(start.getZ(), end.getZ()));
+
+			for (int x = bottomBlockX; x <= topBlockX; x++) {
+				for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+					for (int y = bottomBlockY; y <= topBlockY; y++) {
+						BlockPos blockPos = new BlockPos(x, y, z);
+						TileEntity tileEntity = player.getEntityWorld().getChunkAt(blockPos).getTileEntity(blockPos);
+						if (tileEntity instanceof SignTileEntity) {
+							SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
+							if (signTileEntity.getText(0).getFormattedText().equals("[Rest]")) {
+								validRest.add(blockPos);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return validRest;
+	}
+
+	/**
+	 * Checks if a player is in the guild.
+	 * @param player the player
+	 * @return true if player is in guild, false if not
+	 */
+	public boolean isInGuild(PlayerEntity player) {
+		BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
+		BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
+		Region region = new CuboidRegion(firstPos, secondPos);
+		BlockVector3 playerLoc = BlockVector3.at(player.getPosX(), player.getPosY(), player.getPosZ());
+		return region.contains(playerLoc);
 	}
 }
