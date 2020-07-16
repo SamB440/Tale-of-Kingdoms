@@ -5,6 +5,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -144,14 +145,14 @@ public class ConquestInstance {
 
 	/**
 	 * Checks if a player is in the guild.
-	 * @param player the player
+	 * @param entity the entity
 	 * @return true if player is in guild, false if not
 	 */
-	public boolean isInGuild(PlayerEntity player) {
+	public boolean isInGuild(LivingEntity entity) {
 		BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
 		BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
 		Region region = new CuboidRegion(firstPos, secondPos);
-		BlockVector3 playerLoc = BlockVector3.at(player.getPosX(), player.getPosY(), player.getPosZ());
+		BlockVector3 playerLoc = BlockVector3.at(entity.getPosX(), entity.getPosY(), entity.getPosZ());
 		return region.contains(playerLoc);
 	}
 }
