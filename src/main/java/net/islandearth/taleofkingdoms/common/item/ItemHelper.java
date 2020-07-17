@@ -30,7 +30,7 @@ public class ItemHelper {
 		if (isHostileEntity(entityLiving) && !entityLiving.world.isRemote) {
 			int bound = random.nextInt(25);
 			for (int i = 0; i < bound; i++) {
-				dropItem(ItemRegistry.ITEMS.get("coin"), 1, entityLiving);
+				dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entityLiving);
 			} 
 		} 
 	}
