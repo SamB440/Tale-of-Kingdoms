@@ -2,6 +2,7 @@ package net.islandearth.taleofkingdoms.common.entity.guild;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.entity.InnkeeperScreen;
+import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
@@ -33,6 +34,11 @@ public class InnkeeperEntity extends TOKEntity {
     public boolean processInteract(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || player.world.isRemote) return false;
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
+        if (!instance.hasContract()) {
+            Translations.NEED_CONTRACT.send(player);
+            return false;
+        }
+
         InnkeeperScreen screen = new InnkeeperScreen(player, this, instance);
         Minecraft.getInstance().displayGuiScreen(screen);
         return true;

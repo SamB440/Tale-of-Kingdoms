@@ -33,38 +33,33 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        if (!instance.hasContract()) {
-            Translations.NEED_CONTRACT.send(player);
+        this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Rest in a room.", (button) -> {
             this.onClose();
-        } else {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Rest in a room.", (button) -> {
-                this.onClose();
-                BlockPos rest = this.locateRestingPlace(player);
-                if (rest != null) {
-                    // Find a valid bedhead.
-                    BlockPos bedHead = null;
-                    for (BlockPos block : BlockUtils.getNearbyBlocks(rest, 3)) {
-                        BlockState state = player.getEntityWorld().getBlockState(block);
-                        if (state.isBed(player.getEntityWorld(), block, null)) {
-                            bedHead = block;
-                            break;
-                        }
+            BlockPos rest = this.locateRestingPlace(player);
+            if (rest != null) {
+                // Find a valid bedhead.
+                BlockPos bedHead = null;
+                for (BlockPos block : BlockUtils.getNearbyBlocks(rest, 3)) {
+                    BlockState state = player.getEntityWorld().getBlockState(block);
+                    if (state.isBed(player.getEntityWorld(), block, null)) {
+                        bedHead = block;
+                        break;
                     }
-
-                    if (bedHead == null) {
-                        player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
-                        return;
-                    }
-
-                    player.teleportKeepLoaded(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                    player.trySleep(bedHead);
-                } else {
-                    player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
                 }
-            }));
 
-            this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 15, 150, 20, "Exit", (button) -> this.onClose()));
-        }
+                if (bedHead == null) {
+                    player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
+                    return;
+                }
+
+                player.teleportKeepLoaded(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                player.trySleep(bedHead);
+            } else {
+                player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
+            }
+        }));
+
+        this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 15, 150, 20, "Exit", (button) -> this.onClose()));
     }
 
     @Override

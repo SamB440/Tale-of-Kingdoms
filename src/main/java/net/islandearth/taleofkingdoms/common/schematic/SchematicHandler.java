@@ -40,7 +40,6 @@ public class SchematicHandler {
                         .to(BlockVector3.at(position.getX(), position.getY() + 2, position.getZ()))
                         .ignoreAirBlocks(false)
                         .copyBiomes(false)
-						.copyEntities(true)
                         .build();
 				final UUID uuid = UUID.randomUUID();
 

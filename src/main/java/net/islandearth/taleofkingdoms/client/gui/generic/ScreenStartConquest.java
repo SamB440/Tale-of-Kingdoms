@@ -85,68 +85,71 @@ public class ScreenStartConquest extends ScreenTOK {
 						button.setMessage("Loading, please wait... (" + Operations.getProgress(oi.getOperationId()) + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
 						if (progress >= 100) {
 							button.setMessage("Finishing pasting...");
-							com.sk89q.worldedit.world.World adaptedWorld = ForgeAdapter.adapt(player.getEntityWorld());
-							EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
-							editSession.flushSession();
+							Minecraft.getInstance().runImmediately(() -> {
+								com.sk89q.worldedit.world.World adaptedWorld = ForgeAdapter.adapt(player.getEntityWorld());
+								EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
+								editSession.flushSession();
 
-							Timer pastingTimer = new Timer();
-							pastingTimer.schedule(new TimerTask() {
-								@Override
-								public void run() {
-									button.setMessage("Finishing pasting... (" + progress + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
-									button.setMessage("Loading NPCs...");
-									Minecraft.getInstance().runImmediately(() -> {
-										try {
-											BlockVector3 start = oi.getRegion().getMaximumPoint();
-											BlockVector3 end = oi.getRegion().getMinimumPoint();
-											int topBlockX = (Math.max(start.getBlockX(), end.getBlockX()));
-											int bottomBlockX = (Math.min(start.getBlockX(), end.getBlockX()));
+								Timer pastingTimer = new Timer();
+								pastingTimer.schedule(new TimerTask() {
+									@Override
+									public void run() {
+										button.setMessage("Finishing pasting... (" + progress + "%, " + blocksDone + "/" + oi.getBlocks() + ")");
+										button.setMessage("Loading NPCs...");
+										Minecraft.getInstance().runImmediately(() -> {
+											try {
+												BlockVector3 start = oi.getRegion().getMaximumPoint();
+												BlockVector3 end = oi.getRegion().getMinimumPoint();
+												int topBlockX = (Math.max(start.getBlockX(), end.getBlockX()));
+												int bottomBlockX = (Math.min(start.getBlockX(), end.getBlockX()));
 
-											int topBlockY = (Math.max(start.getBlockY(), end.getBlockY()));
-											int bottomBlockY = (Math.min(start.getBlockY(), end.getBlockY()));
+												int topBlockY = (Math.max(start.getBlockY(), end.getBlockY()));
+												int bottomBlockY = (Math.min(start.getBlockY(), end.getBlockY()));
 
-											int topBlockZ = (Math.max(start.getBlockZ(), end.getBlockZ()));
-											int bottomBlockZ = (Math.min(start.getBlockZ(), end.getBlockZ()));
+												int topBlockZ = (Math.max(start.getBlockZ(), end.getBlockZ()));
+												int bottomBlockZ = (Math.min(start.getBlockZ(), end.getBlockZ()));
 
-											for (int x = bottomBlockX; x <= topBlockX; x++) {
-												for (int z = bottomBlockZ; z <= topBlockZ; z++) {
-													for (int y = bottomBlockY; y <= topBlockY; y++) {
-														BlockPos blockPos = new BlockPos(x, y, z);
-														TileEntity tileEntity = player.getEntityWorld().getChunkAt(blockPos).getTileEntity(blockPos);
-														if (tileEntity instanceof SignTileEntity) {
-															SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
-															if (signTileEntity.getText(0).getFormattedText().equals("[Spawn]")) {
-																String entityName = signTileEntity.getText(1).getFormattedText();
-																button.setMessage("Loading NPCs: " + entityName);
-																Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("net.islandearth.taleofkingdoms.common.entity.guild." + entityName + "Entity");
-																Constructor constructor = entity.getConstructor(World.class);
-																TOKEntity toSpawn = (TOKEntity) constructor.newInstance(player.getEntityWorld());
-																toSpawn.setLocationAndAngles(x + 0.5, y, z + 0.5, 0, 0);
-																player.getEntityWorld().addEntity(toSpawn);
-																toSpawn.forceSetPosition(x + 0.5, y, z + 0.5);
-																signTileEntity.getBlockState().getBlock().removedByPlayer(signTileEntity.getBlockState(), player.getEntityWorld(), blockPos, null, false, signTileEntity.getBlockState().getFluidState());
+												for (int x = bottomBlockX; x <= topBlockX; x++) {
+													for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+														for (int y = bottomBlockY; y <= topBlockY; y++) {
+															BlockPos blockPos = new BlockPos(x, y, z);
+															TileEntity tileEntity = player.getEntityWorld().getChunkAt(blockPos).getTileEntity(blockPos);
+															if (tileEntity instanceof SignTileEntity) {
+																SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
+																if (signTileEntity.getText(0).getFormattedText().equals("[Spawn]")) {
+																	String entityName = signTileEntity.getText(1).getFormattedText();
+																	button.setMessage("Loading NPCs: " + entityName);
+																	Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("net.islandearth.taleofkingdoms.common.entity.guild." + entityName + "Entity");
+																	Constructor constructor = entity.getConstructor(World.class);
+																	TOKEntity toSpawn = (TOKEntity) constructor.newInstance(player.getEntityWorld());
+																	toSpawn.setLocationAndAngles(x + 0.5, y, z + 0.5, 0, 0);
+																	player.getEntityWorld().addEntity(toSpawn);
+																	toSpawn.teleportKeepLoaded(x + 0.5, y, z + 0.5);
+																	signTileEntity.getBlockState().getBlock().removedByPlayer(signTileEntity.getBlockState(), player.getEntityWorld(), blockPos, null, false, signTileEntity.getBlockState().getFluidState());
+																	System.out.println("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getPosX() + "," + toSpawn.getPosY() + "," + toSpawn.getPosZ());
+																}
 															}
 														}
 													}
 												}
+											} catch (ReflectiveOperationException e) {
+												button.setMessage("Error: " + e.getCause().getMessage());
+												e.printStackTrace();
 											}
-										} catch (ReflectiveOperationException e) {
-											button.setMessage("Error: " + e.getCause().getMessage());
-											e.printStackTrace();
-										}
 
-										Minecraft.getInstance().runImmediately(() -> {
-											button.setMessage("Reloading chunks...");
-											minecraft.worldRenderer.loadRenderers();
-											onClose();
-											loading = false;
-											instance.setLoaded(true);
-											instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
-											pastingTimer.cancel();
+											Minecraft.getInstance().runImmediately(() -> {
+												button.setMessage("Reloading chunks...");
+												minecraft.worldRenderer.loadRenderers();
+												onClose();
+												loading = false;
+												instance.setLoaded(true);
+												instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
+												pastingTimer.cancel();
+											});
 										});
-									});
-								}
-							}, 200);
+									}
+								}, 200);
+							});
 							this.cancel();
 						}
 					} catch (Exception e) {
