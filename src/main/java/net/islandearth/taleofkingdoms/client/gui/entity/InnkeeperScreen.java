@@ -3,13 +3,12 @@ package net.islandearth.taleofkingdoms.client.gui.entity;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
-import net.islandearth.taleofkingdoms.common.utils.BlockUtils;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -33,39 +32,24 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, "Rest in a room.", (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
             this.onClose();
             BlockPos rest = this.locateRestingPlace(player);
             if (rest != null) {
-                // Find a valid bedhead.
-                BlockPos bedHead = null;
-                for (BlockPos block : BlockUtils.getNearbyBlocks(rest, 3)) {
-                    BlockState state = player.getEntityWorld().getBlockState(block);
-                    if (state.isBed(player.getEntityWorld(), block, null)) {
-                        bedHead = block;
-                        break;
-                    }
-                }
-
-                if (bedHead == null) {
-                    player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
-                    return;
-                }
-
-                player.teleportKeepLoaded(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                player.trySleep(bedHead);
+                player.teleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5, true);
+                player.trySleep(rest);
             } else {
-                player.sendMessage(new StringTextComponent("House Keeper: It seems there are no rooms available at this time."));
+                player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);
             }
         }));
 
-        this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 15, 150, 20, "Exit", (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 15, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
     }
 
     @Override
-    public void render(int par1, int par2, float par3) {
-        super.render(par1, par2, par3);
-        this.drawCenteredString(this.font, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+    public void render(MatrixStack stack, int par1, int par2, float par3) {
+        super.render(stack, par1, par2, par3);
+        this.drawCenteredString(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
     }
 
     @Override

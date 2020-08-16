@@ -6,9 +6,9 @@ import net.islandearth.taleofkingdoms.client.gui.image.IImage;
 import net.islandearth.taleofkingdoms.client.gui.image.Image;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ public class BlacksmithScreen extends ScreenTOK {
     public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ConquestInstance instance) {
         super("taleofkingdoms.menu.blacksmith.name");
         this.player = player;
-        this.images = Collections.singletonList(new Image(this, new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 128, 5, 230));
+        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 128, 5, 5, 230));
         this.entity = entity;
         this.instance = instance;
     }
@@ -35,11 +35,11 @@ public class BlacksmithScreen extends ScreenTOK {
     }
 
     @Override
-    public void render(int par1, int par2, float par3) {
-        super.render(par1, par2, par3);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+        super.render(stack, mouseX, mouseY, delta);
         images.forEach(IImage::render);
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
-        this.drawCenteredString(this.font, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        this.drawCenteredString(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
     }
 
     @Override

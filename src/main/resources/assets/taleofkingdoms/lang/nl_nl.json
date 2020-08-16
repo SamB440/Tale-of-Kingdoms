@@ -1,0 +1,19 @@
+{
+  "itemGroup.taleOfKingdoms": "Tale of Kingdoms: Een nieuwe verovering",
+  "item.taleofkingdoms.coin": "Munt",
+  "menu.taleofkingdoms.guildmaster.name": "Gildemeester",
+  "menu.taleofkingdoms.blacksmith.name": "Smid",
+  "menu.taleofkingdoms.continueconquest.name": "Verovering hervatten",
+  "menu.taleofkingdoms.startconquest.name": "Verovering starten",
+  "entity_type.taleofkingdoms.farmer.take_bread": "Boer: Hier, neem een brood!",
+  "entity_type.taleofkingdoms.farmer.got_bread": "Boer: Je hebt je brood al gehad voor nu!",
+  "entity_type.taleofkingdoms.guildmaster.contract.sign": "Gildemeester: Je bent nu één van ons vriend. Dood monsters en je zal binnenkort je titel waardig zijn.",
+  "entity_type.taleofkingdoms.guildmaster.contract.sign_up": "Teken contract!",
+  "entity_type.taleofkingdoms.guildmaster.contract.cancel": "Annuleer contract.",
+  "entity_type.taleofkingdoms.guildmaster.welcome": "Gildemeester: Welkom bij de orde, held.",
+  "entity_type.taleofkingdoms.guildmaster.good_hunting": "Gildemeester: Fijne jacht.",
+  "entity_type.taleofkingdoms.innkeeper.rest": "Huisbaas: Heeft u behoefte aan wat rust, meneer?",
+  "entity_type.taleofkingdoms.innkeeper.leave": "Housebeeper: Fijne dag nog.",
+  "menu.taleofkingdoms.innkeeper.name": "Herbergier",
+  "generic.taleofkingdoms.need_contract": "Huisbaas: Daar heb je een contract voor nodig! Ga naar boven en bezoek de Gildemeester!"
+}

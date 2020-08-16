@@ -1,10 +1,10 @@
 package net.islandearth.taleofkingdoms.client.gui.image;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 
 public interface IImage {
-	
-	ResourceLocation getResourceLocation();
+
+	Identifier getResourceLocation();
 
 	void render();
 

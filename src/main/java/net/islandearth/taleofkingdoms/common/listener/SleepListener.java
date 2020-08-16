@@ -1,23 +1,8 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.IWorld;
-import net.minecraftforge.event.entity.player.SleepingLocationCheckEvent;
-import net.minecraftforge.event.entity.player.SleepingTimeCheckEvent;
-import net.minecraftforge.event.world.SleepFinishedTimeEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class SleepListener extends Listener {
-
-    @SubscribeEvent
+//TODO
+    /*@SubscribeEvent
     public void onSleep(SleepFinishedTimeEvent event) {
         if (Minecraft.getInstance().getIntegratedServer() == null) return;
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName());
@@ -60,5 +45,5 @@ public class SleepListener extends Listener {
                 event.setResult(Event.Result.ALLOW);
             }
         }
-    }
+    }*/
 }

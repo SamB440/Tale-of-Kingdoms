@@ -3,8 +3,6 @@ package net.islandearth.taleofkingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstanceStorage;
 import net.islandearth.taleofkingdoms.managers.IManager;
 import net.islandearth.taleofkingdoms.managers.SoundManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +21,6 @@ public class TaleOfKingdomsAPI {
 		this.cis = new ConquestInstanceStorage();
 		SoundManager sm = new SoundManager(mod);
 		managers.put(sm.getName(), sm);
-		
-		IEventBus bus = MinecraftForge.EVENT_BUS;
-		bus.register(sm);
 	}
 
 	@NotNull

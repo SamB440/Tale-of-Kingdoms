@@ -1,15 +1,15 @@
 package net.islandearth.taleofkingdoms.client.gui;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.text.TranslatableText;
 
 /**
  * Find out more from our GUI research:
  * https://forum.islandearth.net/d/10-forge-modding-tutorial-1-14-creating-custom-guis-1-3
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class ScreenTOK extends Screen {
 
 	/**
@@ -17,7 +17,7 @@ public abstract class ScreenTOK extends Screen {
 	 * @param translation the translation key
 	 */
 	protected ScreenTOK(String translation) {
-		super(new TranslationTextComponent(translation));
+		super(new TranslatableText(translation));
 	}
 
 	/**

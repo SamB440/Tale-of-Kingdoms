@@ -1,35 +1,42 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.common.event.EntityDeathCallback;
+import net.islandearth.taleofkingdoms.common.event.EntityPickupItemCallback;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CoinListener extends Listener {
-	
-	@SubscribeEvent
-	public void onDeath(LivingDeathEvent e) {
-		if (e.getSource().getTrueSource() instanceof PlayerEntity) {
-			ItemHelper.dropCoins(e.getEntityLiving());
-			//TODO worthiness stuff
-		}
-	}
-    
-	@SubscribeEvent
-	public void onPickUp(PlayerEvent.ItemPickupEvent e) {
-		Random random = ThreadLocalRandom.current();
-		ItemStack item = e.getStack();
-		if (item.getItem().equals(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN))) {
-			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get().addCoins(random.nextInt(50));
-			e.getPlayer().inventory.clearMatchingItems(predicate -> predicate.getItem().equals(item.getItem()), -1);
-		}
+
+	public CoinListener() {
+		EntityDeathCallback.EVENT.register(((source, entity) -> {
+			if (source.getSource() instanceof PlayerEntity) {
+				ItemHelper.dropCoins(entity);
+				//TODO worthiness stuff
+			}
+		}));
+
+		EntityPickupItemCallback.EVENT.register(((entity, item, count) -> {
+			if (entity instanceof PlayerEntity) {
+				PlayerEntity player = (PlayerEntity) entity;
+				if (item instanceof ItemEntity) {
+					ItemEntity itemEntity = (ItemEntity) item;
+					if (itemEntity.getStack().getItem().equals(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN))) {
+						Random random = ThreadLocalRandom.current();
+						TaleOfKingdoms.getAPI().get()
+								.getConquestInstanceStorage()
+								.mostRecentInstance()
+								.get()
+								.addCoins(random.nextInt(50));
+						player.inventory.method_29280(predicate -> predicate.getItem().equals(itemEntity.getStack().getItem()), -1, player.inventory);
+					}
+				}
+			}
+		}));
 	}
 }

@@ -4,7 +4,7 @@ About
 
 Links
 =====
-Website: https://www.islandearth.net/taleofkingdoms
+Website: https://www.convallyria.com
 
 Discord: https://discord.gg/fh62mxU
 

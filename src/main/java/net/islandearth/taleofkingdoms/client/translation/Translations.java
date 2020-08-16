@@ -1,19 +1,19 @@
 package net.islandearth.taleofkingdoms.client.translation;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.text.TranslatableText;
 
 public enum Translations {
-    FARMER_TAKE_BREAD("taleofkingdoms.entity.farmer.take_bread"),
-    FARMER_GOT_BREAD("taleofkingdoms.entity.farmer.got_bread"),
-    GUILDMASTER_CONTRACT_SIGN("taleofkingdoms.entity.guildmaster.contract.sign"),
-    GUILDMASTER_CONTRACT_SIGN_UP("taleofkingdoms.entity.guildmaster.contract.sign_up"),
-    GUILDMASTER_CONTRACT_CANCEL("taleofkingdoms.entity.guildmaster.contract.cancel"),
-    GUILDMASTER_WELCOME("taleofkingdoms.entity.guildmaster.welcome"),
-    GUILDMASTER_GOODHUNTING("taleofkingdoms.entity.guildmaster.good_hunting"),
-    INNKEEPER_REST("taleofkingdoms.entity.innkeeper.rest"),
-    INNKEEPER_LEAVE("taleofkingdoms.entity.innkeeper.leave"),
-    NEED_CONTRACT("taleofkingdoms.generic.need_contract");
+    FARMER_TAKE_BREAD("entity_type.taleofkingdoms.farmer.take_bread"),
+    FARMER_GOT_BREAD("entity_type.taleofkingdoms.farmer.got_bread"),
+    GUILDMASTER_CONTRACT_SIGN("entity_type.taleofkingdoms.guildmaster.contract.sign"),
+    GUILDMASTER_CONTRACT_SIGN_UP("entity_type.taleofkingdoms.guildmaster.contract.sign_up"),
+    GUILDMASTER_CONTRACT_CANCEL("entity_type.taleofkingdoms.guildmaster.contract.cancel"),
+    GUILDMASTER_WELCOME("entity_type.taleofkingdoms.guildmaster.welcome"),
+    GUILDMASTER_GOODHUNTING("entity_type.taleofkingdoms.guildmaster.good_hunting"),
+    INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
+    INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),
+    NEED_CONTRACT("generic.taleofkingdoms.need_contract");
     
     private final String key;
     
@@ -22,19 +22,15 @@ public enum Translations {
     }
     
     public void send(PlayerEntity playerEntity) {
-        playerEntity.sendMessage(getTranslation());
+        playerEntity.sendMessage(getTranslation(), false);
     }
     
-    public TranslationTextComponent getTranslation() {
-        return new TranslationTextComponent(key);
+    public TranslatableText getTranslation() {
+        return new TranslatableText(key);
     }
     
     public String getFormatted() {
-        return getTranslation().getFormattedText();
-    }
-    
-    public String getRaw() {
-        return getTranslation().getUnformattedComponentText();
+        return getTranslation().getString();
     }
     
     public String getKey() {
