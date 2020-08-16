@@ -1,13 +1,12 @@
 package net.islandearth.taleofkingdoms.managers;
 
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SoundManager implements IManager {
 
@@ -15,11 +14,12 @@ public class SoundManager implements IManager {
 	
 	public SoundManager(TaleOfKingdoms tok) {
 		TaleOfKingdoms.LOGGER.info("Loading sounds...");
-		ResourceLocation toktheme = new ResourceLocation(TaleOfKingdoms.MODID, "toktheme");
-		this.addSound(toktheme);
+		Identifier toktheme = new Identifier(TaleOfKingdoms.MODID, "toktheme");
+		addSound(toktheme);
+		register();
 	}
 	
-	public void addSound(ResourceLocation location) {
+	private void addSound(Identifier location) {
 		TaleOfKingdoms.LOGGER.info("Loading sound: " + location.getPath());
 		events.put(location.getPath(), new SoundEvent(location));
 	}
@@ -32,9 +32,8 @@ public class SoundManager implements IManager {
 	public String getName() {
 		return "Sound Manager";
 	}
-	
-	@SubscribeEvent
-	public void register(RegistryEvent.Register<SoundEvent> evt) {
-		events.forEach((name, event) -> evt.getRegistry().register(event));
+
+	private void register() {
+		events.forEach((name, event) -> Registry.register(Registry.SOUND_EVENT, event.getId(), event));
 	}
 }

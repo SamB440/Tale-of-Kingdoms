@@ -5,10 +5,14 @@ import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
+
 //TODO this class needs more translations
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -28,35 +32,35 @@ public class GuildMasterScreen extends ScreenTOK {
 	public void init() {
 		super.init();
 		if (!instance.hasContract()) {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getFormatted(), (button) -> {
+            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
                 instance.setHasContract(true);
 				Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
                 button.active = false;
                 onClose();
-                Minecraft.getInstance().displayGuiScreen(new GuildMasterScreen(player, entity, instance));
+                MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
             }));
         } else {
-            this.addButton(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getFormatted(), (button) -> {
+            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
                 instance.setHasContract(false);
                 button.visible = false;
                 button.active = false;
             }));
         }
 
-		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + TextFormatting.GREEN + "(1500 gold)" : "Hire Hunters " + TextFormatting.RED + "(1500 gold)";
-        this.addButton(new Button(this.width / 2 - 75, this.height / 2 - 13, 150, 20, hunterText, (button) -> {
+		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + TextColor.fromFormatting(Formatting.GREEN) + "(1500 gold)" : "Hire Hunters " + TextColor.fromFormatting(Formatting.RED) + "(1500 gold)";
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
             //TODO what happens?
         }));
 
-        this.addButton(new Button(this.width / 2 - 75, this.height / 2 + 20, 150, 20, "Exit", (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 20, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
 	}
 
 	@Override
-	public void render(int par1, int par2, float par3) {
-		super.render(par1, par2, par3);
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
-		this.drawCenteredString(this.font, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+	public void render(MatrixStack stack, int par1, int par2, float par3) {
+		super.render(stack, par1, par2, par3);
+		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+		this.drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
 	}
 
 	@Override

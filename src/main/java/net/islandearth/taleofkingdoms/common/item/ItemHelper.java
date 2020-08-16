@@ -2,7 +2,7 @@ package net.islandearth.taleofkingdoms.common.item;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.item.Item;
 
 import java.util.Random;
@@ -17,7 +17,7 @@ public class ItemHelper {
 	 * @return true if entity is hostile
 	 */
 	public static boolean isHostileEntity(Entity entityLiving) {
-		return entityLiving instanceof MonsterEntity;
+		return entityLiving instanceof Monster;
 	}
 
 	/**
@@ -27,7 +27,7 @@ public class ItemHelper {
 	 * @param entityLiving entity to drop coins for
 	 */
 	public static void dropCoins(LivingEntity entityLiving) {
-		if (isHostileEntity(entityLiving) && !entityLiving.world.isRemote) {
+		if (isHostileEntity(entityLiving) && entityLiving.world.isClient()) {
 			int bound = random.nextInt(25);
 			for (int i = 0; i < bound; i++) {
 				dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entityLiving);
@@ -36,6 +36,6 @@ public class ItemHelper {
 	}
 	
 	private static void dropItem(Item item, int meta, LivingEntity livingBase) { 
-		livingBase.entityDropItem(item, meta); 
+		livingBase.dropItem(item, meta);
 	}
 }

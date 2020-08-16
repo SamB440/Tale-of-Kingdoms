@@ -1,39 +1,18 @@
 package net.islandearth.taleofkingdoms.common.entity;
 
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
 
-import java.util.Map;
+public abstract class TOKEntity extends PathAwareEntity {
 
-public abstract class TOKEntity extends CreatureEntity {
-
-	// From PlayerEntity (net.minecraft)
-	private static final EntitySize STANDING_SIZE = EntitySize.flexible(0.6F, 1.8F);
-	private static final Map<Pose, EntitySize> SIZE_BY_POSE = ImmutableMap
-			.<Pose, EntitySize>builder()
-			.put(Pose.STANDING, STANDING_SIZE)
-			.put(Pose.SLEEPING, SLEEPING_SIZE)
-			.put(Pose.FALL_FLYING, EntitySize.flexible(0.6F, 0.6F))
-			.put(Pose.SWIMMING, EntitySize.flexible(0.6F, 0.6F))
-			.put(Pose.SPIN_ATTACK, EntitySize.flexible(0.6F, 0.6F))
-			.put(Pose.CROUCHING, EntitySize.flexible(0.6F, 1.5F))
-			.put(Pose.DYING, EntitySize.fixed(0.2F, 0.2F)).build();
-
-	protected TOKEntity(World worldIn) {
-		super(null, worldIn);
-		this.enablePersistence();
-	}
-
-	protected TOKEntity(EntityType<? extends TOKEntity> entityType, World world) {
+	protected TOKEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
 		super(entityType, world);
-		this.enablePersistence();
 	}
 
 	/**
@@ -41,33 +20,27 @@ public abstract class TOKEntity extends CreatureEntity {
 	 * <br>• {@link SwimGoal}
 	 */
 	protected void applyEntityAI() {
-		this.goalSelector.addGoal(1, new SwimGoal(this));
-	}
-
-	@Override
-	public EntitySize getSize(Pose poseIn) {
-		return SIZE_BY_POSE.getOrDefault(poseIn, STANDING_SIZE);
+		this.goalSelector.add(1, new SwimGoal(this));
 	}
 
 	/**
 	 * Registers the goals for this entity, along with the defaults specified in {@link #applyEntityAI()}
 	 */
 	@Override
-	protected void registerGoals() {
-		this.goalSelector.addGoal(Integer.MAX_VALUE, new LookRandomlyGoal(this));
+	protected void initGoals() {
+		this.goalSelector.add(Integer.MAX_VALUE, new LookAroundGoal(this));
 		applyEntityAI();
 	}
 
 	/**
 	 * Registers default attributes for this entity:
-	 * <br>• {@link SharedMonsterAttributes#MAX_HEALTH} (20.0D)
-	 * <br>• {@link SharedMonsterAttributes#MOVEMENT_SPEED} (1.0D)
+	 * <br>• {@link EntityAttributes#GENERIC_MAX_HEALTH} (20.0D)
+	 * <br>• {@link EntityAttributes#GENERIC_MOVEMENT_SPEED} (1.0D)
 	 */
-	@Override
-	protected void registerAttributes() {
-		super.registerAttributes();
-		this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20.0D);
-		this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(1.0D);
+	public static DefaultAttributeContainer.Builder createMobAttributes() {
+		return LivingEntity.createLivingAttributes()
+				.add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
+				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.0D);
 	}
 
 	/**
@@ -90,17 +63,17 @@ public abstract class TOKEntity extends CreatureEntity {
 	 * @return true if entity may be pushed
 	 */
 	@Override
-	public boolean canBePushed() {
+	public boolean isPushable() {
 		return false;
 	}
 
 	@Override
-	public boolean preventDespawn() {
+	public boolean cannotDespawn() {
 		return true;
 	}
 
 	@Override
-	public boolean canDespawn(double distanceToClosestPlayer) {
+	public boolean canImmediatelyDespawn(double distanceSquared) {
 		return false;
 	}
 

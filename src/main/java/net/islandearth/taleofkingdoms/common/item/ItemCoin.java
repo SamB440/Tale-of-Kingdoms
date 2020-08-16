@@ -4,7 +4,7 @@ import net.minecraft.item.Item;
 
 class ItemCoin extends Item {
 
-	ItemCoin(Properties properties) {
+	ItemCoin(Settings properties) {
 		super(properties);
 	}
 

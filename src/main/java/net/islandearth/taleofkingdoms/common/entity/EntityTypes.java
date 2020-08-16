@@ -1,5 +1,6 @@
 package net.islandearth.taleofkingdoms.common.entity;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.entity.generic.KnightEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
@@ -7,97 +8,42 @@ import net.islandearth.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.FarmerEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.ObjectHolder;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
-@ObjectHolder(TaleOfKingdoms.MODID)
 public class EntityTypes {
-	
-	public static final EntityType<FarmerEntity> FARMER = null;
-	public static final EntityType<GuildMasterEntity> GUILD_MASTER = null;
-	public static final EntityType<BlacksmithEntity> BLACKSMITH = null;
-	public static final EntityType<CityBuilderEntity> CITY_BUILDER = null;
-	public static final EntityType<KnightEntity> KNIGHT = null;
-	public static final EntityType<InnkeeperEntity> INNKEEPER = null;
 
-	@Mod.EventBusSubscriber(modid = TaleOfKingdoms.MODID, bus = Bus.MOD)
-	public static class RegistrationHandler {
-		/**
-		 * Register this mod's {@link Entity} types.
-		 *
-		 * @param event The event
-		 */
-		@SubscribeEvent
-		public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-			final EntityType<FarmerEntity> farmer = build(
-					"farmer",
-					EntityType.Builder.<FarmerEntity>create(FarmerEntity::new, EntityClassification.MISC)
-							.size(0.5f, 0.5f)
-			);
-
-			final EntityType<GuildMasterEntity> guildmaster = build(
-					"guild_master",
-					EntityType.Builder.<GuildMasterEntity>create(GuildMasterEntity::new, EntityClassification.MISC)
-							.size(0.5f, 0.5f)
-			);
-
-			final EntityType<BlacksmithEntity> blacksmith = build(
-					"blacksmith",
-					EntityType.Builder.<BlacksmithEntity>create(BlacksmithEntity::new, EntityClassification.MISC)
-							.size(0.5f, 0.5f)
-			);
-
-			final EntityType<CityBuilderEntity> cityBuilder = build(
-					"city_builder",
-					EntityType.Builder.<CityBuilderEntity>create(CityBuilderEntity::new, EntityClassification.MISC)
-							.size(0.5f, 0.5f)
-			);
-
-			final EntityType<KnightEntity> knight = build(
-					"knight",
-					EntityType.Builder.<KnightEntity>create(KnightEntity::new, EntityClassification.MISC)
-							.size(0.5f, 0.5f)
-			);
-
-			final EntityType<InnkeeperEntity> innkeeper = build(
-					"innkeeper",
-					EntityType.Builder.<InnkeeperEntity>create(InnkeeperEntity::new, EntityClassification.MISC)
-							.size(0.5f, 0.5f)
-			);
-
-			event.getRegistry().registerAll(
-					farmer,
-					guildmaster,
-					blacksmith,
-					cityBuilder,
-					knight,
-					innkeeper
-			);
-		}
-
-		/**
-		 * Build an {@link EntityType} from a {@link EntityType.Builder} using the specified name.
-		 *
-		 * @param name    The entity type name
-		 * @param builder The entity type builder to build
-		 * @return The built entity type
-		 */
-		private static <T extends Entity> EntityType<T> build(final String name, final EntityType.Builder<T> builder) {
-			final ResourceLocation registryName = new ResourceLocation(TaleOfKingdoms.MODID, name);
-
-			final EntityType<T> entityType = builder
-					.build(registryName.toString());
-
-			entityType.setRegistryName(registryName);
-
-			return entityType;
-		}
-	}
+	public static final EntityType<FarmerEntity> FARMER = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(TaleOfKingdoms.MODID, "farmer"),
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, FarmerEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+	);
+	public static final EntityType<GuildMasterEntity> GUILD_MASTER = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(TaleOfKingdoms.MODID, "guild_master"),
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+	);
+	public static final EntityType<BlacksmithEntity> BLACKSMITH = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(TaleOfKingdoms.MODID, "blacksmith"),
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, BlacksmithEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+	);
+	public static final EntityType<CityBuilderEntity> CITY_BUILDER = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(TaleOfKingdoms.MODID, "city_builder"),
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, CityBuilderEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+	);
+	public static final EntityType<KnightEntity> KNIGHT = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(TaleOfKingdoms.MODID, "knight"),
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, KnightEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+	);
+	public static final EntityType<InnkeeperEntity> INNKEEPER = Registry.register(
+			Registry.ENTITY_TYPE,
+			new Identifier(TaleOfKingdoms.MODID, "innkeeper"),
+			FabricEntityTypeBuilder.create(SpawnGroup.MISC, InnkeeperEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
+	);
 }

@@ -2,15 +2,15 @@ package net.islandearth.taleofkingdoms.common.entity.guild;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
-import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -18,20 +18,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends TOKEntity {
 	
-	public FarmerEntity(World worldIn) {
-		super(EntityTypes.FARMER, worldIn);
-		this.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
+	public FarmerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+		super(entityType, world);
+		this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
 	}
-	
-	public FarmerEntity(EntityType<FarmerEntity> farmerEntityEntityType, World world) {
-		super(farmerEntityEntityType, world);
-		this.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
-	}
-	
+
 	@Override
-	protected void registerGoals() {
-		super.registerGoals();
-		this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 10.0F));
+	protected void initGoals() {
+		super.initGoals();
+		this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
 		applyEntityAI();
 	}
 
@@ -41,22 +36,22 @@ public class FarmerEntity extends TOKEntity {
 	}
 
 	@Override
-	public boolean processInteract(PlayerEntity player, Hand hand) {
-		if (hand == Hand.OFF_HAND || player.world.isRemote) return false;
+	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+		if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
 		
 		// Check if there is at least 1 Minecraft day difference
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName()).get();
-		long day = player.world.getDayTime() / 24000L;
+		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+		long day = player.world.getTimeOfDay() / 24000L;
 		if (instance.getFarmerLastBread() >= day) {
 			Translations.FARMER_GOT_BREAD.send(player);
-			return false;
+			return ActionResult.FAIL;
 		}
 		
 		// Set the current day and add bread to inventory
 		instance.setFarmerLastBread(day);
 		Translations.FARMER_TAKE_BREAD.send(player);
 		int amount = ThreadLocalRandom.current().nextInt(1, 4);
-		player.inventory.addItemStackToInventory(new ItemStack(Items.BREAD, amount));
-		return true;
+		player.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+		return ActionResult.PASS;
 	}
 }

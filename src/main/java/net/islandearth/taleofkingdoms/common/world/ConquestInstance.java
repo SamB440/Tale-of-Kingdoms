@@ -5,10 +5,11 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.SignTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -128,10 +129,11 @@ public class ConquestInstance {
 				for (int z = bottomBlockZ; z <= topBlockZ; z++) {
 					for (int y = bottomBlockY; y <= topBlockY; y++) {
 						BlockPos blockPos = new BlockPos(x, y, z);
-						TileEntity tileEntity = player.getEntityWorld().getChunkAt(blockPos).getTileEntity(blockPos);
-						if (tileEntity instanceof SignTileEntity) {
-							SignTileEntity signTileEntity = (SignTileEntity) tileEntity;
-							if (signTileEntity.getText(0).getFormattedText().equals("[Rest]")) {
+						BlockEntity tileEntity = player.getEntityWorld().getChunk(blockPos).getBlockEntity(blockPos);
+						if (tileEntity instanceof SignBlockEntity) {
+							SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
+							Tag tag = signTileEntity.toInitialChunkDataTag().get("Text1");
+							if (tag != null && tag.asString().equals("[Rest]")) {
 								validRest.add(blockPos);
 							}
 						}
@@ -156,7 +158,7 @@ public class ConquestInstance {
 		BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
 		BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
 		Region region = new CuboidRegion(firstPos, secondPos);
-		BlockVector3 playerLoc = BlockVector3.at(entity.getPosX(), entity.getPosY(), entity.getPosZ());
+		BlockVector3 playerLoc = BlockVector3.at(entity.getX(), entity.getY(), entity.getZ());
 		return region.contains(playerLoc);
 	}
 

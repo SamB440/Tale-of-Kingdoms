@@ -1,33 +1,35 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.common.event.BlockBreakCallback;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.Optional;
 
 public class BlockListener extends Listener {
 
-    @SubscribeEvent
-    public void onBreak(BlockEvent.BreakEvent event) {
-        if (Minecraft.getInstance().getIntegratedServer() == null) return;
-        Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().getConquestInstance(Minecraft.getInstance().getIntegratedServer().getFolderName());
-        if (instance.isPresent()) {
-            BlockPos broken = event.getPos();
-            BlockPos remove = null;
-            for (BlockPos blockPos : instance.get().getValidRest()) {
-                if (blockPos.getX() == broken.getX() && blockPos.getY() == broken.getY() && blockPos.getZ() == broken.getZ()) {
-                    remove = blockPos;
-                    break;
+    public BlockListener() {
+        BlockBreakCallback.EVENT.register((player, block, pos) -> {
+            if (MinecraftClient.getInstance().getServer() == null) return ActionResult.FAIL;
+            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
+            if (instance.isPresent()) {
+                BlockPos remove = null;
+                for (BlockPos blockPos : instance.get().getValidRest()) {
+                    if (blockPos.getX() == pos.getX() && blockPos.getY() == pos.getY() && blockPos.getZ() == pos.getZ()) {
+                        remove = blockPos;
+                        break;
+                    }
+                }
+
+                if (remove != null) {
+                    instance.get().getValidRest().remove(remove);
                 }
             }
 
-            if (remove != null) {
-                instance.get().getValidRest().remove(remove);
-            }
-        }
+            return ActionResult.PASS;
+        });
     }
 }
