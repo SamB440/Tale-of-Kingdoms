@@ -60,7 +60,7 @@ public class GuildMasterScreen extends ScreenTOK {
 	public void render(MatrixStack stack, int par1, int par2, float par3) {
 		super.render(stack, par1, par2, par3);
 		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-		this.drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+		drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
 	}
 
 	@Override

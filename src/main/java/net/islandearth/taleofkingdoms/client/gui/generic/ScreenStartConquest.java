@@ -1,15 +1,30 @@
 package net.islandearth.taleofkingdoms.client.gui.generic;
 
+import com.google.gson.Gson;
+import com.sk89q.worldedit.math.BlockVector3;
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
+import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
 import net.islandearth.taleofkingdoms.common.schematic.SchematicHandler;
+import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.Tag;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Constructor;
 
 public class ScreenStartConquest extends ScreenTOK {
 	
@@ -43,7 +58,7 @@ public class ScreenStartConquest extends ScreenTOK {
 			button.setMessage(new LiteralText("Loading, please wait..."));
 			// Load guild castle schematic
 			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player).thenAccept(oi -> {
-				/*MinecraftClient.getInstance().execute(() -> {
+				MinecraftClient.getInstance().execute(() -> {
 					BlockVector3 max = oi.getRegion().getMaximumPoint();
 					BlockVector3 min = oi.getRegion().getMinimumPoint();
 					BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
@@ -55,19 +70,19 @@ public class ScreenStartConquest extends ScreenTOK {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					
+
 					try {
 						TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 						button.setMessage(new LiteralText("Loading NPCs..."));
 						int topBlockX = (Math.max(max.getBlockX(), min.getBlockX()));
 						int bottomBlockX = (Math.min(max.getBlockX(), min.getBlockX()));
-						
+
 						int topBlockY = (Math.max(max.getBlockY(), min.getBlockY()));
 						int bottomBlockY = (Math.min(max.getBlockY(), min.getBlockY()));
-						
+
 						int topBlockZ = (Math.max(max.getBlockZ(), min.getBlockZ()));
 						int bottomBlockZ = (Math.min(max.getBlockZ(), min.getBlockZ()));
-						
+
 						for (int x = bottomBlockX; x <= topBlockX; x++) {
 							for (int z = bottomBlockZ; z <= topBlockZ; z++) {
 								for (int y = bottomBlockY; y <= topBlockY; y++) {
@@ -101,7 +116,7 @@ public class ScreenStartConquest extends ScreenTOK {
 					} catch (ReflectiveOperationException e) {
 						e.printStackTrace();
 					}
-				});*/
+				});
 			});
 		}));
 		this.text.setMaxLength(32);
@@ -115,8 +130,8 @@ public class ScreenStartConquest extends ScreenTOK {
 	@Override
 	public void render(MatrixStack stack, int par1, int par2, float par3) {
         this.renderBackground(stack);
-        this.drawCenteredString(stack, this.textRenderer, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
-        this.drawCenteredString(stack, this.textRenderer, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);
         super.render(stack, par1, par2, par3);
     }

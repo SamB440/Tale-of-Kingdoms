@@ -49,7 +49,7 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         super.render(stack, par1, par2, par3);
-        this.drawCenteredString(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
     }
 
     @Override

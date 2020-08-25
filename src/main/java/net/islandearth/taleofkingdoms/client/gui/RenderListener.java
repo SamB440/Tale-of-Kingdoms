@@ -5,6 +5,7 @@ import net.islandearth.taleofkingdoms.common.event.InventoryDrawCallback;
 import net.islandearth.taleofkingdoms.common.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 
 import java.util.Optional;
 
@@ -12,14 +13,13 @@ public class RenderListener extends Listener {
 
 	public RenderListener() {
 		InventoryDrawCallback.EVENT.register((gui, matrices) -> {
-			String worldName = MinecraftClient.getInstance().getServer().getRunDirectory().getName();
 			Optional<ConquestInstance> instance = TaleOfKingdoms
 					.getAPI()
 					.get()
 					.getConquestInstanceStorage()
-					.getConquestInstance(worldName);
+					.mostRecentInstance();
 			if (!instance.isPresent()) return;
-			gui.drawCenteredString(matrices, MinecraftClient.getInstance().textRenderer, "Gold Coins: " + instance.get().getCoins(), gui.width / 2 - 60, gui.height / 2 - 100, 16763904);
+			DrawableHelper.drawCenteredString(matrices, MinecraftClient.getInstance().textRenderer, "Gold Coins: " + instance.get().getCoins(), gui.width / 2 - 60, gui.height / 2 - 100, 16763904);
 		});
 	}
 }
