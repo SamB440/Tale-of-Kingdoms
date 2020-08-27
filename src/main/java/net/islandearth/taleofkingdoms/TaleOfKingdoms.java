@@ -3,8 +3,13 @@ package net.islandearth.taleofkingdoms;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
+import net.islandearth.taleofkingdoms.common.entity.guild.FarmerEntity;
+import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import net.islandearth.taleofkingdoms.common.gson.BlockPosAdapter;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
+import net.islandearth.taleofkingdoms.common.listener.BlockListener;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
 import net.islandearth.taleofkingdoms.common.listener.MobSpawnListener;
 import net.islandearth.taleofkingdoms.common.listener.SleepListener;
@@ -40,6 +45,12 @@ public class TaleOfKingdoms implements ModInitializer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDMASTER, FarmerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.BLACKSMITH, FarmerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.CITYBUILDER, FarmerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, FarmerEntity.createMobAttributes());
     }
 
 
@@ -67,7 +78,7 @@ public class TaleOfKingdoms implements ModInitializer {
         new CoinListener();
         new SleepListener();
         new MobSpawnListener();
-        //new BlockListener();
+        new BlockListener();
     }
 
     public Gson getGson() {

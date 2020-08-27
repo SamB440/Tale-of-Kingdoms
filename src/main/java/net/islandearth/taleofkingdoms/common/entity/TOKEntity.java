@@ -8,10 +8,11 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class TOKEntity extends PathAwareEntity {
 
-	protected TOKEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+	protected TOKEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
 		super(entityType, world);
 	}
 
@@ -39,6 +40,7 @@ public abstract class TOKEntity extends PathAwareEntity {
 	 */
 	public static DefaultAttributeContainer.Builder createMobAttributes() {
 		return LivingEntity.createLivingAttributes()
+				.add(EntityAttributes.GENERIC_FOLLOW_RANGE)
 				.add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
 				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.0D);
 	}

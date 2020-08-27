@@ -12,7 +12,7 @@ import java.util.Optional;
 public class BlockListener extends Listener {
 
     public BlockListener() {
-        BlockBreakCallback.EVENT.register((player, block, pos) -> {
+        BlockBreakCallback.EVENT.register((block, pos) -> {
             if (MinecraftClient.getInstance().getServer() == null) return ActionResult.FAIL;
             Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()) {

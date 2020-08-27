@@ -19,9 +19,9 @@ public final class RenderSetup {
 	
 	private void setup() {
 		register(EntityTypes.FARMER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
-		register(EntityTypes.GUILD_MASTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
+		register(EntityTypes.GUILDMASTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
 		register(EntityTypes.BLACKSMITH, new Identifier(TaleOfKingdoms.MODID, "textures/entity/toksmith2.png"));
-		register(EntityTypes.CITY_BUILDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/builder2.png"));
+		register(EntityTypes.CITYBUILDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/builder2.png"));
 		register(EntityTypes.KNIGHT, new Identifier(TaleOfKingdoms.MODID, "textures/entity/knight2.png"));
 		register(EntityTypes.INNKEEPER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
 	}

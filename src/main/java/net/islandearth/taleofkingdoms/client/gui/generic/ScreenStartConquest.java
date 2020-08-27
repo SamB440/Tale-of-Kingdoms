@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
+import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
 import net.islandearth.taleofkingdoms.common.schematic.SchematicHandler;
@@ -14,8 +15,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -57,7 +60,7 @@ public class ScreenStartConquest extends ScreenTOK {
 
 			button.setMessage(new LiteralText("Loading, please wait..."));
 			// Load guild castle schematic
-			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, player).thenAccept(oi -> {
+			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid())).thenAccept(oi -> {
 				MinecraftClient.getInstance().execute(() -> {
 					BlockVector3 max = oi.getRegion().getMaximumPoint();
 					BlockVector3 min = oi.getRegion().getMinimumPoint();
@@ -87,20 +90,25 @@ public class ScreenStartConquest extends ScreenTOK {
 							for (int z = bottomBlockZ; z <= topBlockZ; z++) {
 								for (int y = bottomBlockY; y <= topBlockY; y++) {
 									BlockPos blockPos = new BlockPos(x, y, z);
+									player.getEntityWorld().getChunk(blockPos); // Load the chunk
 									BlockEntity tileEntity = player.getEntityWorld().getChunk(blockPos).getBlockEntity(blockPos);
 									if (tileEntity instanceof SignBlockEntity) {
 										SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
 										Tag line1 = signTileEntity.toInitialChunkDataTag().get("Text1");
-										if (line1 != null && line1.asString().equals("[Spawn]")) {
-											Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text1");
-											String entityName = line2.asString();
+										if (line1 != null && line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'")) {
+											Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
+											String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", ""); // Doesn't seem to be a way to get the plain string...
 											button.setMessage(new LiteralText("Loading NPCs: " + entityName));
 											Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("net.islandearth.taleofkingdoms.common.entity.guild." + entityName + "Entity");
-											Constructor constructor = entity.getConstructor(World.class);
-											TOKEntity toSpawn = (TOKEntity) constructor.newInstance(player.getEntityWorld());
-											player.getEntityWorld().spawnEntity(toSpawn);
-											toSpawn.teleport(x + 0.5, y, z + 0.5);
-											signTileEntity.getCachedState().getBlock().onBreak(player.getEntityWorld(), blockPos, signTileEntity.getCachedState(), null);
+											Constructor constructor = entity.getConstructor(EntityType.class, World.class);
+											EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
+											TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, player.getEntityWorld());
+											toSpawn.setPos(x + 0.5, y, z + 0.5);
+											ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+											MinecraftClient.getInstance().getServer().execute(() -> {
+												serverPlayerEntity.getServerWorld().spawnEntity(toSpawn);
+												serverPlayerEntity.getServerWorld().breakBlock(blockPos, false);
+											});
 											System.out.println("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getX() + "," + toSpawn.getY() + "," + toSpawn.getZ());
 										}
 									}

@@ -133,7 +133,7 @@ public class ConquestInstance {
 						if (tileEntity instanceof SignBlockEntity) {
 							SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
 							Tag tag = signTileEntity.toInitialChunkDataTag().get("Text1");
-							if (tag != null && tag.asString().equals("[Rest]")) {
+							if (tag != null && tag.toText().getString().equals("'{\"text\":\"[Rest]\"}'")) {
 								validRest.add(blockPos);
 							}
 						}
@@ -155,11 +155,7 @@ public class ConquestInstance {
 	 * @return true if player is in guild, false if not
 	 */
 	public boolean isInGuild(Entity entity) {
-		BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
-		BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
-		Region region = new CuboidRegion(firstPos, secondPos);
-		BlockVector3 playerLoc = BlockVector3.at(entity.getX(), entity.getY(), entity.getZ());
-		return region.contains(playerLoc);
+		return isInGuild(entity.getBlockPos());
 	}
 
 	public boolean isInGuild(BlockPos pos) {

@@ -21,7 +21,7 @@ public class EntityTypes {
 			new Identifier(TaleOfKingdoms.MODID, "farmer"),
 			FabricEntityTypeBuilder.create(SpawnGroup.MISC, FarmerEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
 	);
-	public static final EntityType<GuildMasterEntity> GUILD_MASTER = Registry.register(
+	public static final EntityType<GuildMasterEntity> GUILDMASTER = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier(TaleOfKingdoms.MODID, "guild_master"),
 			FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
@@ -31,7 +31,7 @@ public class EntityTypes {
 			new Identifier(TaleOfKingdoms.MODID, "blacksmith"),
 			FabricEntityTypeBuilder.create(SpawnGroup.MISC, BlacksmithEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()
 	);
-	public static final EntityType<CityBuilderEntity> CITY_BUILDER = Registry.register(
+	public static final EntityType<CityBuilderEntity> CITYBUILDER = Registry.register(
 			Registry.ENTITY_TYPE,
 			new Identifier(TaleOfKingdoms.MODID, "city_builder"),
 			FabricEntityTypeBuilder.create(SpawnGroup.MISC, CityBuilderEntity::new).dimensions(EntityDimensions.fixed(0.6f, 1.8f)).build()

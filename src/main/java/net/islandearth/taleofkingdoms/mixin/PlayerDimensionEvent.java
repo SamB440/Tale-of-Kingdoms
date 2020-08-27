@@ -1,14 +1,12 @@
 package net.islandearth.taleofkingdoms.mixin;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * This is free and unencumbered software released into the public domain.
@@ -36,12 +34,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin (ServerPlayerEntity.class)
+@Mixin (ServerWorld.class)
 public class PlayerDimensionEvent {
-	@Inject (method = "changeDimension",
+	@Inject (method = "onPlayerChangeDimension",
 	         at = @At ("HEAD"), cancellable = true)
-	private void changed(ServerWorld destination, CallbackInfoReturnable<Entity> cir) {
-		if (this.change(destination.getDimension())) cir.setReturnValue(null);
+	private void changed(ServerPlayerEntity player, CallbackInfo ci) {
+		if (!this.change(player)) {
+			ci.cancel();
+		}
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class PlayerDimensionEvent {
 	 * @return true if the player should not travel to the dimension
 	 */
 	@Unique
-	public boolean change(DimensionType type) {
+	public boolean change(ServerPlayerEntity type) {
 		return true;
 	}
 }
