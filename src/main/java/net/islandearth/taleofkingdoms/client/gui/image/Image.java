@@ -2,6 +2,7 @@ package net.islandearth.taleofkingdoms.client.gui.image;
 
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -11,15 +12,13 @@ public class Image implements IImage {
 	private final Identifier image;
 	private final int x;
 	private final int y;
-	private final int z;
-	private final int dimensions;
+	private final int[] dimensions;
 	
-	public Image(ScreenTOK screen, Identifier image, int x, int y, int z, int dimensions) {
+	public Image(ScreenTOK screen, Identifier image, int x, int y, int[] dimensions) {
 		this.screen = screen;
 		this.image = image;
 		this.x = x;
 		this.y = y;
-		this.z = z;
 		this.dimensions = dimensions;
 	}
 
@@ -36,17 +35,18 @@ public class Image implements IImage {
 		return x;
 	}
 
-	public int getDimensions() {
-		return dimensions;
+	public int getWidth() {
+		return dimensions[0];
+	}
+
+	public int getHeight() {
+		return dimensions[1];
 	}
 
 	@Override
-	public void render() {
+	public void render(MatrixStack matrices, Screen gui) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(image);
-		MatrixStack stack = new MatrixStack();
-		stack.translate(x, y, z);
-		screen.renderBackground(stack);
-		stack.pop();
+		gui.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight());
 		//TODO need to test if this works.
 	}
 }

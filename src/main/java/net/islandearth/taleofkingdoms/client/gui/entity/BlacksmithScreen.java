@@ -23,7 +23,7 @@ public class BlacksmithScreen extends ScreenTOK {
     public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ConquestInstance instance) {
         super("taleofkingdoms.menu.blacksmith.name");
         this.player = player;
-        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 128, 5, 5, 230));
+        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 128, 5, new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
     }
@@ -37,7 +37,7 @@ public class BlacksmithScreen extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        images.forEach(IImage::render);
+        images.forEach(image -> image.render(stack, this));
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         drawCenteredString(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
     }
