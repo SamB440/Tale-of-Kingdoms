@@ -36,7 +36,7 @@ public class ScreenStartConquest extends ScreenTOK {
 	
 	// Text fields
 	private TextFieldWidget text;
-	
+
 	// Other
 	private final String worldName;
 	private final File toSave;
@@ -61,7 +61,8 @@ public class ScreenStartConquest extends ScreenTOK {
 			button.setMessage(new LiteralText("Loading, please wait..."));
 			// Load guild castle schematic
 			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid())).thenAccept(oi -> {
-				MinecraftClient.getInstance().execute(() -> {
+				MinecraftClient.getInstance().getServer().execute(() -> {
+					ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
 					BlockVector3 max = oi.getRegion().getMaximumPoint();
 					BlockVector3 min = oi.getRegion().getMinimumPoint();
 					BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
@@ -73,6 +74,8 @@ public class ScreenStartConquest extends ScreenTOK {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+
+					serverPlayer.refreshPositionAfterTeleport(min.getX(), min.getY() + 4, min.getZ());
 
 					try {
 						TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
@@ -90,8 +93,7 @@ public class ScreenStartConquest extends ScreenTOK {
 							for (int z = bottomBlockZ; z <= topBlockZ; z++) {
 								for (int y = bottomBlockY; y <= topBlockY; y++) {
 									BlockPos blockPos = new BlockPos(x, y, z);
-									player.getEntityWorld().getChunk(blockPos); // Load the chunk
-									BlockEntity tileEntity = player.getEntityWorld().getChunk(blockPos).getBlockEntity(blockPos);
+									BlockEntity tileEntity = serverPlayer.getServerWorld().getChunk(blockPos).getBlockEntity(blockPos);
 									if (tileEntity instanceof SignBlockEntity) {
 										SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
 										Tag line1 = signTileEntity.toInitialChunkDataTag().get("Text1");
@@ -104,23 +106,23 @@ public class ScreenStartConquest extends ScreenTOK {
 											EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
 											TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, player.getEntityWorld());
 											toSpawn.setPos(x + 0.5, y, z + 0.5);
-											ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-											MinecraftClient.getInstance().getServer().execute(() -> {
-												serverPlayerEntity.getServerWorld().spawnEntity(toSpawn);
-												serverPlayerEntity.getServerWorld().breakBlock(blockPos, false);
-											});
+											serverPlayer.getServerWorld().spawnEntity(toSpawn);
+											serverPlayer.getServerWorld().breakBlock(blockPos, false);
 											System.out.println("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getX() + "," + toSpawn.getY() + "," + toSpawn.getZ());
 										}
 									}
 								}
 							}
 						}
-						button.setMessage(new LiteralText("Reloading chunks..."));
-						MinecraftClient.getInstance().worldRenderer.reload();
-						onClose();
-						loading = false;
-						instance.setLoaded(true);
-						instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
+
+						MinecraftClient.getInstance().execute(() -> {
+							button.setMessage(new LiteralText("Reloading chunks..."));
+							MinecraftClient.getInstance().worldRenderer.reload();
+							onClose();
+							loading = false;
+							instance.setLoaded(true);
+							instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
+						});
 					} catch (ReflectiveOperationException e) {
 						e.printStackTrace();
 					}
