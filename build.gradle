@@ -18,7 +18,7 @@ repositories {
 
 dependencies {
     compile 'org.jetbrains:annotations:16.0.2'
-    modCompileOnly ('com.sk89q.worldedit:worldedit-fabric-mc1.16.1:7.2.0-SNAPSHOT') {
+    modCompileOnly ('com.sk89q.worldedit:worldedit-fabric-mc1.16.2:7.2.0-SNAPSHOT') {
         exclude group: 'com.google.guava'
         exclude group: 'com.google.code.gson'
         exclude group: 'it.unimi.dsi'

@@ -5,21 +5,28 @@ import net.islandearth.taleofkingdoms.common.event.InventoryDrawCallback;
 import net.islandearth.taleofkingdoms.common.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 
 import java.util.Optional;
 
 public class RenderListener extends Listener {
 
 	public RenderListener() {
-		InventoryDrawCallback.EVENT.register((gui, matrices) -> {
+		InventoryDrawCallback.EVENT.register((gui, matrices, textRenderer) -> {
 			Optional<ConquestInstance> instance = TaleOfKingdoms
 					.getAPI()
 					.get()
 					.getConquestInstanceStorage()
 					.mostRecentInstance();
 			if (!instance.isPresent()) return;
-			DrawableHelper.drawCenteredString(matrices, MinecraftClient.getInstance().textRenderer, "Gold Coins: " + instance.get().getCoins(), gui.width / 2 - 60, gui.height / 2 - 100, 16763904);
+
+			drawWithoutShadow(matrices, textRenderer, "Gold Coins: " + instance.get().getCoins(), gui.width / 2 - 50, gui.height / 2 - 100, 16763904);
 		});
+	}
+
+	private void drawWithoutShadow(MatrixStack matrices, TextRenderer textRenderer, String text, int centerX, int y, int color) {
+		TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
+		renderer.draw(matrices, text, (float) (centerX - textRenderer.getWidth(text) / 2), (float) y, color);
 	}
 }
