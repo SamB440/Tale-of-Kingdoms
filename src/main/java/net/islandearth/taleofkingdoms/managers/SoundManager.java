@@ -10,22 +10,24 @@ import java.util.Map;
 
 public class SoundManager implements IManager {
 
-	private final Map<String, SoundEvent> events = new HashMap<>();
+	private final Map<TOKSound, SoundEvent> events = new HashMap<>();
 	
 	public SoundManager(TaleOfKingdoms tok) {
 		TaleOfKingdoms.LOGGER.info("Loading sounds...");
-		Identifier toktheme = new Identifier(TaleOfKingdoms.MODID, "toktheme");
-		addSound(toktheme);
+		for (TOKSound value : TOKSound.values()) {
+			addSound(value);
+		}
 		register();
 	}
 	
-	private void addSound(Identifier location) {
-		TaleOfKingdoms.LOGGER.info("Loading sound: " + location.getPath());
-		events.put(location.getPath(), new SoundEvent(location));
+	private void addSound(TOKSound sound) {
+		Identifier identifier = new Identifier(TaleOfKingdoms.MODID, sound.getPath());
+		TaleOfKingdoms.LOGGER.info("Loading sound: " + sound.getPath());
+		events.put(sound, new SoundEvent(identifier));
 	}
 	
-	public SoundEvent getSound(String name) {
-		return events.get(name);
+	public SoundEvent getSound(TOKSound sound) {
+		return events.get(sound);
 	}
 	
 	@Override
@@ -35,5 +37,19 @@ public class SoundManager implements IManager {
 
 	private void register() {
 		events.forEach((name, event) -> Registry.register(Registry.SOUND_EVENT, event.getId(), event));
+	}
+
+	public enum TOKSound {
+		TOKTHEME("toktheme");
+
+		private final String path;
+
+		TOKSound(String path) {
+			this.path = path;
+		}
+
+		public String getPath() {
+			return path;
+		}
 	}
 }

@@ -8,12 +8,10 @@ public class OperationInstance {
 
 	private final UUID operationId;
 	private final Region region;
-	private final int blocks;
 	
 	public OperationInstance(UUID operationId, Region region) {
 		this.operationId = operationId;
 		this.region = region;
-		this.blocks = region.getArea();
 	}
 	
 	public UUID getOperationId() {
@@ -22,9 +20,5 @@ public class OperationInstance {
 
 	public Region getRegion() {
 		return region;
-	}
-
-	public int getBlocks() {
-		return blocks;
 	}
 }

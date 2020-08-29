@@ -10,6 +10,10 @@ import com.sk89q.worldedit.fabric.FabricAdapter;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionSelector;
+import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
@@ -47,19 +51,25 @@ public class SchematicHandler {
                 Clipboard clipboard = format.getReader(new FileInputStream(schematic.getFile())).read();
                 EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
 
-                clipboard.setOrigin(position); // Set this so the region returned is correct.
-
-                BlockVector3 centerY = clipboard.getRegion().getCenter().toBlockPoint();
-                System.out.println(centerY); // Mainly debug, can be used to find the schematic in the world
-
-                Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
+                ClipboardHolder clipboardHolder = new ClipboardHolder(clipboard);
+                Operation operation = clipboardHolder.createPaste(editSession)
                         .to(position)
                         .ignoreAirBlocks(false)
                         .build();
                 final UUID uuid = UUID.randomUUID();
                 Operations.complete(operation);
                 editSession.flushSession();
-                cf.complete(new OperationInstance(uuid, clipboard.getRegion()));
+
+                Region region = clipboard.getRegion();
+                BlockVector3 clipboardOffset = clipboard.getRegion().getMinimumPoint().subtract(clipboard.getOrigin());
+                Vector3 realTo = position.toVector3().add(clipboardHolder.getTransform().apply(clipboardOffset.toVector3()));
+                Vector3 max = realTo.add(clipboardHolder.getTransform().apply(region.getMaximumPoint().subtract(region.getMinimumPoint()).toVector3()));
+                RegionSelector selector = new CuboidRegionSelector(adaptedWorld, realTo.toBlockPoint(), max.toBlockPoint());
+
+                BlockVector3 centerY = selector.getRegion().getCenter().toBlockPoint();
+                System.out.println(centerY); // Mainly debug, can be used to find the schematic in the world
+
+                cf.complete(new OperationInstance(uuid, selector.getRegion()));
             } catch (WorldEditException | IOException e) {
                 e.printStackTrace();
             }

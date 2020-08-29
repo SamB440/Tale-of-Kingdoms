@@ -6,6 +6,7 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
+import net.islandearth.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
 import net.islandearth.taleofkingdoms.common.schematic.SchematicHandler;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
@@ -75,8 +76,6 @@ public class ScreenStartConquest extends ScreenTOK {
 						e.printStackTrace();
 					}
 
-					serverPlayer.refreshPositionAfterTeleport(min.getX(), min.getY() + 4, min.getZ());
-
 					try {
 						TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
 						button.setMessage(new LiteralText("Loading NPCs..."));
@@ -123,6 +122,8 @@ public class ScreenStartConquest extends ScreenTOK {
 							instance.setLoaded(true);
 							instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
 						});
+
+						KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance);
 					} catch (ReflectiveOperationException e) {
 						e.printStackTrace();
 					}
