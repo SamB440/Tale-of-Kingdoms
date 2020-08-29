@@ -11,6 +11,7 @@ import net.islandearth.taleofkingdoms.common.gson.BlockPosAdapter;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.BlockListener;
 import net.islandearth.taleofkingdoms.common.listener.CoinListener;
+import net.islandearth.taleofkingdoms.common.listener.DeleteWorldListener;
 import net.islandearth.taleofkingdoms.common.listener.KingdomListener;
 import net.islandearth.taleofkingdoms.common.listener.MobSpawnListener;
 import net.islandearth.taleofkingdoms.common.listener.SleepListener;
@@ -81,6 +82,7 @@ public class TaleOfKingdoms implements ModInitializer {
         new MobSpawnListener();
         new BlockListener();
         new KingdomListener();
+        new DeleteWorldListener();
     }
 
     public Gson getGson() {

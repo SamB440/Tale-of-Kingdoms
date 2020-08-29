@@ -33,7 +33,7 @@ public class CoinListener extends Listener {
 								.mostRecentInstance()
 								.get()
 								.addCoins(random.nextInt(50));
-						player.inventory.method_29280(predicate -> predicate.getItem().equals(itemEntity.getStack().getItem()), -1, player.inventory);
+						player.inventory.remove(predicate -> predicate.getItem().equals(itemEntity.getStack().getItem()), -1, player.inventory);
 					}
 				}
 			}

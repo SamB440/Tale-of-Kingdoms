@@ -20,7 +20,7 @@ public class CityBuilderEntity extends TOKEntity {
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
         applyEntityAI();
     }
 

@@ -12,7 +12,8 @@
     "InventoryDrawEvent",
     "RecipesUpdatedEvent",
     "WorldClose",
-    "WorldSessionStartEvent"
+    "WorldSessionStartEvent",
+    "WorldDeleteEvent"
   ],
   "injectors": {
     "defaultRequire": 1
