@@ -59,7 +59,7 @@ public class ScreenStartConquest extends ScreenTOK {
 		this.addButton(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 30, 200, 20, new LiteralText("Start your Conquest."), (button) -> {
 			if (loading) return;
 
-			button.setMessage(new LiteralText("Loading, please wait..."));
+			button.setMessage(new LiteralText("Building a great castle..."));
 			// Load guild castle schematic
 			SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid())).thenAccept(oi -> {
 				MinecraftClient.getInstance().getServer().execute(() -> {
@@ -78,7 +78,7 @@ public class ScreenStartConquest extends ScreenTOK {
 
 					try {
 						TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-						button.setMessage(new LiteralText("Loading NPCs..."));
+						button.setMessage(new LiteralText("Summoning citizens of the realm..."));
 						int topBlockX = (Math.max(max.getBlockX(), min.getBlockX()));
 						int bottomBlockX = (Math.min(max.getBlockX(), min.getBlockX()));
 
@@ -99,7 +99,7 @@ public class ScreenStartConquest extends ScreenTOK {
 										if (line1 != null && line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'")) {
 											Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
 											String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", ""); // Doesn't seem to be a way to get the plain string...
-											button.setMessage(new LiteralText("Loading NPCs: " + entityName));
+											button.setMessage(new LiteralText("A new Citizen has arrived: " + entityName));
 											Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("net.islandearth.taleofkingdoms.common.entity.guild." + entityName + "Entity");
 											Constructor constructor = entity.getConstructor(EntityType.class, World.class);
 											EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
@@ -107,7 +107,7 @@ public class ScreenStartConquest extends ScreenTOK {
 											toSpawn.setPos(x + 0.5, y, z + 0.5);
 											serverPlayer.getServerWorld().spawnEntity(toSpawn);
 											serverPlayer.getServerWorld().breakBlock(blockPos, false);
-											System.out.println("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getX() + "," + toSpawn.getY() + "," + toSpawn.getZ());
+											TaleOfKingdoms.LOGGER.info("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getX() + "," + toSpawn.getY() + "," + toSpawn.getZ());
 										}
 									}
 								}
@@ -123,7 +123,7 @@ public class ScreenStartConquest extends ScreenTOK {
 							instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
 						});
 
-						KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance);
+						KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event
 					} catch (ReflectiveOperationException e) {
 						e.printStackTrace();
 					}

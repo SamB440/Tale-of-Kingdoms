@@ -48,7 +48,7 @@ public class GuildMasterScreen extends ScreenTOK {
             }));
         }
 
-		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + TextColor.fromFormatting(Formatting.GREEN) + "(1500 gold)" : "Hire Hunters " + TextColor.fromFormatting(Formatting.RED) + "(1500 gold)";
+		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + TextColor.fromFormatting(Formatting.GREEN).toString() + "(1500 gold)" : "Hire Hunters " + TextColor.fromFormatting(Formatting.RED) + "(1500 gold)";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
             //TODO what happens?
         }));

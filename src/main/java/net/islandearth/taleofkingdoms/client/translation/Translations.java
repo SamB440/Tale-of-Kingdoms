@@ -1,7 +1,9 @@
 package net.islandearth.taleofkingdoms.client.translation;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.NotNull;
 
 public enum Translations {
     FARMER_TAKE_BREAD("entity_type.taleofkingdoms.farmer.take_bread"),
@@ -24,7 +26,26 @@ public enum Translations {
     public void send(PlayerEntity playerEntity) {
         playerEntity.sendMessage(getTranslation(), false);
     }
-    
+
+    public void send(PlayerEntity playerEntity, String... values) {
+        send(playerEntity, false, values);
+    }
+
+    public void send(PlayerEntity playerEntity, boolean actionbar, String... values) {
+        playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().getString(), values)), actionbar);
+    }
+
+    @NotNull
+    private String replaceVariables(String message, String... values) {
+        String modifiedMessage = message;
+        for (int i = 0; i < 10; i++) {
+            if (values.length > i) modifiedMessage = modifiedMessage.replaceAll("%" + i, values[i]);
+            else break;
+        }
+
+        return modifiedMessage;
+    }
+
     public TranslatableText getTranslation() {
         return new TranslatableText(key);
     }

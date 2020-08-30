@@ -55,8 +55,6 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, FarmerEntity.createMobAttributes());
     }
 
-
-
     /**
      * Gets the "data folder" of the mod. This is always the modid as a folder in the mods folder.
      * You may get the file using this.
