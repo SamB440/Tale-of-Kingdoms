@@ -47,6 +47,5 @@ public class Image implements IImage {
 	public void render(MatrixStack matrices, Screen gui) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(image);
 		gui.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight());
-		//TODO need to test if this works.
 	}
 }

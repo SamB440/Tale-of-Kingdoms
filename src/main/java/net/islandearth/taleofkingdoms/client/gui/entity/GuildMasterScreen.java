@@ -53,7 +53,10 @@ public class GuildMasterScreen extends ScreenTOK {
             //TODO what happens?
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 20, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 20, 150, 20, new LiteralText("Exit"), (button) -> {
+			Translations.GUILDMASTER_GOODHUNTING.send(player);
+			this.onClose();
+		}));
 	}
 
 	@Override
@@ -70,12 +73,6 @@ public class GuildMasterScreen extends ScreenTOK {
 
 	@Override
 	public boolean shouldCloseOnEsc() {
-		return true;
-	}
-	
-	@Override
-	public void onClose() {
-		super.onClose();
-		Translations.GUILDMASTER_GOODHUNTING.send(player);
+		return false;
 	}
 }

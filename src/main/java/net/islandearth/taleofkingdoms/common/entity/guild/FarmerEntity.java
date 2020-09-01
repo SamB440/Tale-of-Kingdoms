@@ -4,12 +4,14 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -51,7 +53,10 @@ public class FarmerEntity extends TOKEntity {
 		instance.setFarmerLastBread(day);
 		Translations.FARMER_TAKE_BREAD.send(player);
 		int amount = ThreadLocalRandom.current().nextInt(1, 4);
-		player.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+		MinecraftClient.getInstance().getServer().execute(() -> {
+			ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+			serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+		});
 		return ActionResult.PASS;
 	}
 }
