@@ -13,6 +13,8 @@ public class EntitySpawnEvent {
 
     @Inject(method = "spawnEntity", at = @At(value = "INVOKE"), cancellable = true)
     public void onSpawn(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(EntitySpawnCallback.EVENT.invoker().spawn(entity));
+        if (!EntitySpawnCallback.EVENT.invoker().spawn(entity)) {
+            cir.setReturnValue(false);
+        }
     }
 }
