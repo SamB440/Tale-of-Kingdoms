@@ -4,7 +4,8 @@
   "package": "net.islandearth.taleofkingdoms.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "common.EntitySpawnEvent"
+    "common.EntitySpawnEvent",
+    "common.InventoryInsertEvent"
   ],
   "client": [
     "PlayerBreakBlock",

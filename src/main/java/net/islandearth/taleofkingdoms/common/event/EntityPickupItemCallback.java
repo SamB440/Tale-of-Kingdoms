@@ -2,16 +2,18 @@ package net.islandearth.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 
 public interface EntityPickupItemCallback {
 
     Event<EntityPickupItemCallback> EVENT = EventFactory.createArrayBacked(EntityPickupItemCallback.class,
-            (listeners) -> (entity, item, count) -> {
+            (listeners) -> (entity, item) -> {
                 for (EntityPickupItemCallback listener : listeners) {
-                    listener.pickup(entity, item, count);
+                    return listener.pickup(entity, item);
                 }
+                return true;
             });
 
-    void pickup(Entity entity, Entity item, int count);
+    boolean pickup(PlayerEntity player, ItemStack item);
 }

@@ -2,22 +2,49 @@ package net.islandearth.taleofkingdoms.mixin;
 
 import net.islandearth.taleofkingdoms.common.event.EntityPickupItemCallback;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageTracker;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.stat.Stats;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LivingEntity.class)
-public class EntityPickupItemEvent {
+import java.util.UUID;
 
-    @Shadow @Final private DamageTracker damageTracker;
+@Mixin(ItemEntity.class)
+public abstract class EntityPickupItemEvent extends Entity {
 
-    @Inject(method = "sendPickup", at = @At("HEAD"))
-    public void sendPickup(Entity item, int count, CallbackInfo ci) {
-        EntityPickupItemCallback.EVENT.invoker().pickup(damageTracker.getEntity(), item, count);
+    @Shadow
+    private int pickupDelay;
+
+    @Shadow
+    private UUID owner;
+
+    public EntityPickupItemEvent(EntityType<?> type, World world) {
+        super(type, world);
+    }
+
+    @Override
+    public void onPlayerCollision(PlayerEntity player) {
+        if (!this.world.isClient) {
+            final ItemStack cloned = ((ItemEntity) (Object) this).getStack().copy();
+            ItemStack itemStack = ((ItemEntity) (Object) this).getStack();
+            Item item = itemStack.getItem();
+            int i = itemStack.getCount();
+            if (this.pickupDelay == 0 && (this.owner == null || this.owner.equals(player.getUuid())) && player.inventory.insertStack(itemStack)) {
+                player.sendPickup(this, i);
+                if (itemStack.isEmpty()) {
+                    this.remove();
+                    itemStack.setCount(i);
+                }
+
+                player.increaseStat(Stats.PICKED_UP.getOrCreateStat(item), i);
+                player.method_29499((ItemEntity) (Object) this);
+                EntityPickupItemCallback.EVENT.invoker().pickup(player, cloned);
+            }
+        }
     }
 }
