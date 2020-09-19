@@ -47,7 +47,7 @@ public class ItemRegistry extends Listener {
 		TaleOfKingdoms.LOGGER.info("Loading items...");
 		int index = 1;
 		for (TOKItem item : ITEMS.keySet()) {
-			TaleOfKingdoms.LOGGER.info("[" + index + "/" + ITEMS.values().size() + "] Loading item: " + item.getClass().getName());
+			TaleOfKingdoms.LOGGER.info("[" + index + "/" + ITEMS.values().size() + "] Loading item: " + item.getRegistryName());
 			Registry.register(Registry.ITEM, new Identifier(TaleOfKingdoms.MODID, item.getRegistryName()), ITEMS.get(item));
 			index++;
 		}
