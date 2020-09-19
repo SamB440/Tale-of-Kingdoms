@@ -27,7 +27,7 @@ public class ItemHelper {
 	 * @param entityLiving entity to drop coins for
 	 */
 	public static void dropCoins(LivingEntity entityLiving) {
-		if (isHostileEntity(entityLiving) && entityLiving.world.isClient()) {
+		if (isHostileEntity(entityLiving)) {
 			int bound = random.nextInt(25);
 			for (int i = 0; i < bound; i++) {
 				dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entityLiving);
@@ -35,7 +35,7 @@ public class ItemHelper {
 		} 
 	}
 	
-	private static void dropItem(Item item, int meta, LivingEntity livingBase) { 
+	private static void dropItem(Item item, int meta, LivingEntity livingBase) {
 		livingBase.dropItem(item, meta);
 	}
 }
