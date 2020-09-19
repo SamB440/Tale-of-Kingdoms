@@ -150,7 +150,7 @@ public class ConquestInstance {
 	}
 
 	/**
-	 * Checks if a player is in the guild.
+	 * Checks if an entity is in the guild.
 	 * @param entity the entity
 	 * @return true if player is in guild, false if not
 	 */
@@ -158,6 +158,11 @@ public class ConquestInstance {
 		return isInGuild(entity.getBlockPos());
 	}
 
+	/**
+	 * Checks if a location is in the guild.
+	 * @param pos the {@link BlockPos}
+	 * @return true if position is in guild, false if not
+	 */
 	public boolean isInGuild(BlockPos pos) {
 		BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
 		BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
