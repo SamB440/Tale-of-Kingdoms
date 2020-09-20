@@ -37,7 +37,7 @@ public class InnkeeperScreen extends ScreenTOK {
             BlockPos rest = this.locateRestingPlace(player);
             if (rest != null) {
                 player.teleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5, true);
-                player.trySleep(rest);
+                player.sleep(rest);
             } else {
                 player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);
             }

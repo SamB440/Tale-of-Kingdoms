@@ -10,7 +10,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 
 //TODO this class needs more translations
@@ -48,7 +47,7 @@ public class GuildMasterScreen extends ScreenTOK {
             }));
         }
 
-		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + TextColor.fromFormatting(Formatting.GREEN).toString() + "(1500 gold)" : "Hire Hunters " + TextColor.fromFormatting(Formatting.RED) + "(1500 gold)";
+		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
             //TODO what happens?
         }));
