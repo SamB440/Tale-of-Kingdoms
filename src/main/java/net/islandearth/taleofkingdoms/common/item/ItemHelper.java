@@ -1,5 +1,6 @@
 package net.islandearth.taleofkingdoms.common.item;
 
+import net.islandearth.taleofkingdoms.common.item.common.ItemCoin;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.Monster;

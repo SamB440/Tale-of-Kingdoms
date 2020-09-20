@@ -10,10 +10,9 @@ public interface EntityPickupItemCallback {
     Event<EntityPickupItemCallback> EVENT = EventFactory.createArrayBacked(EntityPickupItemCallback.class,
             (listeners) -> (entity, item) -> {
                 for (EntityPickupItemCallback listener : listeners) {
-                    return listener.pickup(entity, item);
+                    listener.pickup(entity, item);
                 }
-                return true;
             });
 
-    boolean pickup(PlayerEntity player, ItemStack item);
+    void pickup(PlayerEntity player, ItemStack item);
 }

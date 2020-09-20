@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.mixin;
+package net.islandearth.taleofkingdoms.mixin.client;
 
 import net.islandearth.taleofkingdoms.common.event.InventoryDrawCallback;
 import net.minecraft.client.MinecraftClient;

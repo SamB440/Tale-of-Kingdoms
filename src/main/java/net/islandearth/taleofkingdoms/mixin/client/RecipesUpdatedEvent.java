@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.mixin;
+package net.islandearth.taleofkingdoms.mixin.client;
 
 import net.islandearth.taleofkingdoms.common.event.RecipesUpdatedCallback;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

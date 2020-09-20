@@ -30,7 +30,6 @@ public class CoinListener extends Listener {
                         .addCoins(random.nextInt(50));
                 player.inventory.remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.inventory);
             }
-            return true;
         });
     }
 }

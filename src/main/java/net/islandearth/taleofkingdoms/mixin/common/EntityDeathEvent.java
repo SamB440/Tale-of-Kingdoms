@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.mixin;
+package net.islandearth.taleofkingdoms.mixin.common;
 
 import net.islandearth.taleofkingdoms.common.event.EntityDeathCallback;
 import net.minecraft.entity.LivingEntity;
@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * For more information, please refer to <http://unlicense.org/>
  */
 @Mixin(LivingEntity.class)
-public abstract class EntityDeathEvent {
+public class EntityDeathEvent {
 
 	@Shadow @Final private DamageTracker damageTracker;
 

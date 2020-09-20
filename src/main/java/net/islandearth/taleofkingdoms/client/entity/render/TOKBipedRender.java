@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.common.entity.render;
+package net.islandearth.taleofkingdoms.client.entity.render;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

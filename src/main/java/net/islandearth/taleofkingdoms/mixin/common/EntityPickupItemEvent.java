@@ -1,4 +1,4 @@
-package net.islandearth.taleofkingdoms.mixin;
+package net.islandearth.taleofkingdoms.mixin.common;
 
 import net.islandearth.taleofkingdoms.common.event.EntityPickupItemCallback;
 import net.minecraft.entity.Entity;

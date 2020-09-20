@@ -2,6 +2,8 @@ package net.islandearth.taleofkingdoms.common.item;
 
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.common.item.common.ItemCoin;
+import net.islandearth.taleofkingdoms.common.item.common.ItemPouch;
 import net.islandearth.taleofkingdoms.common.listener.Listener;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -22,7 +24,8 @@ public class ItemRegistry extends Listener {
 			.build();
 
 	public enum TOKItem {
-		COIN("coin");
+		COIN("coin"),
+		POUCH("pouch");
 
 		private final String registryName;
 
@@ -40,6 +43,9 @@ public class ItemRegistry extends Listener {
 				.maxCount(16)
 				.rarity(Rarity.COMMON)
 				.fireproof()));
+		ITEMS.put(TOKItem.POUCH, new ItemPouch(new Item.Settings().group(TOK_ITEM_GROUP)
+				.maxCount(1)
+				.rarity(Rarity.COMMON)));
 		registerItems();
 	}
 

@@ -5,14 +5,13 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "common.EntitySpawnEvent",
-    "common.InventoryInsertEvent"
+    "common.InventoryInsertEvent",
+    "common.EntityDeathEvent",
+    "common.EntityPickupItemEvent"
   ],
   "client": [
-    "PlayerBreakBlock",
-    "EntityPickupItemEvent",
-    "EntityDeathEvent",
-    "InventoryDrawEvent",
-    "RecipesUpdatedEvent",
+    "client.InventoryDrawEvent",
+    "client.RecipesUpdatedEvent",
     "WorldClose",
     "WorldSessionStartEvent",
     "WorldDeleteEvent"

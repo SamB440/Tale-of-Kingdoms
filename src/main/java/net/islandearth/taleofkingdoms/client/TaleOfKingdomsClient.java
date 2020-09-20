@@ -4,8 +4,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.client.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.client.gui.RenderListener;
-import net.islandearth.taleofkingdoms.common.entity.render.RenderSetup;
 import net.islandearth.taleofkingdoms.common.listener.StartWorldListener;
 
 @Environment(EnvType.CLIENT)
