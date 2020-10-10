@@ -4,7 +4,6 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.event.InventoryDrawCallback;
 import net.islandearth.taleofkingdoms.common.listener.Listener;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -26,7 +25,6 @@ public class RenderListener extends Listener {
 	}
 
 	private void drawWithoutShadow(MatrixStack matrices, TextRenderer textRenderer, String text, int centerX, int y, int color) {
-		TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
-		renderer.draw(matrices, text, (float) (centerX - textRenderer.getWidth(text) / 2), (float) y, color);
+		textRenderer.draw(matrices, text, (float) (centerX - textRenderer.getWidth(text) / 2), (float) y, color);
 	}
 }
