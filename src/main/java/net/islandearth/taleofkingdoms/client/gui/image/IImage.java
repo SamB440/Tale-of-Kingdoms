@@ -6,8 +6,8 @@ import net.minecraft.util.Identifier;
 
 public interface IImage {
 
-	Identifier getResourceLocation();
+    Identifier getResourceLocation();
 
-	void render(MatrixStack matrices, Screen gui);
+    void render(MatrixStack matrices, Screen gui);
 
 }

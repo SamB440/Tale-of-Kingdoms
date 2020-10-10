@@ -19,44 +19,44 @@ import net.minecraft.world.World;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends TOKEntity {
-	
-	public FarmerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
-		super(entityType, world);
-		this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
-	}
 
-	@Override
-	protected void initGoals() {
-		super.initGoals();
-		this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
-		applyEntityAI();
-	}
+    public FarmerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+        super(entityType, world);
+        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
+    }
 
-	@Override
-	public boolean isStationary() {
-		return true;
-	}
+    @Override
+    protected void initGoals() {
+        super.initGoals();
+        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+        applyEntityAI();
+    }
 
-	@Override
-	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-		if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-		
-		// Check if there is at least 1 Minecraft day difference
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-		long day = player.world.getTimeOfDay() / 24000L;
-		if (instance.getFarmerLastBread() >= day) {
-			Translations.FARMER_GOT_BREAD.send(player);
-			return ActionResult.FAIL;
-		}
-		
-		// Set the current day and add bread to inventory
-		instance.setFarmerLastBread(day);
-		Translations.FARMER_TAKE_BREAD.send(player);
-		int amount = ThreadLocalRandom.current().nextInt(1, 4);
-		MinecraftClient.getInstance().getServer().execute(() -> {
-			ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-			serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
-		});
-		return ActionResult.PASS;
-	}
+    @Override
+    public boolean isStationary() {
+        return true;
+    }
+
+    @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+
+        // Check if there is at least 1 Minecraft day difference
+        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        long day = player.world.getTimeOfDay() / 24000L;
+        if (instance.getFarmerLastBread() >= day) {
+            Translations.FARMER_GOT_BREAD.send(player);
+            return ActionResult.FAIL;
+        }
+
+        // Set the current day and add bread to inventory
+        instance.setFarmerLastBread(day);
+        Translations.FARMER_TAKE_BREAD.send(player);
+        int amount = ThreadLocalRandom.current().nextInt(1, 4);
+        MinecraftClient.getInstance().getServer().execute(() -> {
+            ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+            serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+        });
+        return ActionResult.PASS;
+    }
 }

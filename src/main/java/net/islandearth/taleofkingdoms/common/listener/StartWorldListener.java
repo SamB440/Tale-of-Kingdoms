@@ -24,79 +24,79 @@ import java.io.Writer;
 
 public class StartWorldListener extends Listener {
 
-	private String worldName;
-	private boolean joined;
+    private String worldName;
+    private boolean joined;
 
-	public StartWorldListener() {
-		WorldStopCallback.EVENT.register(() -> {
-			if (!joined) return;
-			if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
+    public StartWorldListener() {
+        WorldStopCallback.EVENT.register(() -> {
+            if (!joined) return;
+            if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
 
-			ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
-			try (Writer writer = new FileWriter(file)) {
-				Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
-				gson.toJson(instance, writer);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(instance.getWorld());
-			this.joined = false;
-		});
+            ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+            File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
+            try (Writer writer = new FileWriter(file)) {
+                Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+                gson.toJson(instance, writer);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(instance.getWorld());
+            this.joined = false;
+        });
 
-		WorldSessionStartCallback.EVENT.register(worldName -> this.worldName = worldName);
+        WorldSessionStartCallback.EVENT.register(worldName -> this.worldName = worldName);
 
-		RecipesUpdatedCallback.EVENT.register(() -> {
-			PlayerEntity entity = MinecraftClient.getInstance().player;
-			if (!entity.getEntityWorld().isClient()) return;
+        RecipesUpdatedCallback.EVENT.register(() -> {
+            PlayerEntity entity = MinecraftClient.getInstance().player;
+            if (!entity.getEntityWorld().isClient()) return;
 
-			// Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
-			if (joined) return;
+            // Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
+            if (joined) return;
 
-			this.joined = true;
-			//TODO support for server
-			boolean loaded = load(worldName);
-			File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
-			if (loaded) {
-				// Already exists
-				Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
-				try {
-					// Load from json into class
-					BufferedReader reader = new BufferedReader(new FileReader(file));
-					ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
-					MinecraftClient.getInstance().execute(() -> {
-						// Check if file exists, but values don't. Game probably crashed?
-						if ((instance == null || instance.getName() == null) || !instance.isLoaded())
-							MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
-						else
-							MinecraftClient.getInstance().openScreen(new ScreenContinueConquest(instance));
-						TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-					});
-				} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-					e.printStackTrace();
-				}
-				return;
-			}
+            this.joined = true;
+            //TODO support for server
+            boolean loaded = load(worldName);
+            File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+            if (loaded) {
+                // Already exists
+                Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+                try {
+                    // Load from json into class
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
+                    MinecraftClient.getInstance().execute(() -> {
+                        // Check if file exists, but values don't. Game probably crashed?
+                        if ((instance == null || instance.getName() == null) || !instance.isLoaded())
+                            MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
+                        else
+                            MinecraftClient.getInstance().openScreen(new ScreenContinueConquest(instance));
+                        TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                    });
+                } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
 
-			// New world creation
-			MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity)));
-		});
-	}
-	
-	private boolean load(String worldName) {
-		File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
-		// Check if this world has been loaded or not
-		if (!file.exists()) {
-			try {
-				// If not, create new file
-				file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return false;
-		} else {
-			// It already exists.
-			return true;
-		}
-	}
+            // New world creation
+            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity)));
+        });
+    }
+
+    private boolean load(String worldName) {
+        File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+        // Check if this world has been loaded or not
+        if (!file.exists()) {
+            try {
+                // If not, create new file
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        } else {
+            // It already exists.
+            return true;
+        }
+    }
 }

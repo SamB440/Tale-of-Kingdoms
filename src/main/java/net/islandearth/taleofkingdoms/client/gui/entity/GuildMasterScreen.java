@@ -16,24 +16,24 @@ import net.minecraft.util.Formatting;
 public class GuildMasterScreen extends ScreenTOK {
 
     private final PlayerEntity player;
-	private final GuildMasterEntity entity;
-	private final ConquestInstance instance;
+    private final GuildMasterEntity entity;
+    private final ConquestInstance instance;
 
-	public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
-	    super("taleofkingdoms.menu.guildmaster.name");
-		this.player = player;
-		this.entity = entity;
-		this.instance = instance;
-		Translations.GUILDMASTER_WELCOME.send(player);
-	}
+    public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
+        super("taleofkingdoms.menu.guildmaster.name");
+        this.player = player;
+        this.entity = entity;
+        this.instance = instance;
+        Translations.GUILDMASTER_WELCOME.send(player);
+    }
 
-	@Override
-	public void init() {
-		super.init();
-		if (!instance.hasContract()) {
+    @Override
+    public void init() {
+        super.init();
+        if (!instance.hasContract()) {
             this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
                 instance.setHasContract(true);
-				Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
+                Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
                 button.active = false;
                 onClose();
@@ -47,31 +47,31 @@ public class GuildMasterScreen extends ScreenTOK {
             }));
         }
 
-		String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
+        String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
             //TODO what happens?
         }));
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 20, 150, 20, new LiteralText("Exit"), (button) -> {
-			Translations.GUILDMASTER_GOODHUNTING.send(player);
-			this.onClose();
-		}));
-	}
+            Translations.GUILDMASTER_GOODHUNTING.send(player);
+            this.onClose();
+        }));
+    }
 
-	@Override
-	public void render(MatrixStack stack, int par1, int par2, float par3) {
-		super.render(stack, par1, par2, par3);
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-		drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-	}
+    @Override
+    public void render(MatrixStack stack, int par1, int par2, float par3) {
+        super.render(stack, par1, par2, par3);
+        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+    }
 
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
 
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return false;
-	}
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
 }

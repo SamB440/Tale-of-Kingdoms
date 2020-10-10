@@ -12,29 +12,29 @@ import net.minecraft.text.TranslatableText;
 @Environment(EnvType.CLIENT)
 public abstract class ScreenTOK extends Screen {
 
-	/**
-	 * Constructs a new {@link Screen}
-	 * @param translation the translation key
-	 */
-	protected ScreenTOK(String translation) {
-		super(new TranslatableText(translation));
-	}
+    /**
+     * Constructs a new {@link Screen}
+     * @param translation the translation key
+     */
+    protected ScreenTOK(String translation) {
+        super(new TranslatableText(translation));
+    }
 
-	/**
-	 * Whether this {@link Screen} is closeable via the escape key.
-	 * @return true if escapable
-	 */
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return false;
-	}
+    /**
+     * Whether this {@link Screen} is closeable via the escape key.
+     * @return true if escapable
+     */
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
 
-	/**
-	 * Whether this {@link Screen} pauses the game.
-	 * @return true if it pauses the game
-	 */
-	@Override
-	public boolean isPauseScreen() {
-		return true;
-	}
+    /**
+     * Whether this {@link Screen} pauses the game.
+     * @return true if it pauses the game
+     */
+    @Override
+    public boolean isPauseScreen() {
+        return true;
+    }
 }

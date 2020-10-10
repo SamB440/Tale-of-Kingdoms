@@ -15,28 +15,28 @@ import net.minecraft.world.World;
 
 public class GuildMasterEntity extends TOKEntity {
 
-	public GuildMasterEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
-		super(entityType, world);
-	}
+    public GuildMasterEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
-	@Override
-	protected void initGoals() {
-		super.initGoals();
-		this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
-		applyEntityAI();
-	}
+    @Override
+    protected void initGoals() {
+        super.initGoals();
+        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+        applyEntityAI();
+    }
 
-	@Override
-	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-		if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-		ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-		GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
-		MinecraftClient.getInstance().openScreen(screen);
-		return ActionResult.PASS;
-	}
+    @Override
+    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
+        MinecraftClient.getInstance().openScreen(screen);
+        return ActionResult.PASS;
+    }
 
-	@Override
-	public boolean isStationary() {
-		return true;
-	}
+    @Override
+    public boolean isStationary() {
+        return true;
+    }
 }
