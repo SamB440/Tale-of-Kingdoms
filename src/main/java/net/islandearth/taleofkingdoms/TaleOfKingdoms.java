@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
+import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.entity.generic.KnightEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.CityBuilderEntity;
@@ -57,6 +58,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.BLACKSMITH, BlacksmithEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.CITYBUILDER, CityBuilderEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity.createMobAttributes());
     }
 
     /**

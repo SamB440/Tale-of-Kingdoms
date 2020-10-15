@@ -15,7 +15,8 @@ public enum Translations {
     GUILDMASTER_GOODHUNTING("entity_type.taleofkingdoms.guildmaster.good_hunting"),
     INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
     INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),
-    NEED_CONTRACT("generic.taleofkingdoms.need_contract");
+    NEED_CONTRACT("generic.taleofkingdoms.need_contract"),
+    SERVE("generic.taleofkingdoms.serve");
     
     private final String key;
     

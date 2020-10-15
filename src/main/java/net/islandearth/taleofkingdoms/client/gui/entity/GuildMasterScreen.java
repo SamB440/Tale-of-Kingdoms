@@ -3,12 +3,15 @@ package net.islandearth.taleofkingdoms.client.gui.entity;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
+import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
+import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 
@@ -36,7 +39,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
                 button.active = false;
-                onClose();
+                this.onClose();
                 MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
             }));
         } else {
@@ -49,7 +52,19 @@ public class GuildMasterScreen extends ScreenTOK {
 
         String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
-            //TODO what happens?
+            if (instance.getCoins() >= 1500) {
+                MinecraftClient.getInstance().getServer().execute(() -> {
+                    ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+                    HunterEntity hunterEntity = new HunterEntity(EntityTypes.HUNTER, serverWorld);
+                    hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
+                    serverWorld.spawnEntity(hunterEntity);
+                    hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
+                });
+                instance.setCoins(instance.getCoins() - 1500);
+                Translations.SERVE.send(player);
+                this.onClose();
+                MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
+            }
         }));
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 20, 150, 20, new LiteralText("Exit"), (button) -> {

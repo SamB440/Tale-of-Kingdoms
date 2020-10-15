@@ -15,5 +15,6 @@
     "entity_type.taleofkingdoms.innkeeper.rest": "Majatalon isäntä: Olisiko lepo paikallaan, herra?",
     "entity_type.taleofkingdoms.innkeeper.leave": "Majatalon isäntä: Hyvää päivänjatkoa.",
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
-    "generic.taleofkingdoms.need_contract": "Majatalon isäntä: Tarvitset sopimuksen tuota varten! Käy Kiltamestarin luona yläkerrassa."
+    "generic.taleofkingdoms.need_contract": "Majatalon isäntä: Tarvitset sopimuksen tuota varten! Käy Kiltamestarin luona yläkerrassa.",
+    "generic.taleofkingdoms.serve": "I will serve you, my liege!"
 }

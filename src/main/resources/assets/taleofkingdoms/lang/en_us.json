@@ -16,5 +16,6 @@
     "entity_type.taleofkingdoms.innkeeper.rest": "House Keeper: Would you like to have some rest, sir?",
     "entity_type.taleofkingdoms.innkeeper.leave": "House Keeper: Have a nice day.",
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
-    "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!"
+    "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
+    "generic.taleofkingdoms.serve": "I will serve you, my liege!"
 }

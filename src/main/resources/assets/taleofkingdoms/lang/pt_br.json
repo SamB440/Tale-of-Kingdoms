@@ -15,5 +15,6 @@
     "entity_type.taleofkingdoms.innkeeper.rest": "Estalajadeiro: Gostaria de descansar, senhor?",
     "entity_type.taleofkingdoms.innkeeper.leave": "Estalajadeiro: Tenha um bom dia.",
     "menu.taleofkingdoms.innkeeper.name": "Estalajadeiro",
-    "generic.taleofkingdoms.need_contract": "Estalajadeiro: Você precisa de um contrato para fazer isto! Vá visitar o mestre da guilda no andar de cima!"
+    "generic.taleofkingdoms.need_contract": "Estalajadeiro: Você precisa de um contrato para fazer isto! Vá visitar o mestre da guilda no andar de cima!",
+    "generic.taleofkingdoms.serve": "I will serve you, my liege!"
 }

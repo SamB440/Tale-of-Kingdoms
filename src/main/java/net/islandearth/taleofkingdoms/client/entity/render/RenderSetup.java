@@ -24,6 +24,7 @@ public final class RenderSetup {
         register(EntityTypes.CITYBUILDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/builder2.png"));
         register(EntityTypes.KNIGHT, new Identifier(TaleOfKingdoms.MODID, "textures/entity/knight2.png"));
         register(EntityTypes.INNKEEPER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/farmer-2.png"));
+        register(EntityTypes.HUNTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/hunter2.png"));
     }
 
     private void register(EntityType type, Identifier skin) {

@@ -15,5 +15,6 @@
   "entity_type.taleofkingdoms.innkeeper.rest": "Huisbaas: Heeft u behoefte aan wat rust, meneer?",
   "entity_type.taleofkingdoms.innkeeper.leave": "Housebeeper: Fijne dag nog.",
   "menu.taleofkingdoms.innkeeper.name": "Herbergier",
-  "generic.taleofkingdoms.need_contract": "Huisbaas: Daar heb je een contract voor nodig! Ga naar boven en bezoek de Gildemeester!"
+  "generic.taleofkingdoms.need_contract": "Huisbaas: Daar heb je een contract voor nodig! Ga naar boven en bezoek de Gildemeester!",
+  "generic.taleofkingdoms.serve": "I will serve you, my liege!"
 }
