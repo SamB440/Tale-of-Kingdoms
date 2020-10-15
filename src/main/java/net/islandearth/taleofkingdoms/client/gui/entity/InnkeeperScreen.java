@@ -4,9 +4,13 @@ import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -34,10 +38,17 @@ public class InnkeeperScreen extends ScreenTOK {
         super.init();
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
             this.onClose();
+            //TODO fix sleeping for fabric
             BlockPos rest = this.locateRestingPlace(player);
             if (rest != null) {
-                player.teleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5, true);
-                player.sleep(rest);
+                MinecraftClient.getInstance().getServer().getOverworld().setTimeOfDay(12000);
+                MinecraftClient.getInstance().getServer().execute(() -> {
+                    ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                    serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                    serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
+                    serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                });
+                //player.sleep(rest);
             } else {
                 player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);
             }
