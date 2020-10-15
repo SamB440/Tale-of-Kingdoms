@@ -41,7 +41,7 @@ public class InnkeeperScreen extends ScreenTOK {
             //TODO fix sleeping for fabric
             BlockPos rest = this.locateRestingPlace(player);
             if (rest != null) {
-                MinecraftClient.getInstance().getServer().getOverworld().setTimeOfDay(12000);
+                MinecraftClient.getInstance().getServer().getOverworld().setTimeOfDay(24000);
                 MinecraftClient.getInstance().getServer().execute(() -> {
                     ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                     serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
