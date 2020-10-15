@@ -28,6 +28,16 @@ A: Currently you cannot donate simply because I have not set anything up. Howeve
 Q: What versions will it be for?
 A: As I am the only one working on it, only 1.15+ will be supported.
 
+Compiling
+=======
+`git clone https://gitlab.com/SamB440/tale-of-kingdoms.git`
+
+`cd tale-of-kingdoms`
+
+`./gradlew build`
+
+Jar file is at `builds/tale-of-kingdoms-1.0.0.jar`
+
 Minecraft Server
 =======
 IslandEarth - https://www.islandearth.net
