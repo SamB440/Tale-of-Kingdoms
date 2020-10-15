@@ -1,6 +1,7 @@
 package net.islandearth.taleofkingdoms.common.listener;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.event.EntityDeathCallback;
 import net.islandearth.taleofkingdoms.common.event.EntityPickupItemCallback;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
@@ -14,7 +15,7 @@ public class CoinListener extends Listener {
 
     public CoinListener() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
-            if (source.getSource() instanceof PlayerEntity) {
+            if (source.getSource() instanceof PlayerEntity || source.getSource() instanceof HunterEntity) {
                 ItemHelper.dropCoins(entity);
                 //TODO worthiness stuff
             }
