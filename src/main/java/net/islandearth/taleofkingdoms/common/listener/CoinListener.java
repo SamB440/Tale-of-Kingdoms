@@ -17,7 +17,9 @@ public class CoinListener extends Listener {
         EntityDeathCallback.EVENT.register((source, entity) -> {
             if (source.getSource() instanceof PlayerEntity || source.getSource() instanceof HunterEntity) {
                 ItemHelper.dropCoins(entity);
-                //TODO worthiness stuff
+                TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+                    instance.setWorthiness(instance.getWorthiness() + 1);
+                });
             }
         });
 

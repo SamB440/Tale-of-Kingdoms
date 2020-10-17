@@ -2,6 +2,7 @@ package net.islandearth.taleofkingdoms.client.gui.entity;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
+import net.islandearth.taleofkingdoms.client.gui.generic.ScreenBar;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
@@ -21,6 +22,7 @@ public class GuildMasterScreen extends ScreenTOK {
     private final PlayerEntity player;
     private final GuildMasterEntity entity;
     private final ConquestInstance instance;
+    private ScreenBar worthness;
 
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
@@ -34,7 +36,7 @@ public class GuildMasterScreen extends ScreenTOK {
     public void init() {
         super.init();
         if (!instance.hasContract()) {
-            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
+            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 45, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
                 instance.setHasContract(true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
@@ -43,7 +45,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
             }));
         } else {
-            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
+            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 45, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
                 instance.setHasContract(false);
                 button.visible = false;
                 button.active = false;
@@ -71,6 +73,9 @@ public class GuildMasterScreen extends ScreenTOK {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
             this.onClose();
         }));
+
+        this.worthness = new ScreenBar(this.width / 2 - 65, this.height / 2 + 65, 125, 12, 1.0F, ScreenBar.BarColour.RED);
+        this.worthness.setBar(instance.getWorthiness() / 10000.0F);
     }
 
     @Override
@@ -78,6 +83,8 @@ public class GuildMasterScreen extends ScreenTOK {
         super.render(stack, par1, par2, par3);
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, "Path to Kingship", this.width / 2, this.height / 2 + 50, 0XFFFFFF);
+        this.worthness.drawBar(stack);
     }
 
     @Override
