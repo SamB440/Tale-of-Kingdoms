@@ -3,6 +3,7 @@ package net.islandearth.taleofkingdoms.client.gui.generic;
 import com.google.gson.Gson;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
@@ -19,6 +20,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
@@ -60,10 +62,23 @@ public class ScreenStartConquest extends ScreenTOK {
             if (loading) return;
 
             button.setMessage(new LiteralText("Building a great castle..."));
+            if (!TaleOfKingdoms.getAPI().isPresent()) {
+                button.setMessage(new LiteralText("No API present"));
+                return;
+            }
+
+            TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+            MinecraftServer server = MinecraftClient.getInstance().getServer();
+            if (server == null) {
+                button.setMessage(new LiteralText("No server present"));
+                return;
+            }
+            ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            if (serverPlayer == null) return;
+
             // Load guild castle schematic
-            SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid())).thenAccept(oi -> {
-                MinecraftClient.getInstance().getServer().execute(() -> {
-                    ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+            SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
+                api.executeOnServer(() -> {
                     BlockVector3 max = oi.getRegion().getMaximumPoint();
                     BlockVector3 min = oi.getRegion().getMinimumPoint();
                     BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
@@ -114,7 +129,7 @@ public class ScreenStartConquest extends ScreenTOK {
                             }
                         }
 
-                        MinecraftClient.getInstance().execute(() -> {
+                        api.executeOnMain(() -> {
                             button.setMessage(new LiteralText("Reloading chunks..."));
                             MinecraftClient.getInstance().worldRenderer.reload();
                             onClose();

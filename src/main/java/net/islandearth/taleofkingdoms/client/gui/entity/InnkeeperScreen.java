@@ -1,5 +1,6 @@
 package net.islandearth.taleofkingdoms.client.gui.entity;
 
+import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
@@ -10,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
@@ -41,13 +43,18 @@ public class InnkeeperScreen extends ScreenTOK {
             //TODO fix sleeping for fabric
             BlockPos rest = this.locateRestingPlace(player);
             if (rest != null) {
-                MinecraftClient.getInstance().getServer().getOverworld().setTimeOfDay(24000);
-                MinecraftClient.getInstance().getServer().execute(() -> {
-                    ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                    serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
-                    serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
-                });
+                MinecraftServer server = MinecraftClient.getInstance().getServer();
+                if (server != null) {
+                    server.getOverworld().setTimeOfDay(24000);
+                    TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
+                        ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        if (serverPlayerEntity == null) return;
+                        serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                        serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
+                        serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                    }));
+                }
+
                 //player.sleep(rest);
             } else {
                 player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);

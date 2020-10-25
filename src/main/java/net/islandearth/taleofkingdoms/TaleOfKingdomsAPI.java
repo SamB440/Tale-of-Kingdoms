@@ -3,6 +3,8 @@ package net.islandearth.taleofkingdoms;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstanceStorage;
 import net.islandearth.taleofkingdoms.managers.IManager;
 import net.islandearth.taleofkingdoms.managers.SoundManager;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,5 +58,18 @@ public class TaleOfKingdomsAPI {
     @NotNull
     public Set<String> getManagers() {
         return managers.keySet();
+    }
+
+    public void executeOnMain(Runnable runnable) {
+        MinecraftClient.getInstance().execute(runnable);
+    }
+
+    public void executeOnServer(Runnable runnable) {
+        MinecraftServer server = MinecraftClient.getInstance().getServer();
+        if (server != null) {
+            MinecraftClient.getInstance().getServer().execute(runnable);
+        } else {
+            TaleOfKingdoms.LOGGER.warn("Cannot execute task because MinecraftServer is null");
+        }
     }
 }

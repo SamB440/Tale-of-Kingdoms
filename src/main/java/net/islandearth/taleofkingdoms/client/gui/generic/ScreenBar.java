@@ -3,7 +3,7 @@ package net.islandearth.taleofkingdoms.client.gui.generic;
 import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 
 public class ScreenBar extends ScreenTOK {
 
@@ -16,10 +16,10 @@ public class ScreenBar extends ScreenTOK {
     private final boolean border;
     private BarColour colour;
 
-    public ScreenBar(int x, int y, int width, int height, float f) {
+    public ScreenBar(int x, int y, int width, int height, float progress) {
         super("taleofkingdoms.menu.bar.name");
-        if (f >= 0.0F && f <= 1.0F) {
-            this.barPosition = f;
+        if (progress >= 0.0F && progress <= 1.0F) {
+            this.barPosition = progress;
         } else {
             this.barPosition = 0.0F;
         }
@@ -31,19 +31,19 @@ public class ScreenBar extends ScreenTOK {
         this.border = true;
     }
 
-    public ScreenBar(int j, int k, int l, int i1, float f, BarColour barColour) {
-        this(j, k, l, i1, f);
+    public ScreenBar(int x, int y, int width, int height, float progress, BarColour barColour) {
+        this(x, y, width, height, progress);
         this.colour = barColour;
     }
 
-    public void setBar(float f) {
-        if (f >= 0.0F && f <= 1.0F) {
-            this.barPosition = f;
+    public void setBar(float progress) {
+        if (progress >= 0.0F && progress <= 1.0F) {
+            this.barPosition = progress;
         }
     }
 
     public void drawBar(MatrixStack stack) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL15.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.border) {
             DrawableHelper.fill(stack, this.xPosition,
                     this.yPosition,

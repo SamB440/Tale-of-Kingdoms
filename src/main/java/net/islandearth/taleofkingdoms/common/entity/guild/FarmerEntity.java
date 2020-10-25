@@ -1,6 +1,7 @@
 package net.islandearth.taleofkingdoms.common.entity.guild;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
@@ -42,7 +43,10 @@ public class FarmerEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        if (!TaleOfKingdoms.getAPI().isPresent() || MinecraftClient.getInstance().getServer() == null) return ActionResult.FAIL;
+        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+        if (!api.getConquestInstanceStorage().mostRecentInstance().isPresent()) return ActionResult.FAIL;
+        ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         long day = player.world.getTimeOfDay() / 24000L;
         if (instance.getFarmerLastBread() >= day) {
             Translations.FARMER_GOT_BREAD.send(player);
@@ -53,9 +57,11 @@ public class FarmerEntity extends TOKEntity {
         instance.setFarmerLastBread(day);
         Translations.FARMER_TAKE_BREAD.send(player);
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
-        MinecraftClient.getInstance().getServer().execute(() -> {
+        api.executeOnMain(() -> {
             ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-            serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+            if (serverPlayerEntity != null) {
+                serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+            }
         });
         return ActionResult.PASS;
     }

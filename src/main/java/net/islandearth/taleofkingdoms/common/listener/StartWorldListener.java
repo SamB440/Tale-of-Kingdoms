@@ -55,8 +55,10 @@ public class StartWorldListener extends Listener {
 
             this.joined = true;
             //TODO support for server
-            boolean loaded = load(worldName);
-            File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+            if (!TaleOfKingdoms.getAPI().isPresent()) return;
+            TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+            boolean loaded = load(worldName, api);
+            File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
             if (loaded) {
                 // Already exists
                 Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
@@ -64,7 +66,7 @@ public class StartWorldListener extends Listener {
                     // Load from json into class
                     BufferedReader reader = new BufferedReader(new FileReader(file));
                     ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
-                    MinecraftClient.getInstance().execute(() -> {
+                    api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded())
                             MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
@@ -79,12 +81,12 @@ public class StartWorldListener extends Listener {
             }
 
             // New world creation
-            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity)));
+            api.executeOnMain(() -> MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity)));
         });
     }
 
-    private boolean load(String worldName) {
-        File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+    private boolean load(String worldName, TaleOfKingdomsAPI api) {
+        File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
         // Check if this world has been loaded or not
         if (!file.exists()) {
             try {

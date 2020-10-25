@@ -55,13 +55,15 @@ public class GuildMasterScreen extends ScreenTOK {
         String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
             if (instance.getCoins() >= 1500) {
-                MinecraftClient.getInstance().getServer().execute(() -> {
-                    ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                    HunterEntity hunterEntity = new HunterEntity(EntityTypes.HUNTER, serverWorld);
-                    hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
-                    serverWorld.spawnEntity(hunterEntity);
-                    hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
-                });
+                TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
+                    if (MinecraftClient.getInstance().getServer() != null) {
+                        ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+                        HunterEntity hunterEntity = new HunterEntity(EntityTypes.HUNTER, serverWorld);
+                        hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
+                        serverWorld.spawnEntity(hunterEntity);
+                        hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
+                    }
+                }));
                 instance.setCoins(instance.getCoins() - 1500);
                 Translations.SERVE.send(player);
                 this.onClose();
