@@ -5,7 +5,7 @@ import net.islandearth.taleofkingdoms.client.gui.ScreenTOK;
 import net.islandearth.taleofkingdoms.client.gui.image.IImage;
 import net.islandearth.taleofkingdoms.client.gui.image.Image;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
-import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
+import net.islandearth.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,15 +16,15 @@ import net.minecraft.util.Identifier;
 import java.util.Collections;
 import java.util.List;
 
-public class BlacksmithScreen extends ScreenTOK {
+public class FoodShopScreen extends ScreenTOK {
 
     private final PlayerEntity player;
     private final List<IImage> images;
-    private final BlacksmithEntity entity;
+    private final FoodShopEntity entity;
     private final ConquestInstance instance;
 
-    public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ConquestInstance instance) {
-        super("menu.taleofkingdoms.blacksmith.name");
+    public FoodShopScreen(PlayerEntity player, FoodShopEntity entity, ConquestInstance instance) {
+        super("menu.taleofkingdoms.foodshop.name");
         this.player = player;
         this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));
         this.entity = entity;
@@ -42,10 +42,7 @@ public class BlacksmithScreen extends ScreenTOK {
         this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
             Translations.SHOP_CLOSE.send(player);
             this.onClose();}));
-
-
     }
-
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
