@@ -7,12 +7,15 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.entity.generic.KnightEntity;
+import net.islandearth.taleofkingdoms.common.entity.guild.BankerEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.FarmerEntity;
+import net.islandearth.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
+import net.islandearth.taleofkingdoms.common.entity.guild.LoneEntity;
 import net.islandearth.taleofkingdoms.common.gson.BlockPosAdapter;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.islandearth.taleofkingdoms.common.listener.BlockListener;
@@ -61,9 +64,9 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.GUARD, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.LONE, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, GuildGuardEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, BankerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.LONE, LoneEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes());
     }
 
     /**
