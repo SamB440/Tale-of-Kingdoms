@@ -4,8 +4,6 @@
     "item.taleofkingdoms.pouch": "Pouch",
     "menu.taleofkingdoms.guildmaster.name": "Guild Master",
     "menu.taleofkingdoms.blacksmith.name": "Blacksmith",
-    "menu.taleofkingdoms.banker.name": "Banker",
-    "menu.taleofkingdoms.foodshop.name": "Foodshop",
     "menu.taleofkingdoms.continueconquest.name": "Continue Conquest",
     "menu.taleofkingdoms.startconquest.name": "Start Conquest",
     "entity_type.taleofkingdoms.farmer.take_bread": "Farmer: Here, have some bread!",
@@ -17,10 +15,7 @@
     "entity_type.taleofkingdoms.guildmaster.good_hunting": "Guild Master: Good hunting.",
     "entity_type.taleofkingdoms.innkeeper.rest": "House Keeper: Would you like to have some rest, sir?",
     "entity_type.taleofkingdoms.innkeeper.leave": "House Keeper: Have a nice day.",
-    "entity_type.taleofkingdoms.shop.close": "Shop Keeper: Thank you! Come back again!",
-    "entity_type.taleofkingdoms.bank.close": "Banker: I will keep your gold safe!",
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
     "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
-    "generic.taleofkingdoms.serve": "I will serve you, my liege!",
-    "entity_type.taleofkingdoms.lone.help": "Survivor: I am greatly lost, my king, I survived the attack but many of our villages burned down. There are still survivors left, hurry and rescure them!"
+    "generic.taleofkingdoms.serve": "I will serve you, my liege!"
 }

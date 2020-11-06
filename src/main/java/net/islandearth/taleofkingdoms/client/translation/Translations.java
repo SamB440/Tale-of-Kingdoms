@@ -16,10 +16,7 @@ public enum Translations {
     INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
     INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),
     NEED_CONTRACT("generic.taleofkingdoms.need_contract"),
-    SERVE("generic.taleofkingdoms.serve"),
-    LONE_HELP("entity_type.taleofkingdoms.lone.help"),
-    SHOP_CLOSE("entity_type.taleofkingdoms.shop.close"),
-    BANK_CLOSE("entity_type.taleofkingdoms.bank.close");
+    SERVE("generic.taleofkingdoms.serve");
     
     private final String key;
     

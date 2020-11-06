@@ -61,9 +61,6 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.GUARD, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.LONE, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, GuildGuardEntity.createMobAttributes());
     }
 
     /**

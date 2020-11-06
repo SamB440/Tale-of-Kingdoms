@@ -4,15 +4,12 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.entity.generic.KnightEntity;
-import net.islandearth.taleofkingdoms.common.entity.guild.BankerEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.FarmerEntity;
-import net.islandearth.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.InnkeeperEntity;
-import net.islandearth.taleofkingdoms.common.entity.guild.LoneEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -62,19 +59,5 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "guild_guard"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildGuardEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
-    );
-    public static final EntityType<LoneEntity> LONE = Registry.register(
-            Registry.ENTITY_TYPE,
-            new Identifier(TaleOfKingdoms.MODID, "lone"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, LoneEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
-    );public static final EntityType<BankerEntity> BANKER = Registry.register(
-            Registry.ENTITY_TYPE,
-            new Identifier(TaleOfKingdoms.MODID, "banker"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, BankerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
-    );
-    public static final EntityType<FoodShopEntity> FOODSHOP = Registry.register(
-            Registry.ENTITY_TYPE,
-            new Identifier(TaleOfKingdoms.MODID, "foodshop"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, FoodShopEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 }
