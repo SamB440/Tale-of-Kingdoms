@@ -41,7 +41,8 @@ public class FoodShopScreen extends ScreenTOK {
 
         this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
             Translations.SHOP_CLOSE.send(player);
-            this.onClose();}));
+            this.onClose();
+        }));
     }
 
     @Override

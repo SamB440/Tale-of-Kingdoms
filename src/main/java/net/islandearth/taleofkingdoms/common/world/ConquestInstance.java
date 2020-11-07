@@ -22,6 +22,7 @@ public class ConquestInstance {
     private String world;
     private String name;
     private int coins;
+    private int bankerCoins;
     private boolean hasLoaded;
     private long farmerLastBread;
     private boolean hasContract;
@@ -55,6 +56,14 @@ public class ConquestInstance {
 
     public void setCoins(int coins) {
         this.coins = coins;
+    }
+
+    public int getBankerCoins() {
+        return bankerCoins;
+    }
+
+    public void setBankerCoins(int bankerCoins) {
+        this.bankerCoins = bankerCoins;
     }
 
     public void addCoins(int coins) {
