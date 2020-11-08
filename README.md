@@ -49,8 +49,8 @@ To enable hot-swapping, do the following (in IntelliJ):
 
 You can reload a class by right clicking it in the explorer then selecting 'Recompile x.class'
 
-Run the `runClient` task and see things change as you code! Do *not* place WorldEdit in the mods folder - it's handled 
-by the `build.gradle`. You can try other mods but they are not guaranteed to work in a development environment.
+Run the `runClient` task by pressing `ALT + SHIFT + F9`, going to `tale-of-kingdoms [runClient]`, pressing the arrow and selecting debug. See things change as you code! Do not place WorldEdit in the mods folder - it's handled 
+by the `build.gradle`, however in some cases it is needed (?). You can try other mods but they are not guaranteed to work in a development environment.
 
 Minecraft Server
 =======
