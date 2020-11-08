@@ -8,6 +8,7 @@ import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.LanServerQueryManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -42,8 +43,6 @@ public class BlacksmithScreen extends ScreenTOK {
         this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
             Translations.SHOP_CLOSE.send(player);
             this.onClose();}));
-
-
     }
 
 
