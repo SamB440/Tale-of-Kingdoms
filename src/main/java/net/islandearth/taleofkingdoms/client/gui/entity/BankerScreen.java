@@ -74,6 +74,7 @@ public class BankerScreen extends ScreenTOK {
         this.text.setMaxLength(12);
         this.text.setText("0");
         this.text.setFocusUnlocked(false);
+        this.text.setSelected(true);
         this.text.changeFocus(true);
         this.text.setVisible(true);
         this.children.add(this.text);
@@ -85,7 +86,6 @@ public class BankerScreen extends ScreenTOK {
         images.forEach(image -> image.render(stack, this));
         super.render(stack, mouseX, mouseY, delta);
         this.text.render(stack, mouseX, mouseY, delta);
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         drawCenteredString(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         drawCenteredString(stack, this.textRenderer, "Total Money You Have: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         drawCenteredString(stack, this.textRenderer, "Total Money in the Bank: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
