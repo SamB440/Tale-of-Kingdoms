@@ -49,7 +49,6 @@ public class FoodShopScreen extends ScreenTOK {
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         images.forEach(image -> image.render(stack, this));
         super.render(stack, mouseX, mouseY, delta);
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         drawCenteredString(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
     }
 

@@ -8,7 +8,6 @@ import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.network.LanServerQueryManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -50,7 +49,6 @@ public class BlacksmithScreen extends ScreenTOK {
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         images.forEach(image -> image.render(stack, this));
         super.render(stack, mouseX, mouseY, delta);
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         drawCenteredString(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
     }
 
