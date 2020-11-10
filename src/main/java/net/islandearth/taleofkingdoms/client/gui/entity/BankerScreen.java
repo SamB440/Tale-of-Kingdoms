@@ -41,10 +41,11 @@ public class BankerScreen extends ScreenTOK {
         this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 77, this.height / 2 - 85, 150, 20, new LiteralText("0"));
         this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new LiteralText("Deposit"), (button) -> {
             int coins = Integer.parseInt(this.text.getText());
-            if(instance.getCoins() == 0) {
+            if (instance.getCoins() == 0) {
                 Translations.BANK_ZERO.send(player);
                 this.onClose();
             }
+
             if (instance.getCoins() <= coins) {
                 instance.setCoins(instance.getCoins() - coins);
                 instance.setBankerCoins(instance.getBankerCoins() + coins);
@@ -53,10 +54,11 @@ public class BankerScreen extends ScreenTOK {
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new LiteralText("Withdraw"), (button) -> {
             int coins = Integer.parseInt(this.text.getText());
-            if(instance.getCoins() == 0) {
+            if (instance.getCoins() == 0) {
                 Translations.BANK_ZERO.send(player);
                 this.onClose();
             }
+
             if (instance.getBankerCoins() >= coins) {
                 instance.setBankerCoins(instance.getBankerCoins() - coins);
                 instance.addCoins(coins);
