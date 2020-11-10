@@ -19,7 +19,8 @@ public enum Translations {
     SERVE("generic.taleofkingdoms.serve"),
     LONE_HELP("entity_type.taleofkingdoms.lone.help"),
     SHOP_CLOSE("entity_type.taleofkingdoms.shop.close"),
-    BANK_CLOSE("entity_type.taleofkingdoms.bank.close");
+    BANK_CLOSE("entity_type.taleofkingdoms.bank.close"),
+    BANK_ZERO("entity_type.taleofkingdoms.bank.zero");
     
     private final String key;
     
