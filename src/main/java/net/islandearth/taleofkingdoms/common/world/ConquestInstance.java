@@ -54,16 +54,12 @@ public class ConquestInstance {
         return coins;
     }
 
+    public int getBankerCoins() { return bankerCoins; }
+
+    public void setBankerCoins(int bankerCoins) { this.bankerCoins = bankerCoins; }
+
     public void setCoins(int coins) {
         this.coins = coins;
-    }
-
-    public int getBankerCoins() {
-        return bankerCoins;
-    }
-
-    public void setBankerCoins(int bankerCoins) {
-        this.bankerCoins = bankerCoins;
     }
 
     public void addCoins(int coins) {
