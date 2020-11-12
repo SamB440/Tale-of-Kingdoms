@@ -46,6 +46,7 @@ public class BankerScreen extends ScreenTOK {
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
                     this.onClose();
+                    return;
                 }
                 if (instance.getCoins() >= coins) {
                     instance.setCoins(instance.getCoins() - coins);
@@ -63,6 +64,7 @@ public class BankerScreen extends ScreenTOK {
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
                     this.onClose();
+                    return;
                 }
                 if (instance.getBankerCoins() >= coins) {
                     instance.setBankerCoins(instance.getBankerCoins() - coins);
