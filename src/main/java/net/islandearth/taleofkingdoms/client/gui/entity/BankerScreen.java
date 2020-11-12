@@ -85,6 +85,7 @@ public class BankerScreen extends ScreenTOK {
         this.text.changeFocus(true);
         this.text.setVisible(true);
         this.children.add(this.text);
+
     }
 
     @Override
