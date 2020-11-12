@@ -22,9 +22,7 @@ public class WanderAroundGuildGoal extends Goal {
     protected boolean ignoringChance;
     private boolean field_24463;
 
-    public WanderAroundGuildGoal(PathAwareEntity mob, double speed) {
-        this(mob, speed, 120);
-    }
+    public WanderAroundGuildGoal(PathAwareEntity mob, double speed) { this(mob, speed, 50); }
 
     public WanderAroundGuildGoal(PathAwareEntity mob, double speed, int chance) {
         this(mob, speed, chance, true);
@@ -38,40 +36,37 @@ public class WanderAroundGuildGoal extends Goal {
         this.setControls(EnumSet.of(Goal.Control.MOVE));
     }
 
+    @Override
     public boolean canStart() {
-        if (this.mob.hasPassengers()) {
+       if (!this.ignoringChance) {
+           // if (this.field_24463 && this.mob.getDespawnCounter() >= 100) {
+             //   return false;
+          //  }
+
+           if (this.mob.getRandom().nextInt(this.chance) != 0) {
+               return false;
+           }
+       }
+
+        Vec3d vec3d = this.getWanderTarget();
+        if (vec3d == null) {
             return false;
         } else {
-            if (!this.ignoringChance) {
-                if (this.field_24463 && this.mob.getDespawnCounter() >= 100) {
-                    return false;
-                }
+            ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+            BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
+            if (!instance.isInGuild(blockPos)) return false;
 
-                if (this.mob.getRandom().nextInt(this.chance) != 0) {
-                    return false;
-                }
-            }
-
-            Vec3d vec3d = this.getWanderTarget();
-            if (vec3d == null) {
-                return false;
-            } else {
-                ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-                BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
-                if (!instance.isInGuild(blockPos)) return false;
-
-                this.targetX = vec3d.x;
-                this.targetY = vec3d.y;
-                this.targetZ = vec3d.z;
-                this.ignoringChance = false;
-                return true;
-            }
+            this.targetX = vec3d.x;
+            this.targetY = vec3d.y;
+            this.targetZ = vec3d.z;
+            this.ignoringChance = false;
+            return true;
         }
     }
 
     @Nullable
     protected Vec3d getWanderTarget() {
-        return TargetFinder.findTarget(this.mob, 10, 7);
+        return TargetFinder.findTarget(this.mob, 30, 7);
     }
 
     @Override
