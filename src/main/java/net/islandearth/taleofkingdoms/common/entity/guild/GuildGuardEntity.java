@@ -1,6 +1,7 @@
 package net.islandearth.taleofkingdoms.common.entity.guild;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
+import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
@@ -30,12 +31,12 @@ public class GuildGuardEntity extends TOKEntity {
     @Override
     protected void initGoals() {
         super.initGoals();
+        this.goalSelector.add(1, new WanderAroundGuildGoal(this, 0.5D));
         this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
             return livingEntity instanceof Monster;
         }));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.5D, false));
-        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
-        this.goalSelector.add(1, new WanderAroundGuildGoal(this, 0.25D));
+        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
         applyEntityAI();
     }
 
@@ -43,6 +44,7 @@ public class GuildGuardEntity extends TOKEntity {
         return TOKEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D);
+
     }
 
     @Override
@@ -50,6 +52,7 @@ public class GuildGuardEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         //TODO
+        Translations.GUILDMEMBER_START.send(player);
         return ActionResult.PASS;
     }
 
