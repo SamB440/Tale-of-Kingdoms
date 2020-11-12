@@ -20,7 +20,11 @@ public enum Translations {
     LONE_HELP("entity_type.taleofkingdoms.lone.help"),
     SHOP_CLOSE("entity_type.taleofkingdoms.shop.close"),
     BANK_CLOSE("entity_type.taleofkingdoms.bank.close"),
-    BANK_ZERO("entity_type.taleofkingdoms.bank.zero");
+    BANK_INPUT("entity_type.taleofkingdoms.bank.input"),
+    BANK_ZERO("entity_type.taleofkingdoms.bank.zero"),
+    GUILDMEMBER_START("entity_type.taleofkingdoms.guildmember.first"),
+    HUNTER_BOW("entity_type.taleofkingdoms.hunter.bow"),
+    HUNTER_SWORD("entity_type.taleofkingdoms.hunter.sword");
     
     private final String key;
     

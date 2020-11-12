@@ -1,5 +1,6 @@
 package net.islandearth.taleofkingdoms.common.entity.generic;
 
+import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import net.islandearth.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
@@ -56,8 +57,10 @@ public class HunterEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.IRON_SWORD) {
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.BOW));
+            Translations.HUNTER_BOW.send(player);
         } else {
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+            Translations.HUNTER_SWORD.send(player);
         }
         return ActionResult.PASS;
     }

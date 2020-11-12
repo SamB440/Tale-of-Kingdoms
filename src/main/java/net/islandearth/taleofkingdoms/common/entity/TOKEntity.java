@@ -43,7 +43,7 @@ public abstract class TOKEntity extends PathAwareEntity implements RangedAttackM
         return LivingEntity.createLivingAttributes()
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.0D);
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D);
     }
 
     /**
