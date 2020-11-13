@@ -52,9 +52,13 @@ public class WanderAroundGuildGoal extends Goal {
         if (vec3d == null) {
             return false;
         } else {
-            ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-            BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
-            if (!instance.isInGuild(blockPos)) return false;
+            if (TaleOfKingdoms.getAPI().isPresent()) {
+                if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) {
+                    ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+                    BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
+                    if (!instance.isInGuild(blockPos)) return false;
+                }
+            }
 
             this.targetX = vec3d.x;
             this.targetY = vec3d.y;
