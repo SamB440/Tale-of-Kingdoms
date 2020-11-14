@@ -8,7 +8,8 @@
     "common.InventoryInsertEvent",
     "common.EntityDeathEvent",
     "common.EntityPickupItemEvent",
-    "common.ItemMergeEvent"
+    "common.ItemMergeEvent",
+    "common.PlayerLogin"
   ],
   "client": [
     "client.InventoryDrawEvent",
@@ -16,6 +17,9 @@
     "WorldClose",
     "WorldSessionStartEvent",
     "WorldDeleteEvent"
+  ],
+  "server": [
+    "server.GameInstanceEvent"
   ],
   "injectors": {
     "defaultRequire": 1

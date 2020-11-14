@@ -9,7 +9,6 @@ import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
-import net.islandearth.taleofkingdoms.common.schematic.SchematicHandler;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -77,7 +76,7 @@ public class ScreenStartConquest extends ScreenTOK {
             if (serverPlayer == null) return;
 
             // Load guild castle schematic
-            SchematicHandler.pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
+            api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
                 api.executeOnServer(() -> {
                     BlockVector3 max = oi.getRegion().getMaximumPoint();
                     BlockVector3 min = oi.getRegion().getMinimumPoint();
@@ -165,5 +164,10 @@ public class ScreenStartConquest extends ScreenTOK {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return true;
     }
 }

@@ -1,17 +1,19 @@
-package net.islandearth.taleofkingdoms.mixin;
+package net.islandearth.taleofkingdoms.mixin.common;
 
 import com.mojang.authlib.GameProfile;
+import net.islandearth.taleofkingdoms.common.event.PlayerJoinCallback;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
-import net.minecraft.text.LiteralText;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.net.SocketAddress;
-import java.util.Random;
 
 /**
  *
@@ -49,6 +51,11 @@ public class PlayerLogin {
 			cir.setReturnValue(deny);
 	}
 
+	@Inject(method = "onPlayerConnect", at = @At("HEAD"))
+	private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
+		PlayerJoinCallback.EVENT.invoker().onJoin(connection, player);
+	}
+
 	/**
 	 * Return the text the player should be sent if he was denied entry to the server,
 	 * this wont allow you to deny players entering their own worlds though.
@@ -58,9 +65,10 @@ public class PlayerLogin {
 	 */
 	@Unique
 	private Text deny(SocketAddress address, GameProfile player) {
-		if(new Random().nextBoolean())
-			return new LiteralText("You're not welcome here."); // player not allowed in
-		else
-			return null; // player allowed in
+		//if(new Random().nextBoolean())
+			//return new LiteralText("You're not welcome here."); // player not allowed in
+		//else
+			//return null; // player allowed in
+		return null;
 	}
 }

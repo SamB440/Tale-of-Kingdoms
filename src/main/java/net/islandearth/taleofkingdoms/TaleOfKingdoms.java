@@ -56,6 +56,7 @@ public class TaleOfKingdoms implements ModInitializer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.GUILDMASTER, GuildMasterEntity.createMobAttributes());

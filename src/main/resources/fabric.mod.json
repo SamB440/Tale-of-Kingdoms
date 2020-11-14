@@ -30,6 +30,9 @@
     ],
     "client": [
       "net.islandearth.taleofkingdoms.client.TaleOfKingdomsClient"
+    ],
+    "server": [
+      "net.islandearth.taleofkingdoms.server.TaleOfKingdomsServer"
     ]
   },
   "mixins": [

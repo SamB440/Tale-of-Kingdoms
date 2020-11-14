@@ -1,15 +1,22 @@
 package net.islandearth.taleofkingdoms;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.islandearth.taleofkingdoms.common.schematic.ClientSchematicHandler;
+import net.islandearth.taleofkingdoms.common.schematic.SchematicHandler;
+import net.islandearth.taleofkingdoms.common.schematic.ServerSchematicHandler;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstanceStorage;
 import net.islandearth.taleofkingdoms.managers.IManager;
 import net.islandearth.taleofkingdoms.managers.SoundManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class TaleOfKingdomsAPI {
@@ -17,6 +24,7 @@ public class TaleOfKingdomsAPI {
     private final TaleOfKingdoms mod;
     private final ConquestInstanceStorage cis;
     private final Map<String, IManager> managers = new HashMap<>();
+    private MinecraftDedicatedServer minecraftServer;
 
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
         this.mod = mod;
@@ -60,16 +68,47 @@ public class TaleOfKingdomsAPI {
         return managers.keySet();
     }
 
+    @Environment(EnvType.CLIENT)
     public void executeOnMain(Runnable runnable) {
         MinecraftClient.getInstance().execute(runnable);
     }
 
+    @Environment(EnvType.CLIENT)
     public void executeOnServer(Runnable runnable) {
         MinecraftServer server = MinecraftClient.getInstance().getServer();
         if (server != null) {
             MinecraftClient.getInstance().getServer().execute(runnable);
         } else {
             TaleOfKingdoms.LOGGER.warn("Cannot execute task because MinecraftServer is null");
+        }
+    }
+
+    @Environment(EnvType.SERVER)
+    public boolean executeOnDedicatedServer(Runnable runnable) {
+        if (minecraftServer != null) {
+            minecraftServer.execute(runnable);
+            return true;
+        }
+        return false;
+    }
+
+    public Optional<MinecraftDedicatedServer> getServer() {
+        return Optional.ofNullable(minecraftServer);
+    }
+
+    public void setServer(MinecraftDedicatedServer minecraftServer) {
+        if (this.minecraftServer != null) {
+            throw new IllegalStateException("Server already registered");
+        }
+
+        this.minecraftServer = minecraftServer;
+    }
+
+    public SchematicHandler getSchematicHandler() {
+        if (this.minecraftServer != null) {
+            return new ServerSchematicHandler();
+        } else {
+            return new ClientSchematicHandler();
         }
     }
 }

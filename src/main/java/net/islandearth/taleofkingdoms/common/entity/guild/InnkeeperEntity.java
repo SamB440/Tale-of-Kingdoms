@@ -1,5 +1,7 @@
 package net.islandearth.taleofkingdoms.common.entity.guild;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.entity.InnkeeperScreen;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
@@ -27,6 +29,7 @@ public class InnkeeperEntity extends TOKEntity {
         applyEntityAI();
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
@@ -36,9 +39,14 @@ public class InnkeeperEntity extends TOKEntity {
             return ActionResult.FAIL;
         }
 
+        this.openScreen(player, instance);
+        return ActionResult.PASS;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void openScreen(PlayerEntity player, ConquestInstance instance) {
         InnkeeperScreen screen = new InnkeeperScreen(player, this, instance);
         MinecraftClient.getInstance().openScreen(screen);
-        return ActionResult.PASS;
     }
 
     @Override

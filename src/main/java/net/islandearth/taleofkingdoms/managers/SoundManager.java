@@ -36,7 +36,10 @@ public class SoundManager implements IManager {
     }
 
     private void register() {
-        events.forEach((name, event) -> Registry.register(Registry.SOUND_EVENT, event.getId(), event));
+        events.forEach((name, event) -> {
+            Identifier identifier = new Identifier(TaleOfKingdoms.MODID, name.getPath());
+            Registry.register(Registry.SOUND_EVENT, identifier, event);
+        });
     }
 
     public enum TOKSound {

@@ -1,5 +1,7 @@
 package net.islandearth.taleofkingdoms.common.entity.guild;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.entity.BankerScreen;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
@@ -28,9 +30,14 @@ public class BankerEntity extends TOKEntity {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        this.openScreen(player, instance);
+        return ActionResult.PASS;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void openScreen(PlayerEntity player, ConquestInstance instance) {
         BankerScreen screen = new BankerScreen(player, this, instance);
         MinecraftClient.getInstance().openScreen(screen);
-        return ActionResult.PASS;
     }
 
     @Override
