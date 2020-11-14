@@ -8,6 +8,7 @@ import net.islandearth.taleofkingdoms.common.event.ItemMergeCallback;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
 
 import java.util.Random;
@@ -17,7 +18,17 @@ public class CoinListener extends Listener {
 
     public CoinListener() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
-            if (source.getSource() instanceof PlayerEntity || source.getSource() instanceof HunterEntity) {
+            if (source.getSource() instanceof PlayerEntity
+                    || source.getSource() instanceof HunterEntity
+                    || source.getSource() instanceof ArrowEntity) {
+                if (source.getSource() instanceof ArrowEntity) {
+                    ArrowEntity arrowEntity = (ArrowEntity) source.getSource();
+                    if (!(arrowEntity.getOwner() instanceof PlayerEntity)
+                            && !(arrowEntity.getOwner() instanceof HunterEntity)) {
+                        return;
+                    }
+                }
+
                 ItemHelper.dropCoins(entity);
                 TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                     instance.setWorthiness(instance.getWorthiness() + 1);
