@@ -7,7 +7,8 @@
     "common.EntitySpawnEvent",
     "common.InventoryInsertEvent",
     "common.EntityDeathEvent",
-    "common.EntityPickupItemEvent"
+    "common.EntityPickupItemEvent",
+    "common.ItemMergeEvent"
   ],
   "client": [
     "client.InventoryDrawEvent",

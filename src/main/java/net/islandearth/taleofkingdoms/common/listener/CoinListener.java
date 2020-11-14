@@ -4,9 +4,11 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.event.EntityDeathCallback;
 import net.islandearth.taleofkingdoms.common.event.EntityPickupItemCallback;
+import net.islandearth.taleofkingdoms.common.event.ItemMergeCallback;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -24,7 +26,7 @@ public class CoinListener extends Listener {
         });
 
         EntityPickupItemCallback.EVENT.register((player, item) -> {
-            if (item.getItem().equals(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN))) {
+            if (equalsCoin(item)) {
                 Random random = ThreadLocalRandom.current();
                 TaleOfKingdoms.getAPI().get()
                         .getConquestInstanceStorage()
@@ -34,5 +36,11 @@ public class CoinListener extends Listener {
                 player.inventory.remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.inventory);
             }
         });
+
+        ItemMergeCallback.EVENT.register((stack1, stack2) -> !equalsCoin(stack1) || !equalsCoin(stack2));
+    }
+
+    private boolean equalsCoin(ItemStack stack) {
+        return stack.getItem().equals(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN));
     }
 }
