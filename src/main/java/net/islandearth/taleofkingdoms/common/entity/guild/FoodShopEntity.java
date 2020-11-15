@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.client.gui.entity.FoodShopScreen;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -32,13 +32,13 @@ public class FoodShopEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         this.openScreen(player, instance);
         return ActionResult.PASS;
     }
 
     @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ConquestInstance instance) {
+    private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
         FoodShopScreen screen = new FoodShopScreen(player, this, instance);
         MinecraftClient.getInstance().openScreen(screen);
     }

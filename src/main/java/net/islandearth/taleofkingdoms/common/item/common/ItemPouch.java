@@ -1,7 +1,7 @@
 package net.islandearth.taleofkingdoms.common.item.common;
 
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -30,7 +30,7 @@ public class ItemPouch extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.hasTag()) {
             CompoundTag compoundTag = itemStack.getTag();

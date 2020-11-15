@@ -3,6 +3,7 @@ package net.islandearth.taleofkingdoms.client.gui;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.common.event.InventoryDrawCallback;
 import net.islandearth.taleofkingdoms.common.listener.Listener;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -20,7 +21,7 @@ public class RenderListener extends Listener {
                     .mostRecentInstance();
             if (!instance.isPresent()) return;
 
-            drawWithoutShadow(matrices, textRenderer, "Gold Coins: " + instance.get().getCoins(), gui.width / 2 - 50, gui.height / 2 - 100, 16763904);
+            drawWithoutShadow(matrices, textRenderer, "Gold Coins: " + ((ClientConquestInstance) instance.get()).getCoins(), gui.width / 2 - 50, gui.height / 2 - 100, 16763904);
         });
     }
 

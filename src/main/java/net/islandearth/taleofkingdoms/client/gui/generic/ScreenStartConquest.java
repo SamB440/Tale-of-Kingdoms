@@ -9,7 +9,7 @@ import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
 import net.islandearth.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -82,7 +82,7 @@ public class ScreenStartConquest extends ScreenTOK {
                     BlockVector3 min = oi.getRegion().getMinimumPoint();
                     BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
                     BlockPos end = new BlockPos(min.getBlockX(), min.getBlockY(), min.getBlockZ());
-                    ConquestInstance instance = new ConquestInstance(worldName, text.getText(), start, end);
+                    ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), start, end);
                     try (Writer writer = new FileWriter(toSave)) {
                         Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
                         gson.toJson(instance, writer);

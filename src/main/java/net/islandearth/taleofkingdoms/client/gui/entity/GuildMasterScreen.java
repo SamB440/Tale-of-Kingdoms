@@ -7,7 +7,7 @@ import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.EntityTypes;
 import net.islandearth.taleofkingdoms.common.entity.generic.HunterEntity;
 import net.islandearth.taleofkingdoms.common.entity.guild.GuildMasterEntity;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,10 +21,10 @@ public class GuildMasterScreen extends ScreenTOK {
 
     private final PlayerEntity player;
     private final GuildMasterEntity entity;
-    private final ConquestInstance instance;
+    private final ClientConquestInstance instance;
     private ScreenBar worthness;
 
-    public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
+    public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
         this.player = player;
         this.entity = entity;

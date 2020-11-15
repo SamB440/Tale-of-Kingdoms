@@ -25,6 +25,7 @@ import net.islandearth.taleofkingdoms.common.listener.KingdomListener;
 import net.islandearth.taleofkingdoms.common.listener.MobSpawnListener;
 import net.islandearth.taleofkingdoms.common.listener.SleepListener;
 import net.islandearth.taleofkingdoms.common.schematic.Schematic;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +43,8 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private static TaleOfKingdomsAPI api;
+
+    public static final Identifier PLAY_INSTANCE_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "instance");
 
     @Override
     public void onInitialize() {

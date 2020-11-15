@@ -6,7 +6,7 @@ import net.islandearth.taleofkingdoms.client.gui.image.IImage;
 import net.islandearth.taleofkingdoms.client.gui.image.Image;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.BlacksmithEntity;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,9 +21,9 @@ public class BlacksmithScreen extends ScreenTOK {
     private final PlayerEntity player;
     private final List<IImage> images;
     private final BlacksmithEntity entity;
-    private final ConquestInstance instance;
+    private final ClientConquestInstance instance;
 
-    public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ConquestInstance instance) {
+    public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.blacksmith.name");
         this.player = player;
         this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));

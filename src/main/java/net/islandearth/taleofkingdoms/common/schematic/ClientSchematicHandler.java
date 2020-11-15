@@ -18,6 +18,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,6 +27,8 @@ import java.util.concurrent.CompletableFuture;
 
 public final class ClientSchematicHandler extends SchematicHandler {
 
+    @Override
+    @NotNull
     public CompletableFuture<OperationInstance> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockVector3 position) {
         CompletableFuture<OperationInstance> cf = new CompletableFuture<>();
 

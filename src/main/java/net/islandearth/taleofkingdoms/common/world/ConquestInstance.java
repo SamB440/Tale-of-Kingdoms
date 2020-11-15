@@ -17,16 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ConquestInstance {
+public abstract class ConquestInstance {
 
     private String world;
     private String name;
-    private int coins;
-    private int bankerCoins;
     private boolean hasLoaded;
-    private long farmerLastBread;
-    private boolean hasContract;
-    private int worthiness;
     private BlockPos start;
     private BlockPos end;
 
@@ -50,56 +45,12 @@ public class ConquestInstance {
         return name;
     }
 
-    public int getCoins() {
-        return coins;
-    }
-
-    public int getBankerCoins() { return bankerCoins; }
-
-    public void setBankerCoins(int bankerCoins) { this.bankerCoins = bankerCoins; }
-
-    public void setCoins(int coins) {
-        this.coins = coins;
-    }
-
-    public void addCoins(int coins) {
-        this.coins = this.coins + coins;
-    }
-
     public boolean isLoaded() {
         return hasLoaded;
     }
 
     public void setLoaded(boolean loaded) {
         this.hasLoaded = loaded;
-    }
-
-    public long getFarmerLastBread() {
-        return farmerLastBread;
-    }
-
-    public void setFarmerLastBread(long day) {
-        this.farmerLastBread = day;
-    }
-
-    public boolean hasContract() {
-        return hasContract;
-    }
-
-    public void setHasContract(boolean hasContract) {
-        this.hasContract = hasContract;
-    }
-
-    public int getWorthiness() {
-        return worthiness;
-    }
-
-    public void setWorthiness(int worthiness) {
-        this.worthiness = worthiness;
-    }
-
-    public void addWorthiness(int worthiness) {
-        this.worthiness = this.worthiness + worthiness;
     }
 
     public BlockPos getStart() {

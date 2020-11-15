@@ -7,6 +7,9 @@ import net.islandearth.taleofkingdoms.common.event.EntityPickupItemCallback;
 import net.islandearth.taleofkingdoms.common.event.ItemMergeCallback;
 import net.islandearth.taleofkingdoms.common.item.ItemHelper;
 import net.islandearth.taleofkingdoms.common.item.ItemRegistry;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
@@ -18,32 +21,52 @@ public class CoinListener extends Listener {
 
     public CoinListener() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
+            PlayerEntity playerEntity = null;
             if (source.getSource() instanceof PlayerEntity
                     || source.getSource() instanceof HunterEntity
                     || source.getSource() instanceof ArrowEntity) {
                 if (source.getSource() instanceof ArrowEntity) {
                     ArrowEntity arrowEntity = (ArrowEntity) source.getSource();
+                    if (arrowEntity.getOwner() instanceof PlayerEntity) {
+                        playerEntity = (PlayerEntity) arrowEntity.getOwner();
+                    }
+
                     if (!(arrowEntity.getOwner() instanceof PlayerEntity)
                             && !(arrowEntity.getOwner() instanceof HunterEntity)) {
                         return;
                     }
+                } else if (source.getSource() instanceof PlayerEntity) {
+                    playerEntity = (PlayerEntity) source.getSource();
                 }
 
+                //TODO assosciate owner with hunter entity
                 ItemHelper.dropCoins(entity);
+                PlayerEntity finalPlayerEntity = playerEntity;
+                if (finalPlayerEntity == null) return;
                 TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                    instance.setWorthiness(instance.getWorthiness() + 1);
+                    if (instance instanceof ClientConquestInstance) {
+                        ((ClientConquestInstance) instance).setWorthiness(((ClientConquestInstance) instance).getWorthiness() + 1);
+                    } else {
+                        ((ServerConquestInstance) instance).setWorthiness(finalPlayerEntity.getUuid(), ((ServerConquestInstance) instance).getWorthiness(finalPlayerEntity.getUuid()) + 1);
+                    }
+
                 });
             }
         });
 
         EntityPickupItemCallback.EVENT.register((player, item) -> {
             if (equalsCoin(item)) {
-                Random random = ThreadLocalRandom.current();
-                TaleOfKingdoms.getAPI().get()
+                ConquestInstance instance = TaleOfKingdoms.getAPI().get()
                         .getConquestInstanceStorage()
                         .mostRecentInstance()
-                        .get()
-                        .addCoins(random.nextInt(50));
+                        .get();
+                Random random = ThreadLocalRandom.current();
+                if (instance instanceof ClientConquestInstance) {
+                    ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
+                } else {
+                    ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
+                }
+
                 player.inventory.remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.inventory);
             }
         });

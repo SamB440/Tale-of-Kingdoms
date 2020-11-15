@@ -4,7 +4,7 @@ import net.islandearth.taleofkingdoms.TaleOfKingdoms;
 import net.islandearth.taleofkingdoms.TaleOfKingdomsAPI;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -40,13 +40,13 @@ public class FarmerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !world.isClient()) return ActionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
         if (!TaleOfKingdoms.getAPI().isPresent() || MinecraftClient.getInstance().getServer() == null) return ActionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         if (!api.getConquestInstanceStorage().mostRecentInstance().isPresent()) return ActionResult.FAIL;
-        ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
+        ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
         long day = player.world.getTimeOfDay() / 24000L;
         if (instance.getFarmerLastBread() >= day) {
             Translations.FARMER_GOT_BREAD.send(player);

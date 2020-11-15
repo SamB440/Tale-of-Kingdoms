@@ -6,7 +6,7 @@ import net.islandearth.taleofkingdoms.client.gui.image.IImage;
 import net.islandearth.taleofkingdoms.client.gui.image.Image;
 import net.islandearth.taleofkingdoms.client.translation.Translations;
 import net.islandearth.taleofkingdoms.common.entity.guild.FoodShopEntity;
-import net.islandearth.taleofkingdoms.common.world.ConquestInstance;
+import net.islandearth.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,9 +21,9 @@ public class FoodShopScreen extends ScreenTOK {
     private final PlayerEntity player;
     private final List<IImage> images;
     private final FoodShopEntity entity;
-    private final ConquestInstance instance;
+    private final ClientConquestInstance instance;
 
-    public FoodShopScreen(PlayerEntity player, FoodShopEntity entity, ConquestInstance instance) {
+    public FoodShopScreen(PlayerEntity player, FoodShopEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.foodshop.name");
         this.player = player;
         this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));

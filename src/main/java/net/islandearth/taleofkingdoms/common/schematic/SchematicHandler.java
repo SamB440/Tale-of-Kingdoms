@@ -2,7 +2,7 @@ package net.islandearth.taleofkingdoms.common.schematic;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -19,7 +19,6 @@ public abstract class SchematicHandler {
      * @param position the {@link BlockVector3} position to paste at
      * @return {@link CompletableFuture} containing the {@link OperationInstance}
      */
-    @Nullable
     public abstract CompletableFuture<OperationInstance> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockVector3 position);
 
     /**
@@ -31,6 +30,7 @@ public abstract class SchematicHandler {
      * @param player the <b><i>server</i></b> player
      * @return {@link CompletableFuture} containing the {@link OperationInstance}
      */
+    @NotNull
     public CompletableFuture<OperationInstance> pasteSchematic(Schematic schematic, ServerPlayerEntity player) {
         BlockVector3 position = BlockVector3.at(player.getBlockPos().getX(), player.getBlockPos().getY() + 1, player.getBlockPos().getZ());
 	    return pasteSchematic(schematic, player, position);
