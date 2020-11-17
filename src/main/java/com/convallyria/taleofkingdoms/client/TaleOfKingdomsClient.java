@@ -36,6 +36,20 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
                         screenSyncConquest.setProgress("Loading API");
                         TaleOfKingdoms.getAPI().ifPresent(api -> {
                             screenSyncConquest.setProgress("API loaded");
+                            if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
+                                screenSyncConquest.setProgress("Updating data");
+                                ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();
+                                instance.setBankerCoins(bankerCoins);
+                                instance.setCoins(coins);
+                                instance.setWorthiness(worthiness);
+                                instance.setFarmerLastBread(farmerLastBread);
+                                instance.setHasContract(hasContract);
+                                instance.setLoaded(isLoaded);
+                                screenSyncConquest.setProgress("Complete.");
+                                screenSyncConquest.onClose();
+                                return;
+                            }
+
                             ClientConquestInstance instance = new ClientConquestInstance(world, name, start, end);
                             screenSyncConquest.setProgress("Created new instance");
                             instance.setBankerCoins(bankerCoins);

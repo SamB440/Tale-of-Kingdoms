@@ -6,7 +6,6 @@ public class ClientConquestInstance extends ConquestInstance {
 
     private int coins;
     private int bankerCoins;
-    private boolean hasLoaded;
     private long farmerLastBread;
     private boolean hasContract;
     private int worthiness;

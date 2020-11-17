@@ -92,10 +92,12 @@ public class TaleOfKingdomsAPI {
         return false;
     }
 
+    @Environment(EnvType.SERVER)
     public Optional<MinecraftDedicatedServer> getServer() {
         return Optional.ofNullable(minecraftServer);
     }
 
+    @Environment(EnvType.SERVER)
     public void setServer(MinecraftDedicatedServer minecraftServer) {
         if (this.minecraftServer != null) {
             throw new IllegalStateException("Server already registered");

@@ -21,13 +21,10 @@ import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
@@ -74,29 +71,6 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, BankerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.LONE, LoneEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes());
-
-        ServerSidePacketRegistry.INSTANCE.register(INSTANCE_PACKET_ID, (packetContext, attachedData) -> {
-            int bankerCoins = attachedData.readInt();
-            int coins = attachedData.readInt();
-            int worthiness = attachedData.readInt();
-            long farmerLastBread = attachedData.readLong();
-            boolean hasContract = attachedData.readBoolean();
-            packetContext.getTaskQueue().execute(() -> {
-                api.getServer().ifPresent(server -> {
-                    // Enforce the server level name
-                    api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
-                        ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
-                        PlayerEntity playerEntity = packetContext.getPlayer();
-                        serverConquestInstance.setBankerCoins(playerEntity.getUuid(), bankerCoins);
-                        serverConquestInstance.setCoins(playerEntity.getUuid(), coins);
-                        serverConquestInstance.setWorthiness(playerEntity.getUuid(), worthiness);
-                        serverConquestInstance.setFarmerLastBread(playerEntity.getUuid(), farmerLastBread);
-                        serverConquestInstance.setHasContract(playerEntity.getUuid(), hasContract);
-                        TaleOfKingdoms.LOGGER.info("Synced stats");
-                    });
-                });
-            });
-        });
     }
 
     /**

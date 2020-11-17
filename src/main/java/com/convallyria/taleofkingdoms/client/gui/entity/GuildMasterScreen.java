@@ -8,15 +8,10 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
@@ -106,18 +101,5 @@ public class GuildMasterScreen extends ScreenTOK {
     @Override
     public void onClose() {
         super.onClose();
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeInt(instance.getBankerCoins());
-        passedData.writeInt(instance.getCoins());
-        passedData.writeInt(instance.getWorthiness());
-        passedData.writeLong(instance.getFarmerLastBread());
-        passedData.writeBoolean(instance.hasContract());
-        // Then we'll send the packet to all the players
-        TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-        System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);
-        ClientSidePacketRegistry.INSTANCE.sendToServer(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData);
-        ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
-        handler.sendPacket(new CustomPayloadC2SPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData));
-        //MinecraftClient.getInstance().player.networkHandler.getConnection().send(new CustomPayloadC2SPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData));
     }
 }

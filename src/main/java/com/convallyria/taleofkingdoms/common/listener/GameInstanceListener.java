@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.event.GameInstanceCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerJoinCallback;
+import com.convallyria.taleofkingdoms.common.event.PlayerLeaveCallback;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
@@ -14,7 +15,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.sk89q.worldedit.math.BlockVector3;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
@@ -22,8 +22,6 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -64,43 +62,34 @@ public class GameInstanceListener extends Listener {
                                 this.create(connection, api, player, server).thenAccept(done -> {
                                     api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
-                                        serverConquestInstance.setBankerCoins(player.getUuid(), 0);
-                                        serverConquestInstance.setCoins(player.getUuid(), 0);
-                                        serverConquestInstance.setFarmerLastBread(player.getUuid(), 0);
-                                        serverConquestInstance.setHasContract(player.getUuid(), false);
-                                        serverConquestInstance.setWorthiness(player.getUuid(), 0);
+                                        serverConquestInstance.sync(player, true, connection);
                                     });
                                 });
                             } else {
-                                api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+                                if (!api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isPresent()) {
+                                    api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+                                }
+
                                 api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                                     ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
-                                    serverConquestInstance.setBankerCoins(player.getUuid(), 0);
-                                    serverConquestInstance.setCoins(player.getUuid(), 0);
-                                    serverConquestInstance.setFarmerLastBread(player.getUuid(), 0);
-                                    serverConquestInstance.setHasContract(player.getUuid(), false);
-                                    serverConquestInstance.setWorthiness(player.getUuid(), 0);
-                                    PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-                                    passedData.writeString(instance.getName());
-                                    passedData.writeString(instance.getWorld());
-                                    passedData.writeInt(serverConquestInstance.getBankerCoins(player.getUuid()));
-                                    passedData.writeInt(serverConquestInstance.getCoins(player.getUuid()));
-                                    passedData.writeInt(serverConquestInstance.getWorthiness(player.getUuid()));
-                                    passedData.writeLong(serverConquestInstance.getFarmerLastBread(player.getUuid()));
-                                    passedData.writeBoolean(serverConquestInstance.hasContract(player.getUuid()));
-                                    passedData.writeBoolean(instance.isLoaded());
-                                    passedData.writeBlockPos(instance.getStart());
-                                    passedData.writeBlockPos(instance.getEnd());
-                                    // Then we'll send the packet to all the players
-                                    TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-                                    System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);
-                                    connection.send(new CustomPayloadS2CPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData));
+                                    serverConquestInstance.sync(player, false, connection);
                                 });
                             }
                         } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
+                });
+            });
+        });
+
+        PlayerLeaveCallback.EVENT.register(player -> {
+            TaleOfKingdoms.getAPI().ifPresent(api -> {
+                api.executeOnDedicatedServer(() -> {
+                    api.getServer().flatMap(server -> api.getConquestInstanceStorage()
+                            .getConquestInstance(server.getLevelName())).ifPresent(conquestInstance -> {
+                        conquestInstance.save(api);
+                    });
                 });
             });
         });
@@ -177,26 +166,8 @@ public class GameInstanceListener extends Listener {
                 TaleOfKingdoms.LOGGER.info("COMPLETE");
                 KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
                 TaleOfKingdoms.LOGGER.info("SENT KINGDOM EVENT");
-                // We'll get to this later
-                PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-                passedData.writeString(instance.getName());
-                passedData.writeString(instance.getWorld());
-                passedData.writeInt(instance.getBankerCoins(player.getUuid()));
-                passedData.writeInt(instance.getCoins(player.getUuid()));
-                passedData.writeInt(instance.getWorthiness(player.getUuid()));
-                passedData.writeLong(instance.getFarmerLastBread(player.getUuid()));
-                passedData.writeBoolean(instance.hasContract(player.getUuid()));
-                passedData.writeBoolean(instance.isLoaded());
-                passedData.writeBlockPos(instance.getStart());
-                passedData.writeBlockPos(instance.getEnd());
-                // Then we'll send the packet to all the players
-                TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-                System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);
-                connection.send(new CustomPayloadS2CPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData));
-                //ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, TaleOfKingdoms.PLAY_INSTANCE_PACKET_ID, passedData, fl1);
-                // This will work in both multiplayer and singleplayer!
-                TaleOfKingdoms.LOGGER.info("SENDING PACKET 2");
                 instance.setLoaded(true);
+                instance.sync(player, true, connection);
                 instance.save(api);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();

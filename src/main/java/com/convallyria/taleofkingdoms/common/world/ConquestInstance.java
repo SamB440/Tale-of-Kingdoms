@@ -137,7 +137,9 @@ public abstract class ConquestInstance {
         try (Writer writer = new FileWriter(file)) {
             Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
             gson.toJson(this, writer);
+            TaleOfKingdoms.LOGGER.info("Saved data");
         } catch (IOException e) {
+            TaleOfKingdoms.LOGGER.error("Error saving data: ", e);
             e.printStackTrace();
         }
     }

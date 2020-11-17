@@ -9,7 +9,8 @@
     "common.EntityDeathEvent",
     "common.EntityPickupItemEvent",
     "common.ItemMergeEvent",
-    "common.PlayerLogin"
+    "common.PlayerLogin",
+    "common.PlayerLeave"
   ],
   "client": [
     "client.InventoryDrawEvent",

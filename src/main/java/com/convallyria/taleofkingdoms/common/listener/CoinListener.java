@@ -13,6 +13,7 @@ import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,8 +49,8 @@ public class CoinListener extends Listener {
                         ((ClientConquestInstance) instance).setWorthiness(((ClientConquestInstance) instance).getWorthiness() + 1);
                     } else {
                         ((ServerConquestInstance) instance).setWorthiness(finalPlayerEntity.getUuid(), ((ServerConquestInstance) instance).getWorthiness(finalPlayerEntity.getUuid()) + 1);
+                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) finalPlayerEntity, false, null);
                     }
-
                 });
             }
         });
@@ -65,6 +66,7 @@ public class CoinListener extends Listener {
                     ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
                 } else {
                     ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
+                    ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, false, null);
                 }
 
                 player.inventory.remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.inventory);
