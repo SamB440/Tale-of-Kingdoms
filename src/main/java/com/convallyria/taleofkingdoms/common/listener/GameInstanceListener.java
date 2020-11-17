@@ -113,7 +113,7 @@ public class GameInstanceListener extends Listener {
     }
 
     private CompletableFuture<Void> create(ClientConnection connection, TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server) {
-        int topY = server.getOverworld().getTopY(Heightmap.Type.WORLD_SURFACE, 0, 0);
+        int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, BlockVector3.at(0, topY, 0)).thenAccept(oi -> {
             BlockVector3 max = oi.getRegion().getMaximumPoint();
             BlockVector3 min = oi.getRegion().getMinimumPoint();

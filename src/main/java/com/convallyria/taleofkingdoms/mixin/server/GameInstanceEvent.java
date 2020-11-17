@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 public class GameInstanceEvent {
 
-    @Inject(method = "loadWorld", at = @At("HEAD"), remap = false)
-    public void onSetGameInstance(CallbackInfo ci) {
+    @Inject(method = "loadWorld", at = @At("HEAD"))
+    protected void onLoadWorld(CallbackInfo ci) {
         GameInstanceCallback.EVENT.invoker().setGameInstance((MinecraftDedicatedServer) (Object) this);
     }
 }
