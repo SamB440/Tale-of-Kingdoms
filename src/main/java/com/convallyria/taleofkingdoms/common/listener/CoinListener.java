@@ -8,10 +8,9 @@ import com.convallyria.taleofkingdoms.common.event.ItemMergeCallback;
 import com.convallyria.taleofkingdoms.common.item.ItemHelper;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -25,15 +24,15 @@ public class CoinListener extends Listener {
             PlayerEntity playerEntity = null;
             if (source.getSource() instanceof PlayerEntity
                     || source.getSource() instanceof HunterEntity
-                    || source.getSource() instanceof ArrowEntity) {
-                if (source.getSource() instanceof ArrowEntity) {
-                    ArrowEntity arrowEntity = (ArrowEntity) source.getSource();
-                    if (arrowEntity.getOwner() instanceof PlayerEntity) {
-                        playerEntity = (PlayerEntity) arrowEntity.getOwner();
+                    || source.getSource() instanceof ProjectileEntity) {
+                if (source.getSource() instanceof ProjectileEntity) {
+                    ProjectileEntity projectileEntity = (ProjectileEntity) source.getSource();
+                    if (projectileEntity.getOwner() instanceof PlayerEntity) {
+                        playerEntity = (PlayerEntity) projectileEntity.getOwner();
                     }
 
-                    if (!(arrowEntity.getOwner() instanceof PlayerEntity)
-                            && !(arrowEntity.getOwner() instanceof HunterEntity)) {
+                    if (!(projectileEntity.getOwner() instanceof PlayerEntity)
+                            && !(projectileEntity.getOwner() instanceof HunterEntity)) {
                         return;
                     }
                 } else if (source.getSource() instanceof PlayerEntity) {
@@ -57,17 +56,15 @@ public class CoinListener extends Listener {
 
         EntityPickupItemCallback.EVENT.register((player, item) -> {
             if (equalsCoin(item)) {
-                ConquestInstance instance = TaleOfKingdoms.getAPI().get()
-                        .getConquestInstanceStorage()
-                        .mostRecentInstance()
-                        .get();
-                Random random = ThreadLocalRandom.current();
-                if (instance instanceof ClientConquestInstance) {
-                    ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
-                } else {
-                    ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
-                    ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, false, null);
-                }
+                TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+                    Random random = ThreadLocalRandom.current();
+                    if (instance instanceof ClientConquestInstance) {
+                        ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
+                    } else {
+                        ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
+                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, false, null);
+                    }
+                });
 
                 player.inventory.remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.inventory);
             }
