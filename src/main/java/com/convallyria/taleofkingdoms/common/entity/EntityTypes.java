@@ -58,7 +58,7 @@ public class EntityTypes {
             new Identifier(TaleOfKingdoms.MODID, "hunter"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, HunterEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
-    public static final EntityType<GuildGuardEntity> GUARD = Registry.register(
+    public static final EntityType<GuildGuardEntity> GUILDGUARD = Registry.register(
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "guild_guard"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildGuardEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()

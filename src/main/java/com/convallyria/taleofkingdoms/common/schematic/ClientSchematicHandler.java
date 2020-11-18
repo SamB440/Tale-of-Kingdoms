@@ -39,7 +39,10 @@ public final class ClientSchematicHandler extends SchematicHandler {
             ClipboardFormat format = ClipboardFormats.findByFile(schematic.getFile());
             try {
                 Clipboard clipboard = format.getReader(new FileInputStream(schematic.getFile())).read();
-                EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld, -1);
+                EditSession editSession = WorldEdit.getInstance().newEditSessionBuilder()
+                        .world(adaptedWorld)
+                        .maxBlocks(-1)
+                        .build();
 
                 ClipboardHolder clipboardHolder = new ClipboardHolder(clipboard);
                 Operation operation = clipboardHolder.createPaste(editSession)
@@ -48,7 +51,7 @@ public final class ClientSchematicHandler extends SchematicHandler {
                         .build();
                 final UUID uuid = UUID.randomUUID();
                 Operations.complete(operation);
-                editSession.flushSession();
+                editSession.close();
 
                 Region region = clipboard.getRegion();
                 BlockVector3 clipboardOffset = clipboard.getRegion().getMinimumPoint().subtract(clipboard.getOrigin());
