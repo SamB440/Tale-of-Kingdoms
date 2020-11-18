@@ -6,12 +6,15 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -56,7 +59,7 @@ public class FarmerEntity extends TOKEntity {
             // Set the current day and add bread to inventory
             instance.setFarmerLastBread(day);
             Translations.FARMER_TAKE_BREAD.send(player);
-        } else {
+        } else if (!(world.getServer() instanceof IntegratedServer)) {
             ServerConquestInstance instance = (ServerConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
             long day = player.world.getTimeOfDay() / 24000L;
             if (instance.getFarmerLastBread(player.getUuid()) >= day) {
@@ -71,8 +74,13 @@ public class FarmerEntity extends TOKEntity {
 
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
         if (world.isClient()) {
-            api.executeOnMain(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
-        } else {
+            api.executeOnMain(() -> {
+                ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                if (serverPlayerEntity != null) {
+                    serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+                }
+            });
+        } else if (!(world.getServer() instanceof IntegratedServer)) {
             api.executeOnDedicatedServer(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;

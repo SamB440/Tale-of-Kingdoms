@@ -49,13 +49,11 @@ public class StartWorldListener extends Listener {
 
         RecipesUpdatedCallback.EVENT.register(() -> {
             PlayerEntity entity = MinecraftClient.getInstance().player;
-            if (entity == null || entity.getServer() == null) return;
-
+            if (entity == null) return;
             // Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
             if (joined) return;
-
             this.joined = true;
-            //TODO support for server
+
             if (!TaleOfKingdoms.getAPI().isPresent()) return;
             TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
             boolean loaded = load(worldName, api);
