@@ -26,10 +26,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.islandearth.taleofkingdoms.TaleOfKingdoms"
+      "com.convallyria.taleofkingdoms.TaleOfKingdoms"
     ],
     "client": [
-      "net.islandearth.taleofkingdoms.client.TaleOfKingdomsClient"
+      "com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient"
+    ],
+    "server": [
+      "com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer"
     ]
   },
   "mixins": [

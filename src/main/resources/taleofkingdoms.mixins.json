@@ -1,13 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.islandearth.taleofkingdoms.mixin",
+  "package": "com.convallyria.taleofkingdoms.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "common.EntitySpawnEvent",
     "common.InventoryInsertEvent",
     "common.EntityDeathEvent",
-    "common.EntityPickupItemEvent"
+    "common.EntityPickupItemEvent",
+    "common.ItemMergeEvent",
+    "common.PlayerLogin",
+    "common.PlayerLeave"
   ],
   "client": [
     "client.InventoryDrawEvent",
@@ -15,6 +18,9 @@
     "WorldClose",
     "WorldSessionStartEvent",
     "WorldDeleteEvent"
+  ],
+  "server": [
+    "server.GameInstanceEvent"
   ],
   "injectors": {
     "defaultRequire": 1
