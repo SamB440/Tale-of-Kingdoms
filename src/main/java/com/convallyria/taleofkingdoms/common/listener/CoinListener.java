@@ -21,37 +21,53 @@ public class CoinListener extends Listener {
 
     public CoinListener() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
-            PlayerEntity playerEntity = null;
-            if (source.getSource() instanceof PlayerEntity
-                    || source.getSource() instanceof HunterEntity
-                    || source.getSource() instanceof ProjectileEntity) {
-                if (source.getSource() instanceof ProjectileEntity) {
-                    ProjectileEntity projectileEntity = (ProjectileEntity) source.getSource();
-                    if (projectileEntity.getOwner() instanceof PlayerEntity) {
-                        playerEntity = (PlayerEntity) projectileEntity.getOwner();
+            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+                PlayerEntity playerEntity = null;
+                System.out.println("death");
+                if (entity instanceof PlayerEntity) {
+                    System.out.println("instanceof");
+                    if (instance instanceof ClientConquestInstance) {
+                        System.out.println("client");
+                        ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
+                        int subtract = (clientConquestInstance.getCoins() / 20) * 100;
+                        clientConquestInstance.setCoins(clientConquestInstance.getCoins() - subtract);
+                    } else {
+                        ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
+                        int subtract = (serverConquestInstance.getCoins(entity.getUuid()) / 20) * 100;
+                        serverConquestInstance.setCoins(entity.getUuid(), subtract);
                     }
-
-                    if (!(projectileEntity.getOwner() instanceof PlayerEntity)
-                            && !(projectileEntity.getOwner() instanceof HunterEntity)) {
-                        return;
-                    }
-                } else if (source.getSource() instanceof PlayerEntity) {
-                    playerEntity = (PlayerEntity) source.getSource();
+                    return;
                 }
 
-                //TODO assosciate owner with hunter entity
-                ItemHelper.dropCoins(entity);
-                PlayerEntity finalPlayerEntity = playerEntity;
-                if (finalPlayerEntity == null) return;
-                TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                    if (instance instanceof ClientConquestInstance) {
-                        ((ClientConquestInstance) instance).setWorthiness(((ClientConquestInstance) instance).getWorthiness() + 1);
-                    } else {
-                        ((ServerConquestInstance) instance).setWorthiness(finalPlayerEntity.getUuid(), ((ServerConquestInstance) instance).getWorthiness(finalPlayerEntity.getUuid()) + 1);
-                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) finalPlayerEntity, false, null);
+                if (source.getSource() instanceof PlayerEntity
+                        || source.getSource() instanceof HunterEntity
+                        || source.getSource() instanceof ProjectileEntity) {
+                    if (source.getSource() instanceof ProjectileEntity) {
+                        ProjectileEntity projectileEntity = (ProjectileEntity) source.getSource();
+                        if (projectileEntity.getOwner() instanceof PlayerEntity) {
+                            playerEntity = (PlayerEntity) projectileEntity.getOwner();
+                        }
+
+                        if (!(projectileEntity.getOwner() instanceof PlayerEntity)
+                                && !(projectileEntity.getOwner() instanceof HunterEntity)) {
+                            return;
+                        }
+                    } else if (source.getSource() instanceof PlayerEntity) {
+                        playerEntity = (PlayerEntity) source.getSource();
                     }
-                });
-            }
+
+                    //TODO assosciate owner with hunter entity
+                    ItemHelper.dropCoins(entity);
+                    if (instance instanceof ClientConquestInstance) {
+                        ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
+                        clientConquestInstance.setWorthiness(clientConquestInstance.getWorthiness() + 1);
+                    } else if (playerEntity instanceof ServerPlayerEntity) {
+                        ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
+                        serverConquestInstance.setWorthiness(playerEntity.getUuid(), serverConquestInstance.getWorthiness(playerEntity.getUuid()) + 1);
+                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, false, null); //TODO put this somewhere else
+                    }
+                }
+            });
         });
 
         EntityPickupItemCallback.EVENT.register((player, item) -> {

@@ -42,12 +42,12 @@ public class BankerScreen extends ScreenTOK {
         this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new LiteralText("Deposit"), (button) -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
-
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
                     this.onClose();
                     return;
                 }
+
                 if (instance.getCoins() >= coins) {
                     instance.setCoins(instance.getCoins() - coins);
                     instance.setBankerCoins(instance.getBankerCoins() + coins);
