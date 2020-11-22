@@ -36,7 +36,7 @@ Compiling
 
 `./gradlew build`
 
-Jar file is at `builds/tale-of-kingdoms-1.0.0.jar`
+Jar file is at `build/libs/tale-of-kingdoms-1.0.0.jar`
 
 Hot-swapping
 =======
