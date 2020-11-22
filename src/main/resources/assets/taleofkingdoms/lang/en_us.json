@@ -15,6 +15,8 @@
     "entity_type.taleofkingdoms.guildmaster.contract.cancel": "Cancel contract.",
     "entity_type.taleofkingdoms.guildmaster.welcome": "Guild Master: Welcome to the order, hero.",
     "entity_type.taleofkingdoms.guildmaster.good_hunting": "Guild Master: Good hunting.",
+    "entity_type.taleofkingdoms.guildmaster.guild_order": "The Guild Order  Total Money: ",
+    "entity_type.taleofkingdoms.guildmaster.path": "Path to Kingship",
     "entity_type.taleofkingdoms.guildmember.first": "Guild Member: Damn those reficules.",
     "entity_type.taleofkingdoms.hunter.bow": "Hunter: I shall use my bow.",
     "entity_type.taleofkingdoms.hunter.sword": "Hunter: I shall use my sword.",
@@ -27,5 +29,6 @@
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
     "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
     "generic.taleofkingdoms.serve": "I will serve you, my liege!",
-    "entity_type.taleofkingdoms.lone.help": "Survivor: I am greatly lost, my king, I survived the attack but many of our villages burned down. There are still survivors left, hurry and rescue them!"
+    "entity_type.taleofkingdoms.lone.help": "Survivor: I am greatly lost, my king, I survived the attack but many of our villages burned down. There are still survivors left, hurry and rescue them!",
+    "generic.taleofkingdoms.gold_coins": "Gold Coins"
 }

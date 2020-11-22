@@ -24,7 +24,10 @@ public enum Translations {
     BANK_ZERO("entity_type.taleofkingdoms.bank.zero"),
     GUILDMEMBER_START("entity_type.taleofkingdoms.guildmember.first"),
     HUNTER_BOW("entity_type.taleofkingdoms.hunter.bow"),
-    HUNTER_SWORD("entity_type.taleofkingdoms.hunter.sword");
+    HUNTER_SWORD("entity_type.taleofkingdoms.hunter.sword"),
+    GOLD_COINS("generic.taleofkingdoms.gold_coins"),
+    GUILDMASTER_GUILD_ORDER("entity_type.taleofkingdoms.guildmaster.guild_order"),
+    GUILDMASTER_PATH("entity_type.taleofkingdoms.guildmaster.path");
     
     private final String key;
     
