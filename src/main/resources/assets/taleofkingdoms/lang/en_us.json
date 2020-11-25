@@ -30,5 +30,11 @@
     "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
     "generic.taleofkingdoms.serve": "I will serve you, my liege!",
     "entity_type.taleofkingdoms.lone.help": "Survivor: I am greatly lost, my king, I survived the attack but many of our villages burned down. There are still survivors left, hurry and rescue them!",
-    "generic.taleofkingdoms.gold_coins": "Gold Coins"
+    "generic.taleofkingdoms.gold_coins": "Gold Coins",
+    "generic.taleofkingdoms.start_conquest": "Start your Conquest.",
+    "generic.taleofkingdoms.building_castle": "Building a great castle...",
+    "generic.taleofkingdoms.summon_citizens": "Summoning citizens of the realm...",
+    "generic.taleofkingdoms.new_citizen": "A new Citizen has arrived: ",
+    "generic.taleofkingdoms.darkness": "The Great Tides of Darkness are coming. Build your forces and vanquish evil.",
+    "generic.taleofkingdoms.hero": "Be the hero you were born for. The Guild will prepare you..."
 }
