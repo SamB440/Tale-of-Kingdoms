@@ -86,4 +86,9 @@ public class HunterEntity extends TOKEntity {
     protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
         return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
     }
+
+    @Override
+    public boolean isPushable() {
+        return true;
+    }
 }
