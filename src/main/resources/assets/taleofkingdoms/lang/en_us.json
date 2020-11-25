@@ -15,6 +15,8 @@
     "entity_type.taleofkingdoms.guildmaster.contract.cancel": "Cancel contract.",
     "entity_type.taleofkingdoms.guildmaster.welcome": "Guild Master: Welcome to the order, hero.",
     "entity_type.taleofkingdoms.guildmaster.good_hunting": "Guild Master: Good hunting.",
+    "entity_type.taleofkingdoms.guildmaster.guild_order": "The Guild Order  Total Money: ",
+    "entity_type.taleofkingdoms.guildmaster.path": "Path to Kingship",
     "entity_type.taleofkingdoms.guildmember.first": "Guild Member: Damn those reficules.",
     "entity_type.taleofkingdoms.hunter.bow": "Hunter: I shall use my bow.",
     "entity_type.taleofkingdoms.hunter.sword": "Hunter: I shall use my sword.",
@@ -24,9 +26,16 @@
     "entity_type.taleofkingdoms.bank.close": "Banker: I will keep your gold safe!",
     "entity_type.taleofkingdoms.bank.zero": "Banker: You have no money! Go fight mobs to earn some gold.",
     "entity_type.taleofkingdoms.bank.input": "Banker: Please enter a number.",
+    "entity_type.taleofkingdoms.citybuilder.message": "City Builder: My king you are still not worthy of creating a kingdom. The Guild Master will prepare you!",
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
     "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
     "generic.taleofkingdoms.serve": "I will serve you, my liege!",
     "entity_type.taleofkingdoms.lone.help": "Survivor: I am greatly lost, my king, I survived the attack but many of our villages burned down. There are still survivors left, hurry and rescue them!",
-    "entity_type.taleofkingdoms.citybuilder.message": "City Builder: My king you are still not worthy of creating a kingdom. The Guild Master will prepare you!"
+    "generic.taleofkingdoms.gold_coins": "Gold Coins",
+    "generic.taleofkingdoms.start_conquest": "Start your Conquest.",
+    "generic.taleofkingdoms.building_castle": "Building a great castle...",
+    "generic.taleofkingdoms.summon_citizens": "Summoning citizens of the realm...",
+    "generic.taleofkingdoms.new_citizen": "A new Citizen has arrived: ",
+    "generic.taleofkingdoms.darkness": "The Great Tides of Darkness are coming. Build your forces and vanquish evil.",
+    "generic.taleofkingdoms.hero": "Be the hero you were born for. The Guild will prepare you..."
 }
