@@ -50,7 +50,6 @@ public class GuildGuardEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         //TODO
         Translations.GUILDMEMBER_START.send(player);
         return ActionResult.PASS;

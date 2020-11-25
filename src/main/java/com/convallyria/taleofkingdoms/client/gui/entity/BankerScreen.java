@@ -91,6 +91,12 @@ public class BankerScreen extends ScreenTOK {
     }
 
     @Override
+    public void onClose() {
+        super.onClose();
+        Translations.BANK_CLOSE.send(player);
+    }
+
+    @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         images.forEach(image -> image.render(stack, this));
         super.render(stack, mouseX, mouseY, delta);

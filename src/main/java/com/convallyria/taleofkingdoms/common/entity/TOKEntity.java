@@ -21,9 +21,7 @@ public abstract class TOKEntity extends PathAwareEntity implements RangedAttackM
      * Applies default entity AI:
      * <br>• {@link SwimGoal}
      */
-    protected void applyEntityAI() {
-        this.goalSelector.add(1, new SwimGoal(this));
-    }
+    protected void applyEntityAI() { this.goalSelector.add(1, new SwimGoal(this)); }
 
     /**
      * Registers the goals for this entity, along with the defaults specified in {@link #applyEntityAI()}
@@ -67,7 +65,7 @@ public abstract class TOKEntity extends PathAwareEntity implements RangedAttackM
      */
     @Override
     public boolean isPushable() {
-        return false;
+        return true;
     }
 
     @Override

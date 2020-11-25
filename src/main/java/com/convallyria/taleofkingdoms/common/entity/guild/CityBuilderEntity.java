@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.EntityType;
@@ -29,6 +30,7 @@ public class CityBuilderEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         //TODO
+        Translations.CITYBUILDER_MESSAGE.send(player);
         return ActionResult.PASS;
     }
 

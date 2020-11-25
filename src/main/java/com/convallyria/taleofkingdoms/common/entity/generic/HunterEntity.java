@@ -1,9 +1,10 @@
-package net.islandearth.taleofkingdoms.common.entity.generic;
+package com.convallyria.taleofkingdoms.common.entity.generic;
 
-import net.islandearth.taleofkingdoms.client.translation.Translations;
-import net.islandearth.taleofkingdoms.common.entity.TOKEntity;
-import net.islandearth.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.BowAttackGoal;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
