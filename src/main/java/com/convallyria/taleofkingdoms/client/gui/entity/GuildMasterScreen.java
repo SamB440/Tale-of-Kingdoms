@@ -16,7 +16,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 
-//TODO this class needs more translations
 public class GuildMasterScreen extends ScreenTOK {
 
     private final PlayerEntity player;
@@ -83,8 +82,10 @@ public class GuildMasterScreen extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         super.render(stack, par1, par2, par3);
-        drawCenteredString(stack, this.textRenderer, "The Guild Order  Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, "Path to Kingship", this.width / 2, this.height / 2 + 50, 0XFFFFFF);
+        String order = Translations.GUILDMASTER_GUILD_ORDER.getFormatted() + instance.getCoins() + " " + Translations.GOLD_COINS.getFormatted();
+        String path = Translations.GUILDMASTER_PATH.getFormatted();
+        drawCenteredString(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, path, this.width / 2, this.height / 2 + 50, 0XFFFFFF);
         this.worthness.drawBar(stack);
     }
 
@@ -96,10 +97,5 @@ public class GuildMasterScreen extends ScreenTOK {
     @Override
     public boolean shouldCloseOnEsc() {
         return false;
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
     }
 }

@@ -31,12 +31,12 @@ public class GuildGuardEntity extends TOKEntity {
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.goalSelector.add(1, new WanderAroundGuildGoal(this, 0.5D));
+        this.goalSelector.add(2, new WanderAroundGuildGoal(this, 0.5D));
         this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
             return livingEntity instanceof Monster;
         }));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.5D, false));
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
+        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
         applyEntityAI();
     }
 
@@ -49,7 +49,8 @@ public class GuildGuardEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         //TODO
         Translations.GUILDMEMBER_START.send(player);
         return ActionResult.PASS;

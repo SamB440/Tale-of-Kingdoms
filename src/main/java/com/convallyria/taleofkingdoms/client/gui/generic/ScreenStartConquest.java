@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui.generic;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
@@ -57,10 +58,10 @@ public class ScreenStartConquest extends ScreenTOK {
         super.init();
         this.buttons.clear();
         this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 150, this.height / 2 - 40, 300, 20, new LiteralText("Sir Punchwood"));
-        this.addButton(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 30, 200, 20, new LiteralText("Start your Conquest."), (button) -> {
+        this.addButton(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 30, 200, 20, Translations.START_CONQUEST.getTranslation(), (button) -> {
             if (loading) return;
 
-            button.setMessage(new LiteralText("Building a great castle..."));
+            button.setMessage(Translations.BUILDING_CASTLE.getTranslation());
             if (!TaleOfKingdoms.getAPI().isPresent()) {
                 button.setMessage(new LiteralText("No API present"));
                 return;
@@ -92,7 +93,7 @@ public class ScreenStartConquest extends ScreenTOK {
 
                     try {
                         TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-                        button.setMessage(new LiteralText("Summoning citizens of the realm..."));
+                        button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
                         int topBlockX = (Math.max(max.getBlockX(), min.getBlockX()));
                         int bottomBlockX = (Math.min(max.getBlockX(), min.getBlockX()));
 
@@ -113,7 +114,7 @@ public class ScreenStartConquest extends ScreenTOK {
                                         if (line1 != null && line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'")) {
                                             Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
                                             String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", ""); // Doesn't seem to be a way to get the plain string...
-                                            button.setMessage(new LiteralText("A new Citizen has arrived: " + entityName));
+                                            button.setMessage(new LiteralText(Translations.NEW_CITIZEN.getFormatted() + entityName));
                                             Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("com.convallyria.taleofkingdoms.common.entity.guild." + entityName + "Entity");
                                             Constructor constructor = entity.getConstructor(EntityType.class, World.class);
                                             EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
@@ -155,8 +156,9 @@ public class ScreenStartConquest extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         this.renderBackground(stack);
-        drawCenteredString(stack, this.textRenderer, "The Great Tides of Darkness are coming. Build your forces and vanquish evil.", this.width / 2, this.height / 2, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, "Be the hero you were born for. The Guild will prepare you...", this.width / 2, this.height / 2 + 10, 0xFFFFFF);
+
+        drawCenteredString(stack, this.textRenderer, Translations.DARKNESS.getFormatted(), this.width / 2, this.height / 2, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, this.height / 2 + 10, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);
         super.render(stack, par1, par2, par3);
     }
