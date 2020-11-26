@@ -13,6 +13,7 @@ public enum Translations {
     GUILDMASTER_CONTRACT_CANCEL("entity_type.taleofkingdoms.guildmaster.contract.cancel"),
     GUILDMASTER_WELCOME("entity_type.taleofkingdoms.guildmaster.welcome"),
     GUILDMASTER_GOODHUNTING("entity_type.taleofkingdoms.guildmaster.good_hunting"),
+    CITYBUILDER_MESSAGE("entity_type.taleofkingdoms.citybuilder.message"),
     INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
     INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),
     NEED_CONTRACT("generic.taleofkingdoms.need_contract"),

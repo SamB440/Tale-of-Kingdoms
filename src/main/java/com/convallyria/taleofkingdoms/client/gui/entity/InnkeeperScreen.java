@@ -61,6 +61,18 @@ public class InnkeeperScreen extends ScreenTOK {
             }
         }));
 
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
+            this.onClose();
+            //TODO fix sleeping for fabric
+            MinecraftServer server = MinecraftClient.getInstance().getServer();
+            if (server != null && server.getOverworld().getTimeOfDay() < 13000) {
+                    server.getOverworld().setTimeOfDay(13000);
+            }
+            else {
+                player.sendMessage(new LiteralText("House Keeper: It is already night time."), false);
+            }
+        }));
+
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 15, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
     }
 

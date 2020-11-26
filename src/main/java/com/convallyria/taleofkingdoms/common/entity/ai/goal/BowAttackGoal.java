@@ -16,7 +16,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     private final double speed;
     private int attackInterval;
     private final float squaredRange;
-    private int cooldown = -1;
+    private int coolDown = -1;
     private int targetSeeingTicker;
     private boolean movingToLeft;
     private boolean backward;
@@ -55,7 +55,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
         super.stop();
         this.actor.setAttacking(false);
         this.targetSeeingTicker = 0;
-        this.cooldown = -1;
+        this.coolDown = -1;
         this.actor.clearActiveItem();
     }
 
@@ -118,10 +118,10 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
                     if (i >= 20) {
                         this.actor.clearActiveItem();
                         ((RangedAttackMob)this.actor).attack(livingEntity, BowItem.getPullProgress(i));
-                        this.cooldown = this.attackInterval;
+                        this.coolDown = this.attackInterval;
                     }
                 }
-            } else if (--this.cooldown <= 0 && this.targetSeeingTicker >= -60) {
+            } else if (--this.coolDown <= 0 && this.targetSeeingTicker >= -60) {
                 this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.BOW));
             }
 

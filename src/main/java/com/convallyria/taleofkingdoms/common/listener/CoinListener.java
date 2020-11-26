@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.listener;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.event.EntityDeathCallback;
 import com.convallyria.taleofkingdoms.common.event.EntityPickupItemCallback;
 import com.convallyria.taleofkingdoms.common.event.ItemMergeCallback;
@@ -41,6 +42,7 @@ public class CoinListener extends Listener {
 
                 if (source.getSource() instanceof PlayerEntity
                         || source.getSource() instanceof HunterEntity
+                        || source.getSource() instanceof GuildGuardEntity
                         || source.getSource() instanceof ProjectileEntity) {
                     if (source.getSource() instanceof ProjectileEntity) {
                         ProjectileEntity projectileEntity = (ProjectileEntity) source.getSource();
