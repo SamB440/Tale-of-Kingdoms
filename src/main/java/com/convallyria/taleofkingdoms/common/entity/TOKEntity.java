@@ -65,7 +65,7 @@ public abstract class TOKEntity extends PathAwareEntity implements RangedAttackM
      */
     @Override
     public boolean isPushable() {
-        return true;
+        return false;
     }
 
     @Override

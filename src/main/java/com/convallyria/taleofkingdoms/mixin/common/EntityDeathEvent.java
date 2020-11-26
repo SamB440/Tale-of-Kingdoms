@@ -37,6 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
+
 @Mixin(LivingEntity.class)
 public class EntityDeathEvent {
 
