@@ -26,6 +26,7 @@
     "entity_type.taleofkingdoms.bank.close": "Banker: I will keep your gold safe!",
     "entity_type.taleofkingdoms.bank.zero": "Banker: You have no money! Go fight mobs to earn some gold.",
     "entity_type.taleofkingdoms.bank.input": "Banker: Please enter a number.",
+    "entity_type.taleofkingdoms.citybuilder.message": "City Builder: My king you are still not worthy of creating a kingdom. The Guild Master will prepare you!",
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
     "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
     "generic.taleofkingdoms.serve": "I will serve you, my liege!",
