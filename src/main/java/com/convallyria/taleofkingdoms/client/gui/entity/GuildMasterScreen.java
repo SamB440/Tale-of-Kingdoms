@@ -7,14 +7,24 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.sk89q.worldedit.math.BlockVector3;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -35,7 +45,7 @@ public class GuildMasterScreen extends ScreenTOK {
     public void init() {
         super.init();
         if (!instance.hasContract()) {
-            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 45, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
+            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
                 instance.setHasContract(true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
                 button.visible = false;
@@ -44,7 +54,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
             }));
         } else {
-            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 45, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
+            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
                 instance.setHasContract(false);
                 button.visible = false;
                 button.active = false;
@@ -52,7 +62,7 @@ public class GuildMasterScreen extends ScreenTOK {
         }
 
         String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 13, 150, 20, new LiteralText(hunterText), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
             if (instance.getCoins() >= 1500) {
                 TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
                     if (MinecraftClient.getInstance().getServer() != null) {
@@ -70,7 +80,57 @@ public class GuildMasterScreen extends ScreenTOK {
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 20, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Fix the guild"), (button) -> {
+            TaleOfKingdoms.getAPI().ifPresent(api -> {
+                api.executeOnMain(() -> {
+                    ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                    if (serverPlayerEntity != null) {
+                        PlayerInventory playerInventory = serverPlayerEntity.inventory;
+                        ItemStack stack = new ItemStack(Items.OAK_LOG, 64);
+                        if (playerInventory.contains(stack)) {
+                            playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
+                            BlockPos origin = instance.getOrigin();
+                            BlockVector3 blockVector3 = BlockVector3.at(origin.getX(), origin.getY(), origin.getZ());
+                            api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, blockVector3).thenAccept(oi -> {
+                                api.executeOnServer(() -> {
+                                    BlockVector3 max = oi.getRegion().getMaximumPoint();
+                                    BlockVector3 min = oi.getRegion().getMinimumPoint();
+
+                                    int topBlockX = (Math.max(max.getBlockX(), min.getBlockX()));
+                                    int bottomBlockX = (Math.min(max.getBlockX(), min.getBlockX()));
+
+                                    int topBlockY = (Math.max(max.getBlockY(), min.getBlockY()));
+                                    int bottomBlockY = (Math.min(max.getBlockY(), min.getBlockY()));
+
+                                    int topBlockZ = (Math.max(max.getBlockZ(), min.getBlockZ()));
+                                    int bottomBlockZ = (Math.min(max.getBlockZ(), min.getBlockZ()));
+
+                                    for (int x = bottomBlockX; x <= topBlockX; x++) {
+                                        for (int z = bottomBlockZ; z <= topBlockZ; z++) {
+                                            for (int y = bottomBlockY; y <= topBlockY; y++) {
+                                                BlockPos blockPos = new BlockPos(x, y, z);
+                                                BlockEntity tileEntity = serverPlayerEntity.getServerWorld().getChunk(blockPos).getBlockEntity(blockPos);
+                                                if (tileEntity instanceof SignBlockEntity) {
+                                                    SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
+                                                    Tag line1 = signTileEntity.toInitialChunkDataTag().get("Text1");
+                                                    if (line1 != null && line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'")) {
+                                                        serverPlayerEntity.getServerWorld().breakBlock(blockPos, false);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+            });
+
+            this.onClose();
+        }));
+
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText("Exit"), (button) -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
             this.onClose();
         }));

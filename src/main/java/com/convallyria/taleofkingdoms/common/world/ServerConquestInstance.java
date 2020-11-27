@@ -20,8 +20,8 @@ public class ServerConquestInstance extends ConquestInstance {
     private Map<UUID, Boolean> playerHasContract;
     private Map<UUID, Integer> playerWorthiness;
 
-    public ServerConquestInstance(String world, String name, BlockPos start, BlockPos end) {
-        super(world, name, start, end);
+    public ServerConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
+        super(world, name, start, end, origin);
         this.playerCoins = new ConcurrentHashMap<>();
         this.playerBankerCoins = new ConcurrentHashMap<>();
         this.playerFarmerLastBread = new ConcurrentHashMap<>();
@@ -92,6 +92,7 @@ public class ServerConquestInstance extends ConquestInstance {
         passedData.writeBoolean(this.isLoaded());
         passedData.writeBlockPos(this.getStart());
         passedData.writeBlockPos(this.getEnd());
+        passedData.writeBlockPos(this.getOrigin());
         // Then we'll send the packet to all the players
         TaleOfKingdoms.LOGGER.info("SENDING PACKET");
         System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);

@@ -10,8 +10,8 @@ public class ClientConquestInstance extends ConquestInstance {
     private boolean hasContract;
     private int worthiness;
 
-    public ClientConquestInstance(String world, String name, BlockPos start, BlockPos end) {
-        super(world, name, start, end);
+    public ClientConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
+        super(world, name, start, end, origin);
     }
 
     public int getCoins() {

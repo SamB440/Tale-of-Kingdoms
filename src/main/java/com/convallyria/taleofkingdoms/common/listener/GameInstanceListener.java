@@ -119,7 +119,7 @@ public class GameInstanceListener extends Listener {
             BlockVector3 min = oi.getRegion().getMinimumPoint();
             BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
             BlockPos end = new BlockPos(min.getBlockX(), min.getBlockY(), min.getBlockZ());
-            ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), start, end);
+            ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), start, end, new BlockPos(0, topY, 0));
             instance.setBankerCoins(player.getUuid(), 0);
             instance.setCoins(player.getUuid(), 0);
             instance.setFarmerLastBread(player.getUuid(), 0);
