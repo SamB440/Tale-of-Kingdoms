@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.math.BlockVector3;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.Tag;
@@ -32,6 +34,12 @@ public class GuildMasterScreen extends ScreenTOK {
     private final GuildMasterEntity entity;
     private final ClientConquestInstance instance;
     private ScreenBar worthness;
+    private final ImmutableList<Item> logs = ImmutableList.of(Items.ACACIA_LOG,
+            Items.BIRCH_LOG,
+            Items.DARK_OAK_LOG,
+            Items.JUNGLE_LOG,
+            Items.OAK_LOG,
+            Items.SPRUCE_LOG);
 
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
@@ -86,8 +94,15 @@ public class GuildMasterScreen extends ScreenTOK {
                     ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity != null) {
                         PlayerInventory playerInventory = serverPlayerEntity.inventory;
-                        ItemStack stack = new ItemStack(Items.OAK_LOG, 64);
-                        if (playerInventory.contains(stack)) {
+                        ItemStack stack = null;
+                        for (Item log : logs) {
+                            ItemStack logStack = new ItemStack(log);
+                            if (playerInventory.contains(logStack)) {
+                                stack = logStack;
+                            }
+                        }
+
+                        if (stack != null) {
                             playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
                             BlockPos origin = instance.getOrigin();
                             BlockVector3 blockVector3 = BlockVector3.at(origin.getX(), origin.getY(), origin.getZ());
