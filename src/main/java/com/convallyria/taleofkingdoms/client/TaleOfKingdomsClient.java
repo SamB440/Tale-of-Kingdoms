@@ -30,6 +30,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
                     boolean isLoaded = attachedData.readBoolean();
                     BlockPos start = attachedData.readBlockPos();
                     BlockPos end = attachedData.readBlockPos();
+                    BlockPos origin = attachedData.readBlockPos();
                     packetContext.getTaskQueue().execute(() -> {
                         ScreenSyncConquest screenSyncConquest = new ScreenSyncConquest();
                         MinecraftClient.getInstance().openScreen(screenSyncConquest);
@@ -50,7 +51,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
                                 return;
                             }
 
-                            ClientConquestInstance instance = new ClientConquestInstance(world, name, start, end);
+                            ClientConquestInstance instance = new ClientConquestInstance(world, name, start, end, origin);
                             screenSyncConquest.setProgress("Created new instance");
                             instance.setBankerCoins(bankerCoins);
                             instance.setCoins(coins);

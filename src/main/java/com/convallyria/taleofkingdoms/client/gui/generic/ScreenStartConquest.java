@@ -83,7 +83,7 @@ public class ScreenStartConquest extends ScreenTOK {
                     BlockVector3 min = oi.getRegion().getMinimumPoint();
                     BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
                     BlockPos end = new BlockPos(min.getBlockX(), min.getBlockY(), min.getBlockZ());
-                    ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), start, end);
+                    ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), start, end, serverPlayer.getBlockPos().add(0, 1, 0));
                     try (Writer writer = new FileWriter(toSave)) {
                         Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
                         gson.toJson(instance, writer);

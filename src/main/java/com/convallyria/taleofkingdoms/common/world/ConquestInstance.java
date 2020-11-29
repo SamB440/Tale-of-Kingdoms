@@ -29,8 +29,9 @@ public abstract class ConquestInstance {
     private boolean hasLoaded;
     private BlockPos start;
     private BlockPos end;
+    private BlockPos origin;
 
-    public ConquestInstance(String world, String name, BlockPos start, BlockPos end) {
+    public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
                 .map(TaleOfKingdomsAPI::getConquestInstanceStorage)
                 .orElseThrow(() -> new IllegalArgumentException("API not present"))
@@ -40,6 +41,7 @@ public abstract class ConquestInstance {
         this.name = name;
         this.start = start;
         this.end = end;
+        this.origin = origin;
     }
 
     public String getWorld() {
@@ -64,6 +66,10 @@ public abstract class ConquestInstance {
 
     public BlockPos getEnd() {
         return end;
+    }
+
+    public BlockPos getOrigin() {
+        return origin;
     }
 
     private List<BlockPos> validRest;
