@@ -29,11 +29,8 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -48,14 +45,11 @@ public class GuildMasterScreen extends ScreenTOK {
             Items.OAK_LOG,
             Items.SPRUCE_LOG);
 
-    private final List<UUID> hunterUUIDs;
-
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
         this.player = player;
         this.entity = entity;
         this.instance = instance;
-        this.hunterUUIDs = new ArrayList<UUID>();
         Translations.GUILDMASTER_WELCOME.send(player);
     }
 
@@ -90,10 +84,12 @@ public class GuildMasterScreen extends ScreenTOK {
                         serverWorld.spawnEntity(hunterEntity);
                         hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
 
-                        addHunter(hunterEntity.getUuid());
+                        instance.addHunter(hunterEntity);
+
                     }
                 }));
                 instance.setCoins(instance.getCoins() - 1500);
+                instance.setHunterUUIDs(instance.getHunter());
                 Translations.SERVE.send(player);
                 this.onClose();
                 MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
@@ -101,20 +97,26 @@ public class GuildMasterScreen extends ScreenTOK {
         }));
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
-            if(hunterUUIDs.isEmpty()) {
-                player.sendMessage(new LiteralText("You have no hunters."), false);
-            }
-            else {
-                UUID Hunter = hunterUUIDs.get(0);
+
+            try {
                 ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                Entity hunter = serverWorld.getEntity(Hunter);
-                serverWorld.removeEntity(hunter);
-                removeHunter(Hunter);
+                Entity hunter = serverWorld.getEntity(instance.getHunter().get(0));
+
+                try {
+                    serverWorld.removeEntity(hunter);
+                    instance.removeHunter(hunter);
+                    player.sendMessage(new LiteralText("Hunter: Thank you my liege!"), false);
+                }
+                catch (IllegalStateException e){
+                    player.sendMessage(new LiteralText("Guild Master: Please wait."), false);
+                }
+
+            } catch (IndexOutOfBoundsException e){
+                player.sendMessage(new LiteralText("Guild Master: You have no hunters."), false);
             }
+
             this.onClose();
-
         }));
-
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText("Fix the guild"), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
@@ -202,8 +204,4 @@ public class GuildMasterScreen extends ScreenTOK {
     public boolean shouldCloseOnEsc() {
         return false;
     }
-
-    public void addHunter(UUID hunter) {hunterUUIDs.add(hunter);}
-
-    public void removeHunter(UUID hunter) {hunterUUIDs.remove(hunter);}
 }
