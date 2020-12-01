@@ -77,7 +77,6 @@ public class BankerScreen extends ScreenTOK {
             }
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
-            Translations.BANK_CLOSE.send(player);
             this.onClose();
         }));
 

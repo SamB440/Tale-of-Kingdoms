@@ -16,6 +16,7 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
@@ -27,6 +28,12 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -41,11 +48,14 @@ public class GuildMasterScreen extends ScreenTOK {
             Items.OAK_LOG,
             Items.SPRUCE_LOG);
 
+    private final List<UUID> hunterUUIDs;
+
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
         this.player = player;
         this.entity = entity;
         this.instance = instance;
+        this.hunterUUIDs = new ArrayList<UUID>();
         Translations.GUILDMASTER_WELCOME.send(player);
     }
 
@@ -79,6 +89,8 @@ public class GuildMasterScreen extends ScreenTOK {
                         hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
                         serverWorld.spawnEntity(hunterEntity);
                         hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
+
+                        addHunter(hunterEntity.getUuid());
                     }
                 }));
                 instance.setCoins(instance.getCoins() - 1500);
@@ -88,7 +100,23 @@ public class GuildMasterScreen extends ScreenTOK {
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Fix the guild"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
+            if(hunterUUIDs.isEmpty()) {
+                player.sendMessage(new LiteralText("You have no hunters."), false);
+            }
+            else {
+                UUID Hunter = hunterUUIDs.get(0);
+                ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+                Entity hunter = serverWorld.getEntity(Hunter);
+                serverWorld.removeEntity(hunter);
+                removeHunter(Hunter);
+            }
+            this.onClose();
+
+        }));
+
+
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText("Fix the guild"), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 api.executeOnMain(() -> {
                     ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
@@ -97,6 +125,7 @@ public class GuildMasterScreen extends ScreenTOK {
                         ItemStack stack = null;
                         for (Item log : logs) {
                             ItemStack logStack = new ItemStack(log);
+
                             if (playerInventory.contains(logStack)) {
                                 stack = logStack;
                             }
@@ -145,12 +174,12 @@ public class GuildMasterScreen extends ScreenTOK {
             this.onClose();
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 46, 150, 20, new LiteralText("Exit"), (button) -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
             this.onClose();
         }));
 
-        this.worthness = new ScreenBar(this.width / 2 - 65, this.height / 2 + 65, 125, 12, 1.0F, ScreenBar.BarColour.RED);
+        this.worthness = new ScreenBar(this.width / 2 - 65 , this.height / 2 + 83, 125, 12, 1.0F, ScreenBar.BarColour.RED);
         this.worthness.setBar(instance.getWorthiness() / 10000.0F);
     }
 
@@ -160,7 +189,7 @@ public class GuildMasterScreen extends ScreenTOK {
         String order = Translations.GUILDMASTER_GUILD_ORDER.getFormatted() + instance.getCoins() + " " + Translations.GOLD_COINS.getFormatted();
         String path = Translations.GUILDMASTER_PATH.getFormatted();
         drawCenteredString(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, path, this.width / 2, this.height / 2 + 50, 0XFFFFFF);
+        drawCenteredString(stack, this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
         this.worthness.drawBar(stack);
     }
 
@@ -173,4 +202,8 @@ public class GuildMasterScreen extends ScreenTOK {
     public boolean shouldCloseOnEsc() {
         return false;
     }
+
+    public void addHunter(UUID hunter) {hunterUUIDs.add(hunter);}
+
+    public void removeHunter(UUID hunter) {hunterUUIDs.remove(hunter);}
 }
