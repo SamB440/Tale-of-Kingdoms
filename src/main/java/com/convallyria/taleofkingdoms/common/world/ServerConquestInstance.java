@@ -1,12 +1,13 @@
 package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import io.netty.buffer.Unpooled;
+import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.UUID;
@@ -73,30 +74,21 @@ public class ServerConquestInstance extends ConquestInstance {
         this.playerWorthiness.put(playerUuid, this.playerWorthiness.get(playerUuid) + worthiness);
     }
 
-    public void sync(ServerPlayerEntity player, boolean reset, ClientConnection connection) {
-        if (reset) {
-            this.setBankerCoins(player.getUuid(), 0);
-            this.setCoins(player.getUuid(), 0);
-            this.setFarmerLastBread(player.getUuid(), 0);
-            this.setHasContract(player.getUuid(), false);
-            this.setWorthiness(player.getUuid(), 0);
-        }
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeString(this.getName());
-        passedData.writeString(this.getWorld());
-        passedData.writeInt(this.getBankerCoins(player.getUuid()));
-        passedData.writeInt(this.getCoins(player.getUuid()));
-        passedData.writeInt(this.getWorthiness(player.getUuid()));
-        passedData.writeLong(this.getFarmerLastBread(player.getUuid()));
-        passedData.writeBoolean(this.hasContract(player.getUuid()));
-        passedData.writeBoolean(this.isLoaded());
-        passedData.writeBlockPos(this.getStart());
-        passedData.writeBlockPos(this.getEnd());
-        passedData.writeBlockPos(this.getOrigin());
-        // Then we'll send the packet to all the players
-        TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-        System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);
-        if (connection != null) connection.send(new CustomPayloadS2CPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData));
-        else player.networkHandler.connection.send(new CustomPayloadS2CPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, passedData));
+    public void reset(@NotNull ServerPlayerEntity player) {
+        this.setBankerCoins(player.getUuid(), 0);
+        this.setCoins(player.getUuid(), 0);
+        this.setFarmerLastBread(player.getUuid(), 0);
+        this.setHasContract(player.getUuid(), false);
+        this.setWorthiness(player.getUuid(), 0);
+    }
+
+    public void sync(@NotNull ServerPlayerEntity player, @Nullable ClientConnection connection) {
+        TaleOfKingdoms.getAPI().ifPresent(api -> {
+            if (api.getServerMod() != null) {
+                TaleOfKingdomsServer server = api.getServerMod();
+                PacketHandler packetHandler = server.getHandler(TaleOfKingdoms.INSTANCE_PACKET_ID);
+                packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, connection, this);
+            }
+        });
     }
 }
