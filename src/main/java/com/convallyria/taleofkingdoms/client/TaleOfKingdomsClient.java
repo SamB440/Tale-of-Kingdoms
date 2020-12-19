@@ -3,7 +3,10 @@ package com.convallyria.taleofkingdoms.client;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.entity.render.RenderSetup;
 import com.convallyria.taleofkingdoms.client.gui.RenderListener;
+import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
+import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -20,7 +23,16 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
     }
 
     private void registerPacketHandlers() {
-        new IncomingInstanceSyncPacketHandler();
+        registerHandler(new IncomingInstanceSyncPacketHandler());
+        registerHandler(new BothSignContractPacketHandler());
+    }
+
+    private void registerListeners() {
+        new GameInstanceListener();
+    }
+
+    protected void registerHandler(ClientPacketHandler clientPacketHandler) {
+        TaleOfKingdoms.getAPI().ifPresent(api -> api.registerClientHandler(clientPacketHandler));
     }
 
     private void registerEvents() {

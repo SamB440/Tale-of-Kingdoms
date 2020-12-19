@@ -62,6 +62,7 @@ public class GameInstanceListener extends Listener {
                                 this.create(connection, api, player, server).thenAccept(done -> {
                                     api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
+                                        serverConquestInstance.reset(player);
                                         serverConquestInstance.sync(player, connection);
                                     });
                                 });
@@ -72,6 +73,9 @@ public class GameInstanceListener extends Listener {
 
                                 api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                                     ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
+                                    if (!serverConquestInstance.hasPlayer(player.getUuid())) {
+                                        serverConquestInstance.reset(player);
+                                    }
                                     serverConquestInstance.sync(player, connection);
                                 });
                             }
@@ -169,6 +173,7 @@ public class GameInstanceListener extends Listener {
                 KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
                 TaleOfKingdoms.LOGGER.info("SENT KINGDOM EVENT");
                 instance.setLoaded(true);
+                instance.reset(player);
                 instance.sync(player, connection);
                 instance.save(api);
             } catch (ReflectiveOperationException e) {

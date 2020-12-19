@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.scheduler.Scheduler;
 import com.convallyria.taleofkingdoms.common.schematic.ClientSchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
@@ -7,12 +8,13 @@ import com.convallyria.taleofkingdoms.common.schematic.ServerSchematicHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
-import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
+import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TaleOfKingdomsAPI {
 
@@ -27,7 +30,8 @@ public class TaleOfKingdomsAPI {
     private final ConquestInstanceStorage cis;
     private final Map<String, IManager> managers = new HashMap<>();
     private MinecraftDedicatedServer minecraftServer;
-    private TaleOfKingdomsServer serverMod;
+    private Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
+    private Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
 
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
@@ -36,6 +40,22 @@ public class TaleOfKingdomsAPI {
         SoundManager sm = new SoundManager(mod);
         managers.put(sm.getName(), sm);
         this.scheduler = new Scheduler();
+    }
+
+    public ServerPacketHandler getServerHandler(Identifier identifier) {
+        return serverPacketHandlers.get(identifier);
+    }
+
+    public void registerServerHandler(ServerPacketHandler serverPacketHandler) {
+        serverPacketHandlers.put(serverPacketHandler.getPacket(), serverPacketHandler);
+    }
+
+    public ClientPacketHandler getClientHandler(Identifier identifier) {
+        return clientPacketHandlers.get(identifier);
+    }
+
+    public void registerClientHandler(ClientPacketHandler clientPacketHandler) {
+        clientPacketHandlers.put(clientPacketHandler.getPacket(), clientPacketHandler);
     }
 
     @NotNull
@@ -61,21 +81,6 @@ public class TaleOfKingdomsAPI {
     @NotNull
     public TaleOfKingdoms getMod() {
         return mod;
-    }
-
-    @Nullable
-    @Environment(EnvType.SERVER)
-    public TaleOfKingdomsServer getServerMod() {
-        return serverMod;
-    }
-
-    @Environment(EnvType.SERVER)
-    public void setServerMod(TaleOfKingdomsServer serverMod) {
-        if (this.serverMod != null) {
-            throw new IllegalStateException("Server mod already registered");
-        }
-
-        this.serverMod = serverMod;
     }
 
     /**

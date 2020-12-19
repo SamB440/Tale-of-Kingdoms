@@ -4,9 +4,13 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import net.fabricmc.fabric.api.network.PacketContext;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler {
 
@@ -27,9 +31,13 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
         BlockPos start = attachedData.readBlockPos();
         BlockPos end = attachedData.readBlockPos();
         BlockPos origin = attachedData.readBlockPos();
+        TaleOfKingdoms.LOGGER.info("hi");
         context.getTaskQueue().execute(() -> {
+            TaleOfKingdoms.LOGGER.info("1");
             TaleOfKingdoms.getAPI().ifPresent(api -> {
+                TaleOfKingdoms.LOGGER.info("2");
                 if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
+                    TaleOfKingdoms.LOGGER.info("3");
                     ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();
                     instance.setBankerCoins(bankerCoins);
                     instance.setCoins(coins);
@@ -47,8 +55,14 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
                 instance.setFarmerLastBread(farmerLastBread);
                 instance.setHasContract(hasContract);
                 instance.setLoaded(isLoaded);
+                TaleOfKingdoms.LOGGER.info("aadadad");
                 api.getConquestInstanceStorage().addConquest(world, instance, true);
             });
         });
+    }
+
+    @Override
+    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data) {
+        throw new IllegalStateException("Not supported");
     }
 }

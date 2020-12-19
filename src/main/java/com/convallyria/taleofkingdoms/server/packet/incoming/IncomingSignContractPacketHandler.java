@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.server.packet.outgoing;
+package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
@@ -14,37 +14,38 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler {
+public final class IncomingSignContractPacketHandler extends ServerPacketHandler {
 
-    public OutgoingInstanceSyncPacketHandler() {
-        super(TaleOfKingdoms.INSTANCE_PACKET_ID);
+    public IncomingSignContractPacketHandler() {
+        super(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID);
     }
 
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        throw new IllegalStateException("Not supported");
+        boolean sign = attachedData.readBoolean();
+        context.getTaskQueue().execute(() -> {
+            TaleOfKingdoms.getAPI().ifPresent(api -> {
+                api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+                    ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
+                    PlayerEntity playerEntity = context.getPlayer();
+                    //TODO verification server-side
+                    serverConquestInstance.setHasContract(playerEntity.getUuid(), sign);
+                    this.handleOutgoingPacket(identifier, playerEntity, null, true);
+                });
+            });
+        });
     }
 
     @Override
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
                                      @Nullable ClientConnection connection, @Nullable Object... data) {
-        if (data != null && data[0] instanceof ServerConquestInstance && player instanceof ServerPlayerEntity) {
-            ServerConquestInstance instance = (ServerConquestInstance) data[0];
+        if (data != null && data[0] instanceof Boolean) {
+            boolean sign = (Boolean) data[0];
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-            passedData.writeString(instance.getName());
-            passedData.writeString(instance.getWorld());
-            passedData.writeInt(instance.getBankerCoins(player.getUuid()));
-            passedData.writeInt(instance.getCoins(player.getUuid()));
-            passedData.writeInt(instance.getWorthiness(player.getUuid()));
-            passedData.writeLong(instance.getFarmerLastBread(player.getUuid()));
-            passedData.writeBoolean(instance.hasContract(player.getUuid()));
-            passedData.writeBoolean(instance.isLoaded());
-            passedData.writeBlockPos(instance.getStart());
-            passedData.writeBlockPos(instance.getEnd());
-            passedData.writeBlockPos(instance.getOrigin());
+            passedData.writeBoolean(sign);
             // Then we'll send the packet to all the players
             TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-            System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);
+            System.out.println(player + " " + identifier + " " + passedData);
             if (connection != null) connection.send(new CustomPayloadS2CPacket(identifier, passedData));
             else ((ServerPlayerEntity) player).networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));
         }

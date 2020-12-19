@@ -2,9 +2,9 @@ package com.convallyria.taleofkingdoms.common.packet;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import net.fabricmc.fabric.api.network.PacketContext;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public abstract class PacketHandler {
 
     public abstract void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData);
 
-    public abstract void handleOutgoingPacket(Identifier identifier, @NotNull ServerPlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data);
+    public abstract void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data);
 
     protected abstract void register();
 }
