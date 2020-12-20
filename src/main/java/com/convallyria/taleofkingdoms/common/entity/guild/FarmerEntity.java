@@ -13,7 +13,6 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -59,7 +58,7 @@ public class FarmerEntity extends TOKEntity {
             // Set the current day and add bread to inventory
             instance.setFarmerLastBread(day);
             Translations.FARMER_TAKE_BREAD.send(player);
-        } else if (!(world.getServer() instanceof IntegratedServer)) {
+        } else {
             ServerConquestInstance instance = (ServerConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
             long day = player.world.getTimeOfDay() / 24000L;
             if (instance.getFarmerLastBread(player.getUuid()) >= day) {
@@ -80,7 +79,7 @@ public class FarmerEntity extends TOKEntity {
                     serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
                 }
             });
-        } else if (!(world.getServer() instanceof IntegratedServer)) {
+        } else {
             api.executeOnDedicatedServer(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;

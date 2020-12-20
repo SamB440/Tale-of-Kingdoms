@@ -2,6 +2,8 @@ package com.convallyria.taleofkingdoms.client.packet.both;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.MinecraftClient;
@@ -13,7 +15,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class BothSignContractPacketHandler extends ClientPacketHandler {
+public final class BothSignContractPacketHandler extends ClientPacketHandler {
 
     public BothSignContractPacketHandler() {
         super(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID);
@@ -25,8 +27,9 @@ public class BothSignContractPacketHandler extends ClientPacketHandler {
         context.getTaskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                    //TODO verify
-                    TaleOfKingdoms.LOGGER.info("Server accepted? " + sign);
+                    ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
+                    clientConquestInstance.setHasContract(sign);
+                    if (sign) Translations.GUILDMASTER_CONTRACT_SIGN.send(context.getPlayer());
                 });
             });
         });

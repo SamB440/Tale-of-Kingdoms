@@ -30,7 +30,9 @@ public class TaleOfKingdomsAPI {
     private final ConquestInstanceStorage cis;
     private final Map<String, IManager> managers = new HashMap<>();
     private MinecraftDedicatedServer minecraftServer;
+    @Environment(EnvType.SERVER)
     private Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
+    @Environment(EnvType.CLIENT)
     private Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
 
@@ -42,18 +44,22 @@ public class TaleOfKingdomsAPI {
         this.scheduler = new Scheduler();
     }
 
+    @Environment(EnvType.SERVER)
     public ServerPacketHandler getServerHandler(Identifier identifier) {
         return serverPacketHandlers.get(identifier);
     }
 
+    @Environment(EnvType.SERVER)
     public void registerServerHandler(ServerPacketHandler serverPacketHandler) {
         serverPacketHandlers.put(serverPacketHandler.getPacket(), serverPacketHandler);
     }
 
+    @Environment(EnvType.CLIENT)
     public ClientPacketHandler getClientHandler(Identifier identifier) {
         return clientPacketHandlers.get(identifier);
     }
 
+    @Environment(EnvType.CLIENT)
     public void registerClientHandler(ClientPacketHandler clientPacketHandler) {
         clientPacketHandlers.put(clientPacketHandler.getPacket(), clientPacketHandler);
     }
