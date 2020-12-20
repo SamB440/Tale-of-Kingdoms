@@ -1,7 +1,5 @@
 package com.convallyria.taleofkingdoms.common.world;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,11 +14,8 @@ public class ConquestInstanceStorage {
     }
 
     public void addConquest(String worldName, ConquestInstance instance, boolean current) {
-        TaleOfKingdoms.LOGGER.info("ADDED");
         this.conquests.put(worldName, instance);
         if (current) this.currentWorldName = worldName;
-        TaleOfKingdoms.LOGGER.info("current: " + this.currentWorldName);
-        TaleOfKingdoms.LOGGER.info(mostRecentInstance().get());
     }
 
     public void removeConquest(String worldName) {
@@ -28,6 +23,6 @@ public class ConquestInstanceStorage {
     }
 
     public Optional<ConquestInstance> mostRecentInstance() {
-        return Optional.ofNullable(conquests.getOrDefault(this.currentWorldName, null));
+        return Optional.ofNullable(this.currentWorldName != null ? conquests.get(this.currentWorldName) : null);
     }
 }
