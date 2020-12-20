@@ -28,6 +28,6 @@ public class ConquestInstanceStorage {
     }
 
     public Optional<ConquestInstance> mostRecentInstance() {
-        return Optional.ofNullable(conquests.get(this.currentWorldName));
+        return Optional.ofNullable(conquests.getOrDefault(this.currentWorldName, null));
     }
 }
