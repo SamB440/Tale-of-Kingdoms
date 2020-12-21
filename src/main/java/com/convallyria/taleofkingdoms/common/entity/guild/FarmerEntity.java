@@ -13,6 +13,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -47,7 +48,8 @@ public class FarmerEntity extends TOKEntity {
         if (!TaleOfKingdoms.getAPI().isPresent()) return ActionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         if (!api.getConquestInstanceStorage().mostRecentInstance().isPresent()) return ActionResult.FAIL;
-        if (world.isClient()) {
+
+        if (player.getServer() != null && !player.getServer().isDedicated()) {
             ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
             long day = player.world.getTimeOfDay() / 24000L;
             if (instance.getFarmerLastBread() >= day) {
@@ -58,7 +60,7 @@ public class FarmerEntity extends TOKEntity {
             // Set the current day and add bread to inventory
             instance.setFarmerLastBread(day);
             Translations.FARMER_TAKE_BREAD.send(player);
-        } else {
+        } else if (player.getServer() != null && player.getServer().isDedicated()) {
             ServerConquestInstance instance = (ServerConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
             long day = player.world.getTimeOfDay() / 24000L;
             if (instance.getFarmerLastBread(player.getUuid()) >= day) {
@@ -72,14 +74,17 @@ public class FarmerEntity extends TOKEntity {
         }
 
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
-        if (world.isClient()) {
+        if (player.getServer() != null && !player.getServer().isDedicated()) {
             api.executeOnMain(() -> {
-                ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                if (serverPlayerEntity != null) {
-                    serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+                MinecraftServer server = MinecraftClient.getInstance().getServer();
+                if (server != null) {
+                    ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
+                    if (serverPlayerEntity != null) {
+                        serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+                    }
                 }
             });
-        } else {
+        } else if (player.getServer() != null && player.getServer().isDedicated()) {
             api.executeOnDedicatedServer(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;
