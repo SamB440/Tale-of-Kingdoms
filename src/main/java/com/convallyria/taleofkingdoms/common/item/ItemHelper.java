@@ -29,8 +29,7 @@ public class ItemHelper {
      */
     public static void dropCoins(LivingEntity entityLiving) {
         if (isHostileEntity(entityLiving)) {
-            int bound = random.nextInt(25);
-            for (int i = 0; i < bound; i++) {
+            for (int i = 0; i < 25; i++) {
                 dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entityLiving);
             }
         }
