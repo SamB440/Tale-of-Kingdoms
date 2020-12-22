@@ -44,8 +44,6 @@ public final class IncomingSignContractPacketHandler extends ServerPacketHandler
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
             passedData.writeBoolean(sign);
             // Then we'll send the packet to all the players
-            TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-            System.out.println(player + " " + identifier + " " + passedData);
             if (connection != null) connection.send(new CustomPayloadS2CPacket(identifier, passedData));
             else ((ServerPlayerEntity) player).networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));
         }

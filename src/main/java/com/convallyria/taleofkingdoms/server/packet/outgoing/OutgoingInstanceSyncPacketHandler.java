@@ -43,8 +43,6 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
             passedData.writeBlockPos(instance.getEnd());
             passedData.writeBlockPos(instance.getOrigin());
             // Then we'll send the packet to all the players
-            TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-            System.out.println(player + " " + TaleOfKingdoms.INSTANCE_PACKET_ID + " " + passedData);
             if (connection != null) connection.send(new CustomPayloadS2CPacket(identifier, passedData));
             else ((ServerPlayerEntity) player).networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));
         }

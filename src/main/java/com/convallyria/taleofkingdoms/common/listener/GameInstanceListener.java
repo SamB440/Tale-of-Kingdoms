@@ -169,9 +169,8 @@ public class GameInstanceListener extends Listener {
                         }
                     }
                 }
-                TaleOfKingdoms.LOGGER.info("COMPLETE");
+
                 KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
-                TaleOfKingdoms.LOGGER.info("SENT KINGDOM EVENT");
                 instance.setLoaded(true);
                 instance.reset(player);
                 instance.sync(player, connection);

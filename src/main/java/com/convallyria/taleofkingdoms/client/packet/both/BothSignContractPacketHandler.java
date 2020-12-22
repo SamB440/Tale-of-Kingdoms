@@ -42,8 +42,6 @@ public final class BothSignContractPacketHandler extends ClientPacketHandler {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
             passedData.writeBoolean(sign);
             // Then we'll send the packet to all the players
-            TaleOfKingdoms.LOGGER.info("SENDING PACKET");
-            System.out.println(player + " " + identifier + " " + passedData);
             if (connection == null) MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(identifier, passedData));
             else connection.send(new CustomPayloadC2SPacket(identifier, passedData));
         }
