@@ -33,6 +33,7 @@ public class BankerScreen extends ScreenTOK {
         this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
+        Translations.BANK_OPEN.send(player);
     }
 
     @Override
@@ -77,7 +78,6 @@ public class BankerScreen extends ScreenTOK {
             }
         }));
         this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
-            Translations.BANK_CLOSE.send(player);
             this.onClose();
         }));
 
@@ -93,7 +93,7 @@ public class BankerScreen extends ScreenTOK {
     @Override
     public void onClose() {
         super.onClose();
-        Translations.BANK_CLOSE.send(player);
+        Translations.BANK_NO_SPEND.send(player);
     }
 
     @Override
