@@ -1,16 +1,20 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.common.scheduler.Scheduler;
 import com.convallyria.taleofkingdoms.common.schematic.ClientSchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.ServerSchematicHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
+import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TaleOfKingdomsAPI {
 
@@ -25,12 +30,43 @@ public class TaleOfKingdomsAPI {
     private final ConquestInstanceStorage cis;
     private final Map<String, IManager> managers = new HashMap<>();
     private MinecraftDedicatedServer minecraftServer;
+    @Environment(EnvType.SERVER)
+    private Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
+    @Environment(EnvType.CLIENT)
+    private Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
+    private final Scheduler scheduler;
 
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
         this.mod = mod;
         this.cis = new ConquestInstanceStorage();
         SoundManager sm = new SoundManager(mod);
         managers.put(sm.getName(), sm);
+        this.scheduler = new Scheduler();
+    }
+
+    @Environment(EnvType.SERVER)
+    public ServerPacketHandler getServerHandler(Identifier identifier) {
+        return serverPacketHandlers.get(identifier);
+    }
+
+    @Environment(EnvType.SERVER)
+    public void registerServerHandler(ServerPacketHandler serverPacketHandler) {
+        serverPacketHandlers.put(serverPacketHandler.getPacket(), serverPacketHandler);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public ClientPacketHandler getClientHandler(Identifier identifier) {
+        return clientPacketHandlers.get(identifier);
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void registerClientHandler(ClientPacketHandler clientPacketHandler) {
+        clientPacketHandlers.put(clientPacketHandler.getPacket(), clientPacketHandler);
+    }
+
+    @NotNull
+    public Scheduler getScheduler() {
+        return scheduler;
     }
 
     @NotNull
@@ -83,6 +119,11 @@ public class TaleOfKingdomsAPI {
         }
     }
 
+    /**
+     * Executes a task on the dedicated server.
+     * @param runnable task to run
+     * @return true if {@link MinecraftDedicatedServer} was present, false if not
+     */
     @Environment(EnvType.SERVER)
     public boolean executeOnDedicatedServer(Runnable runnable) {
         if (minecraftServer != null) {

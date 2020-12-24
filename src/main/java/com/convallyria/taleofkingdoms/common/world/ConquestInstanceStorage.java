@@ -1,12 +1,12 @@
 package com.convallyria.taleofkingdoms.common.world;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ConquestInstanceStorage {
 
-    private final Map<String, ConquestInstance> conquests = new HashMap<>();
+    private final Map<String, ConquestInstance> conquests = new ConcurrentHashMap<>();
     private String currentWorldName;
 
     public Optional<ConquestInstance> getConquestInstance(String worldName) {
@@ -23,6 +23,6 @@ public class ConquestInstanceStorage {
     }
 
     public Optional<ConquestInstance> mostRecentInstance() {
-        return Optional.ofNullable(conquests.get(this.currentWorldName));
+        return Optional.ofNullable(this.currentWorldName != null ? conquests.get(this.currentWorldName) : null);
     }
 }

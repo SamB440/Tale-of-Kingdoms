@@ -66,7 +66,7 @@ public class CoinListener extends Listener {
                     } else if (playerEntity instanceof ServerPlayerEntity) {
                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                         serverConquestInstance.setWorthiness(playerEntity.getUuid(), serverConquestInstance.getWorthiness(playerEntity.getUuid()) + 1);
-                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, false, null); //TODO put this somewhere else
+                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, null);
                     }
                 }
             });
@@ -80,7 +80,7 @@ public class CoinListener extends Listener {
                         ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
                     } else {
                         ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
-                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, false, null);
+                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, null);
                     }
                 });
 
