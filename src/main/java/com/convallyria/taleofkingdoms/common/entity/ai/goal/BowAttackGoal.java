@@ -35,7 +35,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     }
 
     public boolean canStart() {
-        return this.actor.getTarget() != null && this.isHoldingBow();
+        return this.actor.getTarget() == null && this.isHoldingBow();
     }
 
     protected boolean isHoldingBow() {

@@ -1,6 +1,13 @@
 package com.convallyria.taleofkingdoms.common.world;
 
+import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class ClientConquestInstance extends ConquestInstance {
 
@@ -9,9 +16,11 @@ public class ClientConquestInstance extends ConquestInstance {
     private long farmerLastBread;
     private boolean hasContract;
     private int worthiness;
+    private List<UUID> hunterUUIDs;
 
     public ClientConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         super(world, name, start, end, origin);
+        this.hunterUUIDs = new ArrayList<>();
     }
 
     public int getCoins() {
@@ -57,4 +66,15 @@ public class ClientConquestInstance extends ConquestInstance {
     public void addWorthiness(int worthiness) {
         this.worthiness = this.worthiness + worthiness;
     }
+
+    public void addHunter(Entity entity) { this.hunterUUIDs.add(entity.getUuid()); System.out.println("Hunter added");}
+
+    public ImmutableList<UUID> getHunterUUIDs() {
+        if(hunterUUIDs == null) this.hunterUUIDs = new ArrayList<>();
+        return ImmutableList.copyOf(hunterUUIDs);
+    }
+
+    public void removeHunter(Entity entity) { this.hunterUUIDs.remove(entity.getUuid());}
+
+    public boolean isEmpty() {return this.hunterUUIDs.isEmpty();}
 }
