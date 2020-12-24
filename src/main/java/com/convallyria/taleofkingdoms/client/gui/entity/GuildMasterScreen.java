@@ -29,7 +29,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.UUID;
+import java.util.Collections;
 
 
 public class GuildMasterScreen extends ScreenTOK {
@@ -83,13 +83,10 @@ public class GuildMasterScreen extends ScreenTOK {
                         hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
                         serverWorld.spawnEntity(hunterEntity);
                         hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
-
-                        instance.addHunter(hunterEntity);
-
+                        instance.setHunterUUIDs(Collections.singletonList(hunterEntity.getUuid()));
                     }
                 }));
                 instance.setCoins(instance.getCoins() - 1500);
-                instance.setHunterUUIDs(instance.getHunter());
                 Translations.SERVE.send(player);
                 this.onClose();
                 MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
@@ -98,22 +95,16 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
 
-            try {
-                ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                Entity hunter = serverWorld.getEntity(instance.getHunter().get(0));
+            ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+            Entity hunter = serverWorld.getEntity(instance.getHunterUUIDs().get(0));
 
-                try {
-                    serverWorld.removeEntity(hunter);
-                    instance.removeHunter(hunter);
-                    player.sendMessage(new LiteralText("Hunter: Thank you my liege!"), false);
-                }
-                catch (IllegalStateException e){
-                    player.sendMessage(new LiteralText("Guild Master: Please wait."), false);
-                }
-
-            } catch (IndexOutOfBoundsException e){
-                player.sendMessage(new LiteralText("Guild Master: You have no hunters."), false);
+            if (hunter != null) {
+                hunter.kill();
+                Translations.HUNTER_THANK.send(player);
+                instance.removeHunter(hunter);
             }
+            else
+                Translations.GUILDMASTER_NOHUNTER.send(player);
 
             this.onClose();
         }));
