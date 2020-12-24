@@ -65,15 +65,12 @@ public class ClientConquestInstance extends ConquestInstance {
         this.worthiness = this.worthiness + worthiness;
     }
 
-    public void setHunterUUIDs(List<UUID> hunterUUIDs) {
-        if(hunterUUIDs == null) this.hunterUUIDs = new ArrayList<>();
-        this.hunterUUIDs = hunterUUIDs;
-    }
+    public void addHunter(Entity entity) { this.hunterUUIDs.add(entity.getUuid()); }
 
     public List<UUID> getHunterUUIDs() {
         if(hunterUUIDs == null) this.hunterUUIDs = new ArrayList<>();
         return hunterUUIDs;
     }
 
-    public void removeHunter(Entity entity) { this.hunterUUIDs.remove(entity);}
+    public void removeHunter(Entity entity) { this.hunterUUIDs.remove(entity.getUuid());}
 }

@@ -83,7 +83,7 @@ public class GuildMasterScreen extends ScreenTOK {
                         hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
                         serverWorld.spawnEntity(hunterEntity);
                         hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
-                        instance.setHunterUUIDs(Collections.singletonList(hunterEntity.getUuid()));
+                        instance.addHunter(hunterEntity);
                     }
                 }));
                 instance.setCoins(instance.getCoins() - 1500);
