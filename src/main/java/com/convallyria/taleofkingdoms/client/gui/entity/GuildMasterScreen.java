@@ -29,8 +29,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Collections;
-
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -108,7 +106,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
             ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
 
-            if(instance.isEmpty()) {
+            if (instance.getHunterUUIDs().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
                 Entity hunter = serverWorld.getEntity(instance.getHunterUUIDs().get(0));
