@@ -19,6 +19,7 @@ public class ClientConquestInstance extends ConquestInstance {
 
     public ClientConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         super(world, name, start, end, origin);
+        this.hunterUUIDs = new ArrayList<>();
     }
 
     public int getCoins() {
@@ -65,7 +66,7 @@ public class ClientConquestInstance extends ConquestInstance {
         this.worthiness = this.worthiness + worthiness;
     }
 
-    public void addHunter(Entity entity) { this.hunterUUIDs.add(entity.getUuid()); }
+    public void addHunter(Entity entity) { this.hunterUUIDs.add(entity.getUuid()); System.out.println("Hunter added");}
 
     public List<UUID> getHunterUUIDs() {
         if(hunterUUIDs == null) this.hunterUUIDs = new ArrayList<>();
@@ -73,4 +74,6 @@ public class ClientConquestInstance extends ConquestInstance {
     }
 
     public void removeHunter(Entity entity) { this.hunterUUIDs.remove(entity.getUuid());}
+
+    public boolean isEmpty() {return this.hunterUUIDs.isEmpty();}
 }

@@ -96,16 +96,20 @@ public class GuildMasterScreen extends ScreenTOK {
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
 
             ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-            Entity hunter = serverWorld.getEntity(instance.getHunterUUIDs().get(0));
 
-            if (hunter != null) {
-                hunter.kill();
-                Translations.HUNTER_THANK.send(player);
-                instance.removeHunter(hunter);
-            }
-            else
+            if(instance.isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
+            } else {
+                Entity hunter = serverWorld.getEntity(instance.getHunterUUIDs().get(0));
 
+                if (hunter != null) {
+                    hunter.kill();
+                    Translations.HUNTER_THANK.send(player);
+                    instance.removeHunter(hunter);
+                } else {
+                    Translations.GUILDMASTER_NOHUNTER.send(player);
+                }
+            }
             this.onClose();
         }));
 
