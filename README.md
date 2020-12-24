@@ -52,6 +52,12 @@ You can reload a class by right clicking it in the explorer then selecting 'Reco
 Run the `runClient` task by pressing `ALT + SHIFT + F9`, going to `tale-of-kingdoms [runClient]`, pressing the arrow and selecting debug. See things change as you code! Do not place WorldEdit in the mods folder - it's handled 
 by the `build.gradle`, however in some cases it is needed (?). You can try other mods but they are not guaranteed to work in a development environment.
 
+Upgrading textures
+=====
+Some textures are in the old 64x32 format. 1.9+ uses 64x64 for skin textures.
+Upgrading these skins can be done by going to https://www.minecraftskins.com/skin-editor/,
+selecting "upload from computer" then "download".
+
 Minecraft Server
 =======
 IslandEarth - https://www.islandearth.net
