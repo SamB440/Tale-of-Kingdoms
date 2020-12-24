@@ -77,9 +77,9 @@ public class CoinListener extends Listener {
                 TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
                     if (instance instanceof ClientConquestInstance) {
-                        ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
+                        ((ClientConquestInstance) instance).addCoins(random.nextInt(10));
                     } else {
-                        ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
+                        ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(10));
                         ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, null);
                     }
                 });
