@@ -58,8 +58,13 @@ public class GuildMasterScreen extends ScreenTOK {
         super.init();
         if (!instance.hasContract()) {
             this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
-                instance.setHasContract(true);
-                Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
+                TaleOfKingdoms.getAPI().ifPresent(api -> {
+                    api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
+                            .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
+                                    player,
+                                    client.getNetworkHandler().getConnection(),
+                                    true);
+                });
                 button.visible = false;
                 button.active = false;
                 this.onClose();
@@ -67,7 +72,13 @@ public class GuildMasterScreen extends ScreenTOK {
             }));
         } else {
             this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
-                instance.setHasContract(false);
+                TaleOfKingdoms.getAPI().ifPresent(api -> {
+                    api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
+                            .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
+                                    player,
+                                    client.getNetworkHandler().getConnection(),
+                                    false);
+                });
                 button.visible = false;
                 button.active = false;
             }));
