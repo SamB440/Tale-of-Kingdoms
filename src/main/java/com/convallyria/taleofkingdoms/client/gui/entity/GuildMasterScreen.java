@@ -29,8 +29,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Collections;
-
 
 public class GuildMasterScreen extends ScreenTOK {
 
@@ -58,8 +56,18 @@ public class GuildMasterScreen extends ScreenTOK {
         super.init();
         if (!instance.hasContract()) {
             this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
-                instance.setHasContract(true);
-                Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
+                if (MinecraftClient.getInstance().getServer() != null) {
+                    instance.setHasContract(true);
+                    Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
+                } else {
+                    TaleOfKingdoms.getAPI().ifPresent(api -> {
+                        api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
+                                .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
+                                        player,
+                                        client.getNetworkHandler().getConnection(),
+                                        true);
+                    });
+                }
                 button.visible = false;
                 button.active = false;
                 this.onClose();
@@ -67,7 +75,17 @@ public class GuildMasterScreen extends ScreenTOK {
             }));
         } else {
             this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
-                instance.setHasContract(false);
+                if (MinecraftClient.getInstance().getServer() != null) {
+                    instance.setHasContract(false);
+                } else {
+                    TaleOfKingdoms.getAPI().ifPresent(api -> {
+                        api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
+                                .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
+                                        player,
+                                        client.getNetworkHandler().getConnection(),
+                                        false);
+                    });
+                }
                 button.visible = false;
                 button.active = false;
             }));
@@ -97,15 +115,15 @@ public class GuildMasterScreen extends ScreenTOK {
 
             ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
 
-            if(instance.isEmpty()) {
+            if (instance.getHunterUUIDs().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
                 Entity hunter = serverWorld.getEntity(instance.getHunterUUIDs().get(0));
-
                 if (hunter != null) {
                     hunter.kill();
                     Translations.HUNTER_THANK.send(player);
                     instance.removeHunter(hunter);
+                    instance.setCoins(instance.getCoins() + 750);
                 } else {
                     Translations.GUILDMASTER_NOHUNTER.send(player);
                 }

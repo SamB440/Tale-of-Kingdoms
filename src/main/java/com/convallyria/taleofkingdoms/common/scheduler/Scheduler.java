@@ -1,8 +1,8 @@
-package com.convallyria.taleofkingdoms.mixin;
+package com.convallyria.taleofkingdoms.common.scheduler;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.event.server.ServerTickCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
@@ -37,23 +37,22 @@ import java.util.function.IntPredicate;
  * For more information, please refer to <http://unlicense.org/>
  */
 public class Scheduler {
+
 	private final Int2ObjectMap<List<Consumer<MinecraftServer>>> taskQueue = new Int2ObjectOpenHashMap<>();
 	private int currentTick = 0;
 
 	public Scheduler() {
-		ServerTickCallback.EVENT.register(m -> {
+		ServerTickEvents.START_SERVER_TICK.register(m -> {
 			this.currentTick = m.getTicks();
 			List<Consumer<MinecraftServer>> runnables = this.taskQueue.remove(this.currentTick);
 			if (runnables != null) for (Consumer<MinecraftServer> runnable : runnables) {
 				runnable.accept(m);
-
 				if (runnable instanceof Repeating) {// reschedule repeating tasks
 					Repeating repeating = ((Repeating) runnable);
 					if (repeating.shouldQueue(this.currentTick))
 						this.queue(runnable, ((Repeating) runnable).next);
 				}
 			}
-
 		});
 	}
 

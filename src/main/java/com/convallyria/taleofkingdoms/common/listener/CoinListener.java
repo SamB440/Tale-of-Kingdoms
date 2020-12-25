@@ -66,7 +66,7 @@ public class CoinListener extends Listener {
                     } else if (playerEntity instanceof ServerPlayerEntity) {
                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                         serverConquestInstance.setWorthiness(playerEntity.getUuid(), serverConquestInstance.getWorthiness(playerEntity.getUuid()) + 1);
-                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, false, null); //TODO put this somewhere else
+                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, null);
                     }
                 }
             });
@@ -77,10 +77,10 @@ public class CoinListener extends Listener {
                 TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
                     if (instance instanceof ClientConquestInstance) {
-                        ((ClientConquestInstance) instance).addCoins(random.nextInt(50));
+                        ((ClientConquestInstance) instance).addCoins(random.nextInt(10));
                     } else {
-                        ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(50));
-                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, false, null);
+                        ((ServerConquestInstance) instance).addCoins(player.getUuid(), random.nextInt(10));
+                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, null);
                     }
                 });
 

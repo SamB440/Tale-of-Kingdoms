@@ -46,7 +46,7 @@ public class GameInstanceListener extends Listener {
 
         PlayerJoinCallback.EVENT.register((connection, player) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
-                api.executeOnDedicatedServer(() -> {
+                if (!api.executeOnDedicatedServer(() -> {
                     MinecraftDedicatedServer server = api.getServer().get();
                     boolean loaded = load(server.getLevelName(), api);
                     File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ".conquestworld");
@@ -62,7 +62,8 @@ public class GameInstanceListener extends Listener {
                                 this.create(connection, api, player, server).thenAccept(done -> {
                                     api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
-                                        serverConquestInstance.sync(player, true, connection);
+                                        serverConquestInstance.reset(player);
+                                        serverConquestInstance.sync(player, connection);
                                     });
                                 });
                             } else {
@@ -72,14 +73,19 @@ public class GameInstanceListener extends Listener {
 
                                 api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                                     ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
-                                    serverConquestInstance.sync(player, false, connection);
+                                    if (!serverConquestInstance.hasPlayer(player.getUuid())) {
+                                        serverConquestInstance.reset(player);
+                                    }
+                                    serverConquestInstance.sync(player, connection);
                                 });
                             }
                         } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
-                });
+                })) {
+                    TaleOfKingdoms.LOGGER.error("Dedicated server not present!");
+                }
             });
         });
 
@@ -163,11 +169,11 @@ public class GameInstanceListener extends Listener {
                         }
                     }
                 }
-                TaleOfKingdoms.LOGGER.info("COMPLETE");
+
                 KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
-                TaleOfKingdoms.LOGGER.info("SENT KINGDOM EVENT");
                 instance.setLoaded(true);
-                instance.sync(player, true, connection);
+                instance.reset(player);
+                instance.sync(player, connection);
                 instance.save(api);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
