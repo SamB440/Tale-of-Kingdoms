@@ -23,9 +23,19 @@ import com.convallyria.taleofkingdoms.common.listener.SleepListener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.command.argument.TextArgumentType;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.text.Text;
+import net.minecraft.text.Texts;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,6 +56,8 @@ public class TaleOfKingdoms implements ModInitializer {
 
     public static final Identifier INSTANCE_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "instance");
     public static final Identifier SIGN_CONTRACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "sign_contract");
+
+    private final CommandManager commandManager = new CommandManager(CommandManager.RegistrationEnvironment.ALL);
 
     @Override
     public void onInitialize() {
@@ -100,6 +112,31 @@ public class TaleOfKingdoms implements ModInitializer {
         new BlockListener();
         new KingdomListener();
         new DeleteWorldListener();
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> { // Register commands
+            dispatcher.register(CommandManager.literal("taleofkingdoms").executes(context -> {
+                Entity entity = context.getSource().getEntity();
+                if (entity != null) {
+                    String taleOfKingdoms = "[\"\",{\"text\":\"Tale of Kingdoms: A new Conquest\",\"bold\":true,\"underlined\":true,\"color\":\"blue\"},{\"text\":\"\\n\"},{\"text\":\"By Cotander/SamB440 & others. (hover)\",\"color\":\"blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://gitlab.com/SamB440/tale-of-kingdoms/-/blob/master/src/main/resources/fabric.mod.json\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":{\"text\":\"Marackai, Aksel0206, PyroPyxel, Sheepguard, michaelb229, The_KingCobra200, Krol05, BeingAmazing(Ben)#6423. Click to view full list.\"}}},{\"text\":\"\\n\"},{\"text\":\" Take a look at our website: \",\"color\":\"gold\"},{\"text\":\"https://www.convallyria.com\",\"underlined\":true,\"color\":\"gold\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.convallyria.com\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":{\"text\":\"Click to view our website.\"}}},{\"text\":\"\\n\"},{\"text\":\" Join our Discord: \",\"color\":\"gold\"},{\"text\":\"https://discord.gg/fh62mxU\",\"underlined\":true,\"color\":\"gold\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://discord.gg/fh62mxU\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":{\"text\":\"Click to join our Discord.\"}}}]";
+                    entity.sendSystemMessage(Texts.parse(context.getSource(), parse(new StringReader(taleOfKingdoms)), entity, 0), Util.NIL_UUID);
+                    return 1;
+                }
+                return 0;
+            }));
+        });
+    }
+
+    private Text parse(StringReader stringReader) throws CommandSyntaxException {
+        try {
+            Text text = Text.Serializer.fromJson(stringReader);
+            if (text == null) {
+                throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.createWithContext(stringReader, "empty");
+            } else {
+                return text;
+            }
+        } catch (JsonParseException var4) {
+            String string = var4.getCause() != null ? var4.getCause().getMessage() : var4.getMessage();
+            throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.createWithContext(stringReader, string);
+        }
     }
 
     public Gson getGson() {
