@@ -57,8 +57,6 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Identifier INSTANCE_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "instance");
     public static final Identifier SIGN_CONTRACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "sign_contract");
 
-    private final CommandManager commandManager = new CommandManager(CommandManager.RegistrationEnvironment.ALL);
-
     @Override
     public void onInitialize() {
         ItemRegistry.init();
