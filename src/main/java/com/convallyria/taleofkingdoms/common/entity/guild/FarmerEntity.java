@@ -6,7 +6,6 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -76,7 +75,7 @@ public class FarmerEntity extends TOKEntity {
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
         if (player.getServer() != null && !player.getServer().isDedicated()) {
             api.executeOnMain(() -> {
-                MinecraftServer server = MinecraftClient.getInstance().getServer();
+                MinecraftServer server = player.getServer();
                 if (server != null) {
                     ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity != null) {

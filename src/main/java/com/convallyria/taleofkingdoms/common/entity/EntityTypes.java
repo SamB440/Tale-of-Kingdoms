@@ -67,7 +67,8 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "lone"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, LoneEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
-    );public static final EntityType<BankerEntity> BANKER = Registry.register(
+    );
+    public static final EntityType<BankerEntity> BANKER = Registry.register(
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "banker"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, BankerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()

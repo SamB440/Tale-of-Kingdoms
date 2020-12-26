@@ -120,8 +120,9 @@ public class ScreenStartConquest extends ScreenTOK {
                                             EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
                                             TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, player.getEntityWorld());
                                             toSpawn.setPos(x + 0.5, y, z + 0.5);
-                                            serverPlayer.getServerWorld().spawnEntity(toSpawn);
-                                            serverPlayer.getServerWorld().breakBlock(blockPos, false);
+                                            serverPlayer.getServer().getOverworld().spawnEntity(toSpawn);
+                                            serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
+                                            toSpawn.refreshPositionAfterTeleport(x + 0.5, y, z + 0.5);
                                             TaleOfKingdoms.LOGGER.info("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getX() + "," + toSpawn.getY() + "," + toSpawn.getZ());
                                         }
                                     }
