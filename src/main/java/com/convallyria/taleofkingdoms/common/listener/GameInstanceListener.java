@@ -158,7 +158,7 @@ public class GameInstanceListener extends Listener {
                                     Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("com.convallyria.taleofkingdoms.common.entity.guild." + entityName + "Entity");
                                     Constructor constructor = entity.getConstructor(EntityType.class, World.class);
                                     EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
-                                    TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, player.getEntityWorld());
+                                    TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, server.getOverworld());
                                     toSpawn.setPos(x + 0.5, y, z + 0.5);
                                     server.getOverworld().spawnEntity(toSpawn);
                                     server.getOverworld().breakBlock(blockPos, false);

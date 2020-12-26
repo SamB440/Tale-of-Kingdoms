@@ -118,7 +118,7 @@ public class ScreenStartConquest extends ScreenTOK {
                                             Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("com.convallyria.taleofkingdoms.common.entity.guild." + entityName + "Entity");
                                             Constructor constructor = entity.getConstructor(EntityType.class, World.class);
                                             EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
-                                            TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, player.getEntityWorld());
+                                            TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, serverPlayer.getServer().getOverworld());
                                             toSpawn.setPos(x + 0.5, y, z + 0.5);
                                             serverPlayer.getServer().getOverworld().spawnEntity(toSpawn);
                                             serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
