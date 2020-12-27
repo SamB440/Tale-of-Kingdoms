@@ -10,8 +10,8 @@ public class Image implements IImage {
 
     private final ScreenTOK screen;
     private final Identifier image;
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
     private final int[] dimensions;
 
     public Image(ScreenTOK screen, Identifier image, int x, int y, int[] dimensions) {

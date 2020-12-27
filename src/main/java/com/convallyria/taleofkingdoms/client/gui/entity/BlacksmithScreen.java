@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
-import com.convallyria.taleofkingdoms.client.gui.entity.widget.GuiButtonShop;
+import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
@@ -12,13 +12,17 @@ import com.convallyria.taleofkingdoms.common.shop.IronSwordShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 public class BlacksmithScreen extends ScreenTOK {
@@ -34,7 +38,8 @@ public class BlacksmithScreen extends ScreenTOK {
     public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.blacksmith.name");
         this.player = player;
-        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));
+        this.images = Arrays.asList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), this.width / 2 + 40, this.height / 2 + 35, new int[]{230, 230}),
+                new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), this.width / 2 + 75, this.height / 2 + 35, new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
         this.shopItems = ImmutableList.of(new IronShovelShopItem(), new IronSwordShopItem());
@@ -48,13 +53,32 @@ public class BlacksmithScreen extends ScreenTOK {
         this.selectedItem = selectedItem;
     }
 
+    public ImmutableList<ShopItem> getShopItems() {
+        return shopItems;
+    }
+
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 - 40 , this.height / 2 + 35 , 75, 20, new LiteralText("Buy Item"), (button) -> this.onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 + 15 , 75, 20, new LiteralText("Sell Item"), (button) -> this.onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100 , 75, 20, new LiteralText("Back"), (button) -> this.onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100 , 75, 20, new LiteralText("Next"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 40 , this.height / 2 + 35, 75, 20, new LiteralText("Buy Item"), (button) -> {
+            if (instance.getCoins() >= selectedItem.getCost()) {
+                TaleOfKingdoms.getAPI().ifPresent(api -> {
+                    api.executeOnMain(() -> {
+                        MinecraftServer server = MinecraftClient.getInstance().getServer();
+                        if (server != null) {
+                            ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
+                            if (serverPlayerEntity != null) {
+                                serverPlayerEntity.inventory.insertStack(new ItemStack(selectedItem.getItem(), 1));
+                                instance.setCoins(instance.getCoins() - selectedItem.getCost());
+                            }
+                        }
+                    });
+                });
+            }
+        }));
+        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 + 15, 75, 20, new LiteralText("Sell Item"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100, 75, 20, new LiteralText("Back"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100, 75, 20, new LiteralText("Next"), (button) -> this.onClose()));
 
         this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
             Translations.SHOP_CLOSE.send(player);
@@ -63,11 +87,10 @@ public class BlacksmithScreen extends ScreenTOK {
 
         this.selectedItem = shopItems.get(0);
 
-        int currentY = this.height / 4 - 20;
-        int currentX = this.width / 2 - 90;
+        int currentY = this.height / 4;
+        int currentX = this.width / 2 - 100;
         for (ShopItem shopItem : shopItems) {
-            //drawCenteredString(stack, this.textRenderer, shopItem.getName(), currentX, currentY, 0xFFFFFF);
-            buttons.add(new GuiButtonShop(shopItem, this, currentX, currentY, 90, this.textRenderer));
+            this.addButton(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
             currentY = currentY + 20;
         }
     }
