@@ -5,6 +5,8 @@ import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
+import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
+import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.shop.*;
@@ -21,7 +23,9 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BlacksmithScreen extends ScreenTOK {
 
@@ -32,6 +36,7 @@ public class BlacksmithScreen extends ScreenTOK {
 
     private final ImmutableList<ShopItem> shopItems;
     private ShopItem selectedItem;
+    private Shop shop;
 
     public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.blacksmith.name");
@@ -82,9 +87,26 @@ public class BlacksmithScreen extends ScreenTOK {
                 });
             }
         }));
+
         this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 + 15, 75, 20, new LiteralText("Sell Item"), (button) -> this.onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100, 75, 20, new LiteralText("Back"), (button) -> this.onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100, 75, 20, new LiteralText("Next"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100, 75, 20, new LiteralText("Back"), (button) -> {
+            final int currentPage = shop.getCurrentPage();
+            if (currentPage == 0) return;
+            shop.getPages().get(currentPage).hide();
+            shop.setCurrentPage(currentPage - 1);
+            shop.getPages().get(shop.getCurrentPage()).show();
+        }));
+
+        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100, 75, 20, new LiteralText("Next"), (button) -> {
+            final int currentPage = shop.getCurrentPage();
+            if (shop.getPages().size() <= currentPage + 1) {
+                return;
+            }
+
+            shop.getPages().get(currentPage).hide();
+            shop.setCurrentPage(currentPage + 1);
+            shop.getPages().get(shop.getCurrentPage()).show();
+        }));
 
         this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
             Translations.SHOP_CLOSE.send(player);
@@ -93,12 +115,31 @@ public class BlacksmithScreen extends ScreenTOK {
 
         this.selectedItem = shopItems.get(0);
 
+        final int maxPerSide = 9;
+        int page = 0;
+        int currentIteration = 1;
         int currentY = this.height / 4;
         int currentX = this.width / 2 - 100;
+        Map<Integer, ShopPage> pages = new HashMap<>();
+        pages.put(page, new ShopPage(page));
+
         for (ShopItem shopItem : shopItems) {
-            this.addButton(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
+            if (currentIteration >= maxPerSide) {
+                page++;
+                currentIteration = 1;
+                currentY = this.height / 4;
+                pages.put(page, new ShopPage(page));
+            }
+
+            ShopButtonWidget shopButtonWidget = this.addButton(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
+            pages.get(page).addItem(shopButtonWidget);
+
             currentY = currentY + 20;
+            currentIteration++;
         }
+
+        this.shop = new Shop(pages);
+        pages.get(0).show();
     }
 
     @Override
