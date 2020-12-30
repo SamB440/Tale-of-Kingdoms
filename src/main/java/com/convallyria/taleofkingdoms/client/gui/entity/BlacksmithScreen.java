@@ -7,9 +7,7 @@ import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
-import com.convallyria.taleofkingdoms.common.shop.IronShovelShopItem;
-import com.convallyria.taleofkingdoms.common.shop.IronSwordShopItem;
-import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.shop.*;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
@@ -42,7 +40,15 @@ public class BlacksmithScreen extends ScreenTOK {
                 new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), this.width / 2 + 75, this.height / 2 + 35, new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
-        this.shopItems = ImmutableList.of(new IronShovelShopItem(), new IronSwordShopItem());
+        this.shopItems = ImmutableList.of(new ArrowShopItem(), new BowShopItem(),
+                new DiamondAxeShopItem(), new DiamondBootsShopItem(),
+                new DiamondChestplateShopItem(), new DiamondHelmetShopItem(), new DiamondLeggingsShopItem(), new DiamondPickaxeShopItem(),
+                new DiamondShovelShopItem(), new DiamondSwordShopItem(),
+                new IronAxeShopItem(), new IronBootsShopItem(), new IronChestplateShopItem(), new IronHelmetShopItem(),
+                new IronLeggingsShopItem(), new IronPickaxeShopItem(), new IronShovelShopItem(), new IronSwordShopItem(),
+                new LeatherBootsShopItem(), new LeatherChestplateShopItem(), new LeatherHelmetShopItem(), new LeatherLeggingsShopItem(),
+                new StoneAxeShopItem(), new StonePickaxeShopItem(), new StoneShovelShopItem(), new StoneSwordShopItem(),
+                new WoodenAxeShopItem(), new WoodenPickaxeShopItem(), new WoodenShovelShopItem(), new WoodenSwordShopItem());
     }
 
     public ShopItem getSelectedItem() {
