@@ -20,7 +20,7 @@ public final class ShopPage {
     }
 
     public void addItem(ShopButtonWidget shopButtonWidget) {
-        if (buttonWidgets.size() >= 9) throw new IllegalStateException("Size of list cannot be greater than 9");
+        if (buttonWidgets.size() >= 18) throw new IllegalStateException("Size of list cannot be greater than 18");
         buttonWidgets.add(shopButtonWidget);
         shopButtonWidget.visible = false;
     }

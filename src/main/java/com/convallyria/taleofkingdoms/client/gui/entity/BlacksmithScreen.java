@@ -115,19 +115,25 @@ public class BlacksmithScreen extends ScreenTOK {
 
         this.selectedItem = shopItems.get(0);
 
-        final int maxPerSide = 9;
+        final int maxPerSide = 18;
         int page = 0;
-        int currentIteration = 1;
+        int currentIteration = 0;
         int currentY = this.height / 4;
         int currentX = this.width / 2 - 100;
         Map<Integer, ShopPage> pages = new HashMap<>();
         pages.put(page, new ShopPage(page));
 
         for (ShopItem shopItem : shopItems) {
+            if (currentIteration == 9) {
+                currentY = this.height / 4;
+                currentX = currentX + 115;
+            }
+
             if (currentIteration >= maxPerSide) {
                 page++;
-                currentIteration = 1;
+                currentIteration = 0;
                 currentY = this.height / 4;
+                currentX = this.width / 2 - 100;
                 pages.put(page, new ShopPage(page));
             }
 
