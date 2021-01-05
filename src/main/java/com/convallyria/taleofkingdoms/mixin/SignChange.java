@@ -38,7 +38,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(SignBlockEntity.class)
 public class SignChange {
-	@Shadow @Final public Text[] text;
+
+	@Shadow @Final
+	private Text[] text;
 
 	@Inject(method = "setTextOnRow", at = @At("HEAD"), cancellable = true)
 	private void set(int row, Text text, CallbackInfo ci) {

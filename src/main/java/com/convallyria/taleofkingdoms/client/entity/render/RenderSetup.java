@@ -18,17 +18,17 @@ public final class RenderSetup {
     }
 
     private void setup() {
-        register(EntityTypes.FARMER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/new_textures/innkeeper.png"));
+        register(EntityTypes.FARMER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"));
         register(EntityTypes.GUILDMASTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
-        register(EntityTypes.BLACKSMITH, new Identifier(TaleOfKingdoms.MODID, "textures/entity/new_textures/smith.png"));
-        register(EntityTypes.CITYBUILDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/new_textures/builder.png"));
+        register(EntityTypes.BLACKSMITH, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/smith.png"));
+        register(EntityTypes.CITYBUILDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/builder.png"));
         register(EntityTypes.KNIGHT, new Identifier(TaleOfKingdoms.MODID, "textures/entity/knight2.png"));
-        register(EntityTypes.INNKEEPER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/new_textures/innkeeper.png"));
+        register(EntityTypes.INNKEEPER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"));
         register(EntityTypes.HUNTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/hunter2.png"));
         register(EntityTypes.GUILDGUARD, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmember.png"));
-        register(EntityTypes.BANKER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/new_textures/banker.png"));
+        register(EntityTypes.BANKER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/banker.png"));
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
-        register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/new_textures/foodshop.png"));
+        register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
     }
 
     private void register(EntityType type, Identifier skin) {

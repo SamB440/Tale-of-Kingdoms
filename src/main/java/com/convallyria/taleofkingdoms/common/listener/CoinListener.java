@@ -24,7 +24,6 @@ public class CoinListener extends Listener {
         EntityDeathCallback.EVENT.register((source, entity) -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                 PlayerEntity playerEntity = null;
-                System.out.println("death");
                 if (entity instanceof PlayerEntity) {
                     System.out.println("instanceof");
                     if (instance instanceof ClientConquestInstance) {
