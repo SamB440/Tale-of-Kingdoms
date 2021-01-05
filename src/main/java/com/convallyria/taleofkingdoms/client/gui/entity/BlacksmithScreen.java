@@ -7,9 +7,7 @@ import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
-import com.convallyria.taleofkingdoms.common.shop.IronShovelShopItem;
-import com.convallyria.taleofkingdoms.common.shop.IronSwordShopItem;
-import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.shop.*;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
@@ -21,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import org.lwjgl.system.CallbackI;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +53,8 @@ public class BlacksmithScreen extends ScreenTOK {
     }
 
     public ImmutableList<ShopItem> getShopItems() {
-        return shopItems;
+        return
+                shopItems;
     }
 
     @Override
@@ -81,7 +81,6 @@ public class BlacksmithScreen extends ScreenTOK {
         this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100, 75, 20, new LiteralText("Next"), (button) -> this.onClose()));
 
         this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
-            Translations.SHOP_CLOSE.send(player);
             this.onClose();
         }));
 
@@ -103,6 +102,12 @@ public class BlacksmithScreen extends ScreenTOK {
         if (this.selectedItem != null) {
             drawCenteredString(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        Translations.SHOP_CLOSE.send(player);
     }
 
     @Override

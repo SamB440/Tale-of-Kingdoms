@@ -53,6 +53,12 @@ public class FoodShopScreen extends ScreenTOK {
     }
 
     @Override
+    public void onClose() {
+        super.onClose();
+        Translations.SHOP_CLOSE.send(player);
+    }
+
+    @Override
     public boolean isPauseScreen() {
         return false;
     }

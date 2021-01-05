@@ -7,7 +7,7 @@ public class IronSwordShopItem extends ShopItem {
 
     @Override
     public int getCost() {
-        return 156;
+        return 288;
     }
 
     @Override
