@@ -1,7 +1,6 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.BlacksmithScreen;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -13,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL40;
 
 
-public class ShopButtonWidget extends ButtonWidget {
+public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterface {
 
-    private BlacksmithScreen blacksmith;
+    private ShopScreenInterface InterFace;
     private ShopItem shopItem;
     protected final int width;
     private final int xPosition;
@@ -23,12 +22,12 @@ public class ShopButtonWidget extends ButtonWidget {
     private final boolean enabled = true;
     private final TextRenderer textRenderer;
 
-    public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull BlacksmithScreen blacksmith, int x, int y, TextRenderer textRenderer) {
+    public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull ShopScreenInterface InterFace, int x, int y, TextRenderer textRenderer) {
         super(x, y, 110, 20, new LiteralText("Buy Button"), button -> {
-            blacksmith.setSelectedItem(shopItem);
+            InterFace.setSelectedItem(shopItem);
         });
         this.textRenderer = textRenderer;
-        this.blacksmith = blacksmith;
+        this.InterFace = InterFace;
         this.shopItem = shopItem;
         this.width = 110;
         this.height = 20;
@@ -43,14 +42,14 @@ public class ShopButtonWidget extends ButtonWidget {
         GL40.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         boolean flag = isMouseOver(mouseX, mouseY);
         int k;
-        if (blacksmith.getSelectedItem().equals(shopItem)) {
+        if (InterFace.getSelectedItem().equals(shopItem)) {
             k = 2;
         } else {
             k = 1;
         }
 
-        blacksmith.drawTexture(matrices, xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
-        blacksmith.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
+        InterFace.drawTexture(matrices, xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
+        InterFace.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
         super.mouseDragged(mouseX, mouseY, 0, delta, delta); // Don't know what deltaX and deltaY are.
         if (!enabled) {
             drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffcc00);
@@ -59,5 +58,15 @@ public class ShopButtonWidget extends ButtonWidget {
         } else {
             drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0x00cc00);
         }
+    }
+
+    @Override
+    public ShopItem getSelectedItem() {
+        return shopItem;
+    }
+
+    @Override
+    public void setSelectedItem(ShopItem selectedItem) {
+        this.shopItem = shopItem;
     }
 }
