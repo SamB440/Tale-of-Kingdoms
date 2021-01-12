@@ -195,7 +195,7 @@ public class GuildMasterScreen extends ScreenTOK {
         }));
 
         this.worthness = new ScreenBar(this.width / 2 - 65 , this.height / 2 + 83, 125, 12, 1.0F, ScreenBar.BarColour.RED);
-        this.worthness.setBar(instance.getWorthiness() / 10000.0F);
+        this.worthness.setBar(instance.getWorthiness() / 1500.0F);
     }
 
     @Override
