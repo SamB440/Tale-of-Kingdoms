@@ -2,7 +2,9 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.convallyria.taleofkingdoms.client.gui.entity.widget.PageTurnWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
+import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopScreenInterface;
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
@@ -21,13 +23,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import org.lwjgl.system.CallbackI;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BlacksmithScreen extends ScreenTOK {
+public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface{
 
     private final PlayerEntity player;
     private final List<IImage> images;
@@ -41,8 +44,8 @@ public class BlacksmithScreen extends ScreenTOK {
     public BlacksmithScreen(PlayerEntity player, BlacksmithEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.blacksmith.name");
         this.player = player;
-        this.images = Arrays.asList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), this.width / 2 + 40, this.height / 2 + 35, new int[]{230, 230}),
-                new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), this.width / 2 + 75, this.height / 2 + 35, new int[]{230, 230}));
+        this.images = Arrays.asList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), this.width / 2 + 310 , this.height / 2 + 95 , new int[]{230, 230}),
+                new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), this.width / 2 + 540 , this.height / 2 + 95 , new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
         this.shopItems = ImmutableList.of(new ArrowShopItem(), new BowShopItem(),
@@ -52,26 +55,24 @@ public class BlacksmithScreen extends ScreenTOK {
                 new IronAxeShopItem(), new IronBootsShopItem(), new IronChestplateShopItem(), new IronHelmetShopItem(),
                 new IronLeggingsShopItem(), new IronPickaxeShopItem(), new IronShovelShopItem(), new IronSwordShopItem(),
                 new LeatherBootsShopItem(), new LeatherChestplateShopItem(), new LeatherHelmetShopItem(), new LeatherLeggingsShopItem(),
-                new StoneAxeShopItem(), new StonePickaxeShopItem(), new StoneShovelShopItem(), new StoneSwordShopItem(),
+                new ShieldShopItem(),new StoneAxeShopItem(), new StonePickaxeShopItem(), new StoneShovelShopItem(), new StoneSwordShopItem(),
                 new WoodenAxeShopItem(), new WoodenPickaxeShopItem(), new WoodenShovelShopItem(), new WoodenSwordShopItem());
     }
 
+    @Override
     public ShopItem getSelectedItem() {
         return selectedItem;
     }
 
+    @Override
     public void setSelectedItem(ShopItem selectedItem) {
         this.selectedItem = selectedItem;
-    }
-
-    public ImmutableList<ShopItem> getShopItems() {
-        return shopItems;
     }
 
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 - 40 , this.height / 2 + 35, 75, 20, new LiteralText("Buy Item"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), (button) -> {
             if (instance.getCoins() >= selectedItem.getCost()) {
                 TaleOfKingdoms.getAPI().ifPresent(api -> {
                     api.executeOnMain(() -> {
@@ -88,16 +89,17 @@ public class BlacksmithScreen extends ScreenTOK {
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 + 15, 75, 20, new LiteralText("Sell Item"), (button) -> this.onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100, 75, 20, new LiteralText("Back"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), (button) -> this.onClose()));
+
+        this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, (button -> {
             final int currentPage = shop.getCurrentPage();
             if (currentPage == 0) return;
             shop.getPages().get(currentPage).hide();
             shop.setCurrentPage(currentPage - 1);
             shop.getPages().get(shop.getCurrentPage()).show();
-        }));
+        }), true));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100, 75, 20, new LiteralText("Next"), (button) -> {
+        this.addButton(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, (button -> {
             final int currentPage = shop.getCurrentPage();
             if (shop.getPages().size() <= currentPage + 1) {
                 return;
@@ -106,10 +108,9 @@ public class BlacksmithScreen extends ScreenTOK {
             shop.getPages().get(currentPage).hide();
             shop.setCurrentPage(currentPage + 1);
             shop.getPages().get(shop.getCurrentPage()).show();
-        }));
+        }), true));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
-            Translations.SHOP_CLOSE.send(player);
+        this.addButton(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), (button) -> {
             this.onClose();
         }));
 
@@ -156,6 +157,12 @@ public class BlacksmithScreen extends ScreenTOK {
         if (this.selectedItem != null) {
             drawCenteredString(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        Translations.SHOP_CLOSE.send(player);
     }
 
     @Override
