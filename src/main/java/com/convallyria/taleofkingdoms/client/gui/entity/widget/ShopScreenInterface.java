@@ -9,5 +9,5 @@ public interface ShopScreenInterface {
 
     void setSelectedItem(ShopItem selectedItem);
 
-    void drawTexture(MatrixStack matrices, int xPosition, int yPosition, int i, int i1, int i2, int height);
+    void drawTexture(MatrixStack matrices, int xPosition, int yPosition, int x, int y, int width, int height);
 }

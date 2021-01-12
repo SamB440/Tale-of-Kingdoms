@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL40;
 
 public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterface {
 
-    private ShopScreenInterface InterFace;
+    private ShopScreenInterface shopScreen;
     private ShopItem shopItem;
     protected final int width;
     private final int xPosition;
@@ -22,12 +22,12 @@ public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterfac
     private final boolean enabled = true;
     private final TextRenderer textRenderer;
 
-    public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull ShopScreenInterface InterFace, int x, int y, TextRenderer textRenderer) {
+    public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull ShopScreenInterface shopScreen, int x, int y, TextRenderer textRenderer) {
         super(x, y, 110, 20, new LiteralText("Buy Button"), button -> {
-            InterFace.setSelectedItem(shopItem);
+            shopScreen.setSelectedItem(shopItem);
         });
         this.textRenderer = textRenderer;
-        this.InterFace = InterFace;
+        this.shopScreen = shopScreen;
         this.shopItem = shopItem;
         this.width = 110;
         this.height = 20;
@@ -42,14 +42,14 @@ public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterfac
         GL40.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         boolean flag = isMouseOver(mouseX, mouseY);
         int k;
-        if (InterFace.getSelectedItem().equals(shopItem)) {
+        if (shopScreen.getSelectedItem().equals(shopItem)) {
             k = 2;
         } else {
             k = 1;
         }
 
-        InterFace.drawTexture(matrices, xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
-        InterFace.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
+        shopScreen.drawTexture(matrices, xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
+        shopScreen.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
         super.mouseDragged(mouseX, mouseY, 0, delta, delta); // Don't know what deltaX and deltaY are.
         if (!enabled) {
             drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffcc00);

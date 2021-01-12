@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.convallyria.taleofkingdoms.client.gui.entity.widget.PageTurnWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopScreenInterface;
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
@@ -71,7 +72,7 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface{
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 - 40 , this.height / 2 + 65, 75, 20, new LiteralText("Buy Item"), (button) -> {
+        this.addButton(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), (button) -> {
             if (instance.getCoins() >= selectedItem.getCost()) {
                 TaleOfKingdoms.getAPI().ifPresent(api -> {
                     api.executeOnMain(() -> {
@@ -88,7 +89,8 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface{
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 + 15, 75, 20, new LiteralText("Sell Item"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), (button) -> this.onClose()));
+        /*
         this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100, 75, 20, new LiteralText("Back"), (button) -> {
             final int currentPage = shop.getCurrentPage();
             if (currentPage == 0) return;
@@ -107,8 +109,28 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface{
             shop.setCurrentPage(currentPage + 1);
             shop.getPages().get(shop.getCurrentPage()).show();
         }));
+        */
 
-        this.addButton(new ButtonWidget(this.width / 2 - 200 , this.height / 2 + 15 , 75, 20, new LiteralText("Exit"), (button) -> {
+        this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, (button -> {
+            final int currentPage = shop.getCurrentPage();
+            if (currentPage == 0) return;
+            shop.getPages().get(currentPage).hide();
+            shop.setCurrentPage(currentPage - 1);
+            shop.getPages().get(shop.getCurrentPage()).show();
+        }), true));
+
+        this.addButton(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, (button -> {
+            final int currentPage = shop.getCurrentPage();
+            if (shop.getPages().size() <= currentPage + 1) {
+                return;
+            }
+
+            shop.getPages().get(currentPage).hide();
+            shop.setCurrentPage(currentPage + 1);
+            shop.getPages().get(shop.getCurrentPage()).show();
+        }), true));
+
+        this.addButton(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), (button) -> {
             this.onClose();
         }));
 
