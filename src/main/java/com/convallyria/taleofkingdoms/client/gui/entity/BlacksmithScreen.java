@@ -90,26 +90,6 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface{
         }));
 
         this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), (button) -> this.onClose()));
-        /*
-        this.addButton(new ButtonWidget(this.width / 2 - 200, this.height / 2 - 100, 75, 20, new LiteralText("Back"), (button) -> {
-            final int currentPage = shop.getCurrentPage();
-            if (currentPage == 0) return;
-            shop.getPages().get(currentPage).hide();
-            shop.setCurrentPage(currentPage - 1);
-            shop.getPages().get(shop.getCurrentPage()).show();
-        }));
-
-        this.addButton(new ButtonWidget(this.width / 2 + 120, this.height / 2 - 100, 75, 20, new LiteralText("Next"), (button) -> {
-            final int currentPage = shop.getCurrentPage();
-            if (shop.getPages().size() <= currentPage + 1) {
-                return;
-            }
-
-            shop.getPages().get(currentPage).hide();
-            shop.setCurrentPage(currentPage + 1);
-            shop.getPages().get(shop.getCurrentPage()).show();
-        }));
-        */
 
         this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, (button -> {
             final int currentPage = shop.getCurrentPage();
