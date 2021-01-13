@@ -12,10 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL40;
 
 
-public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterface {
+public class ShopButtonWidget extends ButtonWidget {
 
-    private ShopScreenInterface shopScreen;
-    private ShopItem shopItem;
+    private final ShopScreenInterface shopScreen;
+    private final ShopItem shopItem;
     protected final int width;
     private final int xPosition;
     private final int yPosition;
@@ -48,8 +48,8 @@ public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterfac
             k = 1;
         }
 
-        shopScreen.drawTexture(matrices, xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
-        shopScreen.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
+        this.drawTexture(matrices, xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
+        this.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
         super.mouseDragged(mouseX, mouseY, 0, delta, delta); // Don't know what deltaX and deltaY are.
         if (!enabled) {
             drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffcc00);
@@ -58,15 +58,5 @@ public class ShopButtonWidget extends ButtonWidget implements ShopScreenInterfac
         } else {
             drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0x00cc00);
         }
-    }
-
-    @Override
-    public ShopItem getSelectedItem() {
-        return shopItem;
-    }
-
-    @Override
-    public void setSelectedItem(ShopItem selectedItem) {
-        this.shopItem = shopItem;
     }
 }
