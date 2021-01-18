@@ -40,5 +40,13 @@
     "generic.taleofkingdoms.summon_citizens": "Summoning citizens of the realm...",
     "generic.taleofkingdoms.new_citizen": "A new Citizen has arrived: ",
     "generic.taleofkingdoms.darkness": "The Great Tides of Darkness are coming. Build your forces and vanquish evil.",
-    "generic.taleofkingdoms.hero": "Be the hero you were born for. The Guild will prepare you..."
+    "generic.taleofkingdoms.hero": "Be the hero you were born for. The Guild will prepare you...",
+    "entity.taleofkingdoms.guild_guard": "Guild Guard",
+    "entity.taleofkingdoms.blacksmith": "Blacksmith",
+    "entity.taleofkingdoms.farmer": "Farmer",
+    "entity.taleofkingdoms.banker": "Banker",
+    "entity.taleofkingdoms.lone": "Lone",
+    "entity.taleofkingdoms.city_builder": "City Builder",
+    "entity.taleofkingdoms.innkeeper": "Innkeeper",
+    "entity.taleofkingdoms.guild_master": "Guild Master"
 }

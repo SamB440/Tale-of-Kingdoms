@@ -23,6 +23,7 @@ public class PageTurnWidget extends ButtonWidget {
         this.playPageTurnSound = playPageTurnSound;
     }
 
+    @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(BookScreen.BOOK_TEXTURE);
@@ -39,10 +40,10 @@ public class PageTurnWidget extends ButtonWidget {
         this.drawTexture(matrices, this.x, this.y, i, j, 23, 13);
     }
 
+    @Override
     public void playDownSound(SoundManager soundManager) {
         if (this.playPageTurnSound) {
             soundManager.play(PositionedSoundInstance.master(SoundEvents.ITEM_BOOK_PAGE_TURN, 1.0F));
         }
-
     }
 }
