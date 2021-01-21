@@ -25,15 +25,13 @@ public class CoinListener extends Listener {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                 PlayerEntity playerEntity = null;
                 if (entity instanceof PlayerEntity) {
-                    System.out.println("instanceof");
                     if (instance instanceof ClientConquestInstance) {
-                        System.out.println("client");
                         ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
-                        int subtract = (clientConquestInstance.getCoins() / 20) * 100;
+                        int subtract = (clientConquestInstance.getCoins() / 20);
                         clientConquestInstance.setCoins(clientConquestInstance.getCoins() - subtract);
                     } else {
                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
-                        int subtract = (serverConquestInstance.getCoins(entity.getUuid()) / 20) * 100;
+                        int subtract = (serverConquestInstance.getCoins(entity.getUuid()) / 20);
                         serverConquestInstance.setCoins(entity.getUuid(), subtract);
                     }
                     return;
