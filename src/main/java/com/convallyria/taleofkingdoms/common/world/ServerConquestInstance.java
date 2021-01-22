@@ -2,12 +2,15 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
+import com.convallyria.taleofkingdoms.common.quest.Quest;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +31,42 @@ public class ServerConquestInstance extends ConquestInstance {
         this.playerHasContract = new ConcurrentHashMap<>();
         this.playerWorthiness = new ConcurrentHashMap<>();
     }
-
+    
+    @Override
+    public List<Quest> getActiveQuests(PlayerEntity player) {
+        return null;
+    }
+    
+    @Override
+    public List<Quest> getCompletedQuests(PlayerEntity player) {
+        return null;
+    }
+    
+    @Override
+    public void addCompletedQuest(Quest quest, PlayerEntity player) {
+    
+    }
+    
+    @Override
+    public void removeCompletedQuest(Quest quest, PlayerEntity player) {
+    
+    }
+    
+    @Override
+    public void addActiveQuest(Quest quest, PlayerEntity player) {
+    
+    }
+    
+    @Override
+    public void removeActiveQuest(Quest quest, PlayerEntity player) {
+    
+    }
+    
+    @Override
+    public void update(Quest quest, PlayerEntity player) {
+    
+    }
+    
     public boolean hasPlayer(UUID playerUuid) {
         return playerCoins.containsKey(playerUuid)
                 && playerBankerCoins.containsKey(playerUuid)
@@ -36,6 +74,7 @@ public class ServerConquestInstance extends ConquestInstance {
                 && playerHasContract.containsKey(playerUuid)
                 && playerWorthiness.containsKey(playerUuid);
     }
+    
     public int getCoins(UUID playerUuid) {
         return playerCoins.get(playerUuid);
     }

@@ -4,6 +4,7 @@
   "package": "com.convallyria.taleofkingdoms.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "common.BreedEntityEvent",
     "common.EntityDeathEvent",
     "common.EntityPickupItemEvent",
     "common.EntitySpawnEvent",
@@ -11,7 +12,8 @@
     "common.ItemMergeEvent",
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
-    "common.PlayerLogin"
+    "common.PlayerLogin",
+    "common.PlayerPlaceBlock"
   ],
   "client": [
     "WorldClose",

@@ -2,15 +2,26 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.quest.Quest;
+import com.convallyria.taleofkingdoms.common.quest.objective.QuestObjective;
 import com.google.gson.Gson;
+import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.boss.BossBar;
+import net.minecraft.entity.boss.BossBarManager;
+import net.minecraft.entity.boss.CommandBossBar;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,12 +35,12 @@ import java.util.Optional;
 
 public abstract class ConquestInstance {
 
-    private String world;
-    private String name;
+    private final String world;
+    private final String name;
     private boolean hasLoaded;
-    private BlockPos start;
-    private BlockPos end;
-    private BlockPos origin;
+    private final BlockPos start;
+    private final BlockPos end;
+    private final BlockPos origin;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -71,7 +82,21 @@ public abstract class ConquestInstance {
     public BlockPos getOrigin() {
         return origin;
     }
-
+    
+    public abstract List<Quest> getActiveQuests(PlayerEntity player);
+    
+    public abstract List<Quest> getCompletedQuests(PlayerEntity player);
+    
+    public abstract void addCompletedQuest(Quest quest, PlayerEntity player);
+    
+    public abstract void removeCompletedQuest(Quest quest, PlayerEntity player);
+    
+    public abstract void addActiveQuest(Quest quest, PlayerEntity player);
+    
+    public abstract void removeActiveQuest(Quest quest, PlayerEntity player);
+    
+    public abstract void update(Quest quest, PlayerEntity player);
+    
     private List<BlockPos> validRest;
 
     /**

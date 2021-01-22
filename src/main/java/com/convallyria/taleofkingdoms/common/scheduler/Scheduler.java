@@ -93,12 +93,16 @@ public class Scheduler {
 	 * @param tick how many ticks in the future this event should first be called
 	 * 	 * @param interval the number of ticks in between each execution
 	 */
-	public void repeatN(Consumer<MinecraftServer> task, int times, int tick, int interval) {
+	public void repeatN(Consumer<MinecraftServer> task, int times, int tick, int interval, Consumer<Boolean> complete) {
 		this.repeatWhile(task, new IntPredicate() {
 			private int remaining = times;
 			@Override
 			public boolean test(int value) {
-				return this.remaining-- > 0;
+				boolean flag = this.remaining-- > 0;
+				if (!flag) {
+					complete.accept(true);
+				}
+				return flag;
 			}
 		}, tick, interval);
 	}

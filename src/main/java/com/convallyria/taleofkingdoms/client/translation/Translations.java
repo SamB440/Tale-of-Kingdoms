@@ -6,6 +6,18 @@ import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 public enum Translations {
+    NEXT_PAGE("quest.next_page"),
+    NEXT_PAGE_LORE("quest.next_page_lore"),
+    PREVIOUS_PAGE("quest.previous_page"),
+    PREVIOUS_PAGE_LORE("quest.previous_page_lore"),
+    EXIT("quest.exit"),
+    EXIT_LORE("quest.exit_lore"),
+    OBJECTIVE_COMPLETE("quest.objective_complete"),
+    QUEST_COMPLETED("quest.quest_completed"),
+    QUEST_COMPLETED_TITLE("quest.quest_completed_title"),
+    QUEST_FAILED_TITLE("quest.quest_failed_title"),
+    QUEST_STARTED("quest.quest_started"),
+    OBJECTIVE_PROGRESS("quest.objective_progress"),
     FARMER_TAKE_BREAD("entity_type.taleofkingdoms.farmer.take_bread"),
     FARMER_GOT_BREAD("entity_type.taleofkingdoms.farmer.got_bread"),
     GUILDMASTER_CONTRACT_SIGN("entity_type.taleofkingdoms.guildmaster.contract.sign"),
@@ -49,19 +61,19 @@ public enum Translations {
         playerEntity.sendMessage(getTranslation(), false);
     }
 
-    public void send(PlayerEntity playerEntity, String... values) {
+    public void send(PlayerEntity playerEntity, Object... values) {
         send(playerEntity, false, values);
     }
 
-    public void send(PlayerEntity playerEntity, boolean actionbar, String... values) {
+    public void send(PlayerEntity playerEntity, boolean actionbar, Object... values) {
         playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().getString(), values)), actionbar);
     }
 
     @NotNull
-    private String replaceVariables(String message, String... values) {
+    private String replaceVariables(String message, Object... values) {
         String modifiedMessage = message;
         for (int i = 0; i < 10; i++) {
-            if (values.length > i) modifiedMessage = modifiedMessage.replaceAll("%" + i, values[i]);
+            if (values.length > i) modifiedMessage = modifiedMessage.replaceAll("%" + i, String.valueOf(values[i]));
             else break;
         }
 
@@ -70,6 +82,10 @@ public enum Translations {
 
     public TranslatableText getTranslation() {
         return new TranslatableText(key);
+    }
+    
+    public LiteralText get(Object... values) {
+        return new LiteralText(replaceVariables(getTranslation().getString(), values));
     }
     
     public String getFormatted() {

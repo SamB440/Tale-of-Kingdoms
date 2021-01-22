@@ -20,6 +20,7 @@ import com.convallyria.taleofkingdoms.common.listener.DeleteWorldListener;
 import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
+import com.convallyria.taleofkingdoms.common.quest.Quest;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

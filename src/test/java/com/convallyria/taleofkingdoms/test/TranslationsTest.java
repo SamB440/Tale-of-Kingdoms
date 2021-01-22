@@ -32,7 +32,7 @@ public class TranslationsTest {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             Gson gson = new Gson();
             try {
-                Map<String, String> translationMap = gson.fromJson(reader, new TypeToken<Map<String, String>>() {
+                Map<String, Object> translationMap = gson.fromJson(reader, new TypeToken<Map<String, Object>>() {
                 }.getType());
                 for (Translations translation : Translations.values()) {
                     if (!translationMap.containsKey(translation.getKey())) {

@@ -1,12 +1,10 @@
-package com.convallyria.taleofkingdoms.mixin;
+package com.convallyria.taleofkingdoms.mixin.common;
 
+import com.convallyria.taleofkingdoms.common.event.tok.BlockPlaceCallback;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -37,27 +35,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin (BlockItem.class)
+@Mixin(BlockItem.class)
 public class PlayerPlaceBlock {
+	
 	@Inject(method = "place(Lnet/minecraft/item/ItemPlacementContext;Lnet/minecraft/block/BlockState;)Z", at = @At("HEAD"), cancellable = true)
 	private void restrict(ItemPlacementContext context, BlockState state, CallbackInfoReturnable<Boolean> cir) {
-		if(this.restrict(context, state)) {
-			PlayerEntity entity = context.getPlayer();
-			if(entity instanceof ServerPlayerEntity) {
-				//TODO update to 1.16
-				//((ServerPlayerEntity) entity).onContainerRegistered(entity.container, entity.container.getStacks());
-			}
-			cir.setReturnValue(false);
-		}
-	}
-
-	/**
-	 * @param context the context of the placement
-	 * @param state the state to place
-	 * @return return true if the player cannot place a block there
-	 */
-	@Unique
-	public boolean restrict(ItemPlacementContext context, BlockState state) {
-		return false;
+		BlockPlaceCallback.EVENT.invoker().blockPlace(state, context.getPlayer());
 	}
 }

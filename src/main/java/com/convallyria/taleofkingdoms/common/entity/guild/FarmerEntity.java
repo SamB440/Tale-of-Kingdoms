@@ -4,8 +4,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.quest.Quest;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.managers.QuesteManagers;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -59,6 +61,9 @@ public class FarmerEntity extends TOKEntity {
             // Set the current day and add bread to inventory
             instance.setFarmerLastBread(day);
             Translations.FARMER_TAKE_BREAD.send(player);
+            QuesteManagers manager = (QuesteManagers) api.getManager("Queste");
+            Quest quest = manager.getQuesteCache().getQuest("Breed");
+            instance.addActiveQuest(quest, player);
         } else if (player.getServer() != null && player.getServer().isDedicated()) {
             ServerConquestInstance instance = (ServerConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
             long day = player.world.getTimeOfDay() / 24000L;

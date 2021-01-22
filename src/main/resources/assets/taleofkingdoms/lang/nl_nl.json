@@ -1,4 +1,29 @@
 {
+  "quest.next_page": "&aNext Page",
+  "quest.next_page_lore": ["&7Go to the next page."],
+  "quest.previous_page": "&cPrevious Page",
+  "quest.previous_page_lore": ["&7Go to the previous page."],
+  "quest.exit": "&cExit",
+  "quest.exit_lore": ["&7Exit the GUI."],
+  "quest.objective_complete": [
+    " ",
+    " &e&lObjective Complete! &8(%0/%1)",
+    " ",
+    " &bTask %2/%3: &7%4",
+    " "
+  ],
+  "quest.quest_completed": [
+    " ",
+    " &e&lQuest Completed! ",
+    " ",
+    " Well done! You've completed",
+    " the &b%0 &fquest!",
+    " "
+  ],
+  "quest.quest_started": "&aQuest Started",
+  "quest.quest_completed_title": "&aQuest Completed",
+  "quest.quest_failed_title": "&cQuest Failed",
+  "quest.objective_progress": "&6%0 &7(%1/%2)",
   "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
   "item.taleofkingdoms.coin": "Munt",
   "item.taleofkingdoms.pouch": "Pouch",

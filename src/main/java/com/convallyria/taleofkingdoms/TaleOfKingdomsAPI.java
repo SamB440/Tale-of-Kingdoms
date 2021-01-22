@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.ServerSchematicHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
+import com.convallyria.taleofkingdoms.managers.QuesteManagers;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
@@ -31,9 +32,9 @@ public class TaleOfKingdomsAPI {
     private final Map<String, IManager> managers = new HashMap<>();
     private MinecraftDedicatedServer minecraftServer;
     @Environment(EnvType.SERVER)
-    private Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
+    private final Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
     @Environment(EnvType.CLIENT)
-    private Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
+    private final Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
 
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
@@ -41,6 +42,8 @@ public class TaleOfKingdomsAPI {
         this.cis = new ConquestInstanceStorage();
         SoundManager sm = new SoundManager(mod);
         managers.put(sm.getName(), sm);
+        QuesteManagers questeManagers = new QuesteManagers(mod);
+        managers.put(questeManagers.getName(), questeManagers);
         this.scheduler = new Scheduler();
     }
 
