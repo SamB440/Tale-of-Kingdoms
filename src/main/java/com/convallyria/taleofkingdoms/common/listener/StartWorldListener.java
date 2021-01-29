@@ -91,7 +91,7 @@ public class StartWorldListener extends Listener {
         if (!file.exists()) {
             try {
                 // If not, create new file
-                file.createNewFile();
+                return file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

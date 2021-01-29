@@ -36,46 +36,59 @@ public class ServerConquestInstance extends ConquestInstance {
                 && playerHasContract.containsKey(playerUuid)
                 && playerWorthiness.containsKey(playerUuid);
     }
-    public int getCoins(UUID playerUuid) {
-        return playerCoins.get(playerUuid);
+
+    @Override
+    public int getCoins(UUID uuid) {
+        return playerCoins.get(uuid);
     }
 
-    public int getBankerCoins(UUID playerUuid) { return playerBankerCoins.get(playerUuid); }
+    @Override
+    public int getBankerCoins(UUID uuid) { return playerBankerCoins.get(uuid); }
 
-    public void setBankerCoins(UUID playerUuid, int bankerCoins) { this.playerBankerCoins.put(playerUuid, bankerCoins); }
+    @Override
+    public void setBankerCoins(UUID uuid, int bankerCoins) { this.playerBankerCoins.put(uuid, bankerCoins); }
 
-    public void setCoins(UUID playerUuid, int coins) {
-        this.playerCoins.put(playerUuid, coins);
+    @Override
+    public void setCoins(UUID uuid, int coins) {
+        this.playerCoins.put(uuid, coins);
     }
 
-    public void addCoins(UUID playerUuid, int coins) {
-        this.playerCoins.put(playerUuid, this.playerCoins.get(playerUuid) + coins);
+    @Override
+    public void addCoins(UUID uuid, int coins) {
+        this.playerCoins.put(uuid, this.playerCoins.get(uuid) + coins);
     }
 
-    public long getFarmerLastBread(UUID playerUuid) {
-        return playerFarmerLastBread.get(playerUuid);
+    @Override
+    public long getFarmerLastBread(UUID uuid) {
+        return playerFarmerLastBread.get(uuid);
     }
 
-    public void setFarmerLastBread(UUID playerUuid, long day) {
-        this.playerFarmerLastBread.put(playerUuid, day);
+    @Override
+    public void setFarmerLastBread(UUID uuid, long day) {
+        this.playerFarmerLastBread.put(uuid, day);
     }
 
-    public boolean hasContract(UUID playerUuid) {
-        return playerHasContract.get(playerUuid);
+    @Override
+    public boolean hasContract(UUID uuid) {
+        return playerHasContract.get(uuid);
     }
 
-    public void setHasContract(UUID playerUuid, boolean hasContract) {
-        this.playerHasContract.put(playerUuid, hasContract);
+    @Override
+    public void setHasContract(UUID uuid, boolean hasContract) {
+        this.playerHasContract.put(uuid, hasContract);
     }
 
+    @Override
     public int getWorthiness(UUID playerUuid) {
         return playerWorthiness.get(playerUuid);
     }
 
+    @Override
     public void setWorthiness(UUID playerUuid, int worthiness) {
         this.playerWorthiness.put(playerUuid, worthiness);
     }
 
+    @Override
     public void addWorthiness(UUID playerUuid, int worthiness) {
         this.playerWorthiness.put(playerUuid, this.playerWorthiness.get(playerUuid) + worthiness);
     }

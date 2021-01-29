@@ -22,47 +22,59 @@ public class ClientConquestInstance extends ConquestInstance {
         this.hunterUUIDs = new ArrayList<>();
     }
 
-    public int getCoins() {
+    @Override
+    public int getCoins(UUID uuid) {
         return coins;
     }
 
-    public int getBankerCoins() { return bankerCoins; }
+    @Override
+    public int getBankerCoins(UUID uuid) { return bankerCoins; }
 
-    public void setBankerCoins(int bankerCoins) { this.bankerCoins = bankerCoins; }
+    @Override
+    public void setBankerCoins(UUID uuid, int bankerCoins) { this.bankerCoins = bankerCoins; }
 
-    public void setCoins(int coins) {
+    @Override
+    public void setCoins(UUID uuid, int coins) {
         this.coins = coins;
     }
 
-    public void addCoins(int coins) {
+    @Override
+    public void addCoins(UUID uuid, int coins) {
         this.coins = this.coins + coins;
     }
 
-    public long getFarmerLastBread() {
+    @Override
+    public long getFarmerLastBread(UUID uuid) {
         return farmerLastBread;
     }
 
-    public void setFarmerLastBread(long day) {
+    @Override
+    public void setFarmerLastBread(UUID uuid, long day) {
         this.farmerLastBread = day;
     }
 
-    public boolean hasContract() {
+    @Override
+    public boolean hasContract(UUID uuid) {
         return hasContract;
     }
 
-    public void setHasContract(boolean hasContract) {
+    @Override
+    public void setHasContract(UUID uuid, boolean hasContract) {
         this.hasContract = hasContract;
     }
 
-    public int getWorthiness() {
+    @Override
+    public int getWorthiness(UUID uuid) {
         return worthiness;
     }
 
-    public void setWorthiness(int worthiness) {
+    @Override
+    public void setWorthiness(UUID uuid, int worthiness) {
         this.worthiness = worthiness;
     }
 
-    public void addWorthiness(int worthiness) {
+    @Override
+    public void addWorthiness(UUID uuid, int worthiness) {
         this.worthiness = this.worthiness + worthiness;
     }
 

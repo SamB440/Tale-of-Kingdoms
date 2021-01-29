@@ -21,15 +21,16 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public abstract class ConquestInstance {
 
-    private String world;
-    private String name;
+    private final String world;
+    private final String name;
     private boolean hasLoaded;
-    private BlockPos start;
-    private BlockPos end;
-    private BlockPos origin;
+    private final BlockPos start;
+    private final BlockPos end;
+    private final BlockPos origin;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -70,6 +71,78 @@ public abstract class ConquestInstance {
 
     public BlockPos getOrigin() {
         return origin;
+    }
+
+    public abstract int getCoins(UUID uuid);
+
+    public abstract int getBankerCoins(UUID uuid);
+
+    public abstract void setBankerCoins(UUID uuid, int bankerCoins);
+
+    public abstract void setCoins(UUID uuid, int coins);
+
+    public abstract void addCoins(UUID uuid, int coins);
+
+    public abstract long getFarmerLastBread(UUID uuid);
+
+    public abstract void setFarmerLastBread(UUID uuid, long day);
+
+    public abstract boolean hasContract(UUID uuid);
+
+    public abstract void setHasContract(UUID uuid, boolean hasContract);
+
+    public abstract int getWorthiness(UUID uuid);
+
+    public abstract void setWorthiness(UUID uuid, int worthiness);
+
+    public abstract void addWorthiness(UUID uuid, int worthiness);
+
+    public int getCoins() {
+        return getCoins(null);
+    }
+
+    public int getBankerCoins() {
+        return getBankerCoins(null);
+    }
+
+    public void setBankerCoins(int bankerCoins) {
+        setBankerCoins(null, bankerCoins);
+    }
+
+    public void setCoins(int coins) {
+        setCoins(null, coins);
+    }
+
+    public void addCoins(int coins) {
+        addCoins(null, coins);
+    }
+
+    public long getFarmerLastBread() {
+        return getFarmerLastBread(null);
+    }
+
+    public void setFarmerLastBread(long day) {
+        setFarmerLastBread(null, day);
+    }
+
+    public boolean hasContract() {
+        return hasContract(null);
+    }
+
+    public void setHasContract(boolean hasContract) {
+        setHasContract(null, hasContract);
+    }
+
+    public int getWorthiness() {
+        return getWorthiness(null);
+    }
+
+    public void setWorthiness(int worthiness) {
+        setWorthiness(null, worthiness);
+    }
+
+    public void addWorthiness(int worthiness) {
+        addWorthiness(null, worthiness);
     }
 
     private List<BlockPos> validRest;

@@ -31,29 +31,22 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
         BlockPos start = attachedData.readBlockPos();
         BlockPos end = attachedData.readBlockPos();
         BlockPos origin = attachedData.readBlockPos();
-        context.getTaskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().ifPresent(api -> {
-                if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
-                    ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();
-                    instance.setBankerCoins(bankerCoins);
-                    instance.setCoins(coins);
-                    instance.setWorthiness(worthiness);
-                    instance.setFarmerLastBread(farmerLastBread);
-                    instance.setHasContract(hasContract);
-                    instance.setLoaded(isLoaded);
-                    return;
-                }
+        context.getTaskQueue().execute(() -> TaleOfKingdoms.getAPI().ifPresent(api -> {
+            ClientConquestInstance instance;
+            if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
+                instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();
+            } else {
+                instance = new ClientConquestInstance(world, name, start, end, origin);
+            }
 
-                ClientConquestInstance instance = new ClientConquestInstance(world, name, start, end, origin);
-                instance.setBankerCoins(bankerCoins);
-                instance.setCoins(coins);
-                instance.setWorthiness(worthiness);
-                instance.setFarmerLastBread(farmerLastBread);
-                instance.setHasContract(hasContract);
-                instance.setLoaded(isLoaded);
-                api.getConquestInstanceStorage().addConquest(world, instance, true);
-            });
-        });
+            instance.setBankerCoins(bankerCoins);
+            instance.setCoins(coins);
+            instance.setWorthiness(worthiness);
+            instance.setFarmerLastBread(farmerLastBread);
+            instance.setHasContract(hasContract);
+            instance.setLoaded(isLoaded);
+            api.getConquestInstanceStorage().addConquest(world, instance, true);
+        }));
     }
 
     @Override

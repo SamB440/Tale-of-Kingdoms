@@ -16,8 +16,6 @@ public abstract class ClientPacketHandler extends PacketHandler {
     @Override
     protected void register() {
         ClientSidePacketRegistry.INSTANCE.register(this.getPacket(),
-                (packetContext, attachedData) -> {
-            handleIncomingPacket(this.getPacket(), packetContext, attachedData);
-        });
+                (packetContext, attachedData) -> handleIncomingPacket(this.getPacket(), packetContext, attachedData));
     }
 }

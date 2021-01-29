@@ -4,8 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -18,6 +17,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends TOKEntity {
@@ -48,29 +48,22 @@ public class FarmerEntity extends TOKEntity {
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         if (!api.getConquestInstanceStorage().mostRecentInstance().isPresent()) return ActionResult.FAIL;
 
-        if (player.getServer() != null && !player.getServer().isDedicated()) {
-            ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
-            long day = player.world.getTimeOfDay() / 24000L;
-            if (instance.getFarmerLastBread() >= day) {
-                Translations.FARMER_GOT_BREAD.send(player);
-                return ActionResult.FAIL;
-            }
+        ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
+        UUID uuid = null;
+        long day = player.world.getTimeOfDay() / 24000L;
+        if (instance.getFarmerLastBread() >= day) {
+            Translations.FARMER_GOT_BREAD.send(player);
+            return ActionResult.FAIL;
+        }
 
-            // Set the current day and add bread to inventory
-            instance.setFarmerLastBread(day);
-            Translations.FARMER_TAKE_BREAD.send(player);
-        } else if (player.getServer() != null && player.getServer().isDedicated()) {
-            ServerConquestInstance instance = (ServerConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
-            long day = player.world.getTimeOfDay() / 24000L;
-            if (instance.getFarmerLastBread(player.getUuid()) >= day) {
-                Translations.FARMER_GOT_BREAD.send(player);
-                return ActionResult.FAIL;
-            }
-
-            // Set the current day and add bread to inventory
-            instance.setFarmerLastBread(player.getUuid(), day);
+        if (player.getServer() != null && player.getServer().isDedicated()) {
+            uuid = player.getUuid();
             Translations.FARMER_TAKE_BREAD.send(player);
         }
+
+        // Set the current day and add bread to inventory
+        instance.setFarmerLastBread(uuid, day);
+        Translations.FARMER_TAKE_BREAD.send(player);
 
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
         if (player.getServer() != null && !player.getServer().isDedicated()) {
