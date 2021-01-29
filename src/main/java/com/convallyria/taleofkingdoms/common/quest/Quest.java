@@ -6,23 +6,13 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.quest.objective.QuestObjective;
 import com.convallyria.taleofkingdoms.common.quest.reward.QuestReward;
 import com.convallyria.taleofkingdoms.common.quest.start.QuestRequirement;
-import com.google.gson.Gson;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.particle.TotemParticle;
-import net.minecraft.client.sound.Sound;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -257,26 +247,6 @@ public final class Quest {
     public TaleOfKingdomsAPI getPlugin() {
         if (plugin == null) this.plugin = TaleOfKingdoms.getAPI().get();
         return plugin;
-    }
-
-    public boolean save(TaleOfKingdomsAPI plugin) {
-        File file = new File(plugin.getDataFolder() + "/quests/" + this.getName() + ".json");
-        try {
-            Writer writer = new FileWriter(file);
-            Gson gson = plugin.getMod().getGson();
-            gson.toJson(this, writer);
-            writer.flush();
-            writer.close();
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public boolean delete() throws IOException {
-        File file = new File(getPlugin().getDataFolder() + "/quests/" + this.getName() + ".json");
-        return Files.deleteIfExists(file.toPath());
     }
 
     public enum DenyReason {

@@ -66,7 +66,7 @@ public enum Translations {
     }
 
     public void send(PlayerEntity playerEntity, boolean actionbar, Object... values) {
-        playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().getString(), values)), actionbar);
+        playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().asString(), values)), actionbar);
     }
 
     @NotNull
@@ -85,7 +85,7 @@ public enum Translations {
     }
     
     public LiteralText get(Object... values) {
-        return new LiteralText(replaceVariables(getTranslation().getString(), values));
+        return new LiteralText(replaceVariables(getTranslation().asString(), values));
     }
     
     public String getFormatted() {
