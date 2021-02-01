@@ -1,10 +1,15 @@
 {
+
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
     "item.taleofkingdoms.coin": "Moeda",
     "menu.taleofkingdoms.guildmaster.name": "Mestre de Guilda",
+    "entity.taleofkingdoms.guild_guard": "Guarda da Guilda",
     "menu.taleofkingdoms.blacksmith.name": "Ferreiro",
     "menu.taleofkingdoms.banker.name": "Banqueiro",
     "menu.taleofkingdoms.innkeeper.name": "Estalajadeiro",
+    "entity.taleofkingdoms.city_builder": "Construtor",
+    "entity.taleofkingdoms.farmer": "Fazendeiro",
+    "entity.taleofkingdoms.lone": "Solitário",
     "menu.taleofkingdoms.foodshop.name": "Loja de comida",
     "menu.taleofkingdoms.continueconquest.name": "Continuar Jornada",
     "menu.taleofkingdoms.startconquest.name": "Começar Jornada",
