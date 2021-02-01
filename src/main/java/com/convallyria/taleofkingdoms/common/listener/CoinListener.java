@@ -56,7 +56,7 @@ public class CoinListener extends Listener {
                     //TODO assosciate owner with hunter entity
                     ItemHelper.dropCoins(entity);
                     instance.setWorthiness(playerEntity.getUuid(), instance.getWorthiness(playerEntity.getUuid()) + 1);
-                    if (playerEntity instanceof ServerPlayerEntity) {
+                    if (instance instanceof ServerConquestInstance) {
                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                         serverConquestInstance.sync((ServerPlayerEntity) playerEntity, null);
                     }
