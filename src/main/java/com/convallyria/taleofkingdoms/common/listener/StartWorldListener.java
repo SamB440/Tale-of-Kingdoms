@@ -68,11 +68,13 @@ public class StartWorldListener extends Listener {
                     ConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
-                        if ((instance == null || instance.getName() == null) || !instance.isLoaded())
+                        if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
                             MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
-                        else
+                        } else {
                             MinecraftClient.getInstance().openScreen(new ScreenContinueConquest(instance));
-                        TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                            System.out.println("Adding world: " + worldName);
+                            TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                        }
                     });
                 } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
                     e.printStackTrace();
