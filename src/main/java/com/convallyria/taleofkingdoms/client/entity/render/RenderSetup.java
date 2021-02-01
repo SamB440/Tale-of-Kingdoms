@@ -29,9 +29,10 @@ public final class RenderSetup {
         register(EntityTypes.BANKER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/banker.png"));
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
+        register(EntityTypes.GUILDCAPTAIN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildcaptain.png"));
     }
 
-    private void register(EntityType type, Identifier skin) {
+    private void register(EntityType<?> type, Identifier skin) {
         EntityRendererRegistry.INSTANCE.register(type, (dispatcher, context) ->
                 new TOKBipedRender<MobEntity, PlayerEntityModel<MobEntity>>(dispatcher,
                         new PlayerEntityModel<>(0.0F, false),

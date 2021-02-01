@@ -1,10 +1,8 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
-import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -37,7 +35,6 @@ public class GuildGuardEntity extends TOKEntity {
         }));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.5D, false));
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
-        applyEntityAI();
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {

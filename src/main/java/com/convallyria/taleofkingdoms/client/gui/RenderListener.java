@@ -3,7 +3,6 @@ package com.convallyria.taleofkingdoms.client.gui;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.event.InventoryDrawCallback;
 import com.convallyria.taleofkingdoms.common.listener.Listener;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 
@@ -12,7 +11,7 @@ public class RenderListener extends Listener {
     public RenderListener() {
         InventoryDrawCallback.EVENT.register((gui, matrices, textRenderer) -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
-                drawWithoutShadow(matrices, textRenderer, "Gold Coins: " + ((ClientConquestInstance) instance).getCoins(), gui.width / 2 - 50, gui.height / 2 - 100, 16763904);
+                drawWithoutShadow(matrices, textRenderer, "Gold Coins: " + instance.getCoins(), gui.width / 2 - 50, gui.height / 2 - 100, 16763904);
             });
         });
     }
