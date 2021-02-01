@@ -72,7 +72,7 @@ public class StartWorldListener extends Listener {
                             MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
                             MinecraftClient.getInstance().openScreen(new ScreenContinueConquest(instance));
-                            System.out.println("Adding world: " + worldName);
+                            TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }
                     });
