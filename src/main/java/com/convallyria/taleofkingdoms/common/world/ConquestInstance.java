@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
+import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
@@ -170,12 +171,8 @@ public abstract class ConquestInstance {
                     for (int y = bottomBlockY; y <= topBlockY; y++) {
                         BlockPos blockPos = new BlockPos(x, y, z);
                         BlockEntity tileEntity = player.getEntityWorld().getChunk(blockPos).getBlockEntity(blockPos);
-                        if (tileEntity instanceof SignBlockEntity) {
-                            SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
-                            Tag tag = signTileEntity.toInitialChunkDataTag().get("Text1");
-                            if (tag != null && tag.toText().getString().equals("'{\"text\":\"[Rest]\"}'")) {
-                                validRest.add(blockPos);
-                            }
+                        if (tileEntity instanceof BedBlockEntity) {
+                            validRest.add(blockPos);
                         }
                     }
                 }
