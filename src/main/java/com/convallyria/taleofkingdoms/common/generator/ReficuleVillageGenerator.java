@@ -19,6 +19,7 @@ import net.minecraft.world.ServerWorldAccess;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ReficuleVillageGenerator {
 
@@ -30,33 +31,34 @@ public class ReficuleVillageGenerator {
     private static final Identifier TOWER = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
 
     public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces) {
-        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, pos, ONE, BlockRotation.NONE);
-        onePiece.setOrientation(Direction.NORTH);
+        final Direction direction = Direction.random(ThreadLocalRandom.current());
+        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, pos.subtract(new Vec3i(0, 6, 0)), ONE, BlockRotation.NONE);
+        onePiece.setOrientation(direction);
         pieces.add(onePiece);
 
         BlockPos middlePos = pos.add(new Vec3i(48, 0, 0));
         ReficuleVillagePiece middlePiece = new ReficuleVillagePiece(manager, middlePos, MIDDLE, BlockRotation.NONE);
-        middlePiece.setOrientation(Direction.NORTH);
+        middlePiece.setOrientation(direction);
         pieces.add(middlePiece);
 
         BlockPos threePos = middlePos.add(new Vec3i(32, 0, 0));
         ReficuleVillagePiece threePiece = new ReficuleVillagePiece(manager, threePos, THREE, BlockRotation.NONE);
-        threePiece.setOrientation(Direction.NORTH);
+        threePiece.setOrientation(direction);
         pieces.add(threePiece);
 
         BlockPos middleTwoPos = middlePos.subtract(new Vec3i(0, 0, 36));
         ReficuleVillagePiece middleTwoPiece = new ReficuleVillagePiece(manager, middleTwoPos, MIDDLE_TWO, BlockRotation.NONE);
-        middleTwoPiece.setOrientation(Direction.NORTH);
+        middleTwoPiece.setOrientation(direction);
         pieces.add(middleTwoPiece);
 
         BlockPos fourPos = middleTwoPos.add(new Vec3i(0, 0, 13)).add(new Vec3i(32, 0, 0));
         ReficuleVillagePiece fourPiece = new ReficuleVillagePiece(manager, fourPos, FOUR, BlockRotation.NONE);
-        fourPiece.setOrientation(Direction.NORTH);
+        fourPiece.setOrientation(direction);
         pieces.add(fourPiece);
 
         BlockPos towerPos = pos.subtract(new Vec3i(0, 0, 32));
         ReficuleVillagePiece towerPiece = new ReficuleVillagePiece(manager, towerPos, TOWER, BlockRotation.NONE);
-        towerPiece.setOrientation(Direction.NORTH);
+        towerPiece.setOrientation(direction);
         pieces.add(towerPiece);
     }
 
@@ -98,6 +100,7 @@ public class ReficuleVillageGenerator {
         @Override
         protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
                                       BlockBox boundingBox) {
+            // We don't have any metadata to handle.
         }
     }
 }
