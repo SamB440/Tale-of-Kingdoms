@@ -14,6 +14,9 @@ public abstract class EntityPickupItemEvent {
 
     @Inject(method = "method_29499", at = @At(value = "INVOKE"))
     public void onPickup(ItemEntity itemEntity, CallbackInfo ci) {
-        EntityPickupItemCallback.EVENT.invoker().pickup(((PlayerEntity) (Object) this), itemEntity.getStack().copy());
+        //noinspection ConstantConditions - Mixin, injected into LivingEntity which can be instanceof PlayerEntity.
+        if ((Object) this instanceof PlayerEntity) {
+            EntityPickupItemCallback.EVENT.invoker().pickup(((PlayerEntity) (Object) this), itemEntity.getStack().copy());
+        }
     }
 }
