@@ -13,7 +13,9 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
+import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
@@ -77,6 +79,9 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final StructurePieceType REFICULE_VILLAGE = ReficuleVillageGenerator.ReficuleVillagePiece::new;
     private static final StructureFeature<DefaultFeatureConfig> REFICULE_VILLAGE_STRUCTURE = new ReficuleVillageFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> REFICULE_VILLAGE_CONFIGURED = REFICULE_VILLAGE_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
+    public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
+    private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
+    private static final ConfiguredStructureFeature<?, ?> GATEWAY_CONFIGURED = GATEWAY_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
 
     @Override
     public void onInitialize() {
@@ -92,20 +97,7 @@ public class TaleOfKingdoms implements ModInitializer {
             e.printStackTrace();
         }
 
-        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
-        Random random = ThreadLocalRandom.current();
-        int seed = random.nextInt(9000) + 1000;
-        FabricStructureBuilder.create(new Identifier(MODID, "reficule_village"), REFICULE_VILLAGE_STRUCTURE)
-                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(48, 8, seed)
-                .adjustsSurface()
-                .register();
-
-        RegistryKey<ConfiguredStructureFeature<?, ?>> reficuleVillage = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_WORLDGEN,
-                new Identifier(MODID, "reficule_village"));
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), REFICULE_VILLAGE_CONFIGURED);
-        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-                Biome.Category.JUNGLE, Biome.Category.ICY), reficuleVillage);
+        this.registerFeatures();
 
         FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity.createMobAttributes());
@@ -158,6 +150,36 @@ public class TaleOfKingdoms implements ModInitializer {
                 return 0;
             }));
         });
+    }
+
+    private void registerFeatures() {
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
+        Random random = ThreadLocalRandom.current();
+        int seed = random.nextInt(9000) + 1000;
+        FabricStructureBuilder.create(new Identifier(MODID, "reficule_village"), REFICULE_VILLAGE_STRUCTURE)
+                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
+                .defaultConfig(48, 8, seed)
+                .adjustsSurface()
+                .register();
+
+        RegistryKey<ConfiguredStructureFeature<?, ?>> reficuleVillage = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_WORLDGEN,
+                new Identifier(MODID, "reficule_village"));
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), REFICULE_VILLAGE_CONFIGURED);
+        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
+                Biome.Category.JUNGLE, Biome.Category.ICY), reficuleVillage);
+
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), GATEWAY);
+        FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
+                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
+                .defaultConfig(32, 8, seed - 256)
+                .adjustsSurface()
+                .register();
+
+        RegistryKey<ConfiguredStructureFeature<?, ?>> gateway = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_WORLDGEN,
+                new Identifier(MODID, "gateway"));
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), GATEWAY_CONFIGURED);
+        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
+                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA, Biome.Category.EXTREME_HILLS), gateway);
     }
 
     private Text parse(StringReader stringReader) throws CommandSyntaxException {
