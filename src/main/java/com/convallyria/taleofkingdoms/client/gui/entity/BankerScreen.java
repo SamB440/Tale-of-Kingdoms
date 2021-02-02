@@ -30,7 +30,7 @@ public class BankerScreen extends ScreenTOK {
     public BankerScreen(PlayerEntity player, BankerEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.banker.name");
         this.player = player;
-        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));
+        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), this.width / 2 + 50, this.height / 2 + 25, new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
         Translations.BANK_OPEN.send(player);

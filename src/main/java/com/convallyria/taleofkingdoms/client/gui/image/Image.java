@@ -10,8 +10,8 @@ public class Image implements IImage {
 
     private final ScreenTOK screen;
     private final Identifier image;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private final int[] dimensions;
 
     public Image(ScreenTOK screen, Identifier image, int x, int y, int[] dimensions) {
@@ -45,7 +45,8 @@ public class Image implements IImage {
 
     @Override
     public void render(MatrixStack matrices, Screen gui) {
-        MinecraftClient.getInstance().getTextureManager().bindTexture(image);
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.getTextureManager().bindTexture(image);
         gui.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight());
     }
 }

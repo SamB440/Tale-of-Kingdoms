@@ -58,6 +58,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TaleOfKingdoms implements ModInitializer {
 
@@ -91,9 +93,11 @@ public class TaleOfKingdoms implements ModInitializer {
         }
 
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
+        Random random = ThreadLocalRandom.current();
+        int seed = random.nextInt(9000) + 1000;
         FabricStructureBuilder.create(new Identifier(MODID, "reficule_village"), REFICULE_VILLAGE_STRUCTURE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(32, 8, 12345)
+                .defaultConfig(48, 8, seed)
                 .adjustsSurface()
                 .register();
 
