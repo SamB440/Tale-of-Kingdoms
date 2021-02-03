@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
 
 import java.util.List;
@@ -27,13 +28,18 @@ public class GatewayGenerator {
 
     public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces) {
         final Direction direction = Direction.random(ThreadLocalRandom.current());
-        GatewayPiece gateway = new GatewayPiece(manager, pos, GATEWAY, rotation);
+        GatewayPiece gateway = new GatewayPiece(manager, pos, GATEWAY, BlockRotation.NONE);
         gateway.setOrientation(direction);
         pieces.add(gateway);
 
-        GatewayPiece bars = new GatewayPiece(manager, pos.add(7, 4, 5), BARS, rotation);
-        bars.setOrientation(direction);
-        pieces.add(bars);
+        BlockPos startPos = pos.add(new Vec3i(7, 0, 5)).subtract(new Vec3i(0, 1, 0));
+        int times = pos.getY() - 1;
+        for (int i = 0; i < times; i++) {
+            GatewayPiece bars = new GatewayPiece(manager, startPos, BARS, BlockRotation.NONE);
+            bars.setOrientation(direction);
+            pieces.add(bars);
+            startPos = startPos.subtract(new Vec3i(0, 1, 0));
+        }
     }
 
     public static class GatewayPiece extends SimpleStructurePiece {

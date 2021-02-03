@@ -171,15 +171,14 @@ public class TaleOfKingdoms implements ModInitializer {
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), GATEWAY);
         FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(32, 8, seed - 256)
-                .adjustsSurface()
+                .defaultConfig(16, 8, seed - 256)
                 .register();
 
         RegistryKey<ConfiguredStructureFeature<?, ?>> gateway = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_WORLDGEN,
                 new Identifier(MODID, "gateway"));
         BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), GATEWAY_CONFIGURED);
         BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA, Biome.Category.EXTREME_HILLS), gateway);
+                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), gateway);
     }
 
     private Text parse(StringReader stringReader) throws CommandSyntaxException {

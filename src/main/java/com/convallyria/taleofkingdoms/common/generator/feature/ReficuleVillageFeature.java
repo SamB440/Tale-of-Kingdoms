@@ -31,7 +31,7 @@ public class ReficuleVillageFeature extends StructureFeature<DefaultFeatureConfi
     @Override
     protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom random, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, DefaultFeatureConfig config) {
         double percent = Math.random() * 100;
-        return percent >= 70;
+        return percent >= 50;
     }
 
     public static class Start extends StructureStart<DefaultFeatureConfig> {
