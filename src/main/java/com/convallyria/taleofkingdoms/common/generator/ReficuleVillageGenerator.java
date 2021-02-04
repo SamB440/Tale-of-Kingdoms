@@ -1,6 +1,9 @@
 package com.convallyria.taleofkingdoms.common.generator;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.generic.SurvivorEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.SimpleStructurePiece;
 import net.minecraft.structure.Structure;
@@ -100,7 +103,16 @@ public class ReficuleVillageGenerator {
         @Override
         protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
                                       BlockBox boundingBox) {
-            // We don't have any metadata to handle.
+            if (metadata.equals("Survivor")) {
+                double percent = Math.random() * 100;
+                if (percent > 20) {
+                    SurvivorEntity survivorEntity = EntityTypes.SURVIVOR.create(serverWorldAccess.toServerWorld());
+                    survivorEntity.setPersistent();
+                    survivorEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
+                    survivorEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
+                    serverWorldAccess.spawnEntityAndPassengers(survivorEntity);
+                }
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ public final class RenderSetup {
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
         register(EntityTypes.GUILDCAPTAIN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildcaptain.png"));
+        register(EntityTypes.SURVIVOR, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/survivor-updated.png"));
     }
 
     private void register(EntityType<?> type, Identifier skin) {
