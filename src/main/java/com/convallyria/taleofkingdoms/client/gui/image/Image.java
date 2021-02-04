@@ -1,6 +1,5 @@
 package com.convallyria.taleofkingdoms.client.gui.image;
 
-import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -8,15 +7,13 @@ import net.minecraft.util.Identifier;
 
 public class Image implements IImage {
 
-    private final ScreenTOK screen;
-    private final Identifier image;
+    private final Identifier imageIdentifier;
     private final int x;
     private final int y;
     private final int[] dimensions;
 
-    public Image(ScreenTOK screen, Identifier image, int x, int y, int[] dimensions) {
-        this.screen = screen;
-        this.image = image;
+    public Image(Identifier imageIdentifier, int x, int y, int[] dimensions) {
+        this.imageIdentifier = imageIdentifier;
         this.x = x;
         this.y = y;
         this.dimensions = dimensions;
@@ -24,15 +21,15 @@ public class Image implements IImage {
 
     @Override
     public Identifier getResourceLocation() {
-        return image;
-    }
-
-    public int getY() {
-        return y;
+        return imageIdentifier;
     }
 
     public int getX() {
         return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public int getWidth() {
@@ -46,7 +43,7 @@ public class Image implements IImage {
     @Override
     public void render(MatrixStack matrices, Screen gui) {
         MinecraftClient client = MinecraftClient.getInstance();
-        client.getTextureManager().bindTexture(image);
+        client.getTextureManager().bindTexture(imageIdentifier);
         gui.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight());
     }
 }

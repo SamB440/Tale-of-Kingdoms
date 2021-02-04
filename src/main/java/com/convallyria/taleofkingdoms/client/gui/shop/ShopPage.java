@@ -30,14 +30,10 @@ public final class ShopPage {
     }
 
     public void hide() {
-        buttonWidgets.forEach(shopButtonWidget -> {
-            shopButtonWidget.visible = false;
-        });
+        buttonWidgets.forEach(shopButtonWidget -> shopButtonWidget.visible = false);
     }
 
     public void show() {
-        buttonWidgets.forEach(shopButtonWidget -> {
-            shopButtonWidget.visible = true;
-        });
+        buttonWidgets.forEach(shopButtonWidget -> shopButtonWidget.visible = true);
     }
 }
