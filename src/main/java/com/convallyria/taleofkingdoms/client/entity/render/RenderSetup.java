@@ -30,14 +30,20 @@ public final class RenderSetup {
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
         register(EntityTypes.GUILDCAPTAIN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildcaptain.png"));
-        register(EntityTypes.SURVIVOR, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/survivor-updated.png"));
+        register(EntityTypes.SURVIVOR,
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerone.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagertwo.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerthree.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/mantwo.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manfive.png"));
     }
 
-    private void register(EntityType<?> type, Identifier skin) {
+    private void register(EntityType<?> type, Identifier... skins) {
         EntityRendererRegistry.INSTANCE.register(type, (dispatcher, context) ->
                 new TOKBipedRender<MobEntity, PlayerEntityModel<MobEntity>>(dispatcher,
                         new PlayerEntityModel<>(0.0F, false),
                         0.5F,
-                        skin));
+                        skins));
     }
 }
