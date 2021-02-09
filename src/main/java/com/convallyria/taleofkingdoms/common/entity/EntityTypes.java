@@ -3,7 +3,7 @@ package com.convallyria.taleofkingdoms.common.entity;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
-import com.convallyria.taleofkingdoms.common.entity.generic.SurvivorEntity;
+import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
@@ -85,9 +85,9 @@ public class EntityTypes {
             new Identifier(TaleOfKingdoms.MODID, "guild_captain"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildCaptainEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
-    public static final EntityType<SurvivorEntity> SURVIVOR = Registry.register(
+    public static final EntityType<LoneVillagerEntity> LONEVILLAGER = Registry.register(
             Registry.ENTITY_TYPE,
-            new Identifier(TaleOfKingdoms.MODID, "survivor"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, SurvivorEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+            new Identifier(TaleOfKingdoms.MODID, "lone_villager"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, LoneVillagerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 }

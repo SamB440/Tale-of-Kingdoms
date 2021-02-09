@@ -11,9 +11,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class SurvivorEntity extends TOKEntity {
+public class LoneVillagerEntity extends TOKEntity {
 
-    public SurvivorEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public LoneVillagerEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
     }
 

@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.generator;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.generic.SurvivorEntity;
+import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.SimpleStructurePiece;
@@ -106,7 +106,7 @@ public class ReficuleVillageGenerator {
             if (metadata.equals("Survivor")) {
                 double percent = Math.random() * 100;
                 if (percent > 20) {
-                    SurvivorEntity survivorEntity = EntityTypes.SURVIVOR.create(serverWorldAccess.toServerWorld());
+                    LoneVillagerEntity survivorEntity = EntityTypes.LONEVILLAGER.create(serverWorldAccess.toServerWorld());
                     survivorEntity.setPersistent();
                     survivorEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
                     survivorEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);

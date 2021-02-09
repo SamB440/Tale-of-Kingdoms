@@ -30,7 +30,7 @@ public final class RenderSetup {
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
         register(EntityTypes.GUILDCAPTAIN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildcaptain.png"));
-        register(EntityTypes.SURVIVOR,
+        register(EntityTypes.LONEVILLAGER,
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerone.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagertwo.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerthree.png"),
