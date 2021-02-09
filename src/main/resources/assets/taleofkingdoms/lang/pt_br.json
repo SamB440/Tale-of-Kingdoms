@@ -44,5 +44,6 @@
     "generic.taleofkingdoms.summon_citizens": "Chamando cidadãos do reino...",
     "generic.taleofkingdoms.new_citizen": "Um novo cidadão chegou: ",
     "generic.taleofkingdoms.darkness": "As Grandes Ondas de Escuridão estão vindo, construa suas forças e destrua o mal.",
-    "generic.taleofkingdoms.hero": "Seja o héroi que você nasceu para ser. A Guilda vai irá lhe preparar..."
+    "generic.taleofkingdoms.hero": "Seja o héroi que você nasceu para ser. A Guilda vai irá lhe preparar...",
+    "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild."
 }

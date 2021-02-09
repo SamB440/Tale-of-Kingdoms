@@ -49,5 +49,6 @@
     "entity.taleofkingdoms.city_builder": "Architekt",
     "entity.taleofkingdoms.innkeeper": "Oberżysta",
     "entity.taleofkingdoms.guild_master": "Mistrz Gildii",
-    "entity.taleofkingdoms.foodshop": "Sklep z jedzeniem"
+    "entity.taleofkingdoms.foodshop": "Sklep z jedzeniem",
+    "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild."
 }

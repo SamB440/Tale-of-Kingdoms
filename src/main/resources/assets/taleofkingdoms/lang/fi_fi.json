@@ -49,5 +49,6 @@
     "entity.taleofkingdoms.city_builder": "Rakentaja",
     "entity.taleofkingdoms.innkeeper": "Majatalon isäntä",
     "entity.taleofkingdoms.guild_master": "Kiltamestari",
-    "entity.taleofkingdoms.foodshop": "Ruoan myyjä"
+    "entity.taleofkingdoms.foodshop": "Ruoan myyjä",
+    "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild."
 }
