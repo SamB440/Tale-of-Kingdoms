@@ -1,9 +1,12 @@
 package com.convallyria.taleofkingdoms.common.entity.generic;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.MovementVaried;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -14,6 +17,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
 
@@ -47,6 +52,14 @@ public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
+        if (api.isPresent()) {
+            Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
+            if (instance.isPresent()
+                && instance.get().isInGuild(this)) {
+                return ActionResult.PASS;
+            }
+        }
         this.setMovementEnabled(true);
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         Translations.LOST_VILLAGER_THANK.send(player);
@@ -60,6 +73,6 @@ public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
 
     @Override
     public boolean isPushable() {
-        return true;
+        return this.isMovementEnabled();
     }
 }

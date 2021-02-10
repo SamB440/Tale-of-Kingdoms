@@ -11,6 +11,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +20,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LoneEntity extends TOKEntity {
 
@@ -35,7 +38,7 @@ public class LoneEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || player.world.isClient()) return ActionResult.FAIL;
         TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
             BlockPos startPos = instance.getStart();
             BlockPos endPos = instance.getEnd();
@@ -47,11 +50,17 @@ public class LoneEntity extends TOKEntity {
             });
 
             if (!loneVillagers.isEmpty()) {
+                List<BlockPos> sleepLocations = instance.getSleepLocations(player);
                 for (LoneVillagerEntity loneVillager : loneVillagers) {
-                    loneVillager.kill();
+                    loneVillager.setMovementEnabled(false);
+                    Random random = ThreadLocalRandom.current();
+                    BlockPos sleepLocation = sleepLocations.get(random.nextInt(sleepLocations.size()));
+                    loneVillager.refreshPositionAfterTeleport(sleepLocation.getX() + 0.5, sleepLocation.getY(), sleepLocation.getZ() + 0.5);
                 }
+
                 Translations.LONE_THANK.send(player);
-                instance.setWorthiness(player.getUuid(), instance.getWorthiness(player.getUuid()) + loneVillagers.size() * 10);
+                instance.setWorthiness(player.getUuid(), instance.getWorthiness(player.getUuid()) + loneVillagers.size() * 4);
+                player.sendMessage(new LiteralText("+" + loneVillagers.size() * 4 + " worthiness"), true);
             } else {
                 Translations.LONE_HELP.send(player);
             }
