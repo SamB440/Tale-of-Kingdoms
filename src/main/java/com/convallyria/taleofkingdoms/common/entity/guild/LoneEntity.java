@@ -46,12 +46,14 @@ public class LoneEntity extends TOKEntity {
             Vec3d end = new Vec3d(endPos.getX(), endPos.getY(), endPos.getZ());
             Box region = new Box(start, end);
             List<LoneVillagerEntity> loneVillagers = player.world.getEntitiesByType(EntityTypes.LONEVILLAGER, region, predicate -> {
-                return instance.isInGuild(predicate.getBlockPos());
+                return instance.isInGuild(predicate.getBlockPos())
+                        && !instance.getLoneVillagersWithRooms().contains(predicate.getUuid());
             });
 
             if (!loneVillagers.isEmpty()) {
                 List<BlockPos> sleepLocations = instance.getSleepLocations(player);
                 for (LoneVillagerEntity loneVillager : loneVillagers) {
+                    instance.addLoneVillagerWithRoom(loneVillager);
                     loneVillager.setMovementEnabled(false);
                     Random random = ThreadLocalRandom.current();
                     BlockPos sleepLocation = sleepLocations.get(random.nextInt(sleepLocations.size()));

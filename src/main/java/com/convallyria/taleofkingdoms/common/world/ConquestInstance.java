@@ -2,16 +2,15 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.google.gson.Gson;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.Tag;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +31,7 @@ public abstract class ConquestInstance {
     private final BlockPos start;
     private final BlockPos end;
     private final BlockPos origin;
+    private List<UUID> loneVillagersWithRooms;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -44,6 +44,7 @@ public abstract class ConquestInstance {
         this.start = start;
         this.end = end;
         this.origin = origin;
+        this.loneVillagersWithRooms = new ArrayList<>();
     }
 
     public String getWorld() {
@@ -72,6 +73,16 @@ public abstract class ConquestInstance {
 
     public BlockPos getOrigin() {
         return origin;
+    }
+
+    public List<UUID> getLoneVillagersWithRooms() {
+        if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
+        return loneVillagersWithRooms;
+    }
+
+    public void addLoneVillagerWithRoom(LoneVillagerEntity entity) {
+        if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
+        loneVillagersWithRooms.add(entity.getUuid());
     }
 
     public abstract int getCoins(UUID uuid);

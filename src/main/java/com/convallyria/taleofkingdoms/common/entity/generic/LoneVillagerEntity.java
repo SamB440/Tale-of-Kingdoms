@@ -56,10 +56,11 @@ public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
         if (api.isPresent()) {
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()
-                && instance.get().isInGuild(this)) {
-                return ActionResult.PASS;
+                && instance.get().isInGuild(this) && instance.get().getLoneVillagersWithRooms().contains(this.uuid)) {
+                return ActionResult.FAIL;
             }
         }
+
         this.setMovementEnabled(true);
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         Translations.LOST_VILLAGER_THANK.send(player);
