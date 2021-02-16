@@ -23,9 +23,7 @@ public class ShopButtonWidget extends ButtonWidget {
     private final TextRenderer textRenderer;
 
     public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull ShopScreenInterface shopScreen, int x, int y, TextRenderer textRenderer) {
-        super(x, y, 110, 20, new LiteralText("Buy Button"), button -> {
-            shopScreen.setSelectedItem(shopItem);
-        });
+        super(x, y, 110, 20, new LiteralText("Buy Button"), button -> shopScreen.setSelectedItem(shopItem));
         this.textRenderer = textRenderer;
         this.shopScreen = shopScreen;
         this.shopItem = shopItem;

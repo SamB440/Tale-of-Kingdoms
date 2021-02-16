@@ -22,4 +22,24 @@ public final class Shop {
     public void setCurrentPage(int currentPage) {
         this.currentPage = currentPage;
     }
+
+    public void nextPage() {
+        final int currentPage = getCurrentPage();
+        if (getPages().size() <= currentPage + 1) {
+            return;
+        }
+
+        getPages().get(currentPage).hide();
+        setCurrentPage(currentPage + 1);
+        getPages().get(getCurrentPage()).show();
+    }
+
+    public void previousPage() {
+        final int currentPage = getCurrentPage();
+        if (currentPage == 0) return;
+        pages.get(currentPage).hide();
+        this.currentPage = currentPage - 1;
+        setCurrentPage(currentPage - 1);
+        getPages().get(getCurrentPage()).show();
+    }
 }

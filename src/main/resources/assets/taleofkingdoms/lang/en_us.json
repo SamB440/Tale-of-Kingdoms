@@ -49,5 +49,7 @@
     "entity.taleofkingdoms.city_builder": "City Builder",
     "entity.taleofkingdoms.innkeeper": "Innkeeper",
     "entity.taleofkingdoms.guild_master": "Guild Master",
-    "entity.taleofkingdoms.foodshop": "Food Shop"
+    "entity.taleofkingdoms.foodshop": "Food Shop",
+    "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild.",
+    "entity_type.taleofkingdoms.lone.thank": "My king! Thank you for saving them! I will let the §eGuild Master§r know of your efforts."
 }

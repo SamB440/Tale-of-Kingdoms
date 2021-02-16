@@ -40,5 +40,7 @@
   "generic.taleofkingdoms.summon_citizens": "Burgen van het rijk oproepen...",
   "generic.taleofkingdoms.new_citizen": "Een nieuwe burger is gearriveerd: ",
   "generic.taleofkingdoms.darkness": "De grote getijden van Duisternis komen eraan. Bouw je strijdkrachten en overwin het kwaad.",
-  "generic.taleofkingdoms.hero": "Wees de held waarvoor je geboren bent. De Gilde zal je voorbereiden..."
+  "generic.taleofkingdoms.hero": "Wees de held waarvoor je geboren bent. De Gilde zal je voorbereiden...",
+  "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild.",
+  "entity_type.taleofkingdoms.lone.thank": "My king! Thank you for saving them! I will let the §eGuild Master§r know of your efforts."
 }

@@ -157,7 +157,6 @@ public class ScreenStartConquest extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         this.renderBackground(stack);
-
         drawCenteredString(stack, this.textRenderer, Translations.DARKNESS.getFormatted(), this.width / 2, this.height / 2, 0xFFFFFF);
         drawCenteredString(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, this.height / 2 + 10, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);

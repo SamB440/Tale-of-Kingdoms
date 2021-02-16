@@ -2,7 +2,6 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
-import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
@@ -14,13 +13,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-import java.util.Collections;
-import java.util.List;
-
 public class BankerScreen extends ScreenTOK {
 
     private final PlayerEntity player;
-    private final List<IImage> images;
     private final BankerEntity entity;
     private final ClientConquestInstance instance;
 
@@ -30,7 +25,7 @@ public class BankerScreen extends ScreenTOK {
     public BankerScreen(PlayerEntity player, BankerEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.banker.name");
         this.player = player;
-        this.images = Collections.singletonList(new Image(this, new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), 360, 100, new int[]{230, 230}));
+        addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), this.width / 2 + 50, this.height / 2 + 25, new int[]{230, 230}));
         this.entity = entity;
         this.instance = instance;
         Translations.BANK_OPEN.send(player);
@@ -98,7 +93,6 @@ public class BankerScreen extends ScreenTOK {
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        images.forEach(image -> image.render(stack, this));
         super.render(stack, mouseX, mouseY, delta);
         this.text.render(stack, mouseX, mouseY, delta);
         drawCenteredString(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);

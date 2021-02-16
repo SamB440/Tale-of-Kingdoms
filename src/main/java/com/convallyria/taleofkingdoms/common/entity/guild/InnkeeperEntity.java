@@ -27,7 +27,6 @@ public class InnkeeperEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 15.0F, 100F));
-        applyEntityAI();
     }
 
     @Environment(EnvType.CLIENT)

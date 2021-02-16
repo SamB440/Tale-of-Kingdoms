@@ -4,7 +4,9 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -31,7 +33,6 @@ public class FarmerEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
-        applyEntityAI();
     }
 
     @Override
@@ -41,7 +42,7 @@ public class FarmerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || player.world.isClient) return ActionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
         if (!TaleOfKingdoms.getAPI().isPresent()) return ActionResult.FAIL;
@@ -66,7 +67,7 @@ public class FarmerEntity extends TOKEntity {
         Translations.FARMER_TAKE_BREAD.send(player);
 
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
-        if (player.getServer() != null && !player.getServer().isDedicated()) {
+        if (instance instanceof ClientConquestInstance) {
             api.executeOnMain(() -> {
                 MinecraftServer server = player.getServer();
                 if (server != null) {
@@ -76,7 +77,7 @@ public class FarmerEntity extends TOKEntity {
                     }
                 }
             });
-        } else if (player.getServer() != null && player.getServer().isDedicated()) {
+        } else if (instance instanceof ServerConquestInstance) {
             api.executeOnDedicatedServer(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;

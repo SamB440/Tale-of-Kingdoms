@@ -1,12 +1,15 @@
 About
 =====
-*Tale of Kingdoms: A new Conquest* is a revival of the Tale of Kingdoms mod. Currently we are in pre-alpha. Content seen is based on original versions.
+*Tale of Kingdoms: A new Conquest* is a revival of the Tale of Kingdoms mod. 
+Currently we are in pre-alpha. Content seen is based on original versions.
 
 Links
 =====
 Website: https://www.convallyria.com
 
 Discord: https://discord.gg/fh62mxU
+
+Server (Coming soon): beta.islandearth.net
 
 FAQ
 =====
@@ -26,7 +29,7 @@ Q: Where can I donate?
 A: Currently you cannot donate simply because I have not set anything up. However, in the future you will be able to.
 
 Q: What versions will it be for?
-A: As I am the only one working on it, only 1.15+ will be supported.
+A: As only a few people are working on it, only 1.15+ will be supported.
 
 Compiling
 =======
@@ -49,8 +52,9 @@ To enable hot-swapping, do the following (in IntelliJ):
 
 You can reload a class by right clicking it in the explorer then selecting 'Recompile x.class'
 
-Run the `runClient` task by pressing `ALT + SHIFT + F9`, going to `tale-of-kingdoms [runClient]`, pressing the arrow and selecting debug. See things change as you code! Do not place WorldEdit in the mods folder - it's handled 
-by the `build.gradle`, however in some cases it is needed (?). You can try other mods but they are not guaranteed to work in a development environment.
+Run the `runClient` task by pressing `ALT + SHIFT + F9`, going to `tale-of-kingdoms [runClient]`, pressing the arrow and selecting debug. 
+See things change as you code! Do **not** place WorldEdit in the `run/mods` folder - it's handled 
+by the `build.gradle`. You can try other mods but they are not guaranteed to work in a development environment.
 
 Upgrading textures
 =====

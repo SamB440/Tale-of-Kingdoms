@@ -9,19 +9,33 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
+
 @Environment(EnvType.CLIENT)
 public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> extends BipedEntityRenderer<MobEntity, PlayerEntityModel<MobEntity>> {
 
-    private final Identifier DEFAULT_RES_LOC;
+    private final List<Identifier> skins;
+    private final Map<UUID, Identifier> defaultSkin;
 
     public TOKBipedRender(EntityRenderDispatcher renderManagerIn, PlayerEntityModel<MobEntity> modelBipedIn,
-                          float shadowSize, Identifier skinLocation) {
+                          float shadowSize, Identifier... skins) {
         super(renderManagerIn, modelBipedIn, shadowSize);
-        this.DEFAULT_RES_LOC = skinLocation;
+        this.skins = new ArrayList<>();
+        this.defaultSkin = new ConcurrentHashMap<>();
+        Collections.addAll(this.skins, skins);
     }
 
     @Override
     public Identifier getTexture(MobEntity entity) {
-        return DEFAULT_RES_LOC;
+        Random random = ThreadLocalRandom.current();
+        defaultSkin.putIfAbsent(entity.getUuid(), skins.get(random.nextInt(skins.size())));
+        return defaultSkin.get(entity.getUuid());
     }
 }
