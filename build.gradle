@@ -22,11 +22,12 @@ dependencies {
     testImplementation 'org.reflections:reflections:0.9.12'
 
     compile 'org.jetbrains:annotations:16.0.2'
-    modImplementation ('com.sk89q.worldedit:worldedit-fabric-mc1.16.3:7.3.0-SNAPSHOT') {
+    modImplementation ('com.sk89q.worldedit:worldedit-fabric-mc1.16.4:7.3.0-SNAPSHOT') {
         exclude group: 'com.google.guava'
         exclude group: 'com.google.code.gson'
         exclude group: 'it.unimi.dsi'
         exclude group: 'org.apache.logging.log4j'
+        exclude group: 'org.yaml'
     }
 
     //to change the versions see the gradle.properties file
