@@ -39,7 +39,8 @@ public enum Translations {
     DARKNESS("generic.taleofkingdoms.darkness"),
     HERO("generic.taleofkingdoms.hero"),
     LOST_VILLAGER_THANK("entity_type.taleofkingdoms.lostvillager.thank"),
-    LONE_THANK("entity_type.taleofkingdoms.lone.thank");
+    LONE_THANK("entity_type.taleofkingdoms.lone.thank"),
+    LOST_VILLAGER_GUILD_THANK("entity_type.taleofkingdoms.lostvillager.guild_thank");
     
     private final String key;
     
