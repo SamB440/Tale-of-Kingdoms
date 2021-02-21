@@ -45,7 +45,7 @@
     "generic.taleofkingdoms.new_citizen": "Um novo cidadão chegou: ",
     "generic.taleofkingdoms.darkness": "As Grandes Ondas de Escuridão estão vindo, construa suas forças e destrua o mal.",
     "generic.taleofkingdoms.hero": "Seja o héroi que você nasceu para ser. A Guilda vai irá lhe preparar...",
-    "entity_type.taleofkingdoms.lostvillager.thank": "Graças aos céus! Nossa vila foi atacada pelos refículos! Por favor, me guie de volta para a Guilda.",
-    "entity_type.taleofkingdoms.lone.thank": "Meu Rei! Obrigado por salvá-los! Deixarei o §eMestre da Guilda§r saber dos seus feitos.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me."
+    "entity_type.taleofkingdoms.lostvillager.thank": "Aldeão Perdido: Graças aos céus! Nossa vila foi atacada pelos refículos! Por favor, me guie de volta para a Guilda.",
+    "entity_type.taleofkingdoms.lone.thank": "Sobrevivente: Meu Rei! Obrigado por salvá-los! Deixarei o §eMestre da Guilda§r saber dos seus feitos.",
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Aldeão Perdido: Meu Rei! Obrigado por me salvar."
 }
