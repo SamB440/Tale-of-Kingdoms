@@ -50,7 +50,7 @@
     "entity.taleofkingdoms.innkeeper": "Oberżysta",
     "entity.taleofkingdoms.guild_master": "Mistrz Gildii",
     "entity.taleofkingdoms.foodshop": "Sklep z jedzeniem",
-    "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild.",
-    "entity_type.taleofkingdoms.lone.thank": "My king! Thank you for saving them! I will let the §eGuild Master§r know of your efforts.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me."
+    "entity_type.taleofkingdoms.lostvillager.thank": "Dzięki niebiosom! Nasza wioska zostałą zaatakowana przez te czarty. Proszę, poprowadź mnie do gildii.",
+    "entity_type.taleofkingdoms.lone.thank": "Mój Królu! Dziękuję za uratowanie ich! Powiem Mistrzowi Gildii o twoich staraniach.",
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Zagubiony osadnik: Mój Królu! Dziękuję za uratowanie mnie."
 }
