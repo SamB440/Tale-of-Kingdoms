@@ -14,6 +14,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
 import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
@@ -113,6 +114,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.GUILDCAPTAIN, GuildCaptainEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.LONEVILLAGER, LoneVillagerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity.createMobAttributes());
     }
 
     /**

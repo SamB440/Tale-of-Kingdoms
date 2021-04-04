@@ -14,6 +14,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -89,5 +90,11 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "lone_villager"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, LoneVillagerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<ReficuleSoldierEntity> REFICULE_SOLDIER = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "reficule_soldier"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ReficuleSoldierEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 }

@@ -37,6 +37,7 @@ public final class RenderSetup {
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/mantwo.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manfive.png"));
+        register(EntityTypes.REFICULE_SOLDIER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulesoldier.png"));
     }
 
     private void register(EntityType<?> type, Identifier... skins) {
