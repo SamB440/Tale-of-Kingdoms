@@ -32,7 +32,7 @@ public class KnightEntity extends TOKEntity {
         this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
             return livingEntity instanceof Monster;
         }));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.5D, false));
+        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         applyEntityAI();
     }

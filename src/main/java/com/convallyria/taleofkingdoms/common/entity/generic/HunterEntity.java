@@ -11,7 +11,6 @@ import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -32,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 public class HunterEntity extends TOKEntity {
 
     private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal(this, 1.0D, 20, 15.0F);
-    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 0.5D, false) {
+    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 0.6D, false) {
         public void stop() {
             super.stop();
             HunterEntity.this.setAttacking(false);
