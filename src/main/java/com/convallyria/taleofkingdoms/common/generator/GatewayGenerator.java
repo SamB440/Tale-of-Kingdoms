@@ -1,6 +1,9 @@
 package com.convallyria.taleofkingdoms.common.generator;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.SimpleStructurePiece;
 import net.minecraft.structure.Structure;
@@ -28,11 +31,11 @@ public class GatewayGenerator {
 
     public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces) {
         final Direction direction = Direction.random(ThreadLocalRandom.current());
-        GatewayPiece gateway = new GatewayPiece(manager, pos, GATEWAY, BlockRotation.NONE);
+        GatewayPiece gateway = new GatewayPiece(manager, pos.subtract(new Vec3i(0, 1, 0)), GATEWAY, BlockRotation.NONE);
         gateway.setOrientation(direction);
         pieces.add(gateway);
 
-        BlockPos startPos = pos.add(new Vec3i(7, 0, 5)).subtract(new Vec3i(0, 1, 0));
+        BlockPos startPos = pos.add(new Vec3i(7, 0, 5)).subtract(new Vec3i(0, 2, 0));
         int times = pos.getY() - 1;
         for (int i = 0; i < times; i++) {
             GatewayPiece bars = new GatewayPiece(manager, startPos, BARS, BlockRotation.NONE);
@@ -80,7 +83,13 @@ public class GatewayGenerator {
         @Override
         protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
                                       BlockBox boundingBox) {
-            // We don't have any metadata to handle.
+            if (metadata.equals("ReficuleSoldier")) {
+                ReficuleSoldierEntity reficuleSoldierEntity = EntityTypes.REFICULE_SOLDIER.create(serverWorldAccess.toServerWorld());
+                reficuleSoldierEntity.setPersistent();
+                reficuleSoldierEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
+                reficuleSoldierEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
+                serverWorldAccess.spawnEntityAndPassengers(reficuleSoldierEntity);
+            }
         }
     }
 }
