@@ -220,9 +220,9 @@ public abstract class ConquestInstance {
     }
 
     public void save(TaleOfKingdomsAPI api) {
-        File file = new File(api.getDataFolder() + "worlds/" + world + ".conquestworld");
+        File file = new File(api.getDataFolder() + "worlds" + File.separator + world + ".conquestworld");
         try (Writer writer = new FileWriter(file)) {
-            Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+            Gson gson = api.getMod().getGson();
             gson.toJson(this, writer);
             TaleOfKingdoms.LOGGER.info("Saved data");
         } catch (IOException e) {

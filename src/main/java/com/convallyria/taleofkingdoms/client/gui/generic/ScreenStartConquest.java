@@ -31,6 +31,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.util.Optional;
 
 public class ScreenStartConquest extends ScreenTOK {
 
@@ -62,12 +63,12 @@ public class ScreenStartConquest extends ScreenTOK {
             if (loading) return;
 
             button.setMessage(Translations.BUILDING_CASTLE.getTranslation());
-            if (!TaleOfKingdoms.getAPI().isPresent()) {
+            Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
+            if (!api.isPresent()) {
                 button.setMessage(new LiteralText("No API present"));
                 return;
             }
 
-            TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             if (server == null) {
                 button.setMessage(new LiteralText("No server present"));
@@ -77,8 +78,8 @@ public class ScreenStartConquest extends ScreenTOK {
             if (serverPlayer == null) return;
 
             // Load guild castle schematic
-            api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
-                api.executeOnServer(() -> {
+            api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
+                api.get().executeOnServer(() -> {
                     BlockVector3 max = oi.getRegion().getMaximumPoint();
                     BlockVector3 min = oi.getRegion().getMinimumPoint();
                     BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
@@ -130,7 +131,7 @@ public class ScreenStartConquest extends ScreenTOK {
                             }
                         }
 
-                        api.executeOnMain(() -> {
+                        api.get().executeOnMain(() -> {
                             button.setMessage(new LiteralText("Reloading chunks..."));
                             MinecraftClient.getInstance().worldRenderer.reload();
                             onClose();

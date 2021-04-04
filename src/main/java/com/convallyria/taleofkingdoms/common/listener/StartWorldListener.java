@@ -17,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -62,9 +61,8 @@ public class StartWorldListener extends Listener {
             if (loaded) {
                 // Already exists
                 Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
-                try {
-                    // Load from json into class
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                // Load from json into class
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     ConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
@@ -76,7 +74,7 @@ public class StartWorldListener extends Listener {
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }
                     });
-                } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+                } catch (JsonSyntaxException | JsonIOException | IOException e) {
                     e.printStackTrace();
                 }
                 return;

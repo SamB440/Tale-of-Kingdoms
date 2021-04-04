@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -55,8 +54,12 @@ public class GameInstanceListener extends Listener {
                         Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
                         try {
                             // Load from json into class
-                            BufferedReader reader = new BufferedReader(new FileReader(conquestFile));
-                            ConquestInstance instance = gson.fromJson(reader, ServerConquestInstance.class);
+                            ConquestInstance instance = null;
+                            try (BufferedReader reader = new BufferedReader(new FileReader(conquestFile))) {
+                                instance = gson.fromJson(reader, ServerConquestInstance.class);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             // Check if file exists, but values don't. Game probably crashed?
                             if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
                                 this.create(connection, api, player, server).thenAccept(done -> {
@@ -79,7 +82,7 @@ public class GameInstanceListener extends Listener {
                                     serverConquestInstance.sync(player, connection);
                                 });
                             }
-                        } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+                        } catch (JsonSyntaxException | JsonIOException e) {
                             e.printStackTrace();
                         }
                     }

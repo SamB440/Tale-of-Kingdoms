@@ -89,7 +89,7 @@ public class TaleOfKingdoms implements ModInitializer {
     public void onInitialize() {
         ItemRegistry.init();
 
-        File file = new File(this.getDataFolder() + "worlds/");
+        File file = new File(this.getDataFolder() + "worlds");
         if (!file.exists()) file.mkdirs();
         registerEvents();
         TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
@@ -124,7 +124,7 @@ public class TaleOfKingdoms implements ModInitializer {
      */
     @NotNull
     public String getDataFolder() {
-        return new File(".").getAbsolutePath() + "/mods/" + TaleOfKingdoms.MODID + "/";
+        return new File(".").getAbsolutePath() + File.separator + "mods" + File.separator + TaleOfKingdoms.MODID + File.separator;
     }
 
     /**
