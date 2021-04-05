@@ -63,7 +63,7 @@ public class ImprovedFollowTargetGoal<T extends LivingEntity> extends TrackTarge
                     continue;
                 }
 
-                if (entity.distanceTo(mob) < current.distanceTo(mob)) {
+                if (mob.squaredDistanceTo(entity) < mob.squaredDistanceTo(current)) {
                     current = entity;
                 }
             }
