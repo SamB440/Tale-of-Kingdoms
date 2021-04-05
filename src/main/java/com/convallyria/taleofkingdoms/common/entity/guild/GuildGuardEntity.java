@@ -1,7 +1,9 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
@@ -30,15 +32,17 @@ public class GuildGuardEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(2, new WanderAroundGuildGoal(this, 0.6D));
-        this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
-            return livingEntity instanceof Monster;
-        }));
+        this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
+        this.targetSelector.add(2, new FollowTargetGoal<>(this, MobEntity.class, 100,
+                true, true, livingEntity -> livingEntity instanceof Monster));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
         return TOKEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 50.0D)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D);
 
