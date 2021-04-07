@@ -44,7 +44,7 @@ public class ReficuleSoldierEntity extends TOKEntity implements Monster, Telepor
         return TOKEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 40.0D)
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 75.0D) // Big increase! Needs balancing?
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 16.0D)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5D);
     }
 
