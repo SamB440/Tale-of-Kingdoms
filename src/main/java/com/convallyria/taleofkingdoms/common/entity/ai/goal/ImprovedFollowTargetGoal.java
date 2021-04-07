@@ -63,13 +63,14 @@ public class ImprovedFollowTargetGoal<T extends LivingEntity> extends TrackTarge
                     continue;
                 }
 
-                if (mob.squaredDistanceTo(entity) < mob.squaredDistanceTo(current)) {
+                if (entity.squaredDistanceTo(mob) < current.squaredDistanceTo(mob)) {
                     current = entity;
                 }
             }
             this.targetEntity = current;
         } else {
-            this.targetEntity = this.mob.world.getClosestPlayer(this.targetPredicate, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            this.targetEntity = this.mob.world.getClosestPlayer(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(), this.getFollowRange(), true);
+            System.out.println(targetEntity);
         }
     }
 
