@@ -52,19 +52,19 @@ public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
         if (api.isPresent()) {
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()
                 && instance.get().isInGuild(this) && instance.get().getLoneVillagersWithRooms().contains(this.uuid)) {
-                Translations.LOST_VILLAGER_GUILD_THANK.send(player);
+                if (player.world.isClient()) Translations.LOST_VILLAGER_GUILD_THANK.send(player);
                 return ActionResult.PASS;
             }
         }
 
         this.setMovementEnabled(true);
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        Translations.LOST_VILLAGER_THANK.send(player);
+        if (player.world.isClient()) Translations.LOST_VILLAGER_THANK.send(player);
         return ActionResult.PASS;
     }
 
