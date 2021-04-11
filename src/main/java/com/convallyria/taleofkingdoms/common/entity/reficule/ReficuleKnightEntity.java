@@ -43,8 +43,8 @@ public class ReficuleKnightEntity extends TOKEntity implements Monster, Teleport
     public static DefaultAttributeContainer.Builder createMobAttributes() { // Slightly higher stats than guild guards.
         return TOKEntity.createMobAttributes()
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 40.0D)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 75.0D) // Big increase! Needs balancing?
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 12.0D)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 50.0D) // Big increase! Needs balancing?
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 9.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5D);
     }
 
@@ -54,6 +54,11 @@ public class ReficuleKnightEntity extends TOKEntity implements Monster, Teleport
         double y = entity.getY();
         double z = entity.getZ();
         return this.teleport(x, y, z, true);
+    }
+
+    @Override
+    public boolean isFireImmune() {
+        return true;
     }
 
     @Override

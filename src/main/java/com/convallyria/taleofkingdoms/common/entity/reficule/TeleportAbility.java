@@ -5,4 +5,8 @@ import net.minecraft.entity.Entity;
 public interface TeleportAbility {
 
     boolean teleportTo(Entity entity);
+
+    default boolean spreadFire() {
+        return false;
+    }
 }

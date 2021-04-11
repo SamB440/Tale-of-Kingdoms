@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.entity.generic;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -30,8 +31,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class HunterEntity extends TOKEntity implements RangedAttackMob {
 
-    private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal(this, 1.0D, 20, 16.0F);
-    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 1.2D, false) {
+    private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal(this, 0.6D, 20, 16.0F);
+    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 0.8D, false) {
         public void stop() {
             super.stop();
             HunterEntity.this.setAttacking(false);
@@ -56,6 +57,7 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
             return livingEntity instanceof Monster;
         }));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.add(3, new FollowPlayerGoal(this, 0.8F, 5, 30));
         applyEntityAI();
     }
 
