@@ -33,7 +33,9 @@ public class GuildGuardEntity extends TOKEntity {
         super.initGoals();
         this.goalSelector.add(2, new WanderAroundGuildGoal(this, 0.6D));
         this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
-        this.targetSelector.add(2, new FollowTargetGoal<>(this, MobEntity.class, 100,
+        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
+        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
+        this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100,
                 true, true, livingEntity -> livingEntity instanceof Monster));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));
         this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
