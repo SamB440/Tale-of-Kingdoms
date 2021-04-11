@@ -1,7 +1,9 @@
 package com.convallyria.taleofkingdoms.common.entity.generic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
@@ -29,7 +31,10 @@ public class KnightEntity extends TOKEntity {
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
+        this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, true));
+        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, true));
+        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, true));
+        this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
             return livingEntity instanceof Monster;
         }));
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));

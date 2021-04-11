@@ -38,9 +38,18 @@ public final class RenderSetup {
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/mantwo.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manfive.png"));
         register(EntityTypes.REFICULE_SOLDIER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulesoldier.png"));
+        register(EntityTypes.REFICULE_GUARDIAN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficuleguardian.png"));
+        register(EntityTypes.REFICULE_MAGE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png"));
     }
 
     private void register(EntityType<?> type, Identifier... skins) {
+        if (type == EntityTypes.REFICULE_MAGE) {
+            EntityRendererRegistry.INSTANCE.register(type, (dispatcher, context) ->
+                    new ReficuleMageEntityRenderer(dispatcher,
+                            new PlayerEntityModel<>(0.0F, false)));
+            return;
+        }
+
         EntityRendererRegistry.INSTANCE.register(type, (dispatcher, context) ->
                 new TOKBipedRender<MobEntity, PlayerEntityModel<MobEntity>>(dispatcher,
                         new PlayerEntityModel<>(0.0F, false),

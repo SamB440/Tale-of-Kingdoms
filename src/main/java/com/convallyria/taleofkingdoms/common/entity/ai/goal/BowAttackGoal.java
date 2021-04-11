@@ -35,7 +35,6 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     }
 
     public boolean canStart() {
-        System.out.println("aaa");
         return this.isHoldingBow();
     }
 
@@ -66,9 +65,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     @Override
     public void tick() {
         LivingEntity livingEntity = this.actor.getTarget();
-        System.out.println("tick");
         if (livingEntity != null) {
-            System.out.println("not null");
             double d = this.actor.squaredDistanceTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
             boolean bl = this.actor.getVisibilityCache().canSee(livingEntity);
             boolean bl2 = this.targetSeeingTicker > 0;
@@ -129,7 +126,6 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
             } else if (--this.coolDown <= 0 && this.targetSeeingTicker >= -60) {
                 this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.BOW));
             }
-
         }
     }
 }

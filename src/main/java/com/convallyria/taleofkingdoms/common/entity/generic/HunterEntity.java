@@ -1,9 +1,11 @@
 package com.convallyria.taleofkingdoms.common.entity.generic;
 
 import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -53,7 +55,10 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
+        this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, true));
+        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, true));
+        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, true));
+        this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
             return livingEntity instanceof Monster;
         }));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
@@ -124,12 +129,12 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
         }
     }
 
-
     @Override
     public boolean isPushable() {
         return true;
     }
 
+    @Override
     public boolean canUseRangedWeapon(RangedWeaponItem weapon) {
         return weapon == Items.BOW;
     }

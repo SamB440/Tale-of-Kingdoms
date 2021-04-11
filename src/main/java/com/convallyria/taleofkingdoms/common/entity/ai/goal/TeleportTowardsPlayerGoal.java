@@ -17,19 +17,19 @@ public class TeleportTowardsPlayerGoal extends FollowTargetGoal<PlayerEntity> {
 
     private final MobEntity entity;
     private PlayerEntity targetPlayer;
-    private final TargetPredicate staringPlayerPredicate;
+    private final TargetPredicate predicate;
     private long lastTick = 1;
 
     public TeleportTowardsPlayerGoal(TeleportAbility entity, @Nullable Predicate<LivingEntity> predicate) {
         super((MobEntity) entity, PlayerEntity.class, 10, false, false, predicate);
         this.entity = (MobEntity) entity;
-        this.staringPlayerPredicate = (new TargetPredicate()).setBaseMaxDistance(this.getFollowRange()).setPredicate(pred -> true);
+        this.predicate = (new TargetPredicate()).setBaseMaxDistance(this.getFollowRange()).setPredicate(pred -> true);
     }
 
     @Override
     public boolean canStart() {
         this.lastTick++;
-        this.targetPlayer = this.entity.world.getClosestPlayer(this.staringPlayerPredicate, this.entity);
+        this.targetPlayer = this.entity.world.getClosestPlayer(this.predicate, this.entity);
         return this.targetPlayer != null && lastTick > 100;
     }
 
@@ -45,7 +45,12 @@ public class TeleportTowardsPlayerGoal extends FollowTargetGoal<PlayerEntity> {
                     int spawnFire = this.mob.getRandom().nextInt(6);
                     if (spawnFire == 1) {
                         for (BlockPos blockPos : BlockUtils.getNearbyBlocksUnder(this.mob.getBlockPos(), 1)) {
-                            this.mob.world.setBlockState(blockPos, Blocks.FIRE.getDefaultState());
+                            BlockPos up = blockPos.add(0, 1, 0);
+                            System.out.println(up);
+                            if (!this.mob.world.getBlockState(up).isAir()) {
+                                continue;
+                            }
+                            this.mob.world.setBlockState(up, Blocks.FIRE.getDefaultState());
                         }
                     }
                 }
