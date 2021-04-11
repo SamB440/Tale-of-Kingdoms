@@ -54,7 +54,7 @@ public class ImprovedFollowTargetGoal<T extends LivingEntity> extends TrackTarge
             Box box = this.getSearchBox(this.getFollowRange());
             List<T> entities = this.mob.world.getEntitiesByType(entityType, box, entity -> {
                 if (checkVisibility) return mob.canSee(entity);
-                else return true;
+                return true;
             });
             LivingEntity current = null;
             for (T entity : entities) {
@@ -70,7 +70,6 @@ public class ImprovedFollowTargetGoal<T extends LivingEntity> extends TrackTarge
             this.targetEntity = current;
         } else {
             this.targetEntity = this.mob.world.getClosestPlayer(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(), this.getFollowRange(), true);
-            System.out.println(targetEntity);
         }
     }
 

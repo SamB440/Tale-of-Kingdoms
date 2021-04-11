@@ -3,9 +3,9 @@ package com.convallyria.taleofkingdoms.common.entity.generic;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
-import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -28,10 +28,10 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class HunterEntity extends TOKEntity {
+public class HunterEntity extends TOKEntity implements RangedAttackMob {
 
-    private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal(this, 1.0D, 20, 15.0F);
-    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 0.6D, false) {
+    private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal(this, 1.0D, 20, 16.0F);
+    private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 1.2D, false) {
         public void stop() {
             super.stop();
             HunterEntity.this.setAttacking(false);
@@ -52,13 +52,10 @@ public class HunterEntity extends TOKEntity {
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.goalSelector.add(3, new FollowPlayerGoal(this, 1.0F, 5, 30));
         this.targetSelector.add(1, new FollowTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> {
             return livingEntity instanceof Monster;
         }));
-        //this.goalSelector.add(2, new MeleeAttackGoal(this, 0.5D, false));
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
-        this.goalSelector.add(1, new BowAttackGoal(this, 0.5D, 20, 15.0F));
+        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         applyEntityAI();
     }
 
@@ -71,14 +68,14 @@ public class HunterEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.IRON_SWORD) {
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.BOW));
             this.updateAttackType();
-            Translations.HUNTER_BOW.send(player);
+            if (player.world.isClient()) Translations.HUNTER_BOW.send(player);
         } else {
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-            Translations.HUNTER_SWORD.send(player);
+            if (player.world.isClient()) Translations.HUNTER_SWORD.send(player);
             this.updateAttackType();
         }
         return ActionResult.PASS;
@@ -107,7 +104,7 @@ public class HunterEntity extends TOKEntity {
     }
 
     public void updateAttackType() {
-        if (this.world != null && this.world.isClient) {
+        if (this.world != null) {
             this.goalSelector.remove(this.meleeAttackGoal);
             this.goalSelector.remove(this.bowAttackGoal);
             ItemStack itemStack = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
@@ -118,11 +115,10 @@ public class HunterEntity extends TOKEntity {
                 }
 
                 this.bowAttackGoal.setAttackInterval(i);
-                this.goalSelector.add(4, this.bowAttackGoal);
+                this.goalSelector.add(1, this.bowAttackGoal);
             } else {
-                this.goalSelector.add(4, this.meleeAttackGoal);
+                this.goalSelector.add(1, this.meleeAttackGoal);
             }
-
         }
     }
 

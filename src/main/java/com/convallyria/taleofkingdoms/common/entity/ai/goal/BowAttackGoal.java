@@ -35,22 +35,26 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     }
 
     public boolean canStart() {
-        return this.actor.getTarget() == null && this.isHoldingBow();
+        System.out.println("aaa");
+        return this.isHoldingBow();
     }
 
     protected boolean isHoldingBow() {
         return this.actor.isHolding(Items.BOW);
     }
 
+    @Override
     public boolean shouldContinue() {
         return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow();
     }
 
+    @Override
     public void start() {
         super.start();
         this.actor.setAttacking(true);
     }
 
+    @Override
     public void stop() {
         super.stop();
         this.actor.setAttacking(false);
@@ -59,6 +63,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
         this.actor.clearActiveItem();
     }
 
+    @Override
     public void tick() {
         LivingEntity livingEntity = this.actor.getTarget();
         System.out.println("tick");
@@ -117,7 +122,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
                     int i = this.actor.getItemUseTime();
                     if (i >= 20) {
                         this.actor.clearActiveItem();
-                        ((RangedAttackMob)this.actor).attack(livingEntity, BowItem.getPullProgress(i));
+                        this.actor.attack(livingEntity, BowItem.getPullProgress(i));
                         this.coolDown = this.attackInterval;
                     }
                 }
