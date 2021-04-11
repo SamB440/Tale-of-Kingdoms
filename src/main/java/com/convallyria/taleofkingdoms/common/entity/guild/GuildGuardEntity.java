@@ -47,7 +47,6 @@ public class GuildGuardEntity extends TOKEntity {
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D);
-
     }
 
     @Override
