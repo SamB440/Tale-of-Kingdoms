@@ -7,7 +7,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.IllagerEntity;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 import java.util.EnumSet;
 
-public abstract class SpellcastingEntity extends IllagerEntity {
+public abstract class SpellcastingEntity extends HostileEntity {
 
     private static final TrackedData<Byte> SPELL;
     protected int spellTicks;
@@ -26,6 +26,19 @@ public abstract class SpellcastingEntity extends IllagerEntity {
         super(entityType, world);
         this.spell = SpellcastingEntity.Spell.NONE;
     }
+
+    @Override
+    public boolean cannotDespawn() {
+        return true;
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return false;
+    }
+
+    @Override
+    public void checkDespawn() { }
 
     protected void initDataTracker() {
         super.initDataTracker();
@@ -47,7 +60,7 @@ public abstract class SpellcastingEntity extends IllagerEntity {
         if (this.isSpellcasting()) {
             return State.SPELLCASTING;
         } else {
-            return this.isCelebrating() ? State.CELEBRATING : State.CROSSED;
+            return State.CROSSED;
         }
     }
 
@@ -101,6 +114,21 @@ public abstract class SpellcastingEntity extends IllagerEntity {
     }
 
     public abstract SoundEvent getCastSpellSound();
+
+    @Environment(EnvType.CLIENT)
+    public enum State {
+        CROSSED,
+        ATTACKING,
+        SPELLCASTING,
+        BOW_AND_ARROW,
+        CROSSBOW_HOLD,
+        CROSSBOW_CHARGE,
+        CELEBRATING,
+        NEUTRAL;
+
+        State() {
+        }
+    }
 
     static {
         SPELL = DataTracker.registerData(SpellcastingEntity.class, TrackedDataHandlerRegistry.BYTE);
