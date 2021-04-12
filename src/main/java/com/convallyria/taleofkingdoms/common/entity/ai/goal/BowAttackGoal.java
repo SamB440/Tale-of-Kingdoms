@@ -35,7 +35,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     }
 
     public boolean canStart() {
-        return this.isHoldingBow();
+        return this.actor.getTarget() != null && this.isHoldingBow();
     }
 
     protected boolean isHoldingBow() {
@@ -44,7 +44,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
 
     @Override
     public boolean shouldContinue() {
-        return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow();
+        return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow() && this.actor.getTarget() != null;
     }
 
     @Override

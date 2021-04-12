@@ -198,14 +198,6 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     }
 
     @Override
-    public SoundEvent getCelebratingSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
-    }
-
-    @Override
-    public void addBonusForWave(int wave, boolean unused) { }
-
-    @Override
     public void attack(LivingEntity target, float pullProgress) {
         ItemStack itemStack = this.getArrowType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
         PersistentProjectileEntity persistentProjectileEntity = ProjectileUtil.createArrowProjectile(this, itemStack, pullProgress);
