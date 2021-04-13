@@ -5,7 +5,6 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
@@ -18,19 +17,20 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.ServerWorldAccess;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Constructor;
 import java.util.Optional;
 
 public class ScreenStartConquest extends ScreenTOK {
@@ -116,15 +116,15 @@ public class ScreenStartConquest extends ScreenTOK {
                                             Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
                                             String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", ""); // Doesn't seem to be a way to get the plain string...
                                             button.setMessage(new LiteralText(Translations.NEW_CITIZEN.getFormatted() + entityName));
-                                            Class<? extends TOKEntity> entity = (Class<? extends TOKEntity>) Class.forName("com.convallyria.taleofkingdoms.common.entity.guild." + entityName + "Entity");
-                                            Constructor constructor = entity.getConstructor(EntityType.class, World.class);
+                                            ServerWorldAccess serverWorldAccess = serverPlayer.getServerWorld();
                                             EntityType type = (EntityType) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
-                                            TOKEntity toSpawn = (TOKEntity) constructor.newInstance(type, serverPlayer.getServer().getOverworld());
-                                            toSpawn.setPos(x + 0.5, y, z + 0.5);
-                                            serverPlayer.getServer().getOverworld().spawnEntity(toSpawn);
+                                            MobEntity entity = (MobEntity) type.create(serverWorldAccess.toServerWorld());
+                                            BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
+                                            entity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
+                                            entity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
+                                            serverWorldAccess.spawnEntityAndPassengers(entity);
                                             serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
-                                            toSpawn.refreshPositionAfterTeleport(x + 0.5, y, z + 0.5);
-                                            TaleOfKingdoms.LOGGER.info("Spawned entity " + entityName + " " + toSpawn.toString() + " " + toSpawn.getX() + "," + toSpawn.getY() + "," + toSpawn.getZ());
+                                            TaleOfKingdoms.LOGGER.info("Spawned entity " + entityName + " " + entity.toString() + " " + entity.getX() + "," + entity.getY() + "," + entity.getZ());
                                         }
                                     }
                                 }
