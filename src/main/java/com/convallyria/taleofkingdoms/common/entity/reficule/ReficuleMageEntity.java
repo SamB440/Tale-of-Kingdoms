@@ -108,6 +108,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         }));
         this.targetSelector.add(3, (new FollowTargetGoal(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
         this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
         this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
     }
 

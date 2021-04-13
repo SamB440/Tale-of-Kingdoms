@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.FarmerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildArcherEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
@@ -111,6 +112,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.GUILDGUARD, GuildGuardEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDARCHER, GuildArcherEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, BankerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.LONE, LoneEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes());

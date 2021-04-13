@@ -26,6 +26,9 @@ public final class RenderSetup {
         register(EntityTypes.INNKEEPER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"));
         register(EntityTypes.HUNTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/hunter2.png"));
         register(EntityTypes.GUILDGUARD, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmember.png"));
+        register(EntityTypes.GUILDARCHER,
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/guildarcherone.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/guildarchertwo.png"));
         register(EntityTypes.BANKER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/banker.png"));
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
@@ -45,7 +48,7 @@ public final class RenderSetup {
     private void register(EntityType<?> type, Identifier... skins) {
         if (type == EntityTypes.REFICULE_MAGE) {
             EntityRendererRegistry.INSTANCE.register(type, (dispatcher, context) ->
-                    new ReficuleMageEntityRenderer(dispatcher,
+                    new ReficuleMageEntityRenderer<>(dispatcher,
                             new PlayerEntityModel<>(0.0F, false)));
             return;
         }
