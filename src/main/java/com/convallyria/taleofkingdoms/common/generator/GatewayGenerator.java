@@ -2,6 +2,8 @@ package com.convallyria.taleofkingdoms.common.generator;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
+import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.nbt.CompoundTag;
@@ -83,12 +85,28 @@ public class GatewayGenerator {
         @Override
         protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
                                       BlockBox boundingBox) {
-            if (metadata.equals("ReficuleSoldier")) {
-                ReficuleSoldierEntity reficuleSoldierEntity = EntityTypes.REFICULE_SOLDIER.create(serverWorldAccess.toServerWorld());
-                reficuleSoldierEntity.setPersistent();
-                reficuleSoldierEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
-                reficuleSoldierEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
-                serverWorldAccess.spawnEntityAndPassengers(reficuleSoldierEntity);
+            switch (metadata) {
+                case "ReficuleSoldier":
+                    ReficuleSoldierEntity reficuleSoldierEntity = EntityTypes.REFICULE_SOLDIER.create(serverWorldAccess.toServerWorld());
+                    reficuleSoldierEntity.setPersistent();
+                    reficuleSoldierEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
+                    reficuleSoldierEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
+                    serverWorldAccess.spawnEntityAndPassengers(reficuleSoldierEntity);
+                    break;
+                case "ReficuleArcher":
+                    ReficuleGuardianEntity reficuleGuardianEntity = EntityTypes.REFICULE_GUARDIAN.create(serverWorldAccess.toServerWorld());
+                    reficuleGuardianEntity.setPersistent();
+                    reficuleGuardianEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
+                    reficuleGuardianEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
+                    serverWorldAccess.spawnEntityAndPassengers(reficuleGuardianEntity);
+                    break;
+                case "ReficuleMage":
+                    ReficuleMageEntity reficuleMageEntity = EntityTypes.REFICULE_MAGE.create(serverWorldAccess.toServerWorld());
+                    reficuleMageEntity.setPersistent();
+                    reficuleMageEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
+                    reficuleMageEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
+                    serverWorldAccess.spawnEntityAndPassengers(reficuleMageEntity);
+                    break;
             }
         }
     }
