@@ -22,12 +22,14 @@ import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
+import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.listener.BlockListener;
 import com.convallyria.taleofkingdoms.common.listener.CoinListener;
 import com.convallyria.taleofkingdoms.common.listener.DeleteWorldListener;
 import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
+import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
@@ -46,6 +48,7 @@ import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Identifier;
@@ -87,6 +90,8 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
     private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> GATEWAY_CONFIGURED = GATEWAY_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
+
+    public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("gateway", GatewayStructureProcessor.CODEC);
 
     @Override
     public void onInitialize() {
@@ -146,6 +151,7 @@ public class TaleOfKingdoms implements ModInitializer {
         new CoinListener();
         new SleepListener();
         new MobSpawnListener();
+        new MobDeathListener();
         new BlockListener();
         new KingdomListener();
         new DeleteWorldListener();

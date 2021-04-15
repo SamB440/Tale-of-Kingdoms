@@ -2,7 +2,11 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.google.gson.Gson;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -10,8 +14,16 @@ import com.sk89q.worldedit.regions.Region;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.structure.Structure;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
+import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.ServerWorldAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -22,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
 
@@ -32,6 +45,10 @@ public abstract class ConquestInstance {
     private final BlockPos end;
     private final BlockPos origin;
     private List<UUID> loneVillagersWithRooms;
+    private boolean underAttack;
+    private final List<BlockPos> reficuleAttackLocations;
+    private final List<UUID> reficuleAttackers;
+    private boolean hasRebuilt;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -45,6 +62,8 @@ public abstract class ConquestInstance {
         this.end = end;
         this.origin = origin;
         this.loneVillagersWithRooms = new ArrayList<>();
+        this.reficuleAttackLocations = new ArrayList<>();
+        this.reficuleAttackers = new ArrayList<>();
     }
 
     public String getWorld() {
@@ -75,6 +94,52 @@ public abstract class ConquestInstance {
         return origin;
     }
 
+    public boolean canAttack() {
+        return canAttack(null);
+    }
+
+    public boolean canAttack(UUID uuid) {
+        return getWorthiness(uuid) == (1500.0F / 2);
+    }
+
+    public boolean hasAttacked() {
+        return !isUnderAttack() && getWorthiness(null) > 750;
+    }
+
+    public void attack(PlayerEntity player, ServerWorldAccess world) {
+        if (canAttack()) {
+            GuildMasterEntity guildMasterEntity = EntityTypes.GUILDMASTER.create(world.toServerWorld());
+            guildMasterEntity.setPersistent();
+            guildMasterEntity.refreshPositionAndAngles(player.getBlockPos(), 0.0F, 0.0F);
+            guildMasterEntity.initialize(world, world.getLocalDifficulty(player.getBlockPos()), SpawnReason.TRIGGERED, null, null);
+            world.spawnEntityAndPassengers(guildMasterEntity);
+            System.out.println(guildMasterEntity.getBlockPos());
+            this.underAttack = true;
+            Translations.GUILDMASTER_HELP.send(player);
+            guildMasterEntity.setCopyGoals();
+
+            Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
+            Structure structure = world.toServerWorld().getStructureManager().getStructure(gateway);
+            for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
+                StructurePlacementData structurePlacementData = new StructurePlacementData();
+                structurePlacementData.addProcessor(GatewayStructureProcessor.INSTANCE);
+                structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
+                structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
+                BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
+                System.out.println("placing at " + newPos);
+                structure.place(world, newPos, structurePlacementData, ThreadLocalRandom.current());
+            }
+        }
+    }
+
+    public boolean isUnderAttack() {
+        return underAttack;
+    }
+
+    public void setUnderAttack(boolean underAttack) {
+        this.underAttack = underAttack;
+    }
+
     public List<UUID> getLoneVillagersWithRooms() {
         if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
         return loneVillagersWithRooms;
@@ -83,6 +148,22 @@ public abstract class ConquestInstance {
     public void addLoneVillagerWithRoom(LoneVillagerEntity entity) {
         if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
         loneVillagersWithRooms.add(entity.getUuid());
+    }
+
+    public List<BlockPos> getReficuleAttackLocations() {
+        return reficuleAttackLocations;
+    }
+
+    public List<UUID> getReficuleAttackers() {
+        return reficuleAttackers;
+    }
+
+    public boolean hasRebuilt() {
+        return hasRebuilt;
+    }
+
+    public void setRebuilt(boolean hasRebuilt) {
+        this.hasRebuilt = hasRebuilt;
     }
 
     public abstract int getCoins(UUID uuid);
