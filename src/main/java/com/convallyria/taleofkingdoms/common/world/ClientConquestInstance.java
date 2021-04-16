@@ -139,7 +139,7 @@ public class ClientConquestInstance extends ConquestInstance {
                                     String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
                                     BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
                                     try {
-                                        EntityType<?> type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
+                                        EntityType type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
                                         if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
                                             Optional<? extends Entity> guildEntity = getGuildEntity(world, type);
                                             if (type == EntityTypes.GUILDMASTER) {

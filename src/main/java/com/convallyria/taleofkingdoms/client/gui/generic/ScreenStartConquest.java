@@ -117,7 +117,7 @@ public class ScreenStartConquest extends ScreenTOK {
                                             String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
                                             button.setMessage(new LiteralText(Translations.NEW_CITIZEN.getFormatted() + entityName));
                                             BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
-                                            EntityType<?> type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
+                                            EntityType type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
                                             EntityUtils.spawnEntity(type, serverPlayer, pos);
                                             serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
                                         } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")) {

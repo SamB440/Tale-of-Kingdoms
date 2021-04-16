@@ -10,12 +10,12 @@ import net.minecraft.world.ServerWorldAccess;
 
 public class EntityUtils {
 
-    public static MobEntity spawnEntity(EntityType<?> type, ServerPlayerEntity serverPlayer, BlockPos pos) {
+    public static <T extends MobEntity> T spawnEntity(EntityType<T> type, ServerPlayerEntity serverPlayer, BlockPos pos) {
         return spawnEntity(type, serverPlayer.getServerWorld(), pos);
     }
 
-    public static MobEntity spawnEntity(EntityType<?> type, ServerWorldAccess serverWorldAccess, BlockPos pos) {
-        MobEntity entity = (MobEntity) type.create(serverWorldAccess.toServerWorld());
+    public static <T extends MobEntity> T spawnEntity(EntityType<T> type, ServerWorldAccess serverWorldAccess, BlockPos pos) {
+        T entity = type.create(serverWorldAccess.toServerWorld());
         if (entity == null) return null;
         entity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
         entity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);

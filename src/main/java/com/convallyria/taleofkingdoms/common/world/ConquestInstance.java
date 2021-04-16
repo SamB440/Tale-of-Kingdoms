@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
+import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.google.gson.Gson;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
@@ -15,7 +16,6 @@ import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
@@ -102,7 +102,7 @@ public abstract class ConquestInstance {
     }
 
     public boolean canAttack(UUID uuid) {
-        return getWorthiness(uuid) >= (1500.0F / 2) && !isUnderAttack();
+        return getWorthiness(uuid) >= (1500.0F / 2) && !isUnderAttack() && !hasRebuilt;
     }
 
     public boolean hasAttacked() {
@@ -111,12 +111,7 @@ public abstract class ConquestInstance {
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
         if (canAttack()) {
-            GuildMasterEntity guildMasterEntity = EntityTypes.GUILDMASTER.create(world.toServerWorld());
-            guildMasterEntity.setPersistent();
-            guildMasterEntity.refreshPositionAndAngles(player.getBlockPos(), 0.0F, 0.0F);
-            guildMasterEntity.initialize(world, world.getLocalDifficulty(player.getBlockPos()), SpawnReason.TRIGGERED, null, null);
-            world.spawnEntityAndPassengers(guildMasterEntity);
-            System.out.println(guildMasterEntity.getBlockPos());
+            GuildMasterEntity guildMasterEntity = EntityUtils.spawnEntity(EntityTypes.GUILDMASTER, world, player.getBlockPos());
             this.underAttack = true;
             Translations.GUILDMASTER_HELP.send(player);
             guildMasterEntity.setCopyGoals();
@@ -129,7 +124,6 @@ public abstract class ConquestInstance {
                 structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
                 structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
                 BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
-                System.out.println("placing at " + newPos);
                 structure.place(world, newPos, structurePlacementData, ThreadLocalRandom.current());
             }
         }

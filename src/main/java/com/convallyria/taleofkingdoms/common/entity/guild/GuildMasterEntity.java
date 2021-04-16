@@ -127,11 +127,7 @@ public class GuildMasterEntity extends TOKEntity {
 
                     if (stack != null) {
                         playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                        try {
-                            this.kill();
-                            this.remove();
-                        } catch (Exception ignored) { } // JUST DIE PLEASE
-                        System.out.println("kill");
+                        serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
                         ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
                         clientConquestInstance.rebuild(serverPlayerEntity, api, true);
                         instance.setRebuilt(true);
