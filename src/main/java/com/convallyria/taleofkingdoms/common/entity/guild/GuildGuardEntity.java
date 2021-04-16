@@ -67,7 +67,7 @@ public class GuildGuardEntity extends TOKEntity {
                             countdown[0] = countdown[0] - 1;
                         }, 3, 0, 20);
                         api.getScheduler().queue(server -> {
-                            final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true)
+                            final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true);
                             this.targetSelector.add(0, goal);
                             if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_BEGIN.send(player);
                             api.getScheduler().queue(server2 -> {
