@@ -120,11 +120,12 @@ public class ScreenStartConquest extends ScreenTOK {
                                             EntityType<?> type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
                                             EntityUtils.spawnEntity(type, serverPlayer, pos);
                                             serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
-                                        } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")){
+                                        } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")) {
                                             Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
                                             String event = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
                                             if (event.equals("ReficuleGateway")) {
                                                 instance.getReficuleAttackLocations().add(blockPos);
+                                                serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
                                             }
                                         }
                                     }

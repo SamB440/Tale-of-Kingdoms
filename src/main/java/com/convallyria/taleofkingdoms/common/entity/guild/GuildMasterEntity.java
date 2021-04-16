@@ -37,6 +37,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public class GuildMasterEntity extends TOKEntity {
 
     private boolean givenSword;
@@ -76,6 +78,7 @@ public class GuildMasterEntity extends TOKEntity {
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
         this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100,
                 true, true, livingEntity -> livingEntity instanceof Monster));
+        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
     @Override
@@ -96,6 +99,7 @@ public class GuildMasterEntity extends TOKEntity {
                     }
                 });
             }
+            if (!this.world.isClient()) return ActionResult.FAIL;
 
             if (instance.getReficuleAttackers().size() == 0) {
                 Translations.GUILDMASTER_REBUILD.send(player);
@@ -123,10 +127,15 @@ public class GuildMasterEntity extends TOKEntity {
 
                     if (stack != null) {
                         playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
+                        try {
+                            this.kill();
+                            this.remove();
+                        } catch (Exception ignored) { } // JUST DIE PLEASE
+                        System.out.println("kill");
                         ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
                         clientConquestInstance.rebuild(serverPlayerEntity, api, true);
-                        this.kill();
                         instance.setRebuilt(true);
+                        Translations.GUILDMASTER_THANK_YOU.send(player);
                     } else {
                         Translations.GUILDMASTER_REBUILD.send(player);
                     }
@@ -134,6 +143,7 @@ public class GuildMasterEntity extends TOKEntity {
             });
             return ActionResult.SUCCESS;
         }
+        if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
         if (instance instanceof ClientConquestInstance) this.openScreen(player, (ClientConquestInstance) instance);
         return ActionResult.PASS;
     }
@@ -154,6 +164,17 @@ public class GuildMasterEntity extends TOKEntity {
     private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
         GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
         MinecraftClient.getInstance().openScreen(screen);
+    }
+
+    @Override
+    public boolean isFireImmune() {
+        if (TaleOfKingdoms.getAPI().isPresent()) {
+            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
+            if (instance.isPresent()) {
+                return instance.get().isUnderAttack();
+            }
+        }
+        return false;
     }
 
     @Override

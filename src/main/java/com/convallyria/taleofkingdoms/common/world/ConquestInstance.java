@@ -14,6 +14,7 @@ import com.sk89q.worldedit.regions.Region;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.structure.Structure;
@@ -22,8 +23,10 @@ import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -99,7 +102,7 @@ public abstract class ConquestInstance {
     }
 
     public boolean canAttack(UUID uuid) {
-        return getWorthiness(uuid) == (1500.0F / 2);
+        return getWorthiness(uuid) >= (1500.0F / 2) && !isUnderAttack();
     }
 
     public boolean hasAttacked() {
@@ -236,6 +239,16 @@ public abstract class ConquestInstance {
 
     public void addWorthiness(int worthiness) {
         addWorthiness(null, worthiness);
+    }
+
+    public Optional<GuildMasterEntity> getGuildMaster(World world) {
+        Box box = new Box(getStart(), getEnd());
+        return world.getEntitiesByType(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.isFireImmune()).stream().findFirst();
+    }
+
+    public Optional<? extends Entity> getGuildEntity(World world, EntityType<?> type) {
+        Box box = new Box(getStart(), getEnd());
+        return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();
     }
 
     private List<BlockPos> validRest;

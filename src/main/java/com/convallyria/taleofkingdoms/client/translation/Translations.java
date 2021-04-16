@@ -18,6 +18,7 @@ public enum Translations {
     GUILDMASTER_STAY_CLOSE("entity_type.taleofkingdoms.guildmaster.stay_close"),
     GUILDMASTER_KILL_REFICULES("entity_type.taleofkingdoms.guildmaster.kill_reficules"),
     GUILDMASTER_REBUILD("entity_type.taleofkingdoms.guildmaster.rebuild"),
+    GUILDMASTER_THANK_YOU("entity_type.taleofkingdoms.guildmaster.thank_you"),
     CITYBUILDER_MESSAGE("entity_type.taleofkingdoms.citybuilder.message"),
     INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
     INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),

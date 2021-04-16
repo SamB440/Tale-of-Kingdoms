@@ -13,10 +13,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -124,7 +126,8 @@ public class ClientConquestInstance extends ConquestInstance {
                     for (int z = bottomBlockZ; z <= topBlockZ; z++) {
                         for (int y = bottomBlockY; y <= topBlockY; y++) {
                             BlockPos blockPos = new BlockPos(x, y, z);
-                            Chunk chunk = serverPlayerEntity.getServerWorld().getChunk(blockPos);
+                            World world = serverPlayerEntity.getServerWorld();
+                            Chunk chunk = world.getChunk(blockPos);
                             BlockEntity tileEntity = chunk.getBlockEntity(blockPos);
                             if (tileEntity instanceof SignBlockEntity) {
                                 SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
@@ -137,12 +140,27 @@ public class ClientConquestInstance extends ConquestInstance {
                                     BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
                                     try {
                                         EntityType<?> type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
-                                        EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
+                                        if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
+                                            Optional<? extends Entity> guildEntity = getGuildEntity(world, type);
+                                            if (type == EntityTypes.GUILDMASTER) {
+                                                guildEntity = getGuildEntity(serverPlayerEntity.getServerWorld(), type);
+                                            }
+
+                                            if (!guildEntity.isPresent()) {
+                                                EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
+                                            }
+                                        } else EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
                                     } catch (IllegalAccessException | NoSuchFieldException e) {
                                         e.printStackTrace();
                                     }
+                                    serverPlayerEntity.getServer().getOverworld().breakBlock(blockPos, false);
+                                } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")){
+                                    Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
+                                    String event = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
+                                    if (event.equals("ReficuleGateway")) {
+                                        serverPlayerEntity.getServer().getOverworld().breakBlock(blockPos, false);
+                                    }
                                 }
-                                serverPlayerEntity.getServer().getOverworld().breakBlock(blockPos, false);
                             }
                         }
                     }
