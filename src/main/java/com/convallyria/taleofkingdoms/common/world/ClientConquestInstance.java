@@ -134,27 +134,29 @@ public class ClientConquestInstance extends ConquestInstance {
                                 Tag line1 = signTileEntity.toInitialChunkDataTag().get("Text1");
                                 if (line1 == null) continue;
                                 // Doesn't seem to be a way to get the plain string...
-                                if (line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'") && entities) {
+                                if (line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'")) {
                                     Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
-                                    String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
-                                    BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
-                                    try {
-                                        EntityType type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
-                                        if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
-                                            Optional<? extends Entity> guildEntity = getGuildEntity(world, type);
-                                            if (type == EntityTypes.GUILDMASTER) {
-                                                guildEntity = getGuildEntity(serverPlayerEntity.getServerWorld(), type);
-                                            }
+                                    if (entities) {
+                                        String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
+                                        BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
+                                        try {
+                                            EntityType type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
+                                            if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
+                                                Optional<? extends Entity> guildEntity = getGuildEntity(world, type);
+                                                if (type == EntityTypes.GUILDMASTER) {
+                                                    guildEntity = getGuildEntity(serverPlayerEntity.getServerWorld(), type);
+                                                }
 
-                                            if (!guildEntity.isPresent()) {
-                                                EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
-                                            }
-                                        } else EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
-                                    } catch (IllegalAccessException | NoSuchFieldException e) {
-                                        e.printStackTrace();
+                                                if (!guildEntity.isPresent()) {
+                                                    EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
+                                                }
+                                            } else EntityUtils.spawnEntity(type, serverPlayerEntity, pos);
+                                        } catch (IllegalAccessException | NoSuchFieldException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                     serverPlayerEntity.getServer().getOverworld().breakBlock(blockPos, false);
-                                } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")){
+                                } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")) {
                                     Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
                                     String event = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
                                     if (event.equals("ReficuleGateway")) {

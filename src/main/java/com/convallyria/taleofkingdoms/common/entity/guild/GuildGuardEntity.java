@@ -60,6 +60,7 @@ public class GuildGuardEntity extends TOKEntity {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (instance.hasAttacked()) {
                     if (player.getMainHandStack().getItem() == Items.WOODEN_SWORD) {
+                        this.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
                         if (player instanceof ClientPlayerEntity)  Translations.GUILDMEMBER_START_FIGHT.send(player);
                         final int[] countdown = {3};
                         api.getScheduler().repeatN(server -> {
@@ -73,8 +74,12 @@ public class GuildGuardEntity extends TOKEntity {
                             api.getScheduler().queue(server2 -> {
                                 this.targetSelector.remove(goal);
                                 if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
+                                instance.addWorthiness(player.getUuid(), 2);
+                                this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
                             }, 160);
                         }, 80);
+                        player.inventory.removeOne(player.getMainHandStack());
+
                         return;
                     }
                     if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_FIGHTER.send(player);
