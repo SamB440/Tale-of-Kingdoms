@@ -45,12 +45,16 @@ import com.convallyria.taleofkingdoms.common.shop.WoodenShovelShopItem;
 import com.convallyria.taleofkingdoms.common.shop.WoodenSwordShopItem;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +97,6 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
                 new ShieldShopItem(), new StoneAxeShopItem(), new StonePickaxeShopItem(), new StoneShovelShopItem(), new StoneSwordShopItem(),
                 new WoodenAxeShopItem(), new WoodenPickaxeShopItem(), new WoodenShovelShopItem(), new WoodenSwordShopItem());
         int guiScale = MinecraftClient.getInstance().options.guiScale;
-        TaleOfKingdoms.LOGGER.info("a" + guiScale);
         Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
         if (!scaleSize.isPresent()) return;
         int x = scaleSize.get().getX();
@@ -123,7 +126,26 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
             selectedItem.buy(instance, player);
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), button -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), button -> {
+            /*
+             * WHY is this what we need to do for a proper sell GUI?
+             * I HATE THIS!!!!
+             * someone please rewrite it so blocks are not needed
+             */
+            BlockPos pos = entity.getBlockPos().add(0, 2, 0);
+            TaleOfKingdoms.getAPI().ifPresent(api -> {
+                api.getScheduler().queue(server -> {
+                    ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+                    server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
+                    BlockState state = server.getOverworld().getBlockState(pos);
+                    NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
+                    if (screenHandlerFactory != null) {
+                        //With this call the server will request the client to open the appropriate Screenhandler
+                        serverPlayer.openHandledScreen(screenHandlerFactory);
+                    }
+                }, 1);
+            });
+        }));
         this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
         this.addButton(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
         this.addButton(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
