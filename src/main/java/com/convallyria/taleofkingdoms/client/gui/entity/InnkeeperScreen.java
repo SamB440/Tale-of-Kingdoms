@@ -12,7 +12,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.TimeCommand;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
@@ -67,7 +66,7 @@ public class InnkeeperScreen extends ScreenTOK {
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 15, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
     }
 
     @Override
