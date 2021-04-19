@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.gui.image;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -44,6 +45,6 @@ public class Image implements IImage {
     public void render(MatrixStack matrices, Screen gui) {
         MinecraftClient client = MinecraftClient.getInstance();
         client.getTextureManager().bindTexture(imageIdentifier);
-        gui.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight());
+        DrawableHelper.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
     }
 }

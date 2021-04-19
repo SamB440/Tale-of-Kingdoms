@@ -66,6 +66,7 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable CompoundTag entityTag) {
+        EntityData entityReturnData = super.initialize(world, difficulty, spawnReason, entityData, entityTag);
         int value = ThreadLocalRandom.current().nextInt(2);
         this.setStackInHand(Hand.MAIN_HAND, new ItemStack(value == 1 ? Items.BOW : Items.CROSSBOW));
         if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.BOW) {
@@ -73,7 +74,7 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         } else {
             this.goalSelector.add(1, new CrossbowAttackGoal<>(this, 0.6D, 12.0F));
         }
-        return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
+        return entityReturnData;
     }
 
     @Override

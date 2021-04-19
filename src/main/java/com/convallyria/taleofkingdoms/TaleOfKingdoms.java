@@ -1,5 +1,8 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
+import com.convallyria.taleofkingdoms.common.block.SellBlock;
+import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
@@ -22,30 +25,40 @@ import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
+import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.listener.BlockListener;
 import com.convallyria.taleofkingdoms.common.listener.CoinListener;
 import com.convallyria.taleofkingdoms.common.listener.DeleteWorldListener;
 import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
+import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Identifier;
@@ -64,6 +77,11 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -87,6 +105,34 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
     private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> GATEWAY_CONFIGURED = GATEWAY_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
+
+    public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("gateway", GatewayStructureProcessor.CODEC);
+
+    public static final ScreenHandlerType<SellScreenHandler> SELL_SCREEN_HANDLER;
+
+    public static final Block SELL_BLOCK;
+    public static final BlockEntityType<SellBlockEntity> SELL_BLOCK_ENTITY;
+
+    // a public identifier for multiple parts of our bigger chest
+    public static final Identifier SELL_BLOCK_IDENTIFIER = new Identifier(MODID, "sell_block");
+
+    static {
+        //We use registerSimple here because our Entity is not an ExtendedScreenHandlerFactory
+        //but a NamedScreenHandlerFactory.
+        //In a later Tutorial you will see what ExtendedScreenHandlerFactory can do!
+        SELL_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(TaleOfKingdoms.MODID, "sell_screen"), SellScreenHandler::new);
+
+        SELL_BLOCK = Registry.register(Registry.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
+
+        //The parameter of build at the very end is always null, do not worry about it
+        SELL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, BlockEntityType.Builder.create(SellBlockEntity::new, SELL_BLOCK).build(null));
+    }
+
+    private Map<String, Integer> itemValues;
+
+    public Map<String, Integer> getItemValues() {
+        return itemValues;
+    }
 
     @Override
     public void onInitialize() {
@@ -121,6 +167,18 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
+
+        // Load item values
+        InputStream inputStream = TaleOfKingdoms.class.getResourceAsStream("/assets/shop/values.json");
+        if (inputStream == null) {
+            LOGGER.warn("Cannot read shop values file! inputStream is null.");
+            return;
+        }
+        InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+        Type type = new TypeToken<Map<String, Integer>>(){}.getType();
+        Map<String, Integer> mapValue = getGson().fromJson(reader, type);
+        mapValue.forEach((name, value) -> LOGGER.info("Loaded item value " + name + " (" + value + ")."));
+        this.itemValues = mapValue;
     }
 
     /**
@@ -146,6 +204,7 @@ public class TaleOfKingdoms implements ModInitializer {
         new CoinListener();
         new SleepListener();
         new MobSpawnListener();
+        new MobDeathListener();
         new BlockListener();
         new KingdomListener();
         new DeleteWorldListener();
@@ -176,7 +235,7 @@ public class TaleOfKingdoms implements ModInitializer {
                 new Identifier(MODID, "reficule_village"));
         BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), REFICULE_VILLAGE_CONFIGURED);
         BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-                Biome.Category.JUNGLE, Biome.Category.ICY), reficuleVillage);
+                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), reficuleVillage);
 
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), GATEWAY);
         FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
