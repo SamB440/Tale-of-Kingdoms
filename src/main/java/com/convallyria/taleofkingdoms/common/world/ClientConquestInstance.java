@@ -126,7 +126,7 @@ public class ClientConquestInstance extends ConquestInstance {
                     for (int z = bottomBlockZ; z <= topBlockZ; z++) {
                         for (int y = bottomBlockY; y <= topBlockY; y++) {
                             BlockPos blockPos = new BlockPos(x, y, z);
-                            World world = serverPlayerEntity.getServerWorld();
+                            World world = serverPlayerEntity.getServer().getOverworld();
                             Chunk chunk = world.getChunk(blockPos);
                             BlockEntity tileEntity = chunk.getBlockEntity(blockPos);
                             if (tileEntity instanceof SignBlockEntity) {
@@ -144,7 +144,7 @@ public class ClientConquestInstance extends ConquestInstance {
                                             if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
                                                 Optional<? extends Entity> guildEntity = getGuildEntity(world, type);
                                                 if (type == EntityTypes.GUILDMASTER) {
-                                                    guildEntity = getGuildEntity(serverPlayerEntity.getServerWorld(), type);
+                                                    guildEntity = getGuildMaster(world);
                                                 }
 
                                                 if (!guildEntity.isPresent()) {
@@ -155,12 +155,12 @@ public class ClientConquestInstance extends ConquestInstance {
                                             e.printStackTrace();
                                         }
                                     }
-                                    serverPlayerEntity.getServer().getOverworld().breakBlock(blockPos, false);
+                                    world.breakBlock(blockPos, false);
                                 } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")) {
                                     Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
                                     String event = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
                                     if (event.equals("ReficuleGateway")) {
-                                        serverPlayerEntity.getServer().getOverworld().breakBlock(blockPos, false);
+                                        world.breakBlock(blockPos, false);
                                     }
                                 }
                             }

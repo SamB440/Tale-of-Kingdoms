@@ -61,7 +61,7 @@ public class GuildGuardEntity extends TOKEntity {
                 if (instance.hasAttacked()) {
                     if (player.getMainHandStack().getItem() == Items.WOODEN_SWORD) {
                         this.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
-                        if (player instanceof ClientPlayerEntity)  Translations.GUILDMEMBER_START_FIGHT.send(player);
+                        if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_START_FIGHT.send(player);
                         final int[] countdown = {3};
                         api.getScheduler().repeatN(server -> {
                             if (player instanceof ClientPlayerEntity) player.sendMessage(new LiteralText("" + countdown[0]), false);
