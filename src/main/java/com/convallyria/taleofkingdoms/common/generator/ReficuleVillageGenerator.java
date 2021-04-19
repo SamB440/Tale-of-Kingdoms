@@ -2,8 +2,7 @@ package com.convallyria.taleofkingdoms.common.generator;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
-import net.minecraft.entity.SpawnReason;
+import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.SimpleStructurePiece;
 import net.minecraft.structure.Structure;
@@ -103,14 +102,25 @@ public class ReficuleVillageGenerator {
         @Override
         protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
                                       BlockBox boundingBox) {
+            double percent = Math.random() * 100;
             if (metadata.equals("Survivor")) {
-                double percent = Math.random() * 100;
                 if (percent > 20) {
-                    LoneVillagerEntity survivorEntity = EntityTypes.LONEVILLAGER.create(serverWorldAccess.toServerWorld());
-                    survivorEntity.setPersistent();
-                    survivorEntity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
-                    survivorEntity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
-                    serverWorldAccess.spawnEntityAndPassengers(survivorEntity);
+                    EntityUtils.spawnEntity(EntityTypes.LONEVILLAGER, serverWorldAccess, pos);
+                }
+                return;
+            }
+
+            if (percent > 60) {
+                switch (metadata) {
+                    case "ReficuleSoldier":
+                        EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, pos);
+                        break;
+                    case "ReficuleArcher":
+                        EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, pos);
+                        break;
+                    case "ReficuleMage":
+                        EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, pos);
+                        break;
                 }
             }
         }
