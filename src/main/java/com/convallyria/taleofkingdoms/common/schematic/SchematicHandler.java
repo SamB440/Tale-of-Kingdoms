@@ -20,22 +20,22 @@ import java.util.concurrent.ThreadLocalRandom;
 public abstract class SchematicHandler {
 
     /**
-     * Pastes the selected schematic. Returns a {@link CompletableFuture} containing the {@link OperationInstance}
+     * Pastes the selected schematic. Returns a {@link CompletableFuture} containing the {@link BlockBox}
      * @param schematic schematic to paste
      * @param player the <b><i>server</i></b> player
      * @param position the {@link BlockPos} position to paste at
-     * @return {@link CompletableFuture} containing the {@link OperationInstance}
+     * @return {@link CompletableFuture} containing the {@link BlockBox}
      */
     public abstract CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position);
 
     /**
-     * Pastes the selected schematic. Returns a {@link CompletableFuture} containing the {@link OperationInstance}.
+     * Pastes the selected schematic. Returns a {@link CompletableFuture} containing the {@link BlockBox}.
      * This defaults the position parameter to: <br>
      *     <b>x, y + 1, z</b>
      * @see #pasteSchematic(Schematic, ServerPlayerEntity, BlockPos)
      * @param schematic schematic to paste
      * @param player the <b><i>server</i></b> player
-     * @return {@link CompletableFuture} containing the {@link OperationInstance}
+     * @return {@link CompletableFuture} containing the {@link BlockBox}
      */
     @NotNull
     public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player) {

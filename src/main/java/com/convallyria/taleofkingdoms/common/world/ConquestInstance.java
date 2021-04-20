@@ -242,11 +242,13 @@ public abstract class ConquestInstance {
     }
 
     public Optional<GuildMasterEntity> getGuildMaster(World world) {
+        if (start == null || end == null) return Optional.empty();
         Box box = new Box(getStart(), getEnd());
         return world.getEntitiesByType(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.isFireImmune()).stream().findFirst();
     }
 
     public Optional<? extends Entity> getGuildEntity(World world, EntityType<?> type) {
+        if (start == null || end == null) return Optional.empty();
         Box box = new Box(getStart(), getEnd());
         return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();
     }

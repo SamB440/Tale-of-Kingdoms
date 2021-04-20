@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.Structure;
@@ -38,10 +39,10 @@ public class GuildStructureProcessor extends StructureProcessor {
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
             if (!api.isPresent()) return structureBlockInfo2;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
-            System.out.println(structureBlockInfo2.pos);
+            TaleOfKingdoms.LOGGER.debug(structureBlockInfo2.pos);
             if (!instance.isPresent()) return structureBlockInfo2;
 
-            if (metadata.equals("Gateway")) {
+            if (metadata.equals("Gateway") && !instance.get().isLoaded()) {
                 instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
                 return new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
             }
@@ -49,7 +50,16 @@ public class GuildStructureProcessor extends StructureProcessor {
             BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
             try {
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase()).get(EntityTypes.class);
-                EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
+                if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
+                    Optional<? extends Entity> guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
+                    if (type == EntityTypes.GUILDMASTER) {
+                        guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
+                    }
+
+                    if (!guildEntity.isPresent()) {
+                        EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
+                    }
+                } else EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
