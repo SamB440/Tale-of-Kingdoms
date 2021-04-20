@@ -13,7 +13,6 @@ group = project.maven_group
 repositories {
     mavenLocal()
     mavenCentral()
-	maven { url = 'https://maven.sk89q.com/repo/' }
 }
 
 dependencies {
@@ -23,14 +22,6 @@ dependencies {
     testImplementation 'org.reflections:reflections:0.9.12'
 
     compileOnly 'org.jetbrains:annotations:20.1.0'
-
-    modImplementation ('com.sk89q.worldedit:worldedit-fabric-mc1.16.3:7.3.0-SNAPSHOT') {
-        exclude group: 'com.google.guava'
-        exclude group: 'com.google.code.gson'
-        exclude group: 'it.unimi.dsi'
-        exclude group: 'org.apache.logging.log4j'
-        exclude group: 'org.yaml'
-    }
 
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

@@ -26,6 +26,7 @@ import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
+import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.listener.BlockListener;
@@ -35,7 +36,6 @@ import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
 import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
-import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -105,7 +105,8 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
     private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> GATEWAY_CONFIGURED = GATEWAY_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
-
+    
+    public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("guild", GuildStructureProcessor.CODEC);
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("gateway", GatewayStructureProcessor.CODEC);
 
     public static final ScreenHandlerType<SellScreenHandler> SELL_SCREEN_HANDLER;
@@ -142,11 +143,6 @@ public class TaleOfKingdoms implements ModInitializer {
         if (!file.exists()) file.mkdirs();
         registerEvents();
         TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
-        try {
-            Schematic.saveAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         this.registerFeatures();
 

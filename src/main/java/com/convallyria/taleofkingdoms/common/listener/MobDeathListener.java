@@ -10,7 +10,7 @@ public class MobDeathListener extends Listener {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                 if (instance.getReficuleAttackers().contains(entity.getUuid())) {
                     instance.getReficuleAttackers().remove(entity.getUuid());
-                    TaleOfKingdoms.LOGGER.info("Reficule attacker died with UUID " + entity.getUuid());
+                    TaleOfKingdoms.LOGGER.debug("Reficule attacker died with UUID " + entity.getUuid());
                 }
             });
         });
