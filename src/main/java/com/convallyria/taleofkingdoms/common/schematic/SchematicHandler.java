@@ -1,6 +1,8 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
+import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
@@ -18,12 +20,21 @@ import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.structure.Structure;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
+import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockBox;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Handles schematics for TaleOfKingdoms.
@@ -38,26 +49,33 @@ public abstract class SchematicHandler {
      * @param position the {@link BlockVector3} position to paste at
      * @return {@link CompletableFuture} containing the {@link OperationInstance}
      */
-    public abstract CompletableFuture<OperationInstance> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockVector3 position);
+    public abstract CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position);
 
     /**
      * Pastes the selected schematic. Returns a {@link CompletableFuture} containing the {@link OperationInstance}.
      * This defaults the position parameter to: <br>
      *     <b>x, y + 1, z</b>
-     * @see #pasteSchematic(Schematic, ServerPlayerEntity, BlockVector3) 
+     * @see #pasteSchematic(Schematic, ServerPlayerEntity, BlockPos)
      * @param schematic schematic to paste
      * @param player the <b><i>server</i></b> player
      * @return {@link CompletableFuture} containing the {@link OperationInstance}
      */
     @NotNull
-    public CompletableFuture<OperationInstance> pasteSchematic(Schematic schematic, ServerPlayerEntity player) {
-        BlockVector3 position = BlockVector3.at(player.getBlockPos().getX(), player.getBlockPos().getY() + 1, player.getBlockPos().getZ());
-	    return pasteSchematic(schematic, player, position);
+    public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player) {
+	    return pasteSchematic(schematic, player, player.getBlockPos().add(0, 1, 0));
     }
 
-    protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockVector3 position, CompletableFuture<OperationInstance> cf) {
+    protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, CompletableFuture<BlockBox> cf) {
         TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
-        World adaptedWorld = FabricAdapter.adapt(player.getServerWorld());
+        Identifier guild = new Identifier(TaleOfKingdoms.MODID, "guild/guild");
+        Structure structure = player.getServerWorld().getStructureManager().getStructure(guild);
+        StructurePlacementData structurePlacementData = new StructurePlacementData();
+        structurePlacementData.addProcessor(GuildStructureProcessor.INSTANCE);
+        structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
+        cf.complete(structurePlacementData.getBoundingBox());
+        structure.place(player.getServerWorld(), position, structurePlacementData, ThreadLocalRandom.current());
+        
+        /*World adaptedWorld = FabricAdapter.adapt(player.getServerWorld());
         ClipboardFormat format = ClipboardFormats.findByFile(schematic.getFile());
         try {
             Clipboard clipboard = format.getReader(new FileInputStream(schematic.getFile())).read();
@@ -87,6 +105,6 @@ public abstract class SchematicHandler {
             cf.complete(new OperationInstance(uuid, selector.getRegion()));
         } catch (WorldEditException | IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }
