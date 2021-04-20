@@ -20,7 +20,7 @@
     "client.InventoryDrawEvent",
     "client.RecipesUpdatedEvent",
     "structure.StructureBlockAccessor",
-    "StructureBlockUnlimit"
+    "structure.StructureBlockUnlimit"
   ],
   "server": [
     "server.GameInstanceEvent"

@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.mixin;
+package com.convallyria.taleofkingdoms.mixin.structure;
 
 import com.convallyria.taleofkingdoms.mixin.structure.StructureBlockAccessor;
 import net.minecraft.block.BlockState;

@@ -8,13 +8,11 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
@@ -38,16 +36,17 @@ public class GuildStructureProcessor extends StructureProcessor {
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
             if (!api.isPresent()) return structureBlockInfo2;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
+            System.out.println("present? " + instance.isPresent());
             if (!instance.isPresent()) return structureBlockInfo2;
     
             switch (metadata) {
-                case "ReficuleGateway": {
-                    instance.get().getReficuleAttackLocations().add(blockPos);
+                case "Gateway": {
+                    instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
                     return null;
                 }
             }
     
-            BlockPos spawnPos = blockPos.add(0.5, 0, 0.5);
+            BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
             try {
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase()).get(EntityTypes.class);
                 EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
@@ -60,6 +59,6 @@ public class GuildStructureProcessor extends StructureProcessor {
     }
 
     protected StructureProcessorType<?> getType() {
-        return TaleOfKingdoms.GATEWAY_PROCESSOR;
+        return TaleOfKingdoms.GUILD_PROCESSOR;
     }
 }

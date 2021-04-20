@@ -1,38 +1,17 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
-import com.sk89q.worldedit.fabric.FabricAdapter;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.math.Vector3;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.regions.RegionSelector;
-import com.sk89q.worldedit.regions.selector.CuboidRegionSelector;
-import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.world.World;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -72,8 +51,9 @@ public abstract class SchematicHandler {
         StructurePlacementData structurePlacementData = new StructurePlacementData();
         structurePlacementData.addProcessor(GuildStructureProcessor.INSTANCE);
         structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-        cf.complete(structurePlacementData.getBoundingBox());
         structure.place(player.getServerWorld(), position, structurePlacementData, ThreadLocalRandom.current());
+        BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
+        cf.complete(box);
         
         /*World adaptedWorld = FabricAdapter.adapt(player.getServerWorld());
         ClipboardFormat format = ClipboardFormats.findByFile(schematic.getFile());

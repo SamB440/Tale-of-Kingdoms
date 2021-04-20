@@ -44,8 +44,8 @@ public abstract class ConquestInstance {
     private final String world;
     private final String name;
     private boolean hasLoaded;
-    private final BlockPos start;
-    private final BlockPos end;
+    private BlockPos start;
+    private BlockPos end;
     private final BlockPos origin;
     private List<UUID> loneVillagersWithRooms;
     private boolean underAttack;
@@ -88,11 +88,19 @@ public abstract class ConquestInstance {
     public BlockPos getStart() {
         return start;
     }
-
+    
+    public void setStart(BlockPos start) {
+        this.start = start;
+    }
+    
     public BlockPos getEnd() {
         return end;
     }
-
+    
+    public void setEnd(BlockPos end) {
+        this.end = end;
+    }
+    
     public BlockPos getOrigin() {
         return origin;
     }

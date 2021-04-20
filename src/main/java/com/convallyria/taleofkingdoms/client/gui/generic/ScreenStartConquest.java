@@ -69,19 +69,22 @@ public class ScreenStartConquest extends ScreenTOK {
             if (serverPlayer == null) return;
 
             // Load guild castle schematic
+            ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
+            try (Writer writer = new FileWriter(toSave)) {
+                Gson gson = api.get().getMod().getGson();
+                gson.toJson(instance, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            api.get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+            
             api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
                 api.get().executeOnServer(() -> {
                     BlockPos start = new BlockPos(oi.maxX, oi.maxY, oi.maxZ);
                     BlockPos end = new BlockPos(oi.minX, oi.minY, oi.minZ);
-                    ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), start, end, serverPlayer.getBlockPos().add(0, 1, 0));
-                    try (Writer writer = new FileWriter(toSave)) {
-                        Gson gson = api.get().getMod().getGson();
-                        gson.toJson(instance, writer);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-    
-                    api.get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                    instance.setStart(start);
+                    instance.setEnd(end);
+                    
                     button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
     
                     api.get().executeOnMain(() -> {
