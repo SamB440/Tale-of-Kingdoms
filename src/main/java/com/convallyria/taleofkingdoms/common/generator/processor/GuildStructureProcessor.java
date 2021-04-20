@@ -6,8 +6,10 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.StructureProcessor;
@@ -36,14 +38,12 @@ public class GuildStructureProcessor extends StructureProcessor {
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
             if (!api.isPresent()) return structureBlockInfo2;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
-            System.out.println("present? " + instance.isPresent());
+            System.out.println(structureBlockInfo2.pos);
             if (!instance.isPresent()) return structureBlockInfo2;
-    
-            switch (metadata) {
-                case "Gateway": {
-                    instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
-                    return null;
-                }
+
+            if (metadata.equals("Gateway")) {
+                instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
+                return new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
             }
     
             BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
@@ -53,7 +53,7 @@ public class GuildStructureProcessor extends StructureProcessor {
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
-            return null;
+            return new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
         }
         return structureBlockInfo2;
     }

@@ -2,8 +2,6 @@ package com.convallyria.taleofkingdoms.common.listener;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.event.GameInstanceCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerJoinCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerLeaveCallback;
@@ -14,25 +12,18 @@ import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.sk89q.worldedit.math.BlockVector3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.World;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.SERVER)

@@ -36,7 +36,6 @@ import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
 import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
-import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -144,11 +143,6 @@ public class TaleOfKingdoms implements ModInitializer {
         if (!file.exists()) file.mkdirs();
         registerEvents();
         TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
-        try {
-            Schematic.saveAll();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         this.registerFeatures();
 

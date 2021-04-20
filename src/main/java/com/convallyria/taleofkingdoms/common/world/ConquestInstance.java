@@ -9,9 +9,6 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.google.gson.Gson;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -22,6 +19,7 @@ import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3i;
@@ -308,11 +306,9 @@ public abstract class ConquestInstance {
      * @return true if position is in guild, false if not
      */
     public boolean isInGuild(BlockPos pos) {
-        BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
-        BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
-        Region region = new CuboidRegion(firstPos, secondPos);
-        BlockVector3 blockVector3 = BlockVector3.at(pos.getX(), pos.getY(), pos.getZ());
-        return region.contains(blockVector3);
+        if (start == null || end == null) return false; // Probably still pasting.
+        BlockBox blockBox = new BlockBox(start, end);
+        return blockBox.contains(pos);
     }
 
     public void save(TaleOfKingdomsAPI api) {

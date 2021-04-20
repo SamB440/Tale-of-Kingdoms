@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.mixin.structure;
 
-import com.convallyria.taleofkingdoms.mixin.structure.StructureBlockAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.StructureBlockBlockEntity;
 import net.minecraft.block.enums.StructureBlockMode;
@@ -57,7 +58,17 @@ public class StructureBlockUnlimit {
     
     @Shadow
     private float integrity;
-    
+
+    /**
+     * @reason Increase the distance that the bounding box can be seen
+     * @author SamB440/Cotander
+     */
+    @Overwrite
+    @Environment(EnvType.CLIENT)
+    public double getSquaredRenderDistance() {
+        return 256.0D;
+    }
+
     /**
      * @reason Increases structure block max size
      * @author SamB440/Cotander

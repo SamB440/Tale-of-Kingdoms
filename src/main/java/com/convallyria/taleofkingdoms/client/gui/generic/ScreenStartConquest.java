@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -77,8 +78,9 @@ public class ScreenStartConquest extends ScreenTOK {
                 e.printStackTrace();
             }
             api.get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-            
-            api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
+
+            BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 12, 0));
+            api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> {
                 api.get().executeOnServer(() -> {
                     BlockPos start = new BlockPos(oi.maxX, oi.maxY, oi.maxZ);
                     BlockPos end = new BlockPos(oi.minX, oi.minY, oi.minZ);
