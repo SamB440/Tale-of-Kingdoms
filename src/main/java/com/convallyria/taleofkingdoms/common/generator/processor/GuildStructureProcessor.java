@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.generator.processor;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
@@ -20,6 +21,8 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class GuildStructureProcessor extends StructureProcessor {
@@ -29,11 +32,16 @@ public class GuildStructureProcessor extends StructureProcessor {
         return INSTANCE;
     });
 
-    public GuildStructureProcessor() { }
+    private final List<SchematicOptions> options;
+
+    public GuildStructureProcessor(SchematicOptions... options) {
+        this.options = Arrays.asList(options);
+    }
 
     @Nullable
     public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
         ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;
+        Structure.StructureBlockInfo air = new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
         if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
             String metadata = structureBlockInfo2.tag.getString("metadata");
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
@@ -44,12 +52,19 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             if (metadata.equals("Gateway") && !instance.get().isLoaded()) {
                 instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
-                return new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
+                return air;
             }
-    
+
+            if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
+
             BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
             try {
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase()).get(EntityTypes.class);
+                if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
+                        && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER)) {
+                    return air;
+                }
+
                 if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
                     Optional<? extends Entity> guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
                     if (type == EntityTypes.GUILDMASTER) {
@@ -63,7 +78,7 @@ public class GuildStructureProcessor extends StructureProcessor {
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
-            return new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
+            return air;
         }
         return structureBlockInfo2;
     }

@@ -117,11 +117,12 @@ public class GuildMasterEntity extends TOKEntity {
                 if (serverPlayerEntity != null) {
                     PlayerInventory playerInventory = serverPlayerEntity.inventory;
                     ItemStack stack = null;
-                    for (Item log : LOGS) {
-                        ItemStack logStack = new ItemStack(log);
-
-                        if (playerInventory.contains(logStack)) {
-                            stack = logStack;
+                    for (ItemStack itemStack : playerInventory.main) {
+                        if (LOGS.contains(itemStack.getItem())) {
+                            if (itemStack.getCount() == 64) {
+                                stack = itemStack;
+                                break;
+                            }
                         }
                     }
 
@@ -129,7 +130,7 @@ public class GuildMasterEntity extends TOKEntity {
                         playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
                         serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
                         ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
-                        clientConquestInstance.rebuild(serverPlayerEntity, api, true);
+                        clientConquestInstance.rebuild(serverPlayerEntity, api);
                         instance.setRebuilt(true);
                         Translations.GUILDMASTER_THANK_YOU.send(player);
                     } else {

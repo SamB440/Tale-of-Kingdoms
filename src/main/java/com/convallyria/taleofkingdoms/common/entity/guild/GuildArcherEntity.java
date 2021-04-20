@@ -87,6 +87,11 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
         this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100,
                 true, true, livingEntity -> livingEntity instanceof Monster));
+        if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.BOW) {
+            this.goalSelector.add(1, new BowAttackGoal<>(this, 0.6D, 15, 8.0F));
+        } else {
+            this.goalSelector.add(1, new CrossbowAttackGoal<>(this, 0.6D, 12.0F));
+        }
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {

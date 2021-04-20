@@ -13,13 +13,13 @@ public final class ServerSchematicHandler extends SchematicHandler {
 
     @Override
     @NotNull
-    public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position) {
+    public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, SchematicOptions... options) {
         CompletableFuture<BlockBox> cf = new CompletableFuture<>();
 
         // WorldEdit requires actions to be done on the server thread.
         TaleOfKingdoms.getAPI().flatMap(TaleOfKingdomsAPI::getServer).ifPresent(minecraftServer -> {
             minecraftServer.execute(() -> {
-                pasteSchematic(schematic, player, position, cf);
+                pasteSchematic(schematic, player, position, cf, options);
             });
         });
         return cf;

@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
@@ -132,17 +133,18 @@ public class GuildMasterScreen extends ScreenTOK {
                     if (serverPlayerEntity != null) {
                         PlayerInventory playerInventory = serverPlayerEntity.inventory;
                         ItemStack stack = null;
-                        for (Item log : logs) {
-                            ItemStack logStack = new ItemStack(log);
-
-                            if (playerInventory.contains(logStack)) {
-                                stack = logStack;
+                        for (ItemStack itemStack : playerInventory.main) {
+                            if (logs.contains(itemStack.getItem())) {
+                                if (itemStack.getCount() == 64) {
+                                    stack = itemStack;
+                                    break;
+                                }
                             }
                         }
 
                         if (stack != null) {
                             playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                            instance.rebuild(serverPlayerEntity, api, false);
+                            instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
                         }
                     }
                 });

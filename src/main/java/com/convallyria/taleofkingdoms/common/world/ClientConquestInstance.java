@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
+import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -97,7 +98,7 @@ public class ClientConquestInstance extends ConquestInstance {
         this.hunterUUIDs.remove(entity.getUuid());
     }
 
-    public CompletableFuture<BlockBox> rebuild(ServerPlayerEntity serverPlayerEntity, TaleOfKingdomsAPI api, boolean entities) {
-        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 13, 0)));
+    public CompletableFuture<BlockBox> rebuild(ServerPlayerEntity serverPlayerEntity, TaleOfKingdomsAPI api, SchematicOptions... options) {
+        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 13, 0)), options);
     }
 }
