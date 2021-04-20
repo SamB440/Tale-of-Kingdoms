@@ -4,26 +4,20 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
-import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.gson.Gson;
-import com.sk89q.worldedit.math.BlockVector3;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -76,76 +70,35 @@ public class ScreenStartConquest extends ScreenTOK {
             if (serverPlayer == null) return;
 
             // Load guild castle schematic
-            api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer).thenAccept(oi -> {
+            ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
+            try (Writer writer = new FileWriter(toSave)) {
+                Gson gson = api.get().getMod().getGson();
+                gson.toJson(instance, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            api.get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+
+            BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 12, 0));
+            api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> {
                 api.get().executeOnServer(() -> {
-                    BlockVector3 max = oi.getRegion().getMaximumPoint();
-                    BlockVector3 min = oi.getRegion().getMinimumPoint();
-                    BlockPos start = new BlockPos(max.getBlockX(), max.getBlockY(), max.getBlockZ());
-                    BlockPos end = new BlockPos(min.getBlockX(), min.getBlockY(), min.getBlockZ());
-                    ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), start, end, serverPlayer.getBlockPos().add(0, 1, 0));
-                    try (Writer writer = new FileWriter(toSave)) {
-                        Gson gson = api.get().getMod().getGson();
-                        gson.toJson(instance, writer);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        api.get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-                        button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
-                        int topBlockX = (Math.max(max.getBlockX(), min.getBlockX()));
-                        int bottomBlockX = (Math.min(max.getBlockX(), min.getBlockX()));
-
-                        int topBlockY = (Math.max(max.getBlockY(), min.getBlockY()));
-                        int bottomBlockY = (Math.min(max.getBlockY(), min.getBlockY()));
-
-                        int topBlockZ = (Math.max(max.getBlockZ(), min.getBlockZ()));
-                        int bottomBlockZ = (Math.min(max.getBlockZ(), min.getBlockZ()));
-
-                        for (int x = bottomBlockX; x <= topBlockX; x++) {
-                            for (int z = bottomBlockZ; z <= topBlockZ; z++) {
-                                for (int y = bottomBlockY; y <= topBlockY; y++) {
-                                    BlockPos blockPos = new BlockPos(x, y, z);
-                                    BlockEntity tileEntity = serverPlayer.getServerWorld().getChunk(blockPos).getBlockEntity(blockPos);
-                                    if (tileEntity instanceof SignBlockEntity) {
-                                        SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
-                                        Tag line1 = signTileEntity.toInitialChunkDataTag().get("Text1");
-                                        if (line1 == null) continue;
-                                        // Doesn't seem to be a way to get the plain string...
-                                        if (line1.toText().getString().equals("'{\"text\":\"[Spawn]\"}'")) {
-                                            Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
-                                            String entityName = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
-                                            button.setMessage(new LiteralText(Translations.NEW_CITIZEN.getFormatted() + entityName));
-                                            BlockPos pos = new BlockPos(x + 0.5, y, z + 0.5);
-                                            EntityType type = (EntityType<?>) EntityTypes.class.getField(entityName.toUpperCase()).get(EntityTypes.class);
-                                            EntityUtils.spawnEntity(type, serverPlayer, pos);
-                                            serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
-                                        } else if (line1.toText().getString().equals("'{\"text\":\"[Event]\"}'")) {
-                                            Tag line2 = signTileEntity.toInitialChunkDataTag().get("Text2");
-                                            String event = line2.toText().getString().replace("'{\"text\":\"", "").replace("\"}'", "");
-                                            if (event.equals("ReficuleGateway")) {
-                                                instance.getReficuleAttackLocations().add(blockPos);
-                                                serverPlayer.getServer().getOverworld().breakBlock(blockPos, false);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        api.get().executeOnMain(() -> {
-                            button.setMessage(new LiteralText("Reloading chunks..."));
-                            MinecraftClient.getInstance().worldRenderer.reload();
-                            onClose();
-                            loading = false;
-                            instance.setLoaded(true);
-                            instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
-                        });
-
-                        KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event
-                    } catch (ReflectiveOperationException e) {
-                        e.printStackTrace();
-                    }
+                    BlockPos start = new BlockPos(oi.maxX, oi.maxY, oi.maxZ);
+                    BlockPos end = new BlockPos(oi.minX, oi.minY, oi.minZ);
+                    instance.setStart(start);
+                    instance.setEnd(end);
+                    
+                    button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
+    
+                    api.get().executeOnMain(() -> {
+                        button.setMessage(new LiteralText("Reloading chunks..."));
+                        MinecraftClient.getInstance().worldRenderer.reload();
+                        onClose();
+                        loading = false;
+                        instance.setLoaded(true);
+                        instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
+                    });
+    
+                    KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event
                 });
             });
         }));

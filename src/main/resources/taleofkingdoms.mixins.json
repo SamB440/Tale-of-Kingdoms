@@ -18,7 +18,9 @@
     "WorldDeleteEvent",
     "WorldSessionStartEvent",
     "client.InventoryDrawEvent",
-    "client.RecipesUpdatedEvent"
+    "client.RecipesUpdatedEvent",
+    "structure.StructureBlockAccessor",
+    "structure.StructureBlockUnlimit"
   ],
   "server": [
     "server.GameInstanceEvent"
