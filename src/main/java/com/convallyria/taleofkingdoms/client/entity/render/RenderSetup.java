@@ -34,6 +34,7 @@ public final class RenderSetup {
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerone.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagertwo.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerthree.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerfour.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/mantwo.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manfive.png"));
