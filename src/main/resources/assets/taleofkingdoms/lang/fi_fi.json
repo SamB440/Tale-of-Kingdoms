@@ -18,6 +18,8 @@
     "entity_type.taleofkingdoms.guildmaster.no_hunter": "Kiltamestari: Sinulla ei ole metsästäjiä.",
     "entity_type.taleofkingdoms.guildmaster.guild_order": "Kilta  Kokonaisrahamäärä: ",
     "entity_type.taleofkingdoms.guildmaster.path": "Tie kuninkuuteen",
+    "entity_type.taleofkingdoms.guildmaster.help": "Guild Master: My apprentice! The guild is under attack and I have come to ask for your help. We must hurry back to the guild!",
+    "entity_type.taleofkingdoms.guildmember.fighter": "Guild Member: Greetings! You seem like a tough fighter... Give me a wooden sword and let us have a sparring match!",
     "entity_type.taleofkingdoms.guildmember.first": "Killan jäsen: Piru vieköön ne Roistot!",
     "entity_type.taleofkingdoms.hunter.thank": "Metsästäjä: Kiitän herraani!",
     "entity_type.taleofkingdoms.hunter.bow": "Metsästäjä: Käytän joustani.",

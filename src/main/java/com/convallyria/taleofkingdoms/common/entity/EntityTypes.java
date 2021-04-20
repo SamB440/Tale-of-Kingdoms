@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.FarmerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildArcherEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
@@ -67,6 +68,11 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "guild_guard"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildGuardEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+    public static final EntityType<GuildArcherEntity> GUILDARCHER = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "guild_archer"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildArcherEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
     public static final EntityType<LoneEntity> LONE = Registry.register(
             Registry.ENTITY_TYPE,

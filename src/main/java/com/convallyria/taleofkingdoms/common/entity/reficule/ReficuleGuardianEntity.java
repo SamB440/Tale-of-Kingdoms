@@ -43,7 +43,8 @@ public class ReficuleGuardianEntity extends TOKEntity implements Monster, Telepo
         }));
         this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true));
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
+        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
         this.goalSelector.add(1, new BowAttackGoal<>(this, 0.6D, 20, 16.0F));
         this.goalSelector.add(2, new WanderAroundGoal(this, 0.6D));
     }

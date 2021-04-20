@@ -11,7 +11,7 @@ import java.net.URL;
  * An enum of schematics, with file paths, that are available to paste.
  */
 public enum Schematic {
-    GUILD_CASTLE("/assets/schematics/GuildCastle01022021.schem"),
+    GUILD_CASTLE("/assets/schematics/GuildCastle14042021.schem"),
     GUILD_CASTLE_OLD("/assets/schematics/GuildCastle.schematic");
 
     private final String path;

@@ -107,7 +107,9 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
             return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
         }));
         this.targetSelector.add(3, (new FollowTargetGoal(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
+        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
@@ -195,14 +197,6 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     public SoundEvent getCastSpellSound() {
         return SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL;
     }
-
-    @Override
-    public SoundEvent getCelebratingSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
-    }
-
-    @Override
-    public void addBonusForWave(int wave, boolean unused) { }
 
     @Override
     public void attack(LivingEntity target, float pullProgress) {
