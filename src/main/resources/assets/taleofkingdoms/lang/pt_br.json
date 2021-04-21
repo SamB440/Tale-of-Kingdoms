@@ -49,5 +49,19 @@
     "generic.taleofkingdoms.hero": "Seja o héroi que você nasceu para ser. A Guilda vai irá lhe preparar...",
     "entity_type.taleofkingdoms.lostvillager.thank": "Aldeão Perdido: Graças aos céus! Nossa vila foi atacada pelos refículos! Por favor, me guie de volta para a Guilda.",
     "entity_type.taleofkingdoms.lone.thank": "Sobrevivente: Meu Rei! Obrigado por salvá-los! Deixarei o §eMestre da Guilda§r saber dos seus feitos.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Aldeão Perdido: Meu Rei! Obrigado por me salvar."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Aldeão Perdido: Meu Rei! Obrigado por me salvar.",
+    "item.taleofkingdoms.pouch": "Pouch",
+    "menu.taleofkingdoms.blacksmith.sell": "Sell Menu",
+    "entity_type.taleofkingdoms.guildmaster.stay_close": "Guild Master: Stay close and I will heal you.",
+    "entity_type.taleofkingdoms.guildmaster.rebuild": "Guild Master: We did the best we could. Now we should rebuild the guild and gather 64 wood while the rest do some cleanup and construction!",
+    "entity_type.taleofkingdoms.guildmaster.kill_reficules": "Guild Master: Let's take those bastards down. There are still some left!",
+    "entity_type.taleofkingdoms.guildmaster.thank_you": "Guild Master: Thank you hero. You have proven yourself a worthy leader! However, your quest for kingship is not over. I will be back at the guild and may you continue this good progress.",
+    "entity_type.taleofkingdoms.guildmember.start_fight": "Get ready!",
+    "entity_type.taleofkingdoms.guildmember.begin": "Begin!",
+    "entity_type.taleofkingdoms.guildmember.good_fighter": "You are a good fighter my friend, I will let the guildmaster know of your strength!",
+    "entity.taleofkingdoms.blacksmith": "Blacksmith",
+    "entity.taleofkingdoms.banker": "Banker",
+    "entity.taleofkingdoms.innkeeper": "Innkeeper",
+    "entity.taleofkingdoms.guild_master": "Guild Master",
+    "entity.taleofkingdoms.foodshop": "Food Shop"
 }

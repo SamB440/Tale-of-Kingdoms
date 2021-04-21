@@ -54,5 +54,13 @@
     "entity.taleofkingdoms.foodshop": "Ruoan myyjä",
     "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild.",
     "entity_type.taleofkingdoms.lone.thank": "My king! Thank you for saving them! I will let the §eGuild Master§r know of your efforts.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me.",
+    "menu.taleofkingdoms.blacksmith.sell": "Sell Menu",
+    "entity_type.taleofkingdoms.guildmaster.stay_close": "Guild Master: Stay close and I will heal you.",
+    "entity_type.taleofkingdoms.guildmaster.rebuild": "Guild Master: We did the best we could. Now we should rebuild the guild and gather 64 wood while the rest do some cleanup and construction!",
+    "entity_type.taleofkingdoms.guildmaster.kill_reficules": "Guild Master: Let's take those bastards down. There are still some left!",
+    "entity_type.taleofkingdoms.guildmaster.thank_you": "Guild Master: Thank you hero. You have proven yourself a worthy leader! However, your quest for kingship is not over. I will be back at the guild and may you continue this good progress.",
+    "entity_type.taleofkingdoms.guildmember.start_fight": "Get ready!",
+    "entity_type.taleofkingdoms.guildmember.begin": "Begin!",
+    "entity_type.taleofkingdoms.guildmember.good_fighter": "You are a good fighter my friend, I will let the guildmaster know of your strength!"
 }

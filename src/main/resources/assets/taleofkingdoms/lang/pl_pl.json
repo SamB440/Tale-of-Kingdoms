@@ -54,5 +54,13 @@
     "entity.taleofkingdoms.foodshop": "Sklep z jedzeniem",
     "entity_type.taleofkingdoms.lostvillager.thank": "Dzięki niebiosom! Nasza wioska zostałą zaatakowana przez te czarty. Proszę, poprowadź mnie do gildii.",
     "entity_type.taleofkingdoms.lone.thank": "Mój Królu! Dziękuję za uratowanie ich! Powiem Mistrzowi Gildii o twoich staraniach.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Zagubiony osadnik: Mój Królu! Dziękuję za uratowanie mnie."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Zagubiony osadnik: Mój Królu! Dziękuję za uratowanie mnie.",
+    "menu.taleofkingdoms.blacksmith.sell": "Sell Menu",
+    "entity_type.taleofkingdoms.guildmaster.stay_close": "Guild Master: Stay close and I will heal you.",
+    "entity_type.taleofkingdoms.guildmaster.rebuild": "Guild Master: We did the best we could. Now we should rebuild the guild and gather 64 wood while the rest do some cleanup and construction!",
+    "entity_type.taleofkingdoms.guildmaster.kill_reficules": "Guild Master: Let's take those bastards down. There are still some left!",
+    "entity_type.taleofkingdoms.guildmaster.thank_you": "Guild Master: Thank you hero. You have proven yourself a worthy leader! However, your quest for kingship is not over. I will be back at the guild and may you continue this good progress.",
+    "entity_type.taleofkingdoms.guildmember.start_fight": "Get ready!",
+    "entity_type.taleofkingdoms.guildmember.begin": "Begin!",
+    "entity_type.taleofkingdoms.guildmember.good_fighter": "You are a good fighter my friend, I will let the guildmaster know of your strength!"
 }
