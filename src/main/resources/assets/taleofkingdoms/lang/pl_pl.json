@@ -1,13 +1,18 @@
 {
+    "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
+    "key.taleofkingdoms.startconquest": "Start Conquest",
+
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
     "item.taleofkingdoms.coin": "Moneta",
     "item.taleofkingdoms.pouch": "Sakwa",
+
     "menu.taleofkingdoms.guildmaster.name": "Mistrz Gildii",
     "menu.taleofkingdoms.blacksmith.name": "Kowal",
     "menu.taleofkingdoms.banker.name": "Bankier",
     "menu.taleofkingdoms.foodshop.name": "Sklep z jedzeniem",
     "menu.taleofkingdoms.continueconquest.name": "Kontynuuj podbój",
     "menu.taleofkingdoms.startconquest.name": "Zacznij podbój",
+
     "entity_type.taleofkingdoms.farmer.take_bread": "Farmer: Tutaj! Weź swój chleb.",
     "entity_type.taleofkingdoms.farmer.got_bread": "Farmer: Dostałeś chleb, poczekaj aż wypiekę nowy.",
     "entity_type.taleofkingdoms.guildmaster.contract.sign": "Mistrz Gildii: Jesteś teraz jednym z moich przyjaciół. Zabijaj potwory i wkrótce będziesz warty tytułu.",

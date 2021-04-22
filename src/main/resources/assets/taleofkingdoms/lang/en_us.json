@@ -1,7 +1,11 @@
 {
+    "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
+    "key.taleofkingdoms.startconquest": "Start Conquest",
+
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
     "item.taleofkingdoms.coin": "Coin",
     "item.taleofkingdoms.pouch": "Pouch",
+
     "menu.taleofkingdoms.guildmaster.name": "Guild Master",
     "menu.taleofkingdoms.blacksmith.name": "Blacksmith",
     "menu.taleofkingdoms.blacksmith.sell": "Sell Menu",

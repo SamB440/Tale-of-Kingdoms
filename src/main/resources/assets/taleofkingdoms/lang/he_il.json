@@ -1,13 +1,18 @@
 {
+    "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
+    "key.taleofkingdoms.startconquest": "Start Conquest",
+
     "itemGroup.taleofkingdoms.general": "סיפור הממלכות",
     "item.taleofkingdoms.coin": "מטבע",
     "item.taleofkingdoms.pouch": "נרתיק",
+
     "menu.taleofkingdoms.guildmaster.name": "אדון האחוה",
     "menu.taleofkingdoms.blacksmith.name": "נפח",
     "menu.taleofkingdoms.banker.name": "בנקאי",
     "menu.taleofkingdoms.foodshop.name": "מסעדה",
     "menu.taleofkingdoms.continueconquest.name": "המשך כיבוש",
     "menu.taleofkingdoms.startconquest.name": "התחל כיבוש",
+
     "entity_type.taleofkingdoms.farmer.take_bread": "חקלאי: הינה, בוא קח קצת לחם!",
     "entity_type.taleofkingdoms.farmer.got_bread": "חקלאי: יש לך את הלחם שלך עכשיו!",
     "entity_type.taleofkingdoms.guildmaster.contract.sign": "אדון האחוה: אתה עכשיו אחד מאיתנו, חבר. לך להרוג מפלצות ובקרוב תהיה ראוי לתואר שלך.",

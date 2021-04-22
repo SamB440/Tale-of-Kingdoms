@@ -1,13 +1,18 @@
 {
+  "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
+  "key.taleofkingdoms.startconquest": "Start Conquest",
+
   "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
   "item.taleofkingdoms.coin": "Munt",
   "item.taleofkingdoms.pouch": "Pouch",
+
   "menu.taleofkingdoms.guildmaster.name": "Gildemeester",
   "menu.taleofkingdoms.blacksmith.name": "Smid",
   "menu.taleofkingdoms.banker.name": "Banker",
   "menu.taleofkingdoms.foodshop.name": "Foodshop",
   "menu.taleofkingdoms.continueconquest.name": "Verovering hervatten",
   "menu.taleofkingdoms.startconquest.name": "Verovering starten",
+
   "entity_type.taleofkingdoms.farmer.take_bread": "Boer: Hier, neem een brood!",
   "entity_type.taleofkingdoms.farmer.got_bread": "Boer: Je hebt je brood al gehad voor nu!",
   "entity_type.taleofkingdoms.guildmaster.contract.sign": "Gildemeester: Je bent nu één van ons vriend. Dood monsters en je zal binnenkort je titel waardig zijn.",

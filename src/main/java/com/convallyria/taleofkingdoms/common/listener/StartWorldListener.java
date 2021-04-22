@@ -27,6 +27,10 @@ public class StartWorldListener extends Listener {
     private String worldName;
     private boolean joined;
 
+    public String getWorldName() {
+        return worldName;
+    }
+
     public StartWorldListener() {
         WorldStopCallback.EVENT.register(() -> {
             if (!joined) return;
