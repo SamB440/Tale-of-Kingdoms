@@ -120,11 +120,6 @@ public class ScreenStartConquest extends ScreenTOK {
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
     public boolean shouldCloseOnEsc() {
         return true;
     }
