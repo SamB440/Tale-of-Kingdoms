@@ -61,8 +61,8 @@ public class LoneEntity extends TOKEntity {
                 }
 
                 Translations.LONE_THANK.send(player);
-                instance.setWorthiness(player.getUuid(), instance.getWorthiness(player.getUuid()) + loneVillagers.size() * 4);
-                player.sendMessage(new LiteralText("+" + loneVillagers.size() * 4 + " worthiness"), true);
+                instance.setWorthiness(player.getUuid(), instance.getWorthiness(player.getUuid()) + loneVillagers.size() * 6);
+                player.sendMessage(new LiteralText("+" + loneVillagers.size() * 6 + " worthiness"), true);
             } else {
                 Translations.LONE_HELP.send(player);
             }
