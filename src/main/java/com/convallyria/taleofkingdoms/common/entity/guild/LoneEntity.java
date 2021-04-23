@@ -74,4 +74,9 @@ public class LoneEntity extends TOKEntity {
     public boolean isStationary() {
         return true;
     }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
 }

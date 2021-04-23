@@ -53,4 +53,9 @@ public class InnkeeperEntity extends TOKEntity {
     public boolean isStationary() {
         return true;
     }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
 }

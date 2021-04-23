@@ -82,4 +82,9 @@ public class FarmerEntity extends TOKEntity {
         }
         return ActionResult.PASS;
     }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
 }
