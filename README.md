@@ -62,3 +62,9 @@ selecting "upload from computer" then "download".
 Minecraft Server
 =======
 IslandEarth - https://www.islandearth.net
+
+Copyright
+=====
+Code is GNU GPL v3 unless otherwise specified in header of class file.
+
+All other content is subject to their own licence. Builds are All Rights Reserved by Convallyria. Music is All Rights Reserved by the author(s) and is subject to the terms made by the author(s).
