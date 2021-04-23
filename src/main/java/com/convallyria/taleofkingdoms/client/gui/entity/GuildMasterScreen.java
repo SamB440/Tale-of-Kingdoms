@@ -137,6 +137,7 @@ public class GuildMasterScreen extends ScreenTOK {
                     PlayerInventory serverPlayerInventory = serverPlayerEntity.inventory;
                     if (stack != null) {
                         serverPlayerInventory.setStack(serverPlayerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
+                        instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
                         instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
                     }
                 }
