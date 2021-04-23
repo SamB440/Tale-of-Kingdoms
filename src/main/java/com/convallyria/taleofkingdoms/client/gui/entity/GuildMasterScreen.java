@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
+import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
@@ -126,30 +127,20 @@ public class GuildMasterScreen extends ScreenTOK {
             this.onClose();
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText("Fix the guild"), (button) -> {
-            TaleOfKingdoms.getAPI().ifPresent(api -> {
-                api.executeOnMain(() -> {
-                    ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    if (serverPlayerEntity != null) {
-                        PlayerInventory playerInventory = serverPlayerEntity.inventory;
-                        ItemStack stack = null;
-                        for (ItemStack itemStack : playerInventory.main) {
-                            if (logs.contains(itemStack.getItem())) {
-                                if (itemStack.getCount() == 64) {
-                                    stack = itemStack;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (stack != null) {
-                            playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                            instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
-                        }
+        PlayerInventory clientPlayerInventory = player.inventory;
+        ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, logs, 64);
+        String fixText = instance.getCoins() >= 3000 && stack != null ? "Fix the guild " + Formatting.GREEN + "(3000 gold, 64 logs)" : "Fix the guild " + Formatting.RED + "(3000 gold, 64 logs)";
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
+            TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnMain(() -> {
+                ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                if (serverPlayerEntity != null) {
+                    PlayerInventory serverPlayerInventory = serverPlayerEntity.inventory;
+                    if (stack != null) {
+                        serverPlayerInventory.setStack(serverPlayerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
+                        instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
                     }
-                });
-            });
-
+                }
+            }));
             this.onClose();
         }));
 
