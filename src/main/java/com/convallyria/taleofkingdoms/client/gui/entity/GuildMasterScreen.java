@@ -129,7 +129,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         PlayerInventory clientPlayerInventory = player.inventory;
         ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, logs, 64);
-        String fixText = instance.getCoins() >= 3000 && stack != null ? "Fix the guild " + Formatting.GREEN + "(3000 gold, 64 logs)" : "Fix the guild " + Formatting.RED + "(3000 gold, 64 logs)";
+        String fixText = "Fix the guild";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnMain(() -> {
                 if (instance.getCoins(player.getUuid()) < 3000) return;
@@ -162,6 +162,7 @@ public class GuildMasterScreen extends ScreenTOK {
         String path = Translations.GUILDMASTER_PATH.getFormatted();
         drawCenteredString(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         drawCenteredString(stack, this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
+        drawCenteredString(stack, this.textRenderer, "Repairing the guild costs 64 logs and 3000 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
         this.worthness.drawBar(stack);
     }
 
