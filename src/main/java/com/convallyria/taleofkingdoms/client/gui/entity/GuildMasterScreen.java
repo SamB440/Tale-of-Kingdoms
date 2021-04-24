@@ -39,6 +39,9 @@ public class GuildMasterScreen extends ScreenTOK {
             Items.OAK_LOG,
             Items.SPRUCE_LOG);
 
+    private ButtonWidget signContractButton;
+    private ButtonWidget cancelContractButton;
+
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
         this.player = player;
@@ -51,40 +54,9 @@ public class GuildMasterScreen extends ScreenTOK {
     public void init() {
         super.init();
         if (!instance.hasContract()) {
-            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
-                if (MinecraftClient.getInstance().getServer() != null) {
-                    instance.setHasContract(true);
-                    Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
-                } else {
-                    TaleOfKingdoms.getAPI().ifPresent(api -> {
-                        api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
-                                .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
-                                        player,
-                                        client.getNetworkHandler().getConnection(),
-                                        true);
-                    });
-                }
-                button.visible = false;
-                button.active = false;
-                this.onClose();
-                MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
-            }));
+            this.makeContractSignButton();
         } else {
-            this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
-                if (MinecraftClient.getInstance().getServer() != null) {
-                    instance.setHasContract(false);
-                } else {
-                    TaleOfKingdoms.getAPI().ifPresent(api -> {
-                        api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
-                                .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
-                                        player,
-                                        client.getNetworkHandler().getConnection(),
-                                        false);
-                    });
-                }
-                button.visible = false;
-                button.active = false;
-            }));
+            this.makeCancelContractButton();
         }
 
         String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
@@ -174,5 +146,56 @@ public class GuildMasterScreen extends ScreenTOK {
     @Override
     public boolean shouldCloseOnEsc() {
         return false;
+    }
+
+    private void makeContractSignButton() {
+        if (this.signContractButton != null) {
+            signContractButton.visible = true;
+            signContractButton.active = true;
+            return;
+        }
+
+        this.signContractButton = this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
+            if (MinecraftClient.getInstance().getServer() != null) {
+                instance.setHasContract(true);
+                Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
+            } else {
+                TaleOfKingdoms.getAPI().ifPresent(api -> {
+                    api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
+                            .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
+                                    player,
+                                    client.getNetworkHandler().getConnection(),
+                                    true);
+                });
+            }
+            button.visible = false;
+            button.active = false;
+            this.makeCancelContractButton();
+        }));
+    }
+
+    private void makeCancelContractButton() {
+        if (this.cancelContractButton != null) {
+            cancelContractButton.visible = true;
+            cancelContractButton.active = true;
+            return;
+        }
+
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
+            if (MinecraftClient.getInstance().getServer() != null) {
+                instance.setHasContract(false);
+            } else {
+                TaleOfKingdoms.getAPI().ifPresent(api -> {
+                    api.getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
+                            .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
+                                    player,
+                                    client.getNetworkHandler().getConnection(),
+                                    false);
+                });
+            }
+            button.visible = false;
+            button.active = false;
+            this.makeContractSignButton();
+        }));
     }
 }
