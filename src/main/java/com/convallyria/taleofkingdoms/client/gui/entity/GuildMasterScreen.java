@@ -132,6 +132,7 @@ public class GuildMasterScreen extends ScreenTOK {
         String fixText = instance.getCoins() >= 3000 && stack != null ? "Fix the guild " + Formatting.GREEN + "(3000 gold, 64 logs)" : "Fix the guild " + Formatting.RED + "(3000 gold, 64 logs)";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnMain(() -> {
+                if (instance.getCoins(player.getUuid()) < 3000) return;
                 ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                 if (serverPlayerEntity != null) {
                     PlayerInventory serverPlayerInventory = serverPlayerEntity.inventory;
