@@ -125,6 +125,6 @@ public class EntityTypes {
     public static final EntityType<RatEntity> RAT = Registry.register(
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "rat"),
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RatEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, RatEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
 }

@@ -1,6 +1,9 @@
 package com.convallyria.taleofkingdoms.common.entity.nature;
 
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.BoarAttackGoal;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
+import com.convallyria.taleofkingdoms.common.sounds.Sounds;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -11,10 +14,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.ai.goal.AnimalMateGoal;
-import net.minecraft.entity.ai.goal.EscapeDangerGoal;
 import net.minecraft.entity.ai.goal.FollowParentGoal;
+import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.RevengeGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.TemptGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
@@ -59,17 +63,24 @@ public class BoarEntity extends AnimalEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.25D));
+        this.goalSelector.add(1, new BoarAttackGoal(this, 1.25D, false));
+        this.goalSelector.add(2, new RevengeGoal(this, PlayerEntity.class));
         this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(4, new TemptGoal(this, 1.2D, true, BREEDING_INGREDIENT));
         this.goalSelector.add(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.add(6, new WanderAroundFarGoal(this, 1.0D));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.add(8, new LookAroundGoal(this));
+
+        this.targetSelector.add(0, new FollowTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.RAT, true));
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.25D);
+        return MobEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.2D)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2D);
     }
 
     public static void spawnNaturally() {
@@ -91,12 +102,12 @@ public class BoarEntity extends AnimalEntity {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_PIG_AMBIENT;
+        return Sounds.BOAR_AMBIENT;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_PIG_HURT;
+        return Sounds.BOAR_HURT;
     }
 
     @Override

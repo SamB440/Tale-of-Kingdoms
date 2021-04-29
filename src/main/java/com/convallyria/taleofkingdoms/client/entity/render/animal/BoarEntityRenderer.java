@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.client.entity.render.animal;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.entity.model.BoarEntityModel;
 import com.convallyria.taleofkingdoms.common.entity.nature.BoarEntity;
 import net.fabricmc.api.EnvType;
@@ -11,7 +12,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class BoarEntityRenderer extends MobEntityRenderer<BoarEntity, BoarEntityModel<BoarEntity>> {
 
-    private static final Identifier TEXTURE = new Identifier("textures/entity/pig/pig.png"); // TODO need our own texture
+    private static final Identifier TEXTURE = new Identifier(TaleOfKingdoms.MODID, "textures/entity/boar/boar.png");
 
     public BoarEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
         super(entityRenderDispatcher, new BoarEntityModel<>(), 0.7F);

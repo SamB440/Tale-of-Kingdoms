@@ -7,5 +7,34 @@
         "stream": true
       }
     ]
+  },
+  "ratgrunt": {
+    "sounds": [
+      "taleofkingdoms:ratgrunt1",
+      "taleofkingdoms:ratgrunt2",
+      "taleofkingdoms:ratgrunt3",
+      "taleofkingdoms:ratgrunt4"
+    ]
+  },
+  "rathurt": {
+    "sounds": [
+      "taleofkingdoms:rathurt1",
+      "taleofkingdoms:rathurt2"
+    ]
+  },
+  "ratdeath": {
+    "sounds": [
+      "taleofkingdoms:ratdying"
+    ]
+  },
+  "boarambient": {
+    "sounds": [
+      "taleofkingdoms:boarambient"
+    ]
+  },
+  "boarhurt": {
+    "sounds": [
+      "taleofkingdoms:boarhurt"
+    ]
   }
 }

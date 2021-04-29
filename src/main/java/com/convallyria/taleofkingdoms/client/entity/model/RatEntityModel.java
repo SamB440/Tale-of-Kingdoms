@@ -65,13 +65,14 @@ public class RatEntityModel<T extends RatEntity> extends EntityModel<T> {
     
     @Override
     public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        this.head.pitch = headPitch * 0.017453292F;
-        this.head.yaw = headYaw * 0.017453292F;
-        this.body.pitch = 1.5707964F;
-        this.backRightLeg.pitch = MathHelper.cos(limbAngle * 0.6662F) * 1.4F * limbDistance;
-        this.backLeftLeg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * 1.4F * limbDistance;
-        this.frontRightLeg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * 1.4F * limbDistance;
-        this.frontLeftLeg.pitch = MathHelper.cos(limbAngle * 0.6662F) * 1.4F * limbDistance;
+        this.head.pitch = headPitch * 0.001F;
+        this.head.yaw = headYaw * 0.001F;
+        this.whiskers.pitch = headPitch * 0.001F;
+        this.whiskers.yaw = headYaw * 0.001F;
+        this.backRightLeg.pitch = MathHelper.cos(limbAngle * 0.5662F) * 1.4F * limbDistance;
+        this.backLeftLeg.pitch = MathHelper.cos(limbAngle * 0.5662F + 3.1415927F) * 1.4F * limbDistance;
+        this.frontRightLeg.pitch = MathHelper.cos(limbAngle * 0.5662F + 3.1415927F) * 1.4F * limbDistance;
+        this.frontLeftLeg.pitch = MathHelper.cos(limbAngle * 0.5662F) * 1.4F * limbDistance;
     }
     
     @Override
