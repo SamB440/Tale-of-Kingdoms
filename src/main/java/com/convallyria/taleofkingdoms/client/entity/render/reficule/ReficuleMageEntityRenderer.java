@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.client.entity.render;
+package com.convallyria.taleofkingdoms.client.entity.render.reficule;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;

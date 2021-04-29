@@ -1,6 +1,9 @@
 package com.convallyria.taleofkingdoms.client.entity.render;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.entity.render.animal.BoarEntityRenderer;
+import com.convallyria.taleofkingdoms.client.entity.render.animal.RatEntityRenderer;
+import com.convallyria.taleofkingdoms.client.entity.render.reficule.ReficuleMageEntityRenderer;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -47,6 +50,9 @@ public final class RenderSetup {
         register(EntityTypes.REFICULE_SOLDIER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulesoldier.png"));
         register(EntityTypes.REFICULE_GUARDIAN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficuleguardian.png"));
         register(EntityTypes.REFICULE_MAGE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png"));
+
+        EntityRendererRegistry.INSTANCE.register(EntityTypes.BOAR, (dispatcher, context) -> new BoarEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(EntityTypes.RAT, (dispatcher, context) -> new RatEntityRenderer(dispatcher));
     }
 
     private void register(EntityType<?> type, Identifier... skins) {

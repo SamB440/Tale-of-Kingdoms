@@ -15,6 +15,8 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.nature.BoarEntity;
+import com.convallyria.taleofkingdoms.common.entity.nature.hostile.RatEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -114,5 +116,15 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "reficule_mage"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, ReficuleMageEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+    public static final EntityType<BoarEntity> BOAR = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "boar"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, BoarEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
+    );
+    public static final EntityType<RatEntity> RAT = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "rat"),
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, RatEntity::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).build()
     );
 }

@@ -18,6 +18,8 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.nature.BoarEntity;
+import com.convallyria.taleofkingdoms.common.entity.nature.hostile.RatEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -164,6 +166,12 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
 
+        FabricDefaultAttributeRegistry.register(EntityTypes.BOAR, BoarEntity.createMobAttributes());
+        BoarEntity.spawnNaturally();
+    
+        FabricDefaultAttributeRegistry.register(EntityTypes.RAT, RatEntity.createMobAttributes());
+        RatEntity.spawnNaturally();
+        
         // Load item values
         InputStream inputStream = TaleOfKingdoms.class.getResourceAsStream("/assets/shop/values.json");
         if (inputStream == null) {
