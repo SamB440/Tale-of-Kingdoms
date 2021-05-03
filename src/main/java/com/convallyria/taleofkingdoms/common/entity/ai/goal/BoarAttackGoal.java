@@ -22,7 +22,6 @@ public class BoarAttackGoal extends Goal {
     private double targetZ;
     private int updateCountdownTicks;
     private int field_24667;
-    private final int attackIntervalTicks = 20;
     private long lastUpdateTime;
 
     public BoarAttackGoal(PathAwareEntity mob, double speed, boolean pauseWhenMobIdle) {
@@ -32,6 +31,7 @@ public class BoarAttackGoal extends Goal {
         this.setControls(EnumSet.of(Goal.Control.MOVE, Control.LOOK));
     }
 
+    @Override
     public boolean canStart() {
         long l = this.mob.world.getTime();
         if (l - this.lastUpdateTime < 20L) {
@@ -54,6 +54,7 @@ public class BoarAttackGoal extends Goal {
         }
     }
 
+    @Override
     public boolean shouldContinue() {
         LivingEntity livingEntity = this.mob.getTarget();
         if (livingEntity == null) {
@@ -69,6 +70,7 @@ public class BoarAttackGoal extends Goal {
         }
     }
 
+    @Override
     public void start() {
         this.mob.getNavigation().startMovingAlong(this.path, this.speed);
         this.mob.setAttacking(true);
@@ -76,6 +78,7 @@ public class BoarAttackGoal extends Goal {
         this.field_24667 = 0;
     }
 
+    @Override
     public void stop() {
         LivingEntity livingEntity = this.mob.getTarget();
         if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(livingEntity)) {
@@ -86,6 +89,7 @@ public class BoarAttackGoal extends Goal {
         this.mob.getNavigation().stop();
     }
 
+    @Override
     public void tick() {
         LivingEntity livingEntity = this.mob.getTarget();
         this.mob.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
