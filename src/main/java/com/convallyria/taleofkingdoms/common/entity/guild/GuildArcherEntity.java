@@ -26,6 +26,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.RangedWeaponItem;
@@ -44,6 +45,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GuildArcherEntity extends TOKEntity implements CrossbowUser, RangedAttackMob {
 
     private boolean charging;
+    private boolean ticked;
 
     public GuildArcherEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -87,10 +89,19 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
         this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100,
                 true, true, livingEntity -> livingEntity instanceof Monster));
-        if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.BOW) {
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (ticked) return;
+        Item item = this.getStackInHand(Hand.MAIN_HAND).getItem();
+        if (item == Items.BOW) {
             this.goalSelector.add(1, new BowAttackGoal<>(this, 0.6D, 15, 8.0F));
-        } else {
+            this.ticked = true;
+        } else if (item == Items.CROSSBOW) {
             this.goalSelector.add(1, new CrossbowAttackGoal<>(this, 0.6D, 12.0F));
+            this.ticked = true;
         }
     }
 

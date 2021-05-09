@@ -23,6 +23,7 @@
     "sources": "https://gitlab.com/SamB440/tale-of-kingdoms",
     "issues": "https://gitlab.com/SamB440/tale-of-kingdoms/issues"
   },
+  "license": "Code contributions under GNU GPL v3, otherwise All Rights Reserved (C) Convallyria. Other files and/or contributions are under their own license. See README's for more info.",
 
   "icon": "assets/taleofkingdoms/logo.png",
 
