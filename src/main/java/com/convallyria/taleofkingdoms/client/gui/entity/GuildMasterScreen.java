@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
+import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
@@ -23,6 +24,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
 
 
 public class GuildMasterScreen extends ScreenTOK {
@@ -34,6 +36,8 @@ public class GuildMasterScreen extends ScreenTOK {
 
     private ButtonWidget signContractButton;
     private ButtonWidget cancelContractButton;
+
+    private ButtonWidget hireHuntersButton;
 
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
@@ -52,30 +56,10 @@ public class GuildMasterScreen extends ScreenTOK {
             this.makeCancelContractButton();
         }
 
-        String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
-            if (instance.getCoins() >= 1500) {
-                TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
-                    if (MinecraftClient.getInstance().getServer() != null) {
-                        ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                        HunterEntity hunterEntity = new HunterEntity(EntityTypes.HUNTER, serverWorld);
-                        hunterEntity.setPos(entity.getX(), entity.getY(), entity.getZ());
-                        serverWorld.spawnEntity(hunterEntity);
-                        hunterEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
-                        instance.addHunter(hunterEntity);
-                    }
-                }));
-                instance.setCoins(instance.getCoins() - 1500);
-                Translations.SERVE.send(player);
-                this.onClose();
-                MinecraftClient.getInstance().openScreen(new GuildMasterScreen(player, entity, instance));
-            }
-        }));
+        this.makeHireHuntersButton();
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
-
             ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-
             if (instance.getHunterUUIDs().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
@@ -189,6 +173,30 @@ public class GuildMasterScreen extends ScreenTOK {
             button.visible = false;
             button.active = false;
             this.makeContractSignButton();
+        }));
+    }
+
+    private void makeHireHuntersButton() {
+        String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
+        if (this.hireHuntersButton != null) {
+            this.hireHuntersButton.setMessage(new LiteralText(hunterText));
+            return;
+        }
+
+        this.hireHuntersButton = this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
+            if (instance.getCoins() >= 1500) {
+                TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
+                    if (MinecraftClient.getInstance().getServer() != null) {
+                        ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+                        BlockPos blockPos = entity.getBlockPos();
+                        HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, serverWorld, blockPos);
+                        instance.addHunter(hunterEntity);
+                    }
+                }));
+                instance.setCoins(instance.getCoins() - 1500);
+                Translations.SERVE.send(player);
+                this.makeHireHuntersButton();
+            }
         }));
     }
 }

@@ -7,13 +7,16 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ServerWorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 public class EntityUtils {
 
+    @Nullable
     public static <T extends MobEntity> T spawnEntity(EntityType<T> type, ServerPlayerEntity serverPlayer, BlockPos pos) {
         return spawnEntity(type, serverPlayer.getServerWorld(), pos);
     }
 
+    @Nullable
     public static <T extends MobEntity> T spawnEntity(EntityType<T> type, ServerWorldAccess serverWorldAccess, BlockPos pos) {
         T entity = type.create(serverWorldAccess.toServerWorld());
         if (entity == null) return null;
