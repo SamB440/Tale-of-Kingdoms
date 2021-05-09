@@ -10,18 +10,17 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 
@@ -32,12 +31,6 @@ public class GuildMasterScreen extends ScreenTOK {
     private final GuildMasterEntity entity;
     private final ClientConquestInstance instance;
     private ScreenBar worthness;
-    private final ImmutableList<Item> logs = ImmutableList.of(Items.ACACIA_LOG,
-            Items.BIRCH_LOG,
-            Items.DARK_OAK_LOG,
-            Items.JUNGLE_LOG,
-            Items.OAK_LOG,
-            Items.SPRUCE_LOG);
 
     private ButtonWidget signContractButton;
     private ButtonWidget cancelContractButton;
@@ -100,7 +93,7 @@ public class GuildMasterScreen extends ScreenTOK {
         }));
 
         PlayerInventory clientPlayerInventory = player.inventory;
-        ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, logs, 64);
+        ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS.values(), 64);
         String fixText = "Fix the guild";
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnMain(() -> {

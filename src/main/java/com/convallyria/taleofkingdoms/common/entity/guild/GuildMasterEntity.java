@@ -11,7 +11,6 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.HealPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -27,12 +26,12 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -42,12 +41,6 @@ import java.util.Optional;
 public class GuildMasterEntity extends TOKEntity {
 
     private boolean givenSword;
-    private static final ImmutableList<Item> LOGS = ImmutableList.of(Items.ACACIA_LOG,
-            Items.BIRCH_LOG,
-            Items.DARK_OAK_LOG,
-            Items.JUNGLE_LOG,
-            Items.OAK_LOG,
-            Items.SPRUCE_LOG);
 
     public GuildMasterEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -118,7 +111,7 @@ public class GuildMasterEntity extends TOKEntity {
                     PlayerInventory playerInventory = serverPlayerEntity.inventory;
                     ItemStack stack = null;
                     for (ItemStack itemStack : playerInventory.main) {
-                        if (LOGS.contains(itemStack.getItem())) {
+                        if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
                             if (itemStack.getCount() == 64) {
                                 stack = itemStack;
                                 break;
