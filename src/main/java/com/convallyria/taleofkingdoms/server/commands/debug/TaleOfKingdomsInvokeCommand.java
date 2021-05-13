@@ -40,7 +40,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             player.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
 
             return 1;
-        } catch (Exception e) {
+        } catch (CommandSyntaxException e) {
             e.printStackTrace();
             return 0;
         }
