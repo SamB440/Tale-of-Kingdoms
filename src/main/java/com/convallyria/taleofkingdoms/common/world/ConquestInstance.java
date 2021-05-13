@@ -111,6 +111,10 @@ public abstract class ConquestInstance {
         return getWorthiness(uuid) >= (1500.0F / 2) && !isUnderAttack() && !hasRebuilt;
     }
 
+    /**
+     * Returns true if and only if the guild is not currently under attack and the worthiness of the player is greater than 750
+     * @return If the guild has been attacked
+     */
     public boolean hasAttacked() {
         return !isUnderAttack() && getWorthiness(null) > 750;
     }
@@ -135,6 +139,9 @@ public abstract class ConquestInstance {
         }
     }
 
+    /**
+     * @return If the guild is currently under attack
+     */
     public boolean isUnderAttack() {
         return underAttack;
     }
@@ -161,6 +168,9 @@ public abstract class ConquestInstance {
         return reficuleAttackers;
     }
 
+    /**
+     * @return If the guild has been rebuilt
+     */
     public boolean hasRebuilt() {
         return hasRebuilt;
     }
