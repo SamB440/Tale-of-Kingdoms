@@ -1,5 +1,7 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.client.commands.TaleOfKindomsCommand;
+import com.convallyria.taleofkingdoms.server.commands.debug.*;
 import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
@@ -7,17 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.FarmerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildArcherEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.*;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -29,19 +21,16 @@ import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructur
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
-import com.convallyria.taleofkingdoms.common.listener.BlockListener;
-import com.convallyria.taleofkingdoms.common.listener.CoinListener;
-import com.convallyria.taleofkingdoms.common.listener.DeleteWorldListener;
-import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
-import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
-import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
-import com.convallyria.taleofkingdoms.common.listener.SleepListener;
+import com.convallyria.taleofkingdoms.common.listener.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.ArgumentCommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -54,15 +43,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.TextArgumentType;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.structure.StructurePieceType;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -100,7 +88,7 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Identifier SIGN_CONTRACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "sign_contract");
 
     public static final StructurePieceType REFICULE_VILLAGE = ReficuleVillageGenerator.ReficuleVillagePiece::new;
-    private static final StructureFeature<DefaultFeatureConfig> REFICULE_VILLAGE_STRUCTURE = new ReficuleVillageFeature(DefaultFeatureConfig.CODEC);
+    public static final StructureFeature<DefaultFeatureConfig> REFICULE_VILLAGE_STRUCTURE = new ReficuleVillageFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> REFICULE_VILLAGE_CONFIGURED = REFICULE_VILLAGE_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
     public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
     private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
@@ -205,15 +193,143 @@ public class TaleOfKingdoms implements ModInitializer {
         new KingdomListener();
         new DeleteWorldListener();
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> { // Register commands
-            dispatcher.register(CommandManager.literal(MODID).executes(context -> {
-                Entity entity = context.getSource().getEntity();
-                if (entity != null) {
-                    String taleOfKingdoms = "[\"\",{\"text\":\"Tale of Kingdoms: A new Conquest\",\"bold\":true,\"underlined\":true,\"color\":\"blue\"},{\"text\":\"\\n\"},{\"text\":\"By Cotander/SamB440 & others. (hover)\",\"color\":\"blue\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://gitlab.com/SamB440/tale-of-kingdoms/-/blob/master/src/main/resources/fabric.mod.json\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"Marackai, Aksel0206, PyroPyxel, Sheepguard, michaelb229, The_KingCobra200, Krol05, BeingAmazing(Ben)#6423. Click to view full list.\"}]}},{\"text\":\"\\n\"},{\"text\":\" Take a look at our website: \",\"color\":\"gold\"},{\"text\":\"https://www.convallyria.com\",\"underlined\":true,\"color\":\"gold\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://www.convallyria.com\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"Click to view our website.\"}]}},{\"text\":\"\\n\"},{\"text\":\" Join our Discord: \",\"color\":\"gold\"},{\"text\":\"https://discord.gg/fh62mxU\",\"underlined\":true,\"color\":\"gold\",\"clickEvent\":{\"action\":\"open_url\",\"value\":\"https://discord.gg/fh62mxU\"},\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"Click to join our Discord.\"}]}},{\"text\":\"\\n\"},{\"text\":\"\\n\"},{\"text\":\"Copyright (C) Convallyria 2021\",\"color\":\"gray\"}]";
-                    entity.sendSystemMessage(Texts.parse(context.getSource(), parse(new StringReader(taleOfKingdoms)), entity, 0), Util.NIL_UUID);
-                    return 1;
-                }
-                return 0;
-            }));
+            // Base node /taleofkingdoms
+            LiteralCommandNode<ServerCommandSource> baseNode = CommandManager
+                    .literal(MODID)
+                    .executes(new TaleOfKindomsCommand())
+                    .build();
+
+            // Debug node /taleofkingdoms debug
+
+            LiteralCommandNode<ServerCommandSource> debugNode = CommandManager
+                    .literal("debug")
+                    .requires(p -> p.hasPermissionLevel(4))
+                    .executes(new TaleOfKingdomsDebugCommand())
+                    .build();
+
+            // Add node /taleofkingdoms debug add [coins|worthiness] [integer]
+
+            LiteralCommandNode<ServerCommandSource> addNode = CommandManager
+                    .literal("add")
+                    .executes(new TaleOfKingdomsAddCommand())
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> addCoinsNode = CommandManager
+                    .literal("coins")
+                    .build();
+
+            ArgumentCommandNode<ServerCommandSource, Integer> addCoinsArgumentNode = CommandManager
+                    .argument("coins", IntegerArgumentType.integer())
+                    .executes(TaleOfKingdomsAddCommand::addCoins)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> addWorthinessNode = CommandManager
+                    .literal("worthiness")
+                    .build();
+
+            ArgumentCommandNode<ServerCommandSource, Integer> addWorthinessArgumentNode = CommandManager
+                    .argument("worthiness", IntegerArgumentType.integer())
+                    .executes(TaleOfKingdomsAddCommand::addWorthiness)
+                    .build();
+
+            // Get node /taleofkingdoms debug get [coins|worthiness]
+
+            LiteralCommandNode<ServerCommandSource> getNode = CommandManager
+                    .literal("get")
+                    .executes(new TaleOfKingdomsGetCommand())
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> getCoinsNode = CommandManager
+                    .literal("coins")
+                    .executes(TaleOfKingdomsGetCommand::getCoins)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> getWorthinessNode = CommandManager
+                    .literal("worthiness")
+                    .executes(TaleOfKingdomsGetCommand::getWorthiness)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> getHasRebuiltNode = CommandManager
+                    .literal("hasRebuilt")
+                    .executes(TaleOfKingdomsGetCommand::getHasRebuilt)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> getHasAttackedNode = CommandManager
+                    .literal("hasAttacked")
+                    .executes(TaleOfKingdomsGetCommand::getHasAttacked)
+                    .build();
+
+            // Invoke node /taleofkingdoms debug invoke [saveVillagers|guildAttack]
+
+            LiteralCommandNode<ServerCommandSource> invokeNode = CommandManager
+                    .literal("invoke")
+                    .executes(new TaleOfKingdomsInvokeCommand())
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> invokeSaveVillagersNode = CommandManager
+                    .literal("saveVillagers")
+                    .executes(TaleOfKingdomsInvokeCommand::invokeSaveVillagers)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> invokeGuildAttackNode = CommandManager
+                    .literal("guildAttack")
+                    .executes(TaleOfKingdomsInvokeCommand::invokeGuildAttack)
+                    .build();
+
+            // Set node /taleofkingdoms debug set [coins|worthiness] [integer]
+
+            LiteralCommandNode<ServerCommandSource> setNode = CommandManager
+                    .literal("set")
+                    .executes(new TaleOfKingdomsSetCommand())
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> setCoinsNode = CommandManager
+                    .literal("coins")
+                    .build();
+
+            ArgumentCommandNode<ServerCommandSource, Integer> setCoinsArgumentNode = CommandManager
+                    .argument("coins", IntegerArgumentType.integer())
+                    .executes(TaleOfKingdomsSetCommand::setCoins)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> setWorthinessNode = CommandManager
+                    .literal("worthiness")
+                    .build();
+
+            ArgumentCommandNode<ServerCommandSource, Integer> setWorthinessArgumentNode = CommandManager
+                    .argument("worthiness", IntegerArgumentType.integer())
+                    .executes(TaleOfKingdomsSetCommand::setWorthiness)
+                    .build();
+
+            //Now stitch them together
+            dispatcher.getRoot().addChild(baseNode);
+            baseNode.addChild(debugNode);
+
+            // Add node
+            debugNode.addChild(addNode);
+            addNode.addChild(addCoinsNode);
+            addCoinsNode.addChild(addCoinsArgumentNode);
+            addNode.addChild(addWorthinessNode);
+            addWorthinessNode.addChild(addWorthinessArgumentNode);
+
+            // Get node
+            debugNode.addChild(getNode);
+            getNode.addChild(getCoinsNode);
+            getNode.addChild(getWorthinessNode);
+            getNode.addChild(getHasRebuiltNode);
+            getNode.addChild(getHasAttackedNode);
+
+            // Invoke node
+            debugNode.addChild(invokeNode);
+            invokeNode.addChild(invokeSaveVillagersNode);
+            invokeNode.addChild(invokeGuildAttackNode);
+
+            // Set node
+            debugNode.addChild(setNode);
+            setNode.addChild(setCoinsNode);
+            setCoinsNode.addChild(setCoinsArgumentNode);
+            setNode.addChild(setWorthinessNode);
+            setWorthinessNode.addChild(setWorthinessArgumentNode);
         });
     }
 
@@ -246,7 +362,7 @@ public class TaleOfKingdoms implements ModInitializer {
                 Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), gateway);
     }
 
-    private Text parse(StringReader stringReader) throws CommandSyntaxException {
+    public static Text parse(StringReader stringReader) throws CommandSyntaxException {
         try {
             Text text = Text.Serializer.fromJson(stringReader);
             if (text == null) {
