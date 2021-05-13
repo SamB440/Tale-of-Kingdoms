@@ -54,18 +54,17 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
             // Pre-requisites for attack
 
-            // Requires at least 750 worthiness (using 800 just to be safe)
+            // Requires at least 750 worthiness
             instance.addWorthiness(playerUuid, 750);
+            // The guild must not be currently under attack
             instance.setUnderAttack(false);
 
-            // Saving a temporary variable and setting it back to temporary variable as the internal logic of ConquestInstance#attack does not handle it.
-            boolean hasRebuilt = instance.hasRebuilt();
+            // The guild must not be rebuilt
             instance.setRebuilt(false);
 
             instance.attack(player, player.getServerWorld());
 
             instance.setWorthiness(instance.getWorthiness(playerUuid) - 750);
-            instance.setRebuilt(hasRebuilt);
 
             if (instance instanceof ServerConquestInstance) {
                 ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
