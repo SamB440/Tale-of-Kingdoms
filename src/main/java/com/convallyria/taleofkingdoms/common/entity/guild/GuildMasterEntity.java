@@ -95,42 +95,41 @@ public class GuildMasterEntity extends TOKEntity {
             if (!this.world.isClient()) return ActionResult.FAIL;
 
             if (instance.getReficuleAttackers().size() == 0) {
-                Translations.GUILDMASTER_REBUILD.send(player);
-                instance.setUnderAttack(false);
+                if (!instance.hasRebuilt()) {
+                    api.executeOnMain(() -> {
+                        ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        if (serverPlayerEntity != null) {
+                            PlayerInventory playerInventory = serverPlayerEntity.inventory;
+                            ItemStack stack = null;
+                            for (ItemStack itemStack : playerInventory.main) {
+                                if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
+                                    if (itemStack.getCount() == 64) {
+                                        stack = itemStack;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (stack != null) {
+                                playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
+                                serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
+                                ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
+                                clientConquestInstance.rebuild(serverPlayerEntity, api);
+                                instance.setRebuilt(true);
+                                instance.setUnderAttack(false);
+                                Translations.GUILDMASTER_THANK_YOU.send(player);
+                            } else {
+                                Translations.GUILDMASTER_REBUILD.send(player);
+                            }
+                        }
+                    });
+                    return ActionResult.SUCCESS;
+                }
             } else if (instance.getReficuleAttackers().size() <= 4) {
                 Translations.GUILDMASTER_KILL_REFICULES.send(player);
             } else {
                 Translations.GUILDMASTER_STAY_CLOSE.send(player);
             }
-            return ActionResult.SUCCESS;
-        } else if (instance.hasAttacked() && !instance.hasRebuilt()) {
-            if (!this.world.isClient()) return ActionResult.FAIL;
-            api.executeOnMain(() -> {
-                ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                if (serverPlayerEntity != null) {
-                    PlayerInventory playerInventory = serverPlayerEntity.inventory;
-                    ItemStack stack = null;
-                    for (ItemStack itemStack : playerInventory.main) {
-                        if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
-                            if (itemStack.getCount() == 64) {
-                                stack = itemStack;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (stack != null) {
-                        playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                        serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
-                        ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
-                        clientConquestInstance.rebuild(serverPlayerEntity, api);
-                        instance.setRebuilt(true);
-                        Translations.GUILDMASTER_THANK_YOU.send(player);
-                    } else {
-                        Translations.GUILDMASTER_REBUILD.send(player);
-                    }
-                }
-            });
             return ActionResult.SUCCESS;
         }
         if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;

@@ -28,16 +28,12 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
 
     private StartWorldListener startWorldListener;
 
-    private static final KeyBinding START_CONQUEST_KEYBIND;
-
-    static {
-        START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.taleofkingdoms.startconquest", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_K,
-                "category.taleofkingdoms.keys" // The translation key of the keybinding's category.
-        ));
-    }
+    private static final KeyBinding START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.taleofkingdoms.startconquest", // The translation key of the keybinding's name
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_K,
+            "category.taleofkingdoms.keys" // The translation key of the keybinding's category.
+    ));
 
     @Override
     public void onInitializeClient() {
