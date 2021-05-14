@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterCloneEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
@@ -86,19 +87,19 @@ public abstract class ConquestInstance {
     public BlockPos getStart() {
         return start;
     }
-    
+
     public void setStart(BlockPos start) {
         this.start = start;
     }
-    
+
     public BlockPos getEnd() {
         return end;
     }
-    
+
     public void setEnd(BlockPos end) {
         this.end = end;
     }
-    
+
     public BlockPos getOrigin() {
         return origin;
     }
@@ -121,10 +122,10 @@ public abstract class ConquestInstance {
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
         if (canAttack()) {
-            GuildMasterEntity guildMasterEntity = EntityUtils.spawnEntity(EntityTypes.GUILDMASTER, world, player.getBlockPos());
+            GuildMasterCloneEntity guildMasterCloneEntity = EntityUtils.spawnEntity(EntityTypes.GUILDMASTERCLONE, world, player.getBlockPos());
             this.underAttack = true;
             Translations.GUILDMASTER_HELP.send(player);
-            guildMasterEntity.setCopyGoals();
+            guildMasterCloneEntity.setCopyGoals();
 
             Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
             Structure structure = world.toServerWorld().getStructureManager().getStructure(gateway);
