@@ -86,19 +86,19 @@ public abstract class ConquestInstance {
     public BlockPos getStart() {
         return start;
     }
-    
+
     public void setStart(BlockPos start) {
         this.start = start;
     }
-    
+
     public BlockPos getEnd() {
         return end;
     }
-    
+
     public void setEnd(BlockPos end) {
         this.end = end;
     }
-    
+
     public BlockPos getOrigin() {
         return origin;
     }
@@ -121,10 +121,9 @@ public abstract class ConquestInstance {
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
         if (canAttack()) {
-            GuildMasterEntity guildMasterEntity = EntityUtils.spawnEntity(EntityTypes.GUILDMASTER, world, player.getBlockPos());
+            EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.getBlockPos());
             this.underAttack = true;
             Translations.GUILDMASTER_HELP.send(player);
-            guildMasterEntity.setCopyGoals();
 
             Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
             Structure structure = world.toServerWorld().getStructureManager().getStructure(gateway);
