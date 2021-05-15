@@ -29,7 +29,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CoinListener extends Listener {
-    JsonObject worthinessJson;
+    private JsonObject worthinessJson;
 
     public CoinListener() {
         loadWorthinessJson();
