@@ -29,10 +29,10 @@ public class EntityTypes {
             new Identifier(TaleOfKingdoms.MODID, "guild_master"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
-    public static final EntityType<GuildMasterCloneEntity> GUILDMASTERCLONE = Registry.register(
+    public static final EntityType<GuildMasterDefenderEntity> GUILDMASTER_DEFENDER = Registry.register(
             Registry.ENTITY_TYPE,
-            new Identifier(TaleOfKingdoms.MODID, "guild_master_clone"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterCloneEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+            new Identifier(TaleOfKingdoms.MODID, "guild_master_defender"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterDefenderEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
     public static final EntityType<BlacksmithEntity> BLACKSMITH = Registry.register(
             Registry.ENTITY_TYPE,

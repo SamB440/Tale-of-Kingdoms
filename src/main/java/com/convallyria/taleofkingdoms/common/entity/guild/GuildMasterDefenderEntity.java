@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
@@ -30,14 +31,16 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class GuildMasterCloneEntity extends GuildMasterEntity {
+public class GuildMasterDefenderEntity extends GuildMasterEntity {
     private boolean givenSword;
 
-    public GuildMasterCloneEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public GuildMasterDefenderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public void setCopyGoals() {
+    @Override
+    protected void initGoals() {
+        super.initGoals();
         this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(1000.0D);
         this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));
         this.goalSelector.add(2, new FollowPlayerGoal(this, 0.8F, 5F, 15F));
