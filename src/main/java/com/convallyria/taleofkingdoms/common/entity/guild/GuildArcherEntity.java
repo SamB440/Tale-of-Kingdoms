@@ -9,7 +9,11 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTarget
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CrossbowUser;
+import net.minecraft.entity.EntityData;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
