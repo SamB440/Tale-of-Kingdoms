@@ -10,9 +10,7 @@ import java.util.List;
 
 @Mixin(StructureBlockBlockEntity.class)
 public interface StructureBlockAccessor {
-    // All that you need to do is name the void `call<function name>`,
-    // with the first letter of the function name being uppercase.
-    // So for example, an invoker for a void called doAction looks like this:
+
     @Invoker("findCorners")
     List<StructureBlockBlockEntity> findCorners(List<StructureBlockBlockEntity> structureBlockEntities);
     

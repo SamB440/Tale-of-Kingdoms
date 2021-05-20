@@ -60,7 +60,7 @@ public class StructureBlockUnlimit {
     private float integrity;
 
     /**
-     * @reason Increase the distance that the bounding box can be seen
+     * @reason Increase the distance that the bounding box can be seen up to 256 blocks
      * @author SamB440/Cotander
      */
     @Overwrite
@@ -70,7 +70,7 @@ public class StructureBlockUnlimit {
     }
 
     /**
-     * @reason Increases structure block max size
+     * @reason Increases structure block max size to 512
      * @author SamB440/Cotander
      */
     @Overwrite
@@ -123,7 +123,7 @@ public class StructureBlockUnlimit {
     }
     
     /**
-     * @reason Increases structure block detection size.
+     * @reason Increases structure block detection size up to 255
      * @author SamB440/Cotander
      */
     @Overwrite
@@ -134,8 +134,8 @@ public class StructureBlockUnlimit {
             return false;
         } else {
             BlockPos blockPos = entity.getPos();
-            BlockPos blockPos2 = new BlockPos(blockPos.getX() - 240, 0, blockPos.getZ() - 240);
-            BlockPos blockPos3 = new BlockPos(blockPos.getX() + 240, 255, blockPos.getZ() + 240);
+            BlockPos blockPos2 = new BlockPos(blockPos.getX() - 255, 0, blockPos.getZ() - 255);
+            BlockPos blockPos3 = new BlockPos(blockPos.getX() + 255, 255, blockPos.getZ() + 255);
             List<StructureBlockBlockEntity> list = accessor.findStructureBlockEntities(blockPos2, blockPos3);
             List<StructureBlockBlockEntity> list2 = accessor.findCorners(list);
             if (list2.size() < 1) {

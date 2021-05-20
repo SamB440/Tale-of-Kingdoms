@@ -11,16 +11,17 @@
     "common.ItemMergeEvent",
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
-    "common.PlayerLogin"
+    "common.PlayerLogin",
+    "packet.ClientUpdateStructureBlockUnlimit",
+    "structure.StructureBlockAccessor",
+    "structure.StructureBlockUnlimit"
   ],
   "client": [
     "WorldClose",
     "WorldDeleteEvent",
     "WorldSessionStartEvent",
     "client.InventoryDrawEvent",
-    "client.RecipesUpdatedEvent",
-    "structure.StructureBlockAccessor",
-    "structure.StructureBlockUnlimit"
+    "client.RecipesUpdatedEvent"
   ],
   "server": [
     "server.GameInstanceEvent"
