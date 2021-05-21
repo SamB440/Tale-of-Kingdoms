@@ -46,7 +46,7 @@ public class ClientUpdateStructureBlockUnlimit {
         this.size = new BlockPos(MathHelper.clamp(buf.readByte(), 0, 512), MathHelper.clamp(buf.readByte(), 0, 512), MathHelper.clamp(buf.readByte(), 0, 512));
         this.mirror = buf.readEnumConstant(BlockMirror.class);
         this.rotation = buf.readEnumConstant(BlockRotation.class);
-        this.metadata = buf.readString(12);
+        this.metadata = buf.readString(128); // Fix MC-148809: Please see https://github.com/PaperMC/Paper/pull/5700 and https://bugs.mojang.com/browse/MC-148809
         this.integrity = MathHelper.clamp(buf.readFloat(), 0.0F, 1.0F);
         this.seed = buf.readVarLong();
         int k = buf.readByte();
