@@ -25,7 +25,6 @@ public class FoodShopEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
-        applyEntityAI();
     }
 
     @Environment(EnvType.CLIENT)
@@ -46,5 +45,10 @@ public class FoodShopEntity extends TOKEntity {
     @Override
     public boolean isStationary() {
         return true;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
     }
 }

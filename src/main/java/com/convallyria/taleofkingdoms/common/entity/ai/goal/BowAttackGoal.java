@@ -42,15 +42,18 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
         return this.actor.isHolding(Items.BOW);
     }
 
+    @Override
     public boolean shouldContinue() {
-        return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow();
+        return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow() && this.actor.getTarget() != null;
     }
 
+    @Override
     public void start() {
         super.start();
         this.actor.setAttacking(true);
     }
 
+    @Override
     public void stop() {
         super.stop();
         this.actor.setAttacking(false);
@@ -59,11 +62,10 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
         this.actor.clearActiveItem();
     }
 
+    @Override
     public void tick() {
         LivingEntity livingEntity = this.actor.getTarget();
-        System.out.println("tick");
         if (livingEntity != null) {
-            System.out.println("not null");
             double d = this.actor.squaredDistanceTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
             boolean bl = this.actor.getVisibilityCache().canSee(livingEntity);
             boolean bl2 = this.targetSeeingTicker > 0;
@@ -117,14 +119,13 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
                     int i = this.actor.getItemUseTime();
                     if (i >= 20) {
                         this.actor.clearActiveItem();
-                        ((RangedAttackMob)this.actor).attack(livingEntity, BowItem.getPullProgress(i));
+                        this.actor.attack(livingEntity, BowItem.getPullProgress(i));
                         this.coolDown = this.attackInterval;
                     }
                 }
             } else if (--this.coolDown <= 0 && this.targetSeeingTicker >= -60) {
                 this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.BOW));
             }
-
         }
     }
 }

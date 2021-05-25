@@ -4,22 +4,26 @@
   "version": "${version}",
 
   "name": "Tale of Kingdoms: A new Conquest",
-  "description": "This mod is in alpha. Use at your own risk! \n\nThe Tale of Kingdoms mod, revived.",
+  "description": "This mod is in alpha. Use at your own risk! \n\nThe Tale of Kingdoms mod, revived.\n\nEnter a dangerous realm of knights and honour, fight your way through the hordes of evil and forge your very own kingdom under your reign. Begin your adventure. Prove to the Guildmaster that you are worthy. Be the hero you were born for.",
   "authors": [
-    "SamB440"
+    "SamB440",
+    "The_KingCobra200"
   ],
   "contributors": [
     "Marackai",
     "Aksel0206",
     "PyroPyxel",
     "Sheepguard",
-    "michaelb229"
+    "michaelb229",
+    "Krol05",
+    "BeingAmazing(Ben)#6423"
   ],
   "contact": {
     "homepage": "https://www.convallyria.com",
     "sources": "https://gitlab.com/SamB440/tale-of-kingdoms",
     "issues": "https://gitlab.com/SamB440/tale-of-kingdoms/issues"
   },
+  "license": "Code contributions under GNU GPL v3, otherwise All Rights Reserved (C) Convallyria. Other files and/or contributions are under their own license. See README's for more info.",
 
   "icon": "assets/taleofkingdoms/logo.png",
 
@@ -42,8 +46,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
-    "minecraft": "1.16.x",
-    "worldedit": ">=7.2.0-beta-02+d10d7d6"
+    "minecraft": "1.16.x"
   },
   "suggests": {
     "flamingo": "*"

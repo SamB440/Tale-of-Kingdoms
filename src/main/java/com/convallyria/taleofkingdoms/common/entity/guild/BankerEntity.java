@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -24,7 +23,6 @@ public class BankerEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
-        applyEntityAI();
     }
 
     @Override
@@ -43,4 +41,9 @@ public class BankerEntity extends TOKEntity {
 
     @Override
     public boolean isStationary() { return true; }
+
+    @Override
+    public boolean isPushable() {
+        return false;
+    }
 }

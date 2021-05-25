@@ -4,20 +4,24 @@
   "package": "com.convallyria.taleofkingdoms.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "common.EntitySpawnEvent",
-    "common.InventoryInsertEvent",
     "common.EntityDeathEvent",
     "common.EntityPickupItemEvent",
+    "common.EntitySpawnEvent",
+    "common.InventoryInsertEvent",
     "common.ItemMergeEvent",
+    "common.PlayerDeathEvent",
+    "common.PlayerLeave",
     "common.PlayerLogin",
-    "common.PlayerLeave"
+    "packet.ClientUpdateStructureBlockUnlimit",
+    "structure.StructureBlockAccessor",
+    "structure.StructureBlockUnlimit"
   ],
   "client": [
-    "client.InventoryDrawEvent",
-    "client.RecipesUpdatedEvent",
     "WorldClose",
+    "WorldDeleteEvent",
     "WorldSessionStartEvent",
-    "WorldDeleteEvent"
+    "client.InventoryDrawEvent",
+    "client.RecipesUpdatedEvent"
   ],
   "server": [
     "server.GameInstanceEvent"

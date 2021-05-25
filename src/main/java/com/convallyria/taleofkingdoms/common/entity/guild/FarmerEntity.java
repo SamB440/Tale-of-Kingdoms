@@ -5,8 +5,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -19,6 +19,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends TOKEntity {
@@ -32,7 +33,6 @@ public class FarmerEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
-        applyEntityAI();
     }
 
     @Override
@@ -42,41 +42,34 @@ public class FarmerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || player.world.isClient) return ActionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
         if (!TaleOfKingdoms.getAPI().isPresent()) return ActionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         if (!api.getConquestInstanceStorage().mostRecentInstance().isPresent()) return ActionResult.FAIL;
 
-        if (player.getServer() != null && !player.getServer().isDedicated()) {
-            ClientConquestInstance instance = (ClientConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
-            long day = player.world.getTimeOfDay() / 24000L;
-            if (instance.getFarmerLastBread() >= day) {
-                Translations.FARMER_GOT_BREAD.send(player);
-                return ActionResult.FAIL;
-            }
+        ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
+        UUID uuid = null;
+        long day = player.world.getTimeOfDay() / 24000L;
+        if (instance.getFarmerLastBread() >= day) {
+            Translations.FARMER_GOT_BREAD.send(player);
+            return ActionResult.FAIL;
+        }
 
-            // Set the current day and add bread to inventory
-            instance.setFarmerLastBread(day);
-            Translations.FARMER_TAKE_BREAD.send(player);
-        } else if (player.getServer() != null && player.getServer().isDedicated()) {
-            ServerConquestInstance instance = (ServerConquestInstance) api.getConquestInstanceStorage().mostRecentInstance().get();
-            long day = player.world.getTimeOfDay() / 24000L;
-            if (instance.getFarmerLastBread(player.getUuid()) >= day) {
-                Translations.FARMER_GOT_BREAD.send(player);
-                return ActionResult.FAIL;
-            }
-
-            // Set the current day and add bread to inventory
-            instance.setFarmerLastBread(player.getUuid(), day);
+        if (player.getServer() != null && player.getServer().isDedicated()) {
+            uuid = player.getUuid();
             Translations.FARMER_TAKE_BREAD.send(player);
         }
 
+        // Set the current day and add bread to inventory
+        instance.setFarmerLastBread(uuid, day);
+        Translations.FARMER_TAKE_BREAD.send(player);
+
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
-        if (player.getServer() != null && !player.getServer().isDedicated()) {
+        if (instance instanceof ClientConquestInstance) {
             api.executeOnMain(() -> {
-                MinecraftServer server = MinecraftClient.getInstance().getServer();
+                MinecraftServer server = player.getServer();
                 if (server != null) {
                     ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity != null) {
@@ -84,9 +77,14 @@ public class FarmerEntity extends TOKEntity {
                     }
                 }
             });
-        } else if (player.getServer() != null && player.getServer().isDedicated()) {
+        } else if (instance instanceof ServerConquestInstance) {
             api.executeOnDedicatedServer(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;
+    }
+
+    @Override
+    public boolean isPushable() {
+        return false;
     }
 }

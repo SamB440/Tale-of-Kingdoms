@@ -40,12 +40,11 @@ public class InnkeeperScreen extends ScreenTOK {
         super.init();
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
             this.onClose();
-            //TODO fix sleeping for fabric
             BlockPos rest = this.locateRestingPlace(player);
             if (rest != null) {
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server != null) {
-                    server.getOverworld().setTimeOfDay(24000);
+                    server.getOverworld().setTimeOfDay(1000);
                     TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
                         ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                         if (serverPlayerEntity == null) return;
@@ -54,8 +53,6 @@ public class InnkeeperScreen extends ScreenTOK {
                         serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
                     }));
                 }
-
-                //player.sleep(rest);
             } else {
                 player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);
             }
@@ -63,17 +60,13 @@ public class InnkeeperScreen extends ScreenTOK {
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
             this.onClose();
-            //TODO fix sleeping for fabric
             MinecraftServer server = MinecraftClient.getInstance().getServer();
-            if (server != null && server.getOverworld().getTimeOfDay() < 13000) {
-                    server.getOverworld().setTimeOfDay(13000);
-            }
-            else {
-                player.sendMessage(new LiteralText("House Keeper: It is already night time."), false);
+            if (server != null) {
+                server.getOverworld().setTimeOfDay(13000);
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 15, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
+        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
     }
 
     @Override

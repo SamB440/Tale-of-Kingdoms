@@ -2,7 +2,6 @@ package com.convallyria.taleofkingdoms.common.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -11,7 +10,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TOKEntity extends PathAwareEntity implements RangedAttackMob {
+public abstract class TOKEntity extends PathAwareEntity {
 
     protected TOKEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
@@ -80,9 +79,4 @@ public abstract class TOKEntity extends PathAwareEntity implements RangedAttackM
 
     @Override
     public void checkDespawn() { }
-
-    @Override
-    public void attack(LivingEntity target, float pullProgress) {
-        throw new UnsupportedOperationException("Mob does not support ranged attack");
-    }
 }

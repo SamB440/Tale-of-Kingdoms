@@ -17,7 +17,6 @@ import net.minecraft.entity.player.PlayerEntity;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,6 +26,10 @@ public class StartWorldListener extends Listener {
 
     private String worldName;
     private boolean joined;
+
+    public String getWorldName() {
+        return worldName;
+    }
 
     public StartWorldListener() {
         WorldStopCallback.EVENT.register(() -> {
@@ -62,19 +65,20 @@ public class StartWorldListener extends Listener {
             if (loaded) {
                 // Already exists
                 Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
-                try {
-                    // Load from json into class
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                // Load from json into class
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     ConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
-                        if ((instance == null || instance.getName() == null) || !instance.isLoaded())
+                        if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
                             MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
-                        else
+                        } else {
                             MinecraftClient.getInstance().openScreen(new ScreenContinueConquest(instance));
-                        TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                            TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
+                            TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                        }
                     });
-                } catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
+                } catch (JsonSyntaxException | JsonIOException | IOException e) {
                     e.printStackTrace();
                 }
                 return;
@@ -91,7 +95,7 @@ public class StartWorldListener extends Listener {
         if (!file.exists()) {
             try {
                 // If not, create new file
-                file.createNewFile();
+                return file.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }

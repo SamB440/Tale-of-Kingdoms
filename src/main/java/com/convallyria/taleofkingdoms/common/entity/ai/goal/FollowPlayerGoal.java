@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
+import com.convallyria.taleofkingdoms.common.entity.MovementVaried;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.pathing.BirdNavigation;
@@ -40,9 +41,13 @@ public class FollowPlayerGoal extends Goal {
 
     @Override
     public boolean canStart() {
+        if (this.mob instanceof MovementVaried) {
+            MovementVaried movementVaried = (MovementVaried) this.mob;
+            if (!movementVaried.isMovementEnabled()) return false;
+        }
+
         List<PlayerEntity> list = this.mob.world.getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(this.maxDistance), this.targetPredicate);
         if (!list.isEmpty()) {
-
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.isInvisible()) {
                     this.target = playerEntity;
@@ -56,7 +61,12 @@ public class FollowPlayerGoal extends Goal {
 
     @Override
     public boolean shouldContinue() {
-        return this.target != null && !this.navigation.isIdle() && this.mob.squaredDistanceTo(this.target) > (double)(this.minDistance * this.minDistance);
+        boolean flag = true;
+        if (this.mob instanceof MovementVaried) {
+            MovementVaried movementVaried = (MovementVaried) this.mob;
+            if (!movementVaried.isMovementEnabled()) flag = false;
+        }
+        return flag && this.target != null && !this.navigation.isIdle() && this.mob.squaredDistanceTo(this.target) > (double)(this.minDistance * this.minDistance);
     }
 
     @Override

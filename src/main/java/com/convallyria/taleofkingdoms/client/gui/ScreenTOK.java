@@ -1,16 +1,19 @@
 package com.convallyria.taleofkingdoms.client.gui;
 
+import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 
-/**
- * Find out more from our GUI research:
- * https://forum.islandearth.net/d/10-forge-modding-tutorial-1-14-creating-custom-guis-1-3
- */
+import java.util.ArrayList;
+import java.util.List;
+
 @Environment(EnvType.CLIENT)
 public abstract class ScreenTOK extends Screen {
+
+    private final List<IImage> images;
 
     /**
      * Constructs a new {@link Screen}
@@ -18,6 +21,21 @@ public abstract class ScreenTOK extends Screen {
      */
     protected ScreenTOK(String translation) {
         super(new TranslatableText(translation));
+        this.images = new ArrayList<>();
+    }
+
+    public void addImage(IImage image) {
+        images.add(image);
+    }
+
+    public void removeImage(IImage image) {
+        images.remove(image);
+    }
+
+    @Override
+    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+        images.forEach(image -> image.render(stack, this));
+        super.render(stack, mouseX, mouseY, delta);
     }
 
     /**

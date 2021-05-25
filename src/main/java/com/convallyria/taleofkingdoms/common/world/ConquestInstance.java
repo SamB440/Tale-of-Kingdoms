@@ -2,16 +2,29 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
+import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.google.gson.Gson;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
+import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.Tag;
+import net.minecraft.structure.Structure;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
+import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -21,15 +34,22 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
 
-    private String world;
-    private String name;
+    private final String world;
+    private final String name;
     private boolean hasLoaded;
     private BlockPos start;
     private BlockPos end;
-    private BlockPos origin;
+    private final BlockPos origin;
+    private List<UUID> loneVillagersWithRooms;
+    private boolean underAttack;
+    private final List<BlockPos> reficuleAttackLocations;
+    private final List<UUID> reficuleAttackers;
+    private boolean hasRebuilt;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -42,6 +62,9 @@ public abstract class ConquestInstance {
         this.start = start;
         this.end = end;
         this.origin = origin;
+        this.loneVillagersWithRooms = new ArrayList<>();
+        this.reficuleAttackLocations = new ArrayList<>();
+        this.reficuleAttackers = new ArrayList<>();
     }
 
     public String getWorld() {
@@ -64,12 +87,179 @@ public abstract class ConquestInstance {
         return start;
     }
 
+    public void setStart(BlockPos start) {
+        this.start = start;
+    }
+
     public BlockPos getEnd() {
         return end;
     }
 
+    public void setEnd(BlockPos end) {
+        this.end = end;
+    }
+
     public BlockPos getOrigin() {
         return origin;
+    }
+
+    public boolean canAttack() {
+        return canAttack(null);
+    }
+
+    public boolean canAttack(UUID uuid) {
+        return getWorthiness(uuid) >= (1500.0F / 2) && !isUnderAttack() && !hasRebuilt;
+    }
+
+    /**
+     * Returns true if and only if the guild is not currently under attack and the worthiness of the player is greater than 750
+     * @return If the guild has been attacked
+     */
+    public boolean hasAttacked() {
+        return !isUnderAttack() && getWorthiness(null) > 750;
+    }
+
+    public void attack(PlayerEntity player, ServerWorldAccess world) {
+        if (canAttack()) {
+            EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.getBlockPos());
+            this.underAttack = true;
+            Translations.GUILDMASTER_HELP.send(player);
+
+            Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
+            Structure structure = world.toServerWorld().getStructureManager().getStructure(gateway);
+            for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
+                StructurePlacementData structurePlacementData = new StructurePlacementData();
+                structurePlacementData.addProcessor(GatewayStructureProcessor.INSTANCE);
+                structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
+                structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
+                BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
+                structure.place(world, newPos, structurePlacementData, ThreadLocalRandom.current());
+            }
+        }
+    }
+
+    /**
+     * @return If the guild is currently under attack
+     */
+    public boolean isUnderAttack() {
+        return underAttack;
+    }
+
+    public void setUnderAttack(boolean underAttack) {
+        this.underAttack = underAttack;
+    }
+
+    public List<UUID> getLoneVillagersWithRooms() {
+        if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
+        return loneVillagersWithRooms;
+    }
+
+    public void addLoneVillagerWithRoom(LoneVillagerEntity entity) {
+        if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
+        loneVillagersWithRooms.add(entity.getUuid());
+    }
+
+    public List<BlockPos> getReficuleAttackLocations() {
+        return reficuleAttackLocations;
+    }
+
+    public List<UUID> getReficuleAttackers() {
+        return reficuleAttackers;
+    }
+
+    /**
+     * @return If the guild has been rebuilt
+     */
+    public boolean hasRebuilt() {
+        return hasRebuilt;
+    }
+
+    public void setRebuilt(boolean hasRebuilt) {
+        this.hasRebuilt = hasRebuilt;
+    }
+
+    public abstract int getCoins(UUID uuid);
+
+    public abstract int getBankerCoins(UUID uuid);
+
+    public abstract void setBankerCoins(UUID uuid, int bankerCoins);
+
+    public abstract void setCoins(UUID uuid, int coins);
+
+    public abstract void addCoins(UUID uuid, int coins);
+
+    public abstract long getFarmerLastBread(UUID uuid);
+
+    public abstract void setFarmerLastBread(UUID uuid, long day);
+
+    public abstract boolean hasContract(UUID uuid);
+
+    public abstract void setHasContract(UUID uuid, boolean hasContract);
+
+    public abstract int getWorthiness(UUID uuid);
+
+    public abstract void setWorthiness(UUID uuid, int worthiness);
+
+    public abstract void addWorthiness(UUID uuid, int worthiness);
+
+    public int getCoins() {
+        return getCoins(null);
+    }
+
+    public int getBankerCoins() {
+        return getBankerCoins(null);
+    }
+
+    public void setBankerCoins(int bankerCoins) {
+        setBankerCoins(null, bankerCoins);
+    }
+
+    public void setCoins(int coins) {
+        setCoins(null, coins);
+    }
+
+    public void addCoins(int coins) {
+        addCoins(null, coins);
+    }
+
+    public long getFarmerLastBread() {
+        return getFarmerLastBread(null);
+    }
+
+    public void setFarmerLastBread(long day) {
+        setFarmerLastBread(null, day);
+    }
+
+    public boolean hasContract() {
+        return hasContract(null);
+    }
+
+    public void setHasContract(boolean hasContract) {
+        setHasContract(null, hasContract);
+    }
+
+    public int getWorthiness() {
+        return getWorthiness(null);
+    }
+
+    public void setWorthiness(int worthiness) {
+        setWorthiness(null, worthiness);
+    }
+
+    public void addWorthiness(int worthiness) {
+        addWorthiness(null, worthiness);
+    }
+
+    public Optional<GuildMasterEntity> getGuildMaster(World world) {
+        if (start == null || end == null) return Optional.empty();
+        Box box = new Box(getStart(), getEnd());
+        return world.getEntitiesByType(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.isFireImmune()).stream().findFirst();
+    }
+
+    public Optional<? extends Entity> getGuildEntity(World world, EntityType<?> type) {
+        if (start == null || end == null) return Optional.empty();
+        Box box = new Box(getStart(), getEnd());
+        return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();
     }
 
     private List<BlockPos> validRest;
@@ -97,12 +287,8 @@ public abstract class ConquestInstance {
                     for (int y = bottomBlockY; y <= topBlockY; y++) {
                         BlockPos blockPos = new BlockPos(x, y, z);
                         BlockEntity tileEntity = player.getEntityWorld().getChunk(blockPos).getBlockEntity(blockPos);
-                        if (tileEntity instanceof SignBlockEntity) {
-                            SignBlockEntity signTileEntity = (SignBlockEntity) tileEntity;
-                            Tag tag = signTileEntity.toInitialChunkDataTag().get("Text1");
-                            if (tag != null && tag.toText().getString().equals("'{\"text\":\"[Rest]\"}'")) {
-                                validRest.add(blockPos);
-                            }
+                        if (tileEntity instanceof BedBlockEntity) {
+                            validRest.add(blockPos);
                         }
                     }
                 }
@@ -131,17 +317,15 @@ public abstract class ConquestInstance {
      * @return true if position is in guild, false if not
      */
     public boolean isInGuild(BlockPos pos) {
-        BlockVector3 firstPos = BlockVector3.at(start.getX(), start.getY(), start.getZ());
-        BlockVector3 secondPos = BlockVector3.at(end.getX(), end.getY(), end.getZ());
-        Region region = new CuboidRegion(firstPos, secondPos);
-        BlockVector3 blockVector3 = BlockVector3.at(pos.getX(), pos.getY(), pos.getZ());
-        return region.contains(blockVector3);
+        if (start == null || end == null) return false; // Probably still pasting.
+        BlockBox blockBox = new BlockBox(start, end);
+        return blockBox.contains(pos);
     }
 
     public void save(TaleOfKingdomsAPI api) {
-        File file = new File(api.getDataFolder() + "worlds/" + world + ".conquestworld");
+        File file = new File(api.getDataFolder() + "worlds" + File.separator + world + ".conquestworld");
         try (Writer writer = new FileWriter(file)) {
-            Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+            Gson gson = api.getMod().getGson();
             gson.toJson(this, writer);
             TaleOfKingdoms.LOGGER.info("Saved data");
         } catch (IOException e) {
