@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
@@ -48,11 +49,12 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
                     }
 
                     BlockPos pos = entity.get().getBlockPos().add(0, 2, 0);
-                    if (close) {
-
-                        return;
-                    }
                     api.getScheduler().queue(server -> {
+                        if (close) {
+                            server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
+                            return;
+                        }
+
                         ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
                         server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
                         BlockState state = server.getOverworld().getBlockState(pos);

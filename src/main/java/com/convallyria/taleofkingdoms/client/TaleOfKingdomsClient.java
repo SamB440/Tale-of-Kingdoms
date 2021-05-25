@@ -11,7 +11,7 @@ import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketH
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuyItemPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingFixGuildPacketHandler;
-import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingOpenSellGuiPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
 import net.fabricmc.api.ClientModInitializer;
@@ -60,7 +60,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         registerHandler(new IncomingInstanceSyncPacketHandler());
         registerHandler(new BothSignContractPacketHandler());
         registerHandler(new OutgoingFixGuildPacketHandler());
-        registerHandler(new OutgoingOpenSellGuiPacketHandler());
+        registerHandler(new OutgoingToggleSellGuiPacketHandler());
         registerHandler(new OutgoingBuyItemPacketHandler());
     }
 
