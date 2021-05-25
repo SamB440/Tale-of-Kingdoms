@@ -4,7 +4,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuyItemPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingSignContractPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingInstanceSyncPacketHandler;
 import net.fabricmc.api.DedicatedServerModInitializer;
 
@@ -19,6 +22,9 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
     private void registerPacketHandlers() {
         registerHandler(new OutgoingInstanceSyncPacketHandler());
         registerHandler(new IncomingSignContractPacketHandler());
+        registerHandler(new IncomingFixGuildPacketHandler());
+        registerHandler(new IncomingToggleSellGuiPacketHandler());
+        registerHandler(new IncomingBuyItemPacketHandler());
     }
 
     private void registerListeners() {

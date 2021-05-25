@@ -3,7 +3,40 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.entity.BlacksmithScreen;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.shop.ArrowShopItem;
+import com.convallyria.taleofkingdoms.common.shop.BowShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondAxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondBootsShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondChestplateShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondHelmetShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondLeggingsShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondPickaxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondShovelShopItem;
+import com.convallyria.taleofkingdoms.common.shop.DiamondSwordShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronAxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronBootsShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronChestplateShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronHelmetShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronLeggingsShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronPickaxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronShovelShopItem;
+import com.convallyria.taleofkingdoms.common.shop.IronSwordShopItem;
+import com.convallyria.taleofkingdoms.common.shop.LeatherBootsShopItem;
+import com.convallyria.taleofkingdoms.common.shop.LeatherChestplateShopItem;
+import com.convallyria.taleofkingdoms.common.shop.LeatherHelmetShopItem;
+import com.convallyria.taleofkingdoms.common.shop.LeatherLeggingsShopItem;
+import com.convallyria.taleofkingdoms.common.shop.ShieldShopItem;
+import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.shop.StoneAxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.StonePickaxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.StoneShovelShopItem;
+import com.convallyria.taleofkingdoms.common.shop.StoneSwordShopItem;
+import com.convallyria.taleofkingdoms.common.shop.WoodenAxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.WoodenPickaxeShopItem;
+import com.convallyria.taleofkingdoms.common.shop.WoodenShovelShopItem;
+import com.convallyria.taleofkingdoms.common.shop.WoodenSwordShopItem;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -50,5 +83,17 @@ public class BlacksmithEntity extends TOKEntity {
     @Override
     public boolean isPushable() {
         return false;
+    }
+
+    public static ImmutableList<ShopItem> getBlacksmithShopItems() {
+        return ImmutableList.of(new ArrowShopItem(), new BowShopItem(),
+                new DiamondAxeShopItem(), new DiamondBootsShopItem(),
+                new DiamondChestplateShopItem(), new DiamondHelmetShopItem(), new DiamondLeggingsShopItem(), new DiamondPickaxeShopItem(),
+                new DiamondShovelShopItem(), new DiamondSwordShopItem(),
+                new IronAxeShopItem(), new IronBootsShopItem(), new IronChestplateShopItem(), new IronHelmetShopItem(),
+                new IronLeggingsShopItem(), new IronPickaxeShopItem(), new IronShovelShopItem(), new IronSwordShopItem(),
+                new LeatherBootsShopItem(), new LeatherChestplateShopItem(), new LeatherHelmetShopItem(), new LeatherLeggingsShopItem(),
+                new ShieldShopItem(), new StoneAxeShopItem(), new StonePickaxeShopItem(), new StoneShovelShopItem(), new StoneSwordShopItem(),
+                new WoodenAxeShopItem(), new WoodenPickaxeShopItem(), new WoodenShovelShopItem(), new WoodenSwordShopItem());
     }
 }

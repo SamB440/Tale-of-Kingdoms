@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -78,6 +79,13 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     }
 
     protected void deleteBlock(TaleOfKingdomsAPI api, Entity entity) {
+        if (MinecraftClient.getInstance().getServer() == null) {
+            api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
+                    .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
+                            playerInventory.player,
+                            null, true);
+            return;
+        }
         api.getScheduler().queue(server -> {
             BlockPos pos = entity.getBlockPos().add(0, 2, 0);
             server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());

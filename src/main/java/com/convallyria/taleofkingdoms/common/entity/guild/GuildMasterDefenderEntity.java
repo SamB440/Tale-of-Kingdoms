@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
@@ -30,6 +29,8 @@ import net.minecraft.tag.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+
+import java.util.HashSet;
 
 public class GuildMasterDefenderEntity extends GuildMasterEntity {
     private boolean givenSword;
@@ -59,7 +60,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {
-            if (!givenSword && !player.inventory.contains(FabricToolTags.SWORDS)) {
+            if (!givenSword && !player.inventory.containsAny(new HashSet<>(FabricToolTags.SWORDS.values()))) { // Use containsAny method as it is present on both server and client
                 api.executeOnMain(() -> {
                     MinecraftServer server = player.getServer();
                     if (server != null) {
@@ -90,6 +91,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             }
 
                             if (stack != null) {
+                                //TODO request rebuild packet
                                 playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
                                 serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
                                 ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
