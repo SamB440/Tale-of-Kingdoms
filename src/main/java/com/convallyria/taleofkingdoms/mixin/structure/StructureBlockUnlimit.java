@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.mixin.structure;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -119,7 +120,11 @@ public class StructureBlockUnlimit {
         }
         
         this.seed = tag.getLong("seed");
-        accessor.updateBlockMode();
+        try {
+            accessor.updateBlockMode();
+        } catch (StackOverflowError e) {
+            TaleOfKingdoms.LOGGER.info("OVERFLOW!!");
+        }
     }
     
     /**
