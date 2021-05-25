@@ -57,7 +57,7 @@ public class GameInstanceListener extends Listener {
                             // Check if file exists, but values don't. Game probably crashed?
                             if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
                                 this.create(connection, api, player, server, conquestFile).thenAccept(done -> {
-                                    api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
+                                    api.getConquestInstanceStorage().mostRecentInstance().ifPresent(conquestInstance -> {
                                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
                                         serverConquestInstance.reset(player);
                                         serverConquestInstance.sync(player, connection);

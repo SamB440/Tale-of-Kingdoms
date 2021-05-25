@@ -67,6 +67,14 @@ public abstract class ConquestInstance {
         this.reficuleAttackers = new ArrayList<>();
     }
 
+    public boolean isClient() {
+        return this instanceof ClientConquestInstance;
+    }
+    
+    public boolean isServer() {
+        return this instanceof ServerConquestInstance;
+    }
+    
     public String getWorld() {
         return world;
     }
@@ -112,11 +120,19 @@ public abstract class ConquestInstance {
     }
 
     /**
-     * Returns true if and only if the guild is not currently under attack and the worthiness of the player is greater than 750
-     * @return If the guild has been attacked
+     * @see #hasAttacked(UUID)
      */
     public boolean hasAttacked() {
-        return !isUnderAttack() && getWorthiness(null) > 750;
+        return hasAttacked(null);
+    }
+    
+    /**
+     * Returns true if and only if the guild is not currently under attack and the worthiness of the player is greater than 750
+     * @param uuid player uuid to check, nullable
+     * @return If the guild has been attacked
+     */
+    public boolean hasAttacked(UUID uuid) {
+        return !isUnderAttack() && getWorthiness(uuid) > 750;
     }
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {

@@ -50,16 +50,11 @@ public class FarmerEntity extends TOKEntity {
         if (!api.getConquestInstanceStorage().mostRecentInstance().isPresent()) return ActionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-        UUID uuid = null;
+        UUID uuid = player.getUuid();
         long day = player.world.getTimeOfDay() / 24000L;
-        if (instance.getFarmerLastBread() >= day) {
+        if (instance.getFarmerLastBread(uuid) >= day) {
             Translations.FARMER_GOT_BREAD.send(player);
             return ActionResult.FAIL;
-        }
-
-        if (player.getServer() != null && player.getServer().isDedicated()) {
-            uuid = player.getUuid();
-            Translations.FARMER_TAKE_BREAD.send(player);
         }
 
         // Set the current day and add bread to inventory
