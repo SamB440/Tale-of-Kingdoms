@@ -63,16 +63,16 @@ public class GuildGuardEntity extends TOKEntity {
                         if (instance.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
                         final int[] countdown = {3};
                         api.getScheduler().repeatN(server -> {
-                            if (instance.isClient()) player.sendMessage(new LiteralText("" + countdown[0]), false);
+                            player.sendMessage(new LiteralText("" + countdown[0]), false);
                             countdown[0] = countdown[0] - 1;
                         }, 3, 0, 20);
                         api.getScheduler().queue(server -> {
                             final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true);
                             this.targetSelector.add(0, goal);
-                            if (instance.isClient()) Translations.GUILDMEMBER_BEGIN.send(player);
+                            Translations.GUILDMEMBER_BEGIN.send(player);
                             api.getScheduler().queue(server2 -> {
                                 this.targetSelector.remove(goal);
-                                if (instance.isClient()) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
+                                Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
                                 instance.addWorthiness(player.getUuid(), 2);
                                 this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
                             }, 160);

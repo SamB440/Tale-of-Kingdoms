@@ -5,7 +5,9 @@ import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -45,9 +47,16 @@ public class BankerScreen extends ScreenTOK {
                 }
 
                 if (instance.getCoins() >= coins) {
+                    this.onClose();
+                    if (MinecraftClient.getInstance().getServer() == null) {
+                        TaleOfKingdoms.getAPI().get().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
+                                .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
+                                        player,
+                                        null, BankerMethod.DEPOSIT, coins);
+                        return;
+                    }
                     instance.setCoins(instance.getCoins() - coins);
                     instance.setBankerCoins(instance.getBankerCoins() + coins);
-                    this.onClose();
                 }
             } catch (NumberFormatException e) {
                 Translations.BANK_INPUT.send(player);
@@ -63,9 +72,16 @@ public class BankerScreen extends ScreenTOK {
                     return;
                 }
                 if (instance.getBankerCoins() >= coins) {
+                    this.onClose();
+                    if (MinecraftClient.getInstance().getServer() == null) {
+                        TaleOfKingdoms.getAPI().get().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
+                                .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
+                                        player,
+                                        null, BankerMethod.WITHDRAW, coins);
+                        return;
+                    }
                     instance.setBankerCoins(instance.getBankerCoins() - coins);
                     instance.addCoins(coins);
-                    this.onClose();
                 }
             } catch (NumberFormatException e) {
                 Translations.BANK_INPUT.send(player);
@@ -78,11 +94,11 @@ public class BankerScreen extends ScreenTOK {
 
         this.text.setMaxLength(12);
         this.text.setText("0");
-        this.text.setFocusUnlocked(false);
+        this.text.setSelected(true);
+        this.text.setFocusUnlocked(true);
         this.text.changeFocus(true);
         this.text.setVisible(true);
         this.children.add(this.text);
-
     }
 
     @Override

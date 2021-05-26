@@ -19,7 +19,6 @@ import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.Heightmap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -116,9 +115,9 @@ public class GameInstanceListener extends Listener {
     }
 
     private CompletableFuture<Void> create(ClientConnection connection, TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server, File toSave) {
-        int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
-        BlockPos blockPos = new BlockPos(0, topY, 0);
-        ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), null, null, blockPos.add(0, 1, 0));
+        // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
+        BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 12, 0));
+        ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
         try (Writer writer = new FileWriter(toSave)) {
             Gson gson = api.getMod().getGson();
             gson.toJson(instance, writer);
@@ -126,7 +125,7 @@ public class GameInstanceListener extends Listener {
             e.printStackTrace();
         }
         api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
-        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, blockPos.subtract(new Vec3i(0, 12, 0))).thenAccept(oi -> {
+        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
             BlockPos start = new BlockPos(oi.maxX, oi.maxY, oi.maxZ);
             BlockPos end = new BlockPos(oi.minX, oi.minY, oi.minZ);
             instance.setStart(start);

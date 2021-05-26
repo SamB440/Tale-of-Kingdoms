@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.client.gui.shop.ScreenSellItem;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBankerInteractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuyItemPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
@@ -62,6 +63,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         registerHandler(new OutgoingFixGuildPacketHandler());
         registerHandler(new OutgoingToggleSellGuiPacketHandler());
         registerHandler(new OutgoingBuyItemPacketHandler());
+        registerHandler(new OutgoingBankerInteractPacketHandler());
     }
 
     private void registerListeners() {

@@ -57,7 +57,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
                         return;
                     }
 
-                    playerInventory.setStack(getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
+                    playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
                     instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
                     instance.rebuild(player, api, SchematicOptions.IGNORE_DEFENDERS);
                     instance.sync(player, null);
@@ -67,18 +67,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
         });
     }
 
-    private int getSlotWithStack(PlayerInventory playerInventory, ItemStack stack) {
-        for (int i = 0; i < playerInventory.main.size(); ++i) {
-            if (!playerInventory.main.get(i).isEmpty() && areItemsEqual(stack, playerInventory.main.get(i))) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
-    private boolean areItemsEqual(ItemStack stack1, ItemStack stack2) {
-        return stack1.getItem() == stack2.getItem() && ItemStack.areTagsEqual(stack1, stack2);
-    }
 
     @Override
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
