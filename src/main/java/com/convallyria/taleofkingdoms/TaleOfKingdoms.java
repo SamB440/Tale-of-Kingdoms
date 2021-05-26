@@ -7,7 +7,18 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.*;
+import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.FarmerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildArcherEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterDefenderEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -19,7 +30,13 @@ import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructur
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
-import com.convallyria.taleofkingdoms.common.listener.*;
+import com.convallyria.taleofkingdoms.common.listener.BlockListener;
+import com.convallyria.taleofkingdoms.common.listener.CoinListener;
+import com.convallyria.taleofkingdoms.common.listener.DeleteWorldListener;
+import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
+import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
+import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
+import com.convallyria.taleofkingdoms.common.listener.SleepListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -77,6 +94,10 @@ public class TaleOfKingdoms implements ModInitializer {
 
     public static final Identifier INSTANCE_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "instance");
     public static final Identifier SIGN_CONTRACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "sign_contract");
+    public static final Identifier FIX_GUILD_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "fix_guild");
+    public static final Identifier TOGGLE_SELL_GUI_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "open_sell_gui");
+    public static final Identifier BUY_ITEM_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "buy_item");
+    public static final Identifier BANKER_INTERACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "banker_interact");
 
     public static final StructurePieceType REFICULE_VILLAGE = ReficuleVillageGenerator.ReficuleVillagePiece::new;
     public static final StructureFeature<DefaultFeatureConfig> REFICULE_VILLAGE_STRUCTURE = new ReficuleVillageFeature(DefaultFeatureConfig.CODEC);

@@ -69,6 +69,7 @@ public class GuildMasterScreen extends ScreenTOK {
                     Translations.HUNTER_THANK.send(player);
                     instance.removeHunter(hunter);
                     instance.setCoins(instance.getCoins() + 750);
+                    //TODO RETIRE_HUNTER_PACKET_ID
                 } else {
                     Translations.GUILDMASTER_NOHUNTER.send(player);
                 }
@@ -82,14 +83,21 @@ public class GuildMasterScreen extends ScreenTOK {
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnMain(() -> {
                 if (instance.getCoins(player.getUuid()) < 3000) return;
+                if (stack == null) return;
+                if (MinecraftClient.getInstance().getServer() == null) {
+                    api.getClientHandler(TaleOfKingdoms.FIX_GUILD_PACKET_ID)
+                            .handleOutgoingPacket(TaleOfKingdoms.FIX_GUILD_PACKET_ID,
+                                    player,
+                                    client.getNetworkHandler().getConnection());
+                    return;
+                }
+
                 ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                 if (serverPlayerEntity != null) {
                     PlayerInventory serverPlayerInventory = serverPlayerEntity.inventory;
-                    if (stack != null) {
-                        serverPlayerInventory.setStack(serverPlayerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                        instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
-                        instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
-                    }
+                    serverPlayerInventory.setStack(serverPlayerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
+                    instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
+                    instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
                 }
             }));
             this.onClose();
@@ -191,6 +199,7 @@ public class GuildMasterScreen extends ScreenTOK {
                         BlockPos blockPos = entity.getBlockPos();
                         HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, serverWorld, blockPos);
                         instance.addHunter(hunterEntity);
+                        //TODO HIRE_HUNTER_PACKET_ID
                     }
                 }));
                 instance.setCoins(instance.getCoins() - 1500);

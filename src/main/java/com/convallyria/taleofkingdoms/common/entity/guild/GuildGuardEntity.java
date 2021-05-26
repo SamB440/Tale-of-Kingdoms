@@ -6,7 +6,6 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -58,22 +57,22 @@ public class GuildGuardEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (instance.hasAttacked()) {
+                if (instance.hasAttacked(player.getUuid())) {
                     if (player.getMainHandStack().getItem() == Items.WOODEN_SWORD) {
                         this.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
-                        if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_START_FIGHT.send(player);
+                        if (instance.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
                         final int[] countdown = {3};
                         api.getScheduler().repeatN(server -> {
-                            if (player instanceof ClientPlayerEntity) player.sendMessage(new LiteralText("" + countdown[0]), false);
+                            player.sendMessage(new LiteralText("" + countdown[0]), false);
                             countdown[0] = countdown[0] - 1;
                         }, 3, 0, 20);
                         api.getScheduler().queue(server -> {
                             final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true);
                             this.targetSelector.add(0, goal);
-                            if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_BEGIN.send(player);
+                            Translations.GUILDMEMBER_BEGIN.send(player);
                             api.getScheduler().queue(server2 -> {
                                 this.targetSelector.remove(goal);
-                                if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
+                                Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
                                 instance.addWorthiness(player.getUuid(), 2);
                                 this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
                             }, 160);
@@ -82,9 +81,9 @@ public class GuildGuardEntity extends TOKEntity {
 
                         return;
                     }
-                    if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_FIGHTER.send(player);
+                    if (instance.isClient()) Translations.GUILDMEMBER_FIGHTER.send(player);
                 } else {
-                    if (player instanceof ClientPlayerEntity) Translations.GUILDMEMBER_START.send(player);
+                    if (instance.isClient()) Translations.GUILDMEMBER_START.send(player);
                 }
             });
         });

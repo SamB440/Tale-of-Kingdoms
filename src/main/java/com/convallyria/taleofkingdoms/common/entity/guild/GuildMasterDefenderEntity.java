@@ -7,13 +7,12 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.HealPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
@@ -30,6 +29,8 @@ import net.minecraft.tag.ItemTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+
+import java.util.HashSet;
 
 public class GuildMasterDefenderEntity extends GuildMasterEntity {
     private boolean givenSword;
@@ -55,53 +56,51 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity)) return ActionResult.FAIL;
+        ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {
-            if (!givenSword && !player.inventory.contains(FabricToolTags.SWORDS)) {
-                api.executeOnMain(() -> {
+            if (!givenSword && !player.inventory.containsAny(new HashSet<>(FabricToolTags.SWORDS.values()))) { // Use containsAny method as it is present on both server and client
+                Runnable giveItem = () -> {
                     MinecraftServer server = player.getServer();
                     if (server != null) {
-                        ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
-                        if (serverPlayerEntity != null) {
-                            serverPlayerEntity.inventory.insertStack(new ItemStack(Items.IRON_SWORD));
-                            this.givenSword = true;
-                        }
+                        serverPlayerEntity.inventory.insertStack(new ItemStack(Items.IRON_SWORD));
+                        this.givenSword = true;
                     }
-                });
+                };
+                if (instance instanceof ServerConquestInstance) api.executeOnDedicatedServer(giveItem);
+                else api.executeOnMain(giveItem);
+                return ActionResult.SUCCESS;
             }
-            if (!this.world.isClient()) return ActionResult.FAIL;
 
             if (instance.getReficuleAttackers().size() == 0) {
                 if (!instance.hasRebuilt()) {
-                    api.executeOnMain(() -> {
-                        ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                        if (serverPlayerEntity != null) {
-                            PlayerInventory playerInventory = serverPlayerEntity.inventory;
-                            ItemStack stack = null;
-                            for (ItemStack itemStack : playerInventory.main) {
-                                if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
-                                    if (itemStack.getCount() == 64) {
-                                        stack = itemStack;
-                                        break;
-                                    }
+                    Runnable fixGuild = () -> {
+                        PlayerInventory playerInventory = serverPlayerEntity.inventory;
+                        ItemStack stack = null;
+                        for (ItemStack itemStack : playerInventory.main) {
+                            if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
+                                if (itemStack.getCount() == 64) {
+                                    stack = itemStack;
+                                    break;
                                 }
                             }
-
-                            if (stack != null) {
-                                playerInventory.setStack(playerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                                serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
-                                ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
-                                clientConquestInstance.rebuild(serverPlayerEntity, api);
-                                instance.setRebuilt(true);
-                                instance.setUnderAttack(false);
-                                Translations.GUILDMASTER_THANK_YOU.send(player);
-                            } else {
-                                Translations.GUILDMASTER_REBUILD.send(player);
-                            }
                         }
-                    });
+
+                        if (stack != null) {
+                            playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
+                            serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
+                            instance.rebuild(serverPlayerEntity, api);
+                            instance.setRebuilt(true);
+                            instance.setUnderAttack(false);
+                            Translations.GUILDMASTER_THANK_YOU.send(player);
+                        } else {
+                            Translations.GUILDMASTER_REBUILD.send(player);
+                        }
+                    };
+                    if (instance instanceof ServerConquestInstance) api.executeOnDedicatedServer(fixGuild);
+                    else if (serverPlayerEntity.getServerWorld().isClient()) api.executeOnMain(fixGuild);
                     return ActionResult.SUCCESS;
                 }
             } else if (instance.getReficuleAttackers().size() <= 4) {
