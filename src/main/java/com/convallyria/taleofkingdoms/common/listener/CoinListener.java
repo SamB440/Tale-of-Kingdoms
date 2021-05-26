@@ -49,8 +49,8 @@ public class CoinListener extends Listener {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                 PlayerEntity playerEntity = null;
                 if (entity instanceof PlayerEntity) {
-                    int subtract = (instance.getCoins() / 20);
-                    instance.setCoins(entity.getUuid(), instance.getCoins() - subtract);
+                    int subtract = (instance.getCoins(entity.getUuid()) / 20);
+                    instance.setCoins(entity.getUuid(), instance.getCoins(entity.getUuid()) - subtract);
                     return;
                 }
 
@@ -75,9 +75,11 @@ public class CoinListener extends Listener {
                     //TODO associate owner with hunter entity
                     ItemHelper.dropCoins(entity);
 
-                    instance.addWorthiness(source.getSource().getUuid(), getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world));
+                    if (source.getSource() instanceof PlayerEntity) {
+                        instance.addWorthiness(source.getSource().getUuid(), getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world));
+                    }
+
                     if (playerEntity instanceof ServerPlayerEntity) {
-                        System.out.println("ATTACK!");
                         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                         instance.attack(serverPlayerEntity, serverPlayerEntity.getServerWorld());
                     }
