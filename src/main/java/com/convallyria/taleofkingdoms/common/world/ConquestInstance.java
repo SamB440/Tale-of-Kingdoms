@@ -7,6 +7,8 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
+import com.convallyria.taleofkingdoms.common.schematic.Schematic;
+import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.google.gson.Gson;
 import net.minecraft.block.entity.BedBlockEntity;
@@ -14,6 +16,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
@@ -35,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
@@ -67,6 +71,14 @@ public abstract class ConquestInstance {
         this.reficuleAttackers = new ArrayList<>();
     }
 
+    public boolean isClient() {
+        return this instanceof ClientConquestInstance;
+    }
+    
+    public boolean isServer() {
+        return this instanceof ServerConquestInstance;
+    }
+    
     public String getWorld() {
         return world;
     }
@@ -112,15 +124,24 @@ public abstract class ConquestInstance {
     }
 
     /**
-     * Returns true if and only if the guild is not currently under attack and the worthiness of the player is greater than 750
-     * @return If the guild has been attacked
+     * @see #hasAttacked(UUID)
      */
     public boolean hasAttacked() {
-        return !isUnderAttack() && getWorthiness(null) > 750;
+        return hasAttacked(null);
+    }
+    
+    /**
+     * Returns true if and only if the guild is not currently under attack and the worthiness of the player is greater than 750
+     * @param uuid player uuid to check, nullable
+     * @return If the guild has been attacked
+     */
+    public boolean hasAttacked(UUID uuid) {
+        return !isUnderAttack() && getWorthiness(uuid) > 750;
     }
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
-        if (canAttack()) {
+        if (canAttack(player.getUuid())) {
+            TaleOfKingdoms.LOGGER.info("Initiating guild attack for player " + player.getName());
             EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.getBlockPos());
             this.underAttack = true;
             Translations.GUILDMASTER_HELP.send(player);
@@ -320,6 +341,10 @@ public abstract class ConquestInstance {
         if (start == null || end == null) return false; // Probably still pasting.
         BlockBox blockBox = new BlockBox(start, end);
         return blockBox.contains(pos);
+    }
+
+    public CompletableFuture<BlockBox> rebuild(ServerPlayerEntity serverPlayerEntity, TaleOfKingdomsAPI api, SchematicOptions... options) {
+        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 13, 0)), options);
     }
 
     public void save(TaleOfKingdomsAPI api) {

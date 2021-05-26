@@ -20,4 +20,17 @@ public class InventoryUtils {
         }
         return null;
     }
+
+    public static int getSlotWithStack(PlayerInventory playerInventory, ItemStack stack) {
+        for (int i = 0; i < playerInventory.main.size(); ++i) {
+            if (!playerInventory.main.get(i).isEmpty() && areItemsEqual(stack, playerInventory.main.get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static boolean areItemsEqual(ItemStack stack1, ItemStack stack2) {
+        return stack1.getItem() == stack2.getItem() && ItemStack.areTagsEqual(stack1, stack2);
+    }
 }

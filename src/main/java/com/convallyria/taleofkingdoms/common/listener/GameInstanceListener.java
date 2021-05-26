@@ -18,12 +18,14 @@ import net.minecraft.network.ClientConnection;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
+import net.minecraft.util.math.Vec3i;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.SERVER)
@@ -53,8 +55,8 @@ public class GameInstanceListener extends Listener {
                             }
                             // Check if file exists, but values don't. Game probably crashed?
                             if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                                this.create(connection, api, player, server).thenAccept(done -> {
-                                    api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
+                                this.create(connection, api, player, server, conquestFile).thenAccept(done -> {
+                                    api.getConquestInstanceStorage().mostRecentInstance().ifPresent(conquestInstance -> {
                                         ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
                                         serverConquestInstance.reset(player);
                                         serverConquestInstance.sync(player, connection);
@@ -112,20 +114,28 @@ public class GameInstanceListener extends Listener {
         }
     }
 
-    private CompletableFuture<Void> create(ClientConnection connection, TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server) {
-        int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
-        BlockPos blockPos = new BlockPos(0, topY, 0);
-        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, blockPos).thenAccept(oi -> {
+    private CompletableFuture<Void> create(ClientConnection connection, TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server, File toSave) {
+        // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
+        BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 12, 0));
+        ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
+        try (Writer writer = new FileWriter(toSave)) {
+            Gson gson = api.getMod().getGson();
+            gson.toJson(instance, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
             BlockPos start = new BlockPos(oi.maxX, oi.maxY, oi.maxZ);
             BlockPos end = new BlockPos(oi.minX, oi.minY, oi.minZ);
-            ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), start, end, blockPos);
+            instance.setStart(start);
+            instance.setEnd(end);
             instance.setBankerCoins(player.getUuid(), 0);
             instance.setCoins(player.getUuid(), 0);
             instance.setFarmerLastBread(player.getUuid(), 0);
             instance.setHasContract(player.getUuid(), false);
             instance.setWorthiness(player.getUuid(), 0);
-    
-            api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+            
             TaleOfKingdoms.LOGGER.info("Summoning citizens of the realm...");
             KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
             instance.setLoaded(true);

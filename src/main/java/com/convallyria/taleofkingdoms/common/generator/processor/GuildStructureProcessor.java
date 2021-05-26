@@ -50,8 +50,8 @@ public class GuildStructureProcessor extends StructureProcessor {
             TaleOfKingdoms.LOGGER.debug(structureBlockInfo2.pos);
             if (!instance.isPresent()) return structureBlockInfo2;
 
-            if (metadata.equals("Gateway") && !instance.get().isLoaded()) {
-                instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
+            if (metadata.equalsIgnoreCase("Gateway")) {
+                if (!instance.get().isLoaded()) instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
                 return air;
             }
 
