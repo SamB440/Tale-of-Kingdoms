@@ -1,7 +1,11 @@
 package com.convallyria.taleofkingdoms;
 
-import com.convallyria.taleofkingdoms.client.commands.TaleOfKindomsCommand;
-import com.convallyria.taleofkingdoms.server.commands.debug.*;
+import com.convallyria.taleofkingdoms.client.commands.TaleOfKingdomsCommand;
+import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsAddCommand;
+import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsDebugCommand;
+import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsGetCommand;
+import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsInvokeCommand;
+import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsSetCommand;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -15,7 +19,7 @@ public class TaleOfKingdomsCommands {
             // Base node /taleofkingdoms
             LiteralCommandNode<ServerCommandSource> baseNode = CommandManager
                     .literal(TaleOfKingdoms.MODID)
-                    .executes(new TaleOfKindomsCommand())
+                    .executes(new TaleOfKingdomsCommand())
                     .build();
 
             // Debug node /taleofkingdoms debug
