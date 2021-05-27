@@ -100,7 +100,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                         }
                     };
                     if (instance instanceof ServerConquestInstance) api.executeOnDedicatedServer(fixGuild);
-                    else if (serverPlayerEntity.getServerWorld().isClient()) api.executeOnMain(fixGuild);
+                    else if (serverPlayerEntity.getServer() == null || !serverPlayerEntity.getServer().isDedicated()) api.executeOnMain(fixGuild);
                     return ActionResult.SUCCESS;
                 }
             } else if (instance.getReficuleAttackers().size() <= 4) {
