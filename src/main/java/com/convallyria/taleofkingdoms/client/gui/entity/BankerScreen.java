@@ -94,10 +94,11 @@ public class BankerScreen extends ScreenTOK {
 
         this.text.setMaxLength(12);
         this.text.setText("0");
-        this.text.setSelected(true);
+        this.text.setTextFieldFocused(true);
         this.text.setFocusUnlocked(true);
         this.text.changeFocus(true);
         this.text.setVisible(true);
+        this.text.setCursorToEnd();
         this.children.add(this.text);
     }
 
