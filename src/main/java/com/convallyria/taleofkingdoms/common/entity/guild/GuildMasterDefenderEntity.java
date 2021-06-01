@@ -31,6 +31,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 public class GuildMasterDefenderEntity extends GuildMasterEntity {
     private boolean givenSword;
@@ -55,9 +56,19 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
     }
 
     @Override
+    public boolean isFireImmune() {
+        if (TaleOfKingdoms.getAPI().isPresent()) {
+            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
+            if (instance.isPresent()) {
+                return instance.get().isUnderAttack();
+            }
+        }
+        return false;
+    }
+
+    @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity)) return ActionResult.FAIL;
-        ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
+        if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity serverPlayerEntity)) return ActionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {

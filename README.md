@@ -30,6 +30,8 @@ A: As only a few people are working on it, only 1.16+ and Fabric will be support
 
 Compiling
 =======
+Tale of Kingdoms builds on JDK 16 and uses Gradle.
+
 `git clone https://gitlab.com/SamB440/tale-of-kingdoms.git`
 
 `cd tale-of-kingdoms`
