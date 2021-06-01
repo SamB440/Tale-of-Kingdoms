@@ -29,11 +29,12 @@ public class TaleOfKingdomsAPI {
     private final TaleOfKingdoms mod;
     private final ConquestInstanceStorage cis;
     private final Map<String, IManager> managers = new HashMap<>();
+    @Environment(EnvType.SERVER)
     private MinecraftDedicatedServer minecraftServer;
     @Environment(EnvType.SERVER)
-    private Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
+    private final Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
     @Environment(EnvType.CLIENT)
-    private Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
+    private final Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
 
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
@@ -147,6 +148,7 @@ public class TaleOfKingdomsAPI {
         this.minecraftServer = minecraftServer;
     }
 
+    @NotNull
     public SchematicHandler getSchematicHandler() {
         if (this.minecraftServer != null) {
             return new ServerSchematicHandler();

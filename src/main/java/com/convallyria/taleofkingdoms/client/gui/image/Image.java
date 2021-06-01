@@ -6,32 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class Image implements IImage {
-
-    private final Identifier imageIdentifier;
-    private final int x;
-    private final int y;
-    private final int[] dimensions;
-
-    public Image(Identifier imageIdentifier, int x, int y, int[] dimensions) {
-        this.imageIdentifier = imageIdentifier;
-        this.x = x;
-        this.y = y;
-        this.dimensions = dimensions;
-    }
-
-    @Override
-    public Identifier getResourceLocation() {
-        return imageIdentifier;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
+public record Image(Identifier resourceLocation, int x, int y, int[] dimensions) implements IImage {
 
     public int getWidth() {
         return dimensions[0];
@@ -42,9 +17,14 @@ public class Image implements IImage {
     }
 
     @Override
+    public Identifier getResourceLocation() {
+        return resourceLocation;
+    }
+
+    @Override
     public void render(MatrixStack matrices, Screen gui) {
         MinecraftClient client = MinecraftClient.getInstance();
-        client.getTextureManager().bindTexture(imageIdentifier);
+        client.getTextureManager().bindTexture(resourceLocation);
         DrawableHelper.drawTexture(matrices, x, y, 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
     }
 }
