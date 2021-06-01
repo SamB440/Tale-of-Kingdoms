@@ -1,10 +1,15 @@
 About
 =====
 *Tale of Kingdoms: A new Conquest* is a revival of the Tale of Kingdoms mod. 
-Currently we are in alpha. Content seen is based on original versions.
+Currently, we are in alpha. Content seen is based on original versions.
+
+## Contributing
+Please see the [contributing file](CONTRIBUTING.md)!
 
 Links
 =====
+Curseforge: https://www.curseforge.com/minecraft/mc-mods/tale-of-kingdoms-a-new-conquest
+
 Website: https://www.convallyria.com
 
 Discord: https://discord.gg/fh62mxU
