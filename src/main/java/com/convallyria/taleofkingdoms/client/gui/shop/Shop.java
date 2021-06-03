@@ -23,6 +23,10 @@ public final class Shop {
         this.currentPage = currentPage;
     }
 
+    public int getMaxPages() {
+        return pages.size();
+    }
+
     public void nextPage() {
         final int currentPage = getCurrentPage();
         if (getPages().size() <= currentPage + 1) {
