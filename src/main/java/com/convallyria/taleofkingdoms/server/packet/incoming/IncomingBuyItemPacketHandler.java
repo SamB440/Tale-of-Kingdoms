@@ -31,6 +31,7 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
         ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
         String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         String itemName = attachedData.readString(32367);
+        int count = attachedData.readInt();
         context.getTaskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
@@ -41,8 +42,8 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
 
                 // Search for either foodshop or blacksmith in the guild
                 Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                if (!entity.isPresent()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
-                if (!entity.isPresent()) {
+                if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop entity not present in guild.");
                     return;
                 }
@@ -53,14 +54,15 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                if (instance.getCoins(player.getUuid()) < shopItem.getCost()) {
+                int cost = shopItem.getCost() * count;
+                if (instance.getCoins(player.getUuid()) < cost) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Coins requirement not met.");
                     return;
                 }
 
-                instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - shopItem.getCost());
+                instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
                 // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
-                player.inventory.insertStack(new ItemStack(shopItem.getItem(), 1));
+                player.inventory.insertStack(new ItemStack(shopItem.getItem(), count));
                 instance.sync(player, null);
             });
         });

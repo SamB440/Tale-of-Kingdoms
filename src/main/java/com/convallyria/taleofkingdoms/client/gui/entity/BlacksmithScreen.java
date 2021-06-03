@@ -16,10 +16,12 @@ import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -81,7 +83,12 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
     public void init() {
         super.init();
         this.addButton(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
-            ShopBuyUtil.buyItem(instance, player, selectedItem);
+            int count = 1;
+            if (Screen.hasShiftDown()) count = 16;
+            ShopBuyUtil.buyItem(instance, player, selectedItem, count);
+        }, (button, stack, x, y) -> {
+            Text text = new LiteralText("Use Left Shift to buy 16x.");
+            this.renderTooltip(stack, text, x, y);
         }));
 
         this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), button -> {

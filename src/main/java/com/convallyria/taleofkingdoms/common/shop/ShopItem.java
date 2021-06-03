@@ -12,7 +12,7 @@ public abstract class ShopItem {
 
     public abstract String getName();
 
-    public boolean canBuy(ConquestInstance instance, PlayerEntity player) {
-        return instance.getCoins(player.getUuid()) >= getCost();
+    public boolean canBuy(ConquestInstance instance, PlayerEntity player, int count) {
+        return instance.getCoins(player.getUuid()) >= (getCost() * count);
     }
 }

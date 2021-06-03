@@ -14,8 +14,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 @Environment(EnvType.CLIENT)
 public class ShopBuyUtil {
 
-    public static void buyItem(ConquestInstance instance, PlayerEntity player, ShopItem shopItem) {
-        if (shopItem.canBuy(instance, player)) {
+    public static void buyItem(ConquestInstance instance, PlayerEntity player, ShopItem shopItem, int count) {
+        if (shopItem.canBuy(instance, player, count)) {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 api.executeOnMain(() -> {
                     MinecraftServer server = MinecraftClient.getInstance().getServer();
@@ -23,14 +23,15 @@ public class ShopBuyUtil {
                         api.getClientHandler(TaleOfKingdoms.BUY_ITEM_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BUY_ITEM_PACKET_ID,
                                         player,
-                                        null, shopItem.getName());
+                                        null, shopItem.getName(), count);
                         return;
                     }
 
                     ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity != null) {
-                        serverPlayerEntity.inventory.insertStack(new ItemStack(shopItem.getItem(), 1));
-                        instance.setCoins(instance.getCoins() - shopItem.getCost());
+                        serverPlayerEntity.inventory.insertStack(new ItemStack(shopItem.getItem(), count));
+                        int cost = shopItem.getCost() * count;
+                        instance.setCoins(instance.getCoins() - cost);
                     }
                 });
             });
