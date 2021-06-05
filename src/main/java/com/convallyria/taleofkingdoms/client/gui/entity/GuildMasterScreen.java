@@ -14,7 +14,6 @@ import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -59,17 +58,28 @@ public class GuildMasterScreen extends ScreenTOK {
         this.makeHireHuntersButton();
 
         this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
-            ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
             if (instance.getHunterUUIDs().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
-                Entity hunter = serverWorld.getEntity(instance.getHunterUUIDs().get(0));
-                if (hunter != null) {
-                    hunter.kill();
+                if (!instance.getHunterUUIDs().isEmpty()) {
                     Translations.HUNTER_THANK.send(player);
+                    if (MinecraftClient.getInstance().getServer() == null) {
+                        TaleOfKingdoms.getAPI().ifPresent(api -> {
+                            api.getClientHandler(TaleOfKingdoms.HUNTER_PACKET_ID)
+                                    .handleOutgoingPacket(TaleOfKingdoms.HUNTER_PACKET_ID,
+                                            player,
+                                            client.getNetworkHandler().getConnection(),
+                                            true);
+                        });
+                        this.onClose();
+                        return;
+                    }
+
+                    ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+                    HunterEntity hunter = (HunterEntity) serverWorld.getEntity(instance.getHunterUUIDs().get(0));
+                    hunter.kill();
                     instance.removeHunter(hunter);
                     instance.setCoins(instance.getCoins() + 750);
-                    //TODO RETIRE_HUNTER_PACKET_ID
                 } else {
                     Translations.GUILDMASTER_NOHUNTER.send(player);
                 }
@@ -193,17 +203,25 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.hireHuntersButton = this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
             if (instance.getCoins() >= 1500) {
-                TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> {
-                    if (MinecraftClient.getInstance().getServer() != null) {
+                TaleOfKingdoms.getAPI().ifPresent(api -> {
+                    Translations.SERVE.send(player);
+                    if (MinecraftClient.getInstance().getServer() == null) {
+                        api.getClientHandler(TaleOfKingdoms.HUNTER_PACKET_ID)
+                                .handleOutgoingPacket(TaleOfKingdoms.HUNTER_PACKET_ID,
+                                        player,
+                                        client.getNetworkHandler().getConnection(),
+                                        false);
+                        return;
+                    }
+
+                    api.executeOnServer(() -> {
                         ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
                         BlockPos blockPos = entity.getBlockPos();
                         HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, serverWorld, blockPos);
                         instance.addHunter(hunterEntity);
-                        //TODO HIRE_HUNTER_PACKET_ID
-                    }
-                }));
-                instance.setCoins(instance.getCoins() - 1500);
-                Translations.SERVE.send(player);
+                        instance.setCoins(instance.getCoins() - 1500);
+                    });
+                });
                 this.makeHireHuntersButton();
             }
         }));
