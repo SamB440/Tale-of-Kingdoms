@@ -45,8 +45,10 @@ public abstract class TOKEntity extends PathAwareEntity {
 
     /**
      * Whether this entity is intended to be stationary or not.
+     * @deprecated pretty useless
      * @return true if intended to be stationary
      */
+    @Deprecated
     public abstract boolean isStationary();
 
     /**

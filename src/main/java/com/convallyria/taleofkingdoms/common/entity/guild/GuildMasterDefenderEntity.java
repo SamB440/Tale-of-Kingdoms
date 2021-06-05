@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -63,6 +64,11 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                 return instance.get().isUnderAttack();
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean damage(DamageSource damageSource, float f) {
         return false;
     }
 

@@ -46,7 +46,6 @@ public class TeleportTowardsPlayerGoal extends FollowTargetGoal<PlayerEntity> {
                     if (spawnFire == 1) {
                         for (BlockPos blockPos : BlockUtils.getNearbyBlocksUnder(this.mob.getBlockPos(), 1)) {
                             BlockPos up = blockPos.add(0, 1, 0);
-                            System.out.println(up);
                             if (!this.mob.world.getBlockState(up).isAir()) {
                                 continue;
                             }

@@ -20,6 +20,7 @@ public enum Translations {
     GUILDMASTER_REBUILD("entity_type.taleofkingdoms.guildmaster.rebuild"),
     GUILDMASTER_THANK_YOU("entity_type.taleofkingdoms.guildmaster.thank_you"),
     CITYBUILDER_MESSAGE("entity_type.taleofkingdoms.citybuilder.message"),
+    CITYBUILDER_BUILD("entity_type.taleofkingdoms.citybuilder.build"),
     INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
     INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),
     NEED_CONTRACT("generic.taleofkingdoms.need_contract"),
