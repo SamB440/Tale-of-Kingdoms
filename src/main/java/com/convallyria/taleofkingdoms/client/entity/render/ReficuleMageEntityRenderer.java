@@ -22,7 +22,7 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
 
     public ReficuleMageEntityRenderer(EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<ReficuleMageEntity> modelBipedIn) {
         super(entityRenderDispatcher, modelBipedIn, 0.5F);
-        this.addFeature(new HeadFeatureRenderer(this));
+        this.addFeature(new HeadFeatureRenderer<>(this));
         this.addFeature(new HeldItemFeatureRenderer<>(this) {
             @Override
             public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, ReficuleMageEntity reficuleMageEntity, float f, float g, float h, float j, float k, float l) {
