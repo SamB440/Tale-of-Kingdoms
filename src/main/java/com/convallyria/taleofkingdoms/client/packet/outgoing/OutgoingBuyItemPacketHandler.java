@@ -29,6 +29,7 @@ public final class OutgoingBuyItemPacketHandler extends ClientPacketHandler {
                                      @Nullable ClientConnection connection, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         passedData.writeString((String) data[0]);
+        passedData.writeInt((Integer) data[1]);
         if (connection == null) MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(identifier, passedData));
         else connection.send(new CustomPayloadC2SPacket(identifier, passedData));
     }

@@ -36,22 +36,22 @@ public class GatewayStructureProcessor extends StructureProcessor {
         if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
             String metadata = structureBlockInfo2.tag.getString("metadata");
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
-            if (!api.isPresent()) return structureBlockInfo2;
+            if (api.isEmpty()) return structureBlockInfo2;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
-            if (!instance.isPresent()) return structureBlockInfo2;
+            if (instance.isEmpty()) return structureBlockInfo2;
 
             switch (metadata) {
-                case "ReficuleSoldier": {
+                case "ReficuleSoldier" -> {
                     MobEntity entity = EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, newPos);
                     instance.get().getReficuleAttackers().add(entity.getUuid());
                     return null;
                 }
-                case "ReficuleArcher": {
+                case "ReficuleArcher" -> {
                     MobEntity entity = EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, newPos);
                     instance.get().getReficuleAttackers().add(entity.getUuid());
                     return null;
                 }
-                case "ReficuleMage": {
+                case "ReficuleMage" -> {
                     MobEntity entity = EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, newPos);
                     instance.get().getReficuleAttackers().add(entity.getUuid());
                     return null;

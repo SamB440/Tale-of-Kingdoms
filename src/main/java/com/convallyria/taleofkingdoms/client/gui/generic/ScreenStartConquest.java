@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.generic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
@@ -122,5 +124,12 @@ public class ScreenStartConquest extends ScreenTOK {
     @Override
     public boolean shouldCloseOnEsc() {
         return true;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
+        player.sendMessage(new LiteralText("Start conquest menu was closed. Press ").append(keyName).append(" to open it again."), false);
     }
 }

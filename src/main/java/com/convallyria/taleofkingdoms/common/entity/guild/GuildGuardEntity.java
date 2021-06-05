@@ -60,7 +60,7 @@ public class GuildGuardEntity extends TOKEntity {
                 if (instance.hasAttacked(player.getUuid())) {
                     if (player.getMainHandStack().getItem() == Items.WOODEN_SWORD) {
                         this.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
-                        if (instance.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
+                        if (player.world.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
                         final int[] countdown = {3};
                         api.getScheduler().repeatN(server -> {
                             player.sendMessage(new LiteralText("" + countdown[0]), false);
@@ -69,25 +69,24 @@ public class GuildGuardEntity extends TOKEntity {
                         api.getScheduler().queue(server -> {
                             final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true);
                             this.targetSelector.add(0, goal);
-                            Translations.GUILDMEMBER_BEGIN.send(player);
+                            if (player.world.isClient()) Translations.GUILDMEMBER_BEGIN.send(player);
                             api.getScheduler().queue(server2 -> {
                                 this.targetSelector.remove(goal);
-                                Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
+                                if (player.world.isClient()) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
                                 instance.addWorthiness(player.getUuid(), 2);
                                 this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
                             }, 160);
                         }, 80);
                         player.inventory.removeOne(player.getMainHandStack());
-
                         return;
                     }
-                    if (instance.isClient()) Translations.GUILDMEMBER_FIGHTER.send(player);
+                    if (player.world.isClient()) Translations.GUILDMEMBER_FIGHTER.send(player);
                 } else {
-                    if (instance.isClient()) Translations.GUILDMEMBER_START.send(player);
+                    if (player.world.isClient()) Translations.GUILDMEMBER_START.send(player);
                 }
             });
         });
-        return ActionResult.PASS;
+        return ActionResult.SUCCESS;
     }
 
     @Override

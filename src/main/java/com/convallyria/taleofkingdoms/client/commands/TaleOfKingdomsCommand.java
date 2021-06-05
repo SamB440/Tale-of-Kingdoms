@@ -10,7 +10,8 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Util;
 
-public class TaleOfKindomsCommand implements Command<ServerCommandSource> {
+public class TaleOfKingdomsCommand implements Command<ServerCommandSource> {
+
     @Override
     public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Entity entity = context.getSource().getEntity();

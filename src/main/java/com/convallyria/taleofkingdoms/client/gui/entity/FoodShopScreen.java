@@ -10,15 +10,18 @@ import com.convallyria.taleofkingdoms.client.gui.image.ScaleSize;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
 import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.client.utils.ShopBuyUtil;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -55,11 +58,11 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
         this.shopItems = FoodShopEntity.getFoodShopItems();
         int guiScale = MinecraftClient.getInstance().options.guiScale;
         Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (!scaleSize.isPresent()) return;
+        if (scaleSize.isEmpty()) return;
         int x = scaleSize.get().getX();
         int y = scaleSize.get().getY();
         Optional<ScaleSize> scaleSizeTwo = SCALE_SIZES_TWO.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (!scaleSizeTwo.isPresent()) return;
+        if (scaleSizeTwo.isEmpty()) return;
         int xTwo = scaleSizeTwo.get().getX();
         int yTwo = scaleSizeTwo.get().getY();
         addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), x, y, new int[]{230, 230}));
@@ -79,13 +82,16 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
-            selectedItem.buy(instance, player);
+        this.addButton(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
+            int count = 1;
+            if (Screen.hasShiftDown()) count = 16;
+            ShopBuyUtil.buyItem(instance, player, selectedItem, count);
+        }, (button, stack, x, y) -> {
+            Text text = new LiteralText("Use Left Shift to buy 16x.");
+            this.renderTooltip(stack, text, x, y);
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new LiteralText("Sell"), button -> {
-            openSellGui(entity, player);
-        }));
+        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new LiteralText("Sell"), button -> openSellGui(entity, player)));
         this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
         this.addButton(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
         this.addButton(new ButtonWidget(this.width / 2 - 160, this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));

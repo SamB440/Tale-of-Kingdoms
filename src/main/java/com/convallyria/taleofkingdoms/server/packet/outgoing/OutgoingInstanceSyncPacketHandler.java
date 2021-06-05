@@ -28,8 +28,8 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
     @Override
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
                                      @Nullable ClientConnection connection, @Nullable Object... data) {
-        if (data != null && data[0] instanceof ServerConquestInstance && player instanceof ServerPlayerEntity) {
-            ServerConquestInstance instance = (ServerConquestInstance) data[0];
+        if (data != null && data[0] instanceof ServerConquestInstance instance
+                && player instanceof ServerPlayerEntity serverPlayerEntity) {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
             passedData.writeString(instance.getName());
             passedData.writeString(instance.getWorld());
@@ -44,7 +44,7 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
             passedData.writeBlockPos(instance.getOrigin());
             // Then we'll send the packet to all the players
             if (connection != null) connection.send(new CustomPayloadS2CPacket(identifier, passedData));
-            else ((ServerPlayerEntity) player).networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));
+            else serverPlayerEntity.networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));
         }
     }
 }

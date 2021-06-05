@@ -66,7 +66,7 @@ public class StructureBlockUnlimit {
      */
     @Overwrite
     @Environment(EnvType.CLIENT)
-    public double getSquaredRenderDistance() {
+    public double getRenderDistance() {
         return 256.0D;
     }
 

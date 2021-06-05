@@ -1,10 +1,15 @@
 About
 =====
 *Tale of Kingdoms: A new Conquest* is a revival of the Tale of Kingdoms mod. 
-Currently we are in alpha. Content seen is based on original versions.
+Currently, we are in alpha. Content seen is based on original versions.
+
+## Contributing
+Please see the [contributing file](CONTRIBUTING.md)!
 
 Links
 =====
+Curseforge: https://www.curseforge.com/minecraft/mc-mods/tale-of-kingdoms-a-new-conquest
+
 Website: https://www.convallyria.com
 
 Discord: https://discord.gg/fh62mxU
@@ -30,6 +35,8 @@ A: As only a few people are working on it, only 1.16+ and Fabric will be support
 
 Compiling
 =======
+Tale of Kingdoms builds on JDK 16 and uses Gradle.
+
 `git clone https://gitlab.com/SamB440/tale-of-kingdoms.git`
 
 `cd tale-of-kingdoms`
