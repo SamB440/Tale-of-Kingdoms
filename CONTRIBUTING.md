@@ -21,7 +21,8 @@ To start contributing to Tale of Kingdoms, you will need the following:
 
 Pretty much anything that would improve the mod will be accepted, just as long as you follow good conventions!
 
-If you are adding server-side code 
+If you are adding a new feature, please make sure it works on both the client and dedicated server.
+
 ## Frequently Asked Questions
 
 ### I get a NoClass/Method found error when running on a different environment

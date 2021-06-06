@@ -114,7 +114,7 @@ public class CoinListener extends Listener {
         return stack.getItem().equals(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN));
     }
 
-    //Copies (if needed) and loads the json file in "config/taleofkingdoms/worthiness.jsos"
+    //Copies (if needed) and loads the json file in "config/taleofkingdoms/worthiness.json"
     private void loadWorthinessJson() {
         File internalFile = new File("worthiness.json");
         File configDirectory = new File("config/" + TaleOfKingdoms.MODID);
