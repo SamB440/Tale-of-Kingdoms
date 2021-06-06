@@ -13,6 +13,7 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBankerInter
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuyItemPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
@@ -66,6 +67,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         registerHandler(new OutgoingBuyItemPacketHandler());
         registerHandler(new OutgoingBankerInteractPacketHandler());
         registerHandler(new OutgoingHunterPacketHandler());
+        registerHandler(new OutgoingInnkeeperPacketHandler());
     }
 
     private void registerListeners() {

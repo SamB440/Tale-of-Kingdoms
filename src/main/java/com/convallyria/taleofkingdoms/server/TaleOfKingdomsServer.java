@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBankerInter
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuyItemPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingHunterPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingInstanceSyncPacketHandler;
@@ -29,6 +30,7 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
         registerHandler(new IncomingBuyItemPacketHandler());
         registerHandler(new IncomingBankerInteractPacketHandler());
         registerHandler(new IncomingHunterPacketHandler());
+        registerHandler(new IncomingInnkeeperPacketHandler());
     }
 
     private void registerListeners() {
