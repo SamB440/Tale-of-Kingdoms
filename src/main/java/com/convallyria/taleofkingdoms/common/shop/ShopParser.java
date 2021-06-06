@@ -1,7 +1,11 @@
 package com.convallyria.taleofkingdoms.common.shop;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
@@ -52,7 +56,7 @@ public class ShopParser {
                             addToShopItems(jsonElement.getKey(), new ShopItem(name, item, cost, -1));
                         }
                     }
-                } catch (NoSuchFieldException | IllegalAccessException e) {
+                } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
             }
@@ -86,7 +90,7 @@ public class ShopParser {
         return false;
     }
 
-    private Item getItem(String name) throws NoSuchFieldException, IllegalAccessException {
+    private Item getItem(String name) throws ReflectiveOperationException {
         return (Item) Items.class.getDeclaredField(name.toUpperCase()).get(Item.class);
     }
 
