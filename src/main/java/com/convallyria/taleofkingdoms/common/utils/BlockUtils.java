@@ -1,9 +1,14 @@
 package com.convallyria.taleofkingdoms.common.utils;
 
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class BlockUtils {
 
@@ -29,5 +34,14 @@ public class BlockUtils {
             }
         }
         return blocks;
+    }
+
+    @Nullable
+    public static BlockPos locateRestingPlace(ConquestInstance instance, PlayerEntity player) {
+        List<BlockPos> validRest = instance.getSleepLocations(player);
+
+        if (validRest.isEmpty()) return null;
+        Random rand = ThreadLocalRandom.current();
+        return validRest.get(rand.nextInt(validRest.size()));
     }
 }

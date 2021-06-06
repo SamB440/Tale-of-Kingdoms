@@ -5,11 +5,9 @@ import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +29,6 @@ public final class OutgoingBankerInteractPacketHandler extends ClientPacketHandl
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         passedData.writeEnumConstant((BankerMethod) data[0]);
         passedData.writeInt((Integer) data[1]);
-        if (connection == null) MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(identifier, passedData));
-        else connection.send(new CustomPayloadC2SPacket(identifier, passedData));
+        sendPacket(connection, passedData);
     }
 }
