@@ -12,6 +12,10 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler {
 
     public IncomingInstanceSyncPacketHandler() {
@@ -31,6 +35,12 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
         BlockPos start = attachedData.readBlockPos();
         BlockPos end = attachedData.readBlockPos();
         BlockPos origin = attachedData.readBlockPos();
+        List<UUID> hunterUuids = new ArrayList<>();
+        while (attachedData.isReadable()) {
+            TaleOfKingdoms.LOGGER.info("Reading uuids!");
+            hunterUuids.add(attachedData.readUuid());
+        }
+
         context.getTaskQueue().execute(() -> TaleOfKingdoms.getAPI().ifPresent(api -> {
             ClientConquestInstance instance;
             if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
@@ -45,6 +55,8 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
             instance.setFarmerLastBread(farmerLastBread);
             instance.setHasContract(hasContract);
             instance.setLoaded(isLoaded);
+            instance.clearHunters();
+            hunterUuids.forEach(instance::addHunter);
             api.getConquestInstanceStorage().addConquest(world, instance, true);
         }));
     }

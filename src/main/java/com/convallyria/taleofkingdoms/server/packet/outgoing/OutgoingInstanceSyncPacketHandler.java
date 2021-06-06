@@ -42,6 +42,9 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
             passedData.writeBlockPos(instance.getStart());
             passedData.writeBlockPos(instance.getEnd());
             passedData.writeBlockPos(instance.getOrigin());
+            instance.getHunterUUIDs().forEach((playerUuid, hunterUuids) -> {
+                hunterUuids.forEach(passedData::writeUuid);
+            });
             // Then we'll send the packet to all the players
             if (connection != null) connection.send(new CustomPayloadS2CPacket(identifier, passedData));
             else serverPlayerEntity.networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));

@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -8,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +22,7 @@ public class ServerConquestInstance extends ConquestInstance {
     private final Map<UUID, Long> playerFarmerLastBread;
     private final Map<UUID, Boolean> playerHasContract;
     private final Map<UUID, Integer> playerWorthiness;
+    private Map<UUID, List<UUID>> hunterUUIDs;
 
     public ServerConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         super(world, name, start, end, origin);
@@ -27,6 +31,7 @@ public class ServerConquestInstance extends ConquestInstance {
         this.playerFarmerLastBread = new ConcurrentHashMap<>();
         this.playerHasContract = new ConcurrentHashMap<>();
         this.playerWorthiness = new ConcurrentHashMap<>();
+        this.hunterUUIDs = new ConcurrentHashMap<>();
     }
 
     public boolean hasPlayer(UUID playerUuid) {
@@ -91,6 +96,23 @@ public class ServerConquestInstance extends ConquestInstance {
     @Override
     public void addWorthiness(UUID playerUuid, int worthiness) {
         this.playerWorthiness.put(playerUuid, this.playerWorthiness.get(playerUuid) + worthiness);
+    }
+
+    public Map<UUID, List<UUID>> getHunterUUIDs() {
+        if (hunterUUIDs == null) hunterUUIDs = new ConcurrentHashMap<>();
+        return hunterUUIDs;
+    }
+
+    public void addHunter(UUID playerUuid, HunterEntity hunterEntity) {
+        List<UUID> uuids = hunterUUIDs.getOrDefault(playerUuid, new ArrayList<>());
+        uuids.add(hunterEntity.getUuid());
+        hunterUUIDs.put(playerUuid, uuids);
+    }
+
+    public void removeHunter(UUID playerUuid, UUID hunterUuid) {
+        List<UUID> uuids = hunterUUIDs.getOrDefault(playerUuid, new ArrayList<>());
+        uuids.remove(hunterUuid);
+        hunterUUIDs.put(playerUuid, uuids);
     }
 
     public void reset(@NotNull ServerPlayerEntity player) {

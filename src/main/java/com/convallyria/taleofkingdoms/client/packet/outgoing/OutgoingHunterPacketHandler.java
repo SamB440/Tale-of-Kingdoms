@@ -11,10 +11,10 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class OutgoingBuyItemPacketHandler extends ClientPacketHandler {
+public final class OutgoingHunterPacketHandler extends ClientPacketHandler {
 
-    public OutgoingBuyItemPacketHandler() {
-        super(TaleOfKingdoms.BUY_ITEM_PACKET_ID);
+    public OutgoingHunterPacketHandler() {
+        super(TaleOfKingdoms.HUNTER_PACKET_ID);
     }
 
     @Override
@@ -26,8 +26,7 @@ public final class OutgoingBuyItemPacketHandler extends ClientPacketHandler {
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
                                      @Nullable ClientConnection connection, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeString((String) data[0]);
-        passedData.writeInt((Integer) data[1]);
+        passedData.writeBoolean((Boolean) data[0]); // False if hiring, true if retiring
         sendPacket(connection, passedData);
     }
 }

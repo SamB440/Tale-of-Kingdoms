@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.world;
 
+import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -78,8 +78,16 @@ public class ClientConquestInstance extends ConquestInstance {
         this.worthiness = this.worthiness + worthiness;
     }
 
-    public void addHunter(Entity entity) {
+    public void addHunter(HunterEntity entity) {
         this.hunterUUIDs.add(entity.getUuid());
+    }
+
+    public void addHunter(UUID hunterUuid) {
+        this.hunterUUIDs.add(hunterUuid);
+    }
+
+    public void clearHunters() {
+        hunterUUIDs.clear();
     }
 
     public ImmutableList<UUID> getHunterUUIDs() {
@@ -87,7 +95,7 @@ public class ClientConquestInstance extends ConquestInstance {
         return ImmutableList.copyOf(hunterUUIDs);
     }
 
-    public void removeHunter(Entity entity) {
+    public void removeHunter(HunterEntity entity) {
         this.hunterUUIDs.remove(entity.getUuid());
     }
 }
