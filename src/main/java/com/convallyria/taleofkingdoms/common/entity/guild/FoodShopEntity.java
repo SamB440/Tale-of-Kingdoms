@@ -3,23 +3,8 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.entity.FoodShopScreen;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.common.shop.AppleShopItem;
-import com.convallyria.taleofkingdoms.common.shop.BeetrootShopItem;
-import com.convallyria.taleofkingdoms.common.shop.BreadShopItem;
-import com.convallyria.taleofkingdoms.common.shop.CakeShopItem;
-import com.convallyria.taleofkingdoms.common.shop.CarrotShopItem;
-import com.convallyria.taleofkingdoms.common.shop.CookieShopItem;
-import com.convallyria.taleofkingdoms.common.shop.GoldenAppleShopItem;
-import com.convallyria.taleofkingdoms.common.shop.MelonShopItem;
-import com.convallyria.taleofkingdoms.common.shop.PotatoShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawBeefShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawChickenShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawCodShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawMuttonShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawPorkchopShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawRabbitShopItem;
-import com.convallyria.taleofkingdoms.common.shop.RawSalmonShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
@@ -71,10 +56,6 @@ public class FoodShopEntity extends TOKEntity {
     }
 
     public static ImmutableList<ShopItem> getFoodShopItems() {
-        return ImmutableList.of(new AppleShopItem(), new BeetrootShopItem(), new BreadShopItem(),
-                new CakeShopItem(), new CarrotShopItem(), new CookieShopItem(), new GoldenAppleShopItem(),
-                new MelonShopItem(), new PotatoShopItem(), new RawBeefShopItem(), new RawChickenShopItem(),
-                new RawCodShopItem(), new RawMuttonShopItem(), new RawPorkchopShopItem(), new RawRabbitShopItem(),
-                new RawSalmonShopItem());
+        return ImmutableList.copyOf(ShopParser.guiShopItems.get(ShopParser.GUI.FOOD));
     }
 }

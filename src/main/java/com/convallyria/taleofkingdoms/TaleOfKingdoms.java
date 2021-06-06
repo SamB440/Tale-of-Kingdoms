@@ -37,10 +37,10 @@ import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
 import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
+import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.ModInitializer;
@@ -73,11 +73,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -129,12 +124,6 @@ public class TaleOfKingdoms implements ModInitializer {
         SELL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, BlockEntityType.Builder.create(SellBlockEntity::new, SELL_BLOCK).build(null));
     }
 
-    private Map<String, Integer> itemValues;
-
-    public Map<String, Integer> getItemValues() {
-        return itemValues;
-    }
-
     @Override
     public void onInitialize() {
         ItemRegistry.init();
@@ -166,17 +155,9 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
 
-        // Load item values
-        InputStream inputStream = TaleOfKingdoms.class.getResourceAsStream("/assets/shop/values.json");
-        if (inputStream == null) {
-            LOGGER.warn("Cannot read shop values file! inputStream is null.");
-            return;
-        }
-        InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-        Type type = new TypeToken<Map<String, Integer>>(){}.getType();
-        Map<String, Integer> mapValue = getGson().fromJson(reader, type);
-        mapValue.forEach((name, value) -> LOGGER.info("Loaded item value " + name + " (" + value + ")."));
-        this.itemValues = mapValue;
+        // Load shop items
+        new ShopParser().createShopItems();
+        ShopParser.guiShopItems.values().forEach(shopItems -> shopItems.forEach(shopItem -> LOGGER.info("Loaded item value " + shopItem.toString())));
     }
 
     /**

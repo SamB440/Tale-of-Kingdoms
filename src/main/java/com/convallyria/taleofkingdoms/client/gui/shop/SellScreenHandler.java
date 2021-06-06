@@ -2,6 +2,8 @@ package com.convallyria.taleofkingdoms.client.gui.shop;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,8 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.registry.Registry;
 
+import java.util.List;
 import java.util.Optional;
 
 public class SellScreenHandler extends ScreenHandler {
@@ -66,12 +68,16 @@ public class SellScreenHandler extends ScreenHandler {
             if (!api.isPresent()) return itemStack;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
             if (!instance.isPresent()) return itemStack;
-            String itemName = Registry.ITEM.getId(itemStack.getItem()).getPath().toUpperCase();
-            if (api.get().getMod().getItemValues().containsKey(itemName)) {
-                playerEntity.inventory.setCursorStack(ItemStack.EMPTY);
-                int value = api.get().getMod().getItemValues().get(itemName);
-                instance.get().addCoins(playerEntity.getUuid(), value * itemStack.getCount());
-                return ItemStack.EMPTY;
+            playerEntity.inventory.setCursorStack(ItemStack.EMPTY);
+
+            for (List<ShopItem> shopItems : ShopParser.guiShopItems.values()) {
+                for (ShopItem shopItem : shopItems) {
+                    if (itemStack.getItem() == shopItem.getItem()) {
+                        // Issue #59
+                        instance.get().addCoins(playerEntity.getUuid(), shopItem.getSell() * itemStack.getCount());
+                        return ItemStack.EMPTY;
+                    }
+                }
             }
             return itemStack;
         }
