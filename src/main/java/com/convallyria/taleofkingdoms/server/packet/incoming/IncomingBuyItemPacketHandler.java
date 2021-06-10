@@ -62,7 +62,7 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
 
                 instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
                 // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
-                player.inventory.insertStack(new ItemStack(shopItem.getItem(), count));
+                player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
                 instance.sync(player, null);
             });
         });

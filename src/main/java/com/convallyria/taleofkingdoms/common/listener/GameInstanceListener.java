@@ -126,8 +126,8 @@ public class GameInstanceListener extends Listener {
         }
         api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
-            BlockPos start = new BlockPos(oi.maxX, oi.maxY, oi.maxZ);
-            BlockPos end = new BlockPos(oi.minX, oi.minY, oi.minZ);
+            BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
+            BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
             instance.setStart(start);
             instance.setEnd(end);
             instance.setBankerCoins(player.getUuid(), 0);

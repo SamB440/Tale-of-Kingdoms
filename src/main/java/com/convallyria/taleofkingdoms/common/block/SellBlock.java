@@ -13,7 +13,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class SellBlock extends BlockWithEntity {
@@ -23,8 +22,8 @@ public class SellBlock extends BlockWithEntity {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new SellBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new SellBlockEntity(blockPos, blockState);
     }
 
     @Override

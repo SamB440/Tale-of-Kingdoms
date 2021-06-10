@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.gui.generic;
 
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import org.lwjgl.opengl.GL40;
@@ -10,8 +11,8 @@ public class ScreenBar extends ScreenTOK {
     private final int xPosition;
     private final int borderColor = -10592674;
     private final int yPosition;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     private float barPosition;
     private final boolean border;
     private BarColour colour;
@@ -43,7 +44,7 @@ public class ScreenBar extends ScreenTOK {
     }
 
     public void drawBar(MatrixStack stack) {
-        GL40.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.border) {
             DrawableHelper.fill(stack, this.xPosition,
                     this.yPosition,

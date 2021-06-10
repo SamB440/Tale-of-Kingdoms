@@ -17,6 +17,7 @@
     "structure.StructureBlockUnlimit"
   ],
   "client": [
+    "structure.StructureBlockRenderMixin",
     "WorldClose",
     "WorldDeleteEvent",
     "WorldSessionStartEvent",

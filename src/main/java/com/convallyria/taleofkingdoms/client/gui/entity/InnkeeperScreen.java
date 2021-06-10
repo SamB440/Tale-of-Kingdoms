@@ -36,7 +36,7 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
             this.onClose();
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
@@ -61,8 +61,8 @@ public class InnkeeperScreen extends ScreenTOK {
                         ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                         if (serverPlayerEntity == null) return;
                         serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                        serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
-                        serverPlayerEntity.applyStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                        serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
+                        serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
                         conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
                     });
                 });
@@ -71,7 +71,7 @@ public class InnkeeperScreen extends ScreenTOK {
             }
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
             this.onClose();
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             TaleOfKingdoms.getAPI().ifPresent(api -> {
@@ -95,14 +95,14 @@ public class InnkeeperScreen extends ScreenTOK {
 
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
     }
 
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         super.render(stack, par1, par2, par3);
-        drawCenteredString(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
     }
 
     @Override

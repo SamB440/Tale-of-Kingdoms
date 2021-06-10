@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.Durations;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.MobEntity;
@@ -9,19 +10,19 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.math.IntRange;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.EnumSet;
 
 public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & CrossbowUser> extends Goal {
-    public static final IntRange field_25696 = new IntRange(20, 40);
+    public static final UniformIntProvider COOLDOWN_RANGE = Durations.betweenSeconds(1, 2);
     private final T actor;
-    private CrossbowAttackGoal.Stage stage;
+    private Stage stage;
     private final double speed;
     private final float squaredRange;
     private int seeingTargetTicker;
     private int chargedTicksLeft;
-    private int field_25697;
+    private int cooldown;
 
     public CrossbowAttackGoal(T actor, double speed, float range) {
         this.stage = CrossbowAttackGoal.Stage.UNCHARGED;
@@ -77,46 +78,46 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
             double d = this.actor.squaredDistanceTo(livingEntity);
             boolean bl3 = (d > (double)this.squaredRange || this.seeingTargetTicker < 5) && this.chargedTicksLeft == 0;
             if (bl3) {
-                --this.field_25697;
-                if (this.field_25697 <= 0) {
+                --this.cooldown;
+                if (this.cooldown <= 0) {
                     this.actor.getNavigation().startMovingTo(livingEntity, this.isUncharged() ? this.speed : this.speed * 0.5D);
-                    this.field_25697 = field_25696.choose(this.actor.getRandom());
+                    this.cooldown = COOLDOWN_RANGE.get(this.actor.getRandom());
                 }
             } else {
-                this.field_25697 = 0;
+                this.cooldown = 0;
                 this.actor.getNavigation().stop();
             }
 
             this.actor.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
-            if (this.stage == CrossbowAttackGoal.Stage.UNCHARGED) {
+            if (this.stage == Stage.UNCHARGED) {
                 if (!bl3) {
                     this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.CROSSBOW));
-                    this.stage = CrossbowAttackGoal.Stage.CHARGING;
+                    this.stage = Stage.CHARGING;
                     this.actor.setCharging(true);
                 }
-            } else if (this.stage == CrossbowAttackGoal.Stage.CHARGING) {
+            } else if (this.stage == Stage.CHARGING) {
                 if (!this.actor.isUsingItem()) {
-                    this.stage = CrossbowAttackGoal.Stage.UNCHARGED;
+                    this.stage = Stage.UNCHARGED;
                 }
 
                 int i = this.actor.getItemUseTime();
                 ItemStack itemStack = this.actor.getActiveItem();
                 if (i >= CrossbowItem.getPullTime(itemStack)) {
                     this.actor.stopUsingItem();
-                    this.stage = CrossbowAttackGoal.Stage.CHARGED;
+                    this.stage = Stage.CHARGED;
                     this.chargedTicksLeft = 20 + this.actor.getRandom().nextInt(20);
                     this.actor.setCharging(false);
                 }
-            } else if (this.stage == CrossbowAttackGoal.Stage.CHARGED) {
+            } else if (this.stage == Stage.CHARGED) {
                 --this.chargedTicksLeft;
                 if (this.chargedTicksLeft == 0) {
-                    this.stage = CrossbowAttackGoal.Stage.READY_TO_ATTACK;
+                    this.stage = Stage.READY_TO_ATTACK;
                 }
-            } else if (this.stage == CrossbowAttackGoal.Stage.READY_TO_ATTACK && bl) {
+            } else if (this.stage == Stage.READY_TO_ATTACK && bl) {
                 this.actor.attack(livingEntity, 1.0F);
                 ItemStack itemStack2 = this.actor.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.CROSSBOW));
                 CrossbowItem.setCharged(itemStack2, false);
-                this.stage = CrossbowAttackGoal.Stage.UNCHARGED;
+                this.stage = Stage.UNCHARGED;
             }
 
         }

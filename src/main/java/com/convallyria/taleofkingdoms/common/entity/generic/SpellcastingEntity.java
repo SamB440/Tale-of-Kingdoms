@@ -8,7 +8,8 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.entity.mob.SpellcastingIllagerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.MathHelper;
@@ -45,13 +46,13 @@ public abstract class SpellcastingEntity extends HostileEntity {
         this.dataTracker.startTracking(SPELL, (byte)0);
     }
 
-    public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
+    public void readCustomDataFromTag(NbtCompound tag) {
+        super.readCustomDataFromNbt(tag);
         this.spellTicks = tag.getInt("SpellTicks");
     }
 
-    public void writeCustomDataToTag(CompoundTag tag) {
-        super.writeCustomDataToTag(tag);
+    public void writeCustomDataToTag(NbtCompound tag) {
+        super.writeCustomDataToNbt(tag);
         tag.putInt("SpellTicks", this.spellTicks);
     }
 

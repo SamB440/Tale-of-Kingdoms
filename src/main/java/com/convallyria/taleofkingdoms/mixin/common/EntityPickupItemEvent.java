@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public abstract class EntityPickupItemEvent {
 
-    @Inject(method = "method_29499", at = @At(value = "INVOKE"))
+    @Inject(method = "triggerItemPickedUpByEntityCriteria", at = @At(value = "INVOKE"))
     public void onPickup(ItemEntity itemEntity, CallbackInfo ci) {
         //noinspection ConstantConditions - Mixin, injected into LivingEntity which can be instanceof PlayerEntity.
         if ((Object) this instanceof PlayerEntity) {

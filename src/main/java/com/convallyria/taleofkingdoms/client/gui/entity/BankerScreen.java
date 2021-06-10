@@ -37,7 +37,7 @@ public class BankerScreen extends ScreenTOK {
     public void init() {
         super.init();
         this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 77, this.height / 2 - 85, 150, 20, new LiteralText("0"));
-        this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new LiteralText("Deposit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new LiteralText("Deposit"), (button) -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
@@ -63,7 +63,7 @@ public class BankerScreen extends ScreenTOK {
                 this.onClose();
             }
         }));
-        this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new LiteralText("Withdraw"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new LiteralText("Withdraw"), (button) -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
@@ -88,7 +88,7 @@ public class BankerScreen extends ScreenTOK {
                 this.onClose();
             }
         }));
-        this.addButton(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
             this.onClose();
         }));
 
@@ -99,7 +99,7 @@ public class BankerScreen extends ScreenTOK {
         this.text.changeFocus(true);
         this.text.setVisible(true);
         this.text.setCursorToEnd();
-        this.children.add(this.text);
+        this.addSelectableChild(this.text);
     }
 
     @Override
@@ -112,9 +112,9 @@ public class BankerScreen extends ScreenTOK {
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
         this.text.render(stack, mouseX, mouseY, delta);
-        drawCenteredString(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, "Total Money You Have: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, "Total Money in the Bank: " + instance.getBankerCoins() + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Total Money You Have: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Total Money in the Bank: " + instance.getBankerCoins() + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
     }
 
     @Override

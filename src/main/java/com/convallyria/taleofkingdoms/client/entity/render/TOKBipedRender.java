@@ -3,7 +3,7 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.mob.MobEntity;
@@ -24,9 +24,9 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> 
     private final List<Identifier> skins;
     private final Map<UUID, Identifier> defaultSkin;
 
-    public TOKBipedRender(EntityRenderDispatcher renderManagerIn, PlayerEntityModel<MobEntity> modelBipedIn,
+    public TOKBipedRender(EntityRendererFactory.Context context, PlayerEntityModel<MobEntity> modelBipedIn,
                           float shadowSize, Identifier... skins) {
-        super(renderManagerIn, modelBipedIn, shadowSize);
+        super(context, modelBipedIn, shadowSize);
         this.skins = new ArrayList<>();
         this.defaultSkin = new ConcurrentHashMap<>();
         Collections.addAll(this.skins, skins);

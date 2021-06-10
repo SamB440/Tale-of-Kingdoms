@@ -8,48 +8,47 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-
-import java.io.IOException;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(UpdateStructureBlockC2SPacket.class)
 public class ClientUpdateStructureBlockUnlimit {
 
-    @Shadow private BlockPos pos;
-    @Shadow private StructureBlockBlockEntity.Action action;
-    @Shadow private StructureBlockMode mode;
-    @Shadow private String structureName;
-    @Shadow private BlockPos offset;
-    @Shadow private BlockPos size;
-    @Shadow private BlockMirror mirror;
-    @Shadow private BlockRotation rotation;
-    @Shadow private String metadata;
-    @Shadow private boolean ignoreEntities;
-    @Shadow private boolean showAir;
-    @Shadow private boolean showBoundingBox;
-    @Shadow private float integrity;
-    @Shadow private long seed;
+    @Shadow @Final @Mutable private BlockPos pos;
+    @Shadow @Final @Mutable private StructureBlockBlockEntity.Action action;
+    @Shadow @Final @Mutable private StructureBlockMode mode;
+    @Shadow @Final @Mutable private String structureName;
+    @Shadow @Final @Mutable private BlockPos offset;
+    @Shadow @Final @Mutable private Vec3i size;
+    @Shadow @Final @Mutable private BlockMirror mirror;
+    @Shadow @Final @Mutable private BlockRotation rotation;
+    @Shadow @Final @Mutable private String metadata;
+    @Shadow @Final @Mutable private boolean ignoreEntities;
+    @Shadow @Final @Mutable private boolean showAir;
+    @Shadow @Final @Mutable private boolean showBoundingBox;
+    @Shadow @Final @Mutable private float integrity;
+    @Shadow @Final @Mutable private long seed;
 
-    /**
-     * @reason Increase the distance that the bounding box can be seen up to 256 blocks
-     * @author SamB440/Cotander
-     */
-    @Overwrite
-    public void read(PacketByteBuf buf) throws IOException {
-        this.pos = buf.readBlockPos();
-        this.action = buf.readEnumConstant(StructureBlockBlockEntity.Action.class);
-        this.mode = buf.readEnumConstant(StructureBlockMode.class);
-        this.structureName = buf.readString(32767);
-        this.offset = new BlockPos(MathHelper.clamp(buf.readByte(), -512, 512), MathHelper.clamp(buf.readByte(), -512, 512), MathHelper.clamp(buf.readByte(), -512, 512));
-        this.size = new BlockPos(MathHelper.clamp(buf.readByte(), 0, 512), MathHelper.clamp(buf.readByte(), 0, 512), MathHelper.clamp(buf.readByte(), 0, 512));
-        this.mirror = buf.readEnumConstant(BlockMirror.class);
-        this.rotation = buf.readEnumConstant(BlockRotation.class);
-        this.metadata = buf.readString(128); // Fix MC-148809: Please see https://github.com/PaperMC/Paper/pull/5700 and https://bugs.mojang.com/browse/MC-148809
-        this.integrity = MathHelper.clamp(buf.readFloat(), 0.0F, 1.0F);
-        this.seed = buf.readVarLong();
-        int k = buf.readByte();
+    @Inject(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", at = @At("RETURN"))
+    private void reinit(PacketByteBuf packetByteBuf, CallbackInfo ci) {
+        this.pos = packetByteBuf.readBlockPos();
+        this.action = packetByteBuf.readEnumConstant(StructureBlockBlockEntity.Action.class);
+        this.mode = packetByteBuf.readEnumConstant(StructureBlockMode.class);
+        this.structureName = packetByteBuf.readString();
+        this.offset = new BlockPos(MathHelper.clamp(packetByteBuf.readByte(), -512, 512), MathHelper.clamp(packetByteBuf.readByte(), -512, 512), MathHelper.clamp(packetByteBuf.readByte(), -512, 512));
+        this.size = new Vec3i(MathHelper.clamp(packetByteBuf.readByte(), 0, 512), MathHelper.clamp(packetByteBuf.readByte(), 0, 512), MathHelper.clamp(packetByteBuf.readByte(), 0, 512));
+        this.mirror = packetByteBuf.readEnumConstant(BlockMirror.class);
+        this.rotation = packetByteBuf.readEnumConstant(BlockRotation.class);
+        this.metadata = packetByteBuf.readString(128);
+        this.integrity = MathHelper.clamp(packetByteBuf.readFloat(), 0.0F, 1.0F);
+        this.seed = packetByteBuf.readVarLong();
+        int k = packetByteBuf.readByte();
         this.ignoreEntities = (k & 1) != 0;
         this.showAir = (k & 2) != 0;
         this.showBoundingBox = (k & 4) != 0;

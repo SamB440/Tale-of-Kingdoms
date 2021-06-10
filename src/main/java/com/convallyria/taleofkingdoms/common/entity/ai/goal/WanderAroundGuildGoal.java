@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.entity.ai.TargetFinder;
+import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.BlockPos;
@@ -20,19 +20,13 @@ public class WanderAroundGuildGoal extends Goal {
     protected final double speed;
     protected int chance;
     protected boolean ignoringChance;
-    private boolean field_24463;
 
     public WanderAroundGuildGoal(PathAwareEntity mob, double speed) { this(mob, speed, 50); }
 
-    public WanderAroundGuildGoal(PathAwareEntity mob, double speed, int chance) {
-        this(mob, speed, chance, true);
-    }
-
-    public WanderAroundGuildGoal(PathAwareEntity pathAwareEntity, double d, int i, boolean bl) {
+    public WanderAroundGuildGoal(PathAwareEntity pathAwareEntity, double d, int i) {
         this.mob = pathAwareEntity;
         this.speed = d;
         this.chance = i;
-        this.field_24463 = bl;
         this.setControls(EnumSet.of(Goal.Control.MOVE));
     }
 
@@ -70,7 +64,7 @@ public class WanderAroundGuildGoal extends Goal {
 
     @Nullable
     protected Vec3d getWanderTarget() {
-        return TargetFinder.findTarget(this.mob, 30, 7);
+        return NoPenaltyTargeting.find(this.mob, 30, 7);
     }
 
     @Override

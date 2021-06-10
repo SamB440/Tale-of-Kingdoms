@@ -3,11 +3,15 @@ package com.convallyria.taleofkingdoms.common.generator;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.IglooGenerator;
 import net.minecraft.structure.SimpleStructurePiece;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructurePieceType;
+import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.util.BlockMirror;
@@ -18,28 +22,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.gen.feature.IglooFeature;
 
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 
 public class GatewayGenerator {
 
     private static final Identifier GATEWAY = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
     private static final Identifier BARS = new Identifier(TaleOfKingdoms.MODID, "gateway/bars");
 
-    public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces) {
+    public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
         final Direction direction = Direction.random(ThreadLocalRandom.current());
-        GatewayPiece gateway = new GatewayPiece(manager, pos.subtract(new Vec3i(0, 1, 0)), GATEWAY, BlockRotation.NONE);
+        GatewayPiece gateway = new GatewayPiece(manager, GATEWAY, pos.subtract(new Vec3i(0, 1, 0)), BlockRotation.NONE, 0);
         gateway.setOrientation(direction);
-        pieces.add(gateway);
-
+        structurePiecesHolder.addPiece(gateway);
         BlockPos startPos = pos.add(new Vec3i(7, 0, 5)).subtract(new Vec3i(0, 2, 0));
         int times = pos.getY() - 1;
         for (int i = 0; i < times; i++) {
-            GatewayPiece bars = new GatewayPiece(manager, startPos, BARS, BlockRotation.NONE);
+            GatewayPiece bars = new GatewayPiece(manager, BARS, startPos, BlockRotation.NONE, 0);
             bars.setOrientation(direction);
-            pieces.add(bars);
+            structurePiecesHolder.addPiece(bars);
             startPos = startPos.subtract(new Vec3i(0, 1, 0));
         }
     }
@@ -48,50 +53,37 @@ public class GatewayGenerator {
         private final BlockRotation rotation;
         private final Identifier template;
 
-        public GatewayPiece(StructureManager structureManager, CompoundTag compoundTag) {
-            super(TaleOfKingdoms.REFICULE_VILLAGE, compoundTag);
-            this.template = new Identifier(compoundTag.getString("Template"));
-            this.rotation = BlockRotation.valueOf(compoundTag.getString("Rot"));
-            this.initializeStructureData(structureManager);
-        }
-
-        public GatewayPiece(StructureManager structureManager, BlockPos pos, Identifier template, BlockRotation rotation) {
-            super(TaleOfKingdoms.REFICULE_VILLAGE, 0);
+        public GatewayPiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
+            super(TaleOfKingdoms.GATEWAY, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
             this.pos = pos;
-            this.rotation = rotation;
-            this.template = template;
-
-            this.initializeStructureData(structureManager);
+            this.rotation = blockRotation;
+            this.template = identifier;
+            createPlacementData(blockRotation, identifier);
         }
 
-        private void initializeStructureData(StructureManager structureManager) {
-            Structure structure = structureManager.getStructureOrBlank(this.template);
-            StructurePlacementData placementData = (new StructurePlacementData())
-                    .setRotation(this.rotation)
+        public GatewayPiece(ServerWorld serverWorld, NbtCompound nbtCompound) {
+            super(TaleOfKingdoms.GATEWAY, nbtCompound, serverWorld, (identifier) -> {
+                return createPlacementData(BlockRotation.valueOf(nbtCompound.getString("Rot")), identifier);
+            });
+            this.template = new Identifier(nbtCompound.getString("Template"));
+            this.rotation = BlockRotation.valueOf(nbtCompound.getString("Rot"));
+            createPlacementData(rotation, template);
+        }
+
+        private static StructurePlacementData createPlacementData(BlockRotation blockRotation, Identifier identifier) {
+            return (new StructurePlacementData())
+                    .setRotation(blockRotation)
                     .setMirror(BlockMirror.NONE)
                     .addProcessor(BlockIgnoreStructureProcessor.IGNORE_STRUCTURE_BLOCKS);
-            this.setStructureData(structure, this.pos, placementData);
-        }
-
-        protected void toNbt(CompoundTag tag) {
-            super.toNbt(tag);
-            tag.putString("Template", this.template.toString());
-            tag.putString("Rot", this.rotation.name());
         }
 
         @Override
-        protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
-                                      BlockBox boundingBox) {
+        protected void handleMetadata(String metadata, BlockPos blockPos, ServerWorldAccess serverWorldAccess,
+                                      Random random, BlockBox blockBox) {
             switch (metadata) {
-                case "ReficuleSoldier":
-                    EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, pos);
-                    break;
-                case "ReficuleArcher":
-                    EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, pos);
-                    break;
-                case "ReficuleMage":
-                    EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, pos);
-                    break;
+                case "ReficuleSoldier" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, pos);
+                case "ReficuleArcher" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, pos);
+                case "ReficuleMage" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, pos);
             }
         }
     }

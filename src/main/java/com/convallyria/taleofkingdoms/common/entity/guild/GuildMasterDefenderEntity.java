@@ -23,7 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.ItemTags;
@@ -78,11 +78,11 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {
-            if (!givenSword && !player.inventory.containsAny(new HashSet<>(FabricToolTags.SWORDS.values()))) { // Use containsAny method as it is present on both server and client
+            if (!givenSword && !player.getInventory().containsAny(new HashSet<>(FabricToolTags.SWORDS.values()))) { // Use containsAny method as it is present on both server and client
                 Runnable giveItem = () -> {
                     MinecraftServer server = player.getServer();
                     if (server != null) {
-                        serverPlayerEntity.inventory.insertStack(new ItemStack(Items.IRON_SWORD));
+                        serverPlayerEntity.getInventory().insertStack(new ItemStack(Items.IRON_SWORD));
                         this.givenSword = true;
                     }
                 };
@@ -94,7 +94,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
             if (instance.getReficuleAttackers().size() == 0) {
                 if (!instance.hasRebuilt()) {
                     Runnable fixGuild = () -> {
-                        PlayerInventory playerInventory = serverPlayerEntity.inventory;
+                        PlayerInventory playerInventory = serverPlayerEntity.getInventory();
                         ItemStack stack = null;
                         for (ItemStack itemStack : playerInventory.main) {
                             if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
@@ -107,7 +107,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
                         if (stack != null) {
                             playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
-                            serverPlayerEntity.getServerWorld().getEntityById(this.getEntityId()).kill();
+                            serverPlayerEntity.getServerWorld().getEntityById(this.getId()).kill();
                             instance.rebuild(serverPlayerEntity, api);
                             instance.setRebuilt(true);
                             instance.setUnderAttack(false);
@@ -130,14 +130,14 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         tag.putBoolean("givenSword", givenSword);
-        return super.toTag(tag);
+        return super.writeNbt(tag);
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
+    public void readNbt(NbtCompound tag) {
         this.givenSword = tag.getBoolean("givenSword");
-        super.fromTag(tag);
+        super.readNbt(tag);
     }
 }

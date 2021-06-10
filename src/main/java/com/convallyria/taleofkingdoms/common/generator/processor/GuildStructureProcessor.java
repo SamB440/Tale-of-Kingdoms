@@ -11,7 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.StructureProcessor;
@@ -41,14 +41,14 @@ public class GuildStructureProcessor extends StructureProcessor {
     @Nullable
     public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
         ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;
-        Structure.StructureBlockInfo air = new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new CompoundTag());
+        Structure.StructureBlockInfo air = new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
         if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
-            String metadata = structureBlockInfo2.tag.getString("metadata");
+            String metadata = structureBlockInfo2.nbt.getString("metadata");
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
-            if (!api.isPresent()) return structureBlockInfo2;
+            if (api.isEmpty()) return structureBlockInfo2;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
             TaleOfKingdoms.LOGGER.debug(structureBlockInfo2.pos);
-            if (!instance.isPresent()) return structureBlockInfo2;
+            if (instance.isEmpty()) return structureBlockInfo2;
 
             if (metadata.equalsIgnoreCase("Gateway")) {
                 if (!instance.get().isLoaded()) instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
@@ -71,7 +71,7 @@ public class GuildStructureProcessor extends StructureProcessor {
                         guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
                     }
 
-                    if (!guildEntity.isPresent()) {
+                    if (guildEntity.isEmpty()) {
                         EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
                     }
                 } else EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);

@@ -77,7 +77,7 @@ public class GuildGuardEntity extends TOKEntity {
                                 this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
                             }, 160);
                         }, 80);
-                        player.inventory.removeOne(player.getMainHandStack());
+                        player.getInventory().removeOne(player.getMainHandStack());
                         return;
                     }
                     if (player.world.isClient()) Translations.GUILDMEMBER_FIGHTER.send(player);

@@ -101,7 +101,7 @@ public class CoinListener extends Listener {
                     }
                 });
 
-                player.inventory.remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.inventory);
+                player.getInventory().remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.getInventory());
             }
         });
     }

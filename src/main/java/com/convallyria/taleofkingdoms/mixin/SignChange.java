@@ -40,11 +40,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SignChange {
 
 	@Shadow @Final
-	private Text[] text;
+	private Text[] texts;
 
-	@Inject(method = "setTextOnRow", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "setTextOnRow(ILnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
 	private void set(int row, Text text, CallbackInfo ci) {
-		if(this.abortSignChange(row, this.text[row], text))
+		if(this.abortSignChange(row, this.texts[row], text))
 			ci.cancel();
 	}
 

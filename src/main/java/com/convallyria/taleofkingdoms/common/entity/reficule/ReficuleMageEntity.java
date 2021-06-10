@@ -34,12 +34,11 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
@@ -106,7 +105,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         this.targetSelector.add(2, new TeleportTowardsPlayerGoal(this, entity -> {
             return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
         }));
-        this.targetSelector.add(3, (new FollowTargetGoal(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
+        this.targetSelector.add(3, (new FollowTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
         this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
         this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
         this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
@@ -122,7 +121,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable CompoundTag entityTag) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
         ItemStack wand = new ItemStack(Items.STICK);
         wand.addEnchantment(Enchantments.MENDING, 1); // Want them to look fancy :)
         this.equipStack(EquipmentSlot.OFFHAND, wand);
@@ -201,14 +200,18 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     @Override
     public void attack(LivingEntity target, float pullProgress) {
         ItemStack itemStack = this.getArrowType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity persistentProjectileEntity = ProjectileUtil.createArrowProjectile(this, itemStack, pullProgress);
+        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
-        double f = target.getZ() - this.getZ();
-        double g = MathHelper.sqrt(d * d + f * f);
-        persistentProjectileEntity.setVelocity(d, e + g * 0.20000000298023224D, f, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
+        double g = target.getZ() - this.getZ();
+        double h = Math.sqrt(d * d + g * g);
+        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(persistentProjectileEntity);
+    }
+
+    protected PersistentProjectileEntity createArrowProjectile(ItemStack itemStack, float f) {
+        return ProjectileUtil.createArrowProjectile(this, itemStack, f);
     }
 
     @Environment(EnvType.CLIENT)

@@ -6,7 +6,7 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
@@ -33,7 +33,7 @@ public class ItemPouch extends Item {
         ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.hasTag()) {
-            CompoundTag compoundTag = itemStack.getTag();
+            NbtCompound compoundTag = itemStack.getTag();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
                 if (coins == maxCoins) {
@@ -48,13 +48,13 @@ public class ItemPouch extends Item {
 
         if (instance.getCoins() >= 100) {
             if (!itemStack.hasTag()) {
-                CompoundTag compoundTag = new CompoundTag();
+                NbtCompound compoundTag = new NbtCompound();
                 compoundTag.putInt("coins", 100);
                 instance.setCoins(instance.getCoins() - 100);
                 itemStack.setTag(compoundTag);
                 user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
             } else {
-                CompoundTag compoundTag = itemStack.getTag();
+                NbtCompound compoundTag = itemStack.getTag();
                 if (!compoundTag.contains("coins")) {
                     compoundTag.putInt("coins", 100);
                     instance.setCoins(instance.getCoins() - 100);
@@ -76,7 +76,7 @@ public class ItemPouch extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (stack.hasTag()) {
-            CompoundTag compoundTag = stack.getTag();
+            NbtCompound compoundTag = stack.getTag();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
                 tooltip.add(new LiteralText("Coins: " + coins).formatted(Formatting.GOLD, Formatting.ITALIC));

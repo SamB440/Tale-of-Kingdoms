@@ -6,7 +6,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.IllagerEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.SkeletonEntityRenderer;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -20,9 +23,9 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
 
     private static final Identifier TEXTURE = new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png");
 
-    public ReficuleMageEntityRenderer(EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<ReficuleMageEntity> modelBipedIn) {
-        super(entityRenderDispatcher, modelBipedIn, 0.5F);
-        this.addFeature(new HeadFeatureRenderer<>(this));
+    public ReficuleMageEntityRenderer(EntityRendererFactory.Context context, PlayerEntityModel<ReficuleMageEntity> modelBipedIn) {
+        super(context, modelBipedIn, 0.5f);
+        this.addFeature(new HeadFeatureRenderer(this, context.getModelLoader()));
         this.addFeature(new HeldItemFeatureRenderer<>(this) {
             @Override
             public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, ReficuleMageEntity reficuleMageEntity, float f, float g, float h, float j, float k, float l) {

@@ -68,12 +68,12 @@ public class FarmerEntity extends TOKEntity {
                 if (server != null) {
                     ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity != null) {
-                        serverPlayerEntity.inventory.insertStack(new ItemStack(Items.BREAD, amount));
+                        serverPlayerEntity.getInventory().insertStack(new ItemStack(Items.BREAD, amount));
                     }
                 }
             });
         } else if (instance instanceof ServerConquestInstance) {
-            api.executeOnDedicatedServer(() -> player.inventory.insertStack(new ItemStack(Items.BREAD, amount)));
+            api.executeOnDedicatedServer(() -> player.getInventory().insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;
     }

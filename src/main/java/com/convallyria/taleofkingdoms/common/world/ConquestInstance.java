@@ -147,15 +147,16 @@ public abstract class ConquestInstance {
             Translations.GUILDMASTER_HELP.send(player);
 
             Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
-            Structure structure = world.toServerWorld().getStructureManager().getStructure(gateway);
-            for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
-                StructurePlacementData structurePlacementData = new StructurePlacementData();
-                structurePlacementData.addProcessor(GatewayStructureProcessor.INSTANCE);
-                structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-                structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
-                BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
-                structure.place(world, newPos, structurePlacementData, ThreadLocalRandom.current());
-            }
+            world.toServerWorld().getStructureManager().getStructure(gateway).ifPresent(structure -> {
+                for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
+                    StructurePlacementData structurePlacementData = new StructurePlacementData();
+                    structurePlacementData.addProcessor(GatewayStructureProcessor.INSTANCE);
+                    structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
+                    structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
+                    BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
+                    structure.place(world, newPos, newPos, structurePlacementData, ThreadLocalRandom.current(), 0);
+                }
+            });
         }
     }
 
@@ -339,7 +340,7 @@ public abstract class ConquestInstance {
      */
     public boolean isInGuild(BlockPos pos) {
         if (start == null || end == null) return false; // Probably still pasting.
-        BlockBox blockBox = new BlockBox(start, end);
+        BlockBox blockBox = new BlockBox(start.getX(), start.getY(), start.getZ(), end.getX(), end.getY(), end.getZ());
         return blockBox.contains(pos);
     }
 

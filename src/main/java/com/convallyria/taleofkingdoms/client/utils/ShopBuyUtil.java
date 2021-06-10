@@ -29,7 +29,7 @@ public class ShopBuyUtil {
 
                     ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity != null) {
-                        serverPlayerEntity.inventory.insertStack(new ItemStack(shopItem.getItem(), count));
+                        serverPlayerEntity.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
                         int cost = shopItem.getCost() * count;
                         instance.setCoins(instance.getCoins() - cost);
                     }

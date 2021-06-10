@@ -29,7 +29,7 @@ public class FireballSpellGoal extends CastSpellGoal {
     @Override
     public void start() {
         super.start();
-        this.targetId = spellCaster.getTarget().getEntityId();
+        this.targetId = spellCaster.getTarget().getId();
     }
 
     @Override
@@ -50,13 +50,12 @@ public class FireballSpellGoal extends CastSpellGoal {
         double x = spellCaster.getX();
         double y = spellCaster.getEyeY();
         double z = spellCaster.getZ();
-        FireballEntity fireballEntity = new FireballEntity(spellCaster.world, spellCaster, x, y, z);
-        fireballEntity.explosionPower = 1;
+        FireballEntity fireballEntity = new FireballEntity(spellCaster.world, spellCaster, x, y, z, 1);
         fireballEntity.updatePosition(spellCaster.getX() + vec3d.x * 4.0D, spellCaster.getBodyY(0.5D) + 0.5D, fireballEntity.getZ() + vec3d.z * 4.0D);
         double d = target.getX() - spellCaster.getX();
         double e = target.getBodyY(0.3333333333333333D) - fireballEntity.getY();
         double f = target.getZ() - spellCaster.getZ();
-        double g = MathHelper.sqrt(d * d + f * f);
+        double g = MathHelper.sqrt((float) (d * d + f * f)); // TODO update for 1.17
         fireballEntity.setVelocity(d, e + g * 0.20000000298023224D, f, 1.6F, (float)(14 - spellCaster.world.getDifficulty().getId() * 4));
         spellCaster.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (spellCaster.getRandom().nextFloat() * 0.4F + 0.8F));
         spellCaster.world.spawnEntity(fireballEntity);

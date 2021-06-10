@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.block.entity;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.client.gui.shop.inventory.ImplementedInventory;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,13 +13,14 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
 public class SellBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
     private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
-    public SellBlockEntity() {
-        super(TaleOfKingdoms.SELL_BLOCK_ENTITY);
+    public SellBlockEntity(BlockPos blockPos, BlockState blockState) {
+        super(TaleOfKingdoms.SELL_BLOCK_ENTITY, blockPos, blockState);
     }
 
 

@@ -50,11 +50,11 @@ public class ShopButtonWidget extends ButtonWidget {
         this.drawTexture(matrices, xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);
         super.mouseDragged(mouseX, mouseY, 0, delta, delta); // Don't know what deltaX and deltaY are.
         if (!enabled) {
-            drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffcc00);
+            drawCenteredText(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffcc00);
         } else if (!flag) {
-            drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffff);
+            drawCenteredText(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0xffffff);
         } else {
-            drawCenteredString(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0x00cc00);
+            drawCenteredText(matrices, textRenderer, shopItem.getName(), (xPosition + width / 2) - 20, yPosition + (height - 8) / 2, 0x00cc00);
         }
     }
 }

@@ -27,13 +27,13 @@ public class EncaseFireSpellGoal extends CastSpellGoal {
             return false;
         } else if (spellCaster.getTarget() == null) {
             return false;
-        } else return spellCaster.getTarget().getEntityId() != this.targetId;
+        } else return spellCaster.getTarget().getId() != this.targetId;
     }
 
     @Override
     public void start() {
         super.start();
-        this.targetId = spellCaster.getTarget().getEntityId();
+        this.targetId = spellCaster.getTarget().getId();
     }
 
     @Override

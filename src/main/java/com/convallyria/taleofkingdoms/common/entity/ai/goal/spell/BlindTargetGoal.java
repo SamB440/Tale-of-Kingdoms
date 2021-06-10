@@ -24,7 +24,7 @@ public class BlindTargetGoal extends CastSpellGoal {
             return false;
         } else if (spellCaster.getTarget() == null) {
             return false;
-        } else if (spellCaster.getTarget().getEntityId() == this.targetId) {
+        } else if (spellCaster.getTarget().getId() == this.targetId) {
             return false;
         } else {
             return spellCaster.world.getLocalDifficulty(spellCaster.getBlockPos()).isHarderThan((float) Difficulty.NORMAL.ordinal());
@@ -34,7 +34,7 @@ public class BlindTargetGoal extends CastSpellGoal {
     @Override
     public void start() {
         super.start();
-        this.targetId = spellCaster.getTarget().getEntityId();
+        this.targetId = spellCaster.getTarget().getId();
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.convallyria.taleofkingdoms.common.schematic;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.math.BlockBox;
@@ -44,12 +43,13 @@ public abstract class SchematicHandler {
 
     protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
         TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
-        Structure structure = player.getServerWorld().getStructureManager().getStructure(schematic.getPath());
-        StructurePlacementData structurePlacementData = new StructurePlacementData();
-        structurePlacementData.addProcessor(new GuildStructureProcessor(options));
-        structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-        structure.place(player.getServerWorld(), position, structurePlacementData, ThreadLocalRandom.current());
-        BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
-        cf.complete(box);
+        player.getServerWorld().getStructureManager().getStructure(schematic.getPath()).ifPresent(structure -> {
+            StructurePlacementData structurePlacementData = new StructurePlacementData();
+            structurePlacementData.addProcessor(new GuildStructureProcessor(options));
+            structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
+            structure.place(player.getServerWorld(), position, position, structurePlacementData, ThreadLocalRandom.current(), 0);
+            BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
+            cf.complete(box);
+        });
     }
 }

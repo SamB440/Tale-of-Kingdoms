@@ -82,7 +82,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
             int count = 1;
             if (Screen.hasShiftDown()) count = 16;
             ShopBuyUtil.buyItem(instance, player, selectedItem, count);
@@ -91,10 +91,10 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
             this.renderTooltip(stack, text, x, y);
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new LiteralText("Sell"), button -> openSellGui(entity, player)));
-        this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
-        this.addButton(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-        this.addButton(new ButtonWidget(this.width / 2 - 160, this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new LiteralText("Sell"), button -> openSellGui(entity, player)));
+        this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
+        this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160, this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
 
         this.selectedItem = shopItems.get(0);
 
@@ -120,7 +120,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
                 pages.put(page, new ShopPage(page));
             }
 
-            ShopButtonWidget shopButtonWidget = this.addButton(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
+            ShopButtonWidget shopButtonWidget = this.addDrawableChild(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
             pages.get(page).addItem(shopButtonWidget);
 
             currentY = currentY + 20;
@@ -134,9 +134,9 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        drawCenteredString(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         if (this.selectedItem != null) {
-            drawCenteredString(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+            drawCenteredText(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }
     }
 

@@ -57,12 +57,13 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
         this.instance = instance;
         this.shopItems = BlacksmithEntity.getBlacksmithShopItems();
         int guiScale = MinecraftClient.getInstance().options.guiScale;
+
         Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (!scaleSize.isPresent()) return;
+        if (scaleSize.isEmpty()) return;
         int x = scaleSize.get().getX();
         int y = scaleSize.get().getY();
         Optional<ScaleSize> scaleSizeTwo = SCALE_SIZES_TWO.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (!scaleSizeTwo.isPresent()) return;
+        if (scaleSizeTwo.isEmpty()) return;
         int xTwo = scaleSizeTwo.get().getX();
         int yTwo = scaleSizeTwo.get().getY();
         addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), x, y, new int[]{230, 230}));
@@ -82,7 +83,7 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void init() {
         super.init();
-        this.addButton(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
             int count = 1;
             if (Screen.hasShiftDown()) count = 16;
             ShopBuyUtil.buyItem(instance, player, selectedItem, count);
@@ -91,12 +92,12 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
             this.renderTooltip(stack, text, x, y);
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, new LiteralText("Sell"), button -> {
             openSellGui(entity, player);
         }));
-        this.addButton(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
-        this.addButton(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-        this.addButton(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
+        this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
+        this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
 
         this.selectedItem = shopItems.get(0);
 
@@ -122,7 +123,7 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
                 pages.put(page, new ShopPage(page));
             }
 
-            ShopButtonWidget shopButtonWidget = this.addButton(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
+            ShopButtonWidget shopButtonWidget = this.addDrawableChild(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
             pages.get(page).addItem(shopButtonWidget);
 
             currentY = currentY + 20;
@@ -136,9 +137,9 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        drawCenteredString(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         if (this.selectedItem != null) {
-            drawCenteredString(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+            drawCenteredText(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }
     }
 

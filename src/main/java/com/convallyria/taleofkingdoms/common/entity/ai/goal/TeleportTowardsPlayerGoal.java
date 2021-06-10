@@ -23,7 +23,7 @@ public class TeleportTowardsPlayerGoal extends FollowTargetGoal<PlayerEntity> {
     public TeleportTowardsPlayerGoal(TeleportAbility entity, @Nullable Predicate<LivingEntity> predicate) {
         super((MobEntity) entity, PlayerEntity.class, 10, false, false, predicate);
         this.entity = (MobEntity) entity;
-        this.predicate = (new TargetPredicate()).setBaseMaxDistance(this.getFollowRange()).setPredicate(pred -> true);
+        this.predicate = (TargetPredicate.createAttackable()).setBaseMaxDistance(this.getFollowRange()).setPredicate(pred -> true);
     }
 
     @Override

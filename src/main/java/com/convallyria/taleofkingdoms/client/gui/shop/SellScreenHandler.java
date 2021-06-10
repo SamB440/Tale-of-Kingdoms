@@ -61,27 +61,27 @@ public class SellScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
+    public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
         if (i == 0) {
-            ItemStack itemStack = playerEntity.inventory.getCursorStack();
+            ItemStack itemStack = playerEntity.currentScreenHandler.getCursorStack();
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
-            if (!api.isPresent()) return itemStack;
+            if (api.isEmpty()) return;
             Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
-            if (!instance.isPresent()) return itemStack;
-            playerEntity.inventory.setCursorStack(ItemStack.EMPTY);
+            if (instance.isEmpty()) return;
+            playerEntity.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
 
             for (List<ShopItem> shopItems : ShopParser.guiShopItems.values()) {
                 for (ShopItem shopItem : shopItems) {
                     if (itemStack.getItem() == shopItem.getItem()) {
                         // Issue #59
                         instance.get().addCoins(playerEntity.getUuid(), shopItem.getSell() * itemStack.getCount());
-                        return ItemStack.EMPTY;
+                        return;
                     }
                 }
             }
-            return itemStack;
+            return;
         }
-        return super.onSlotClick(i, j, actionType, playerEntity);
+        super.onSlotClick(i, j, actionType, playerEntity);
     }
 
     // Shift + Player Inv Slot

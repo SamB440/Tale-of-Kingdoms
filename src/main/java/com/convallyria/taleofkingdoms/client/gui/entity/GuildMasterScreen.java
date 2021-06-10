@@ -57,7 +57,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.makeHireHuntersButton();
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
             if (instance.getHunterUUIDs().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
@@ -87,10 +87,10 @@ public class GuildMasterScreen extends ScreenTOK {
             this.onClose();
         }));
 
-        PlayerInventory clientPlayerInventory = player.inventory;
+        PlayerInventory clientPlayerInventory = player.getInventory();
         ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS.values(), 64);
         String fixText = "Fix the guild";
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnMain(() -> {
                 if (instance.getCoins(player.getUuid()) < 3000) return;
                 if (stack == null) return;
@@ -104,7 +104,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
                 ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                 if (serverPlayerEntity != null) {
-                    PlayerInventory serverPlayerInventory = serverPlayerEntity.inventory;
+                    PlayerInventory serverPlayerInventory = serverPlayerEntity.getInventory();
                     serverPlayerInventory.setStack(serverPlayerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
                     instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
                     instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
@@ -113,7 +113,7 @@ public class GuildMasterScreen extends ScreenTOK {
             this.onClose();
         }));
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 46, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 46, 150, 20, new LiteralText("Exit"), (button) -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
             this.onClose();
         }));
@@ -127,9 +127,9 @@ public class GuildMasterScreen extends ScreenTOK {
         super.render(stack, par1, par2, par3);
         String order = Translations.GUILDMASTER_GUILD_ORDER.getFormatted() + instance.getCoins() + " " + Translations.GOLD_COINS.getFormatted();
         String path = Translations.GUILDMASTER_PATH.getFormatted();
-        drawCenteredString(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredString(stack, this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
-        drawCenteredString(stack, this.textRenderer, "Repairing the guild costs 64 logs and 3000 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
+        drawCenteredText(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Repairing the guild costs 64 logs and 3000 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
         this.worthness.drawBar(stack);
     }
 
@@ -150,7 +150,7 @@ public class GuildMasterScreen extends ScreenTOK {
             return;
         }
 
-        this.signContractButton = this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
+        this.signContractButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
             if (MinecraftClient.getInstance().getServer() != null) {
                 instance.setHasContract(true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
@@ -176,7 +176,7 @@ public class GuildMasterScreen extends ScreenTOK {
             return;
         }
 
-        this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
             if (MinecraftClient.getInstance().getServer() != null) {
                 instance.setHasContract(false);
             } else {
@@ -201,7 +201,7 @@ public class GuildMasterScreen extends ScreenTOK {
             return;
         }
 
-        this.hireHuntersButton = this.addButton(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
+        this.hireHuntersButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
             if (instance.getCoins() >= 1500) {
                 TaleOfKingdoms.getAPI().ifPresent(api -> {
                     Translations.SERVE.send(player);
