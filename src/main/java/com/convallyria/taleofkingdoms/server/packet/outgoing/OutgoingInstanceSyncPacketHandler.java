@@ -1,10 +1,10 @@
 package com.convallyria.taleofkingdoms.server.packet.outgoing;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
@@ -45,9 +45,7 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
             instance.getHunterUUIDs().forEach((playerUuid, hunterUuids) -> {
                 hunterUuids.forEach(passedData::writeUuid);
             });
-            // Then we'll send the packet to all the players
-            if (connection != null) connection.send(new CustomPayloadS2CPacket(identifier, passedData));
-            else serverPlayerEntity.networkHandler.connection.send(new CustomPayloadS2CPacket(identifier, passedData));
+            sendPacket(player,passedData);
         }
     }
 }

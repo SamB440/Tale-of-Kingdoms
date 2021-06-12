@@ -1,13 +1,12 @@
 package com.convallyria.taleofkingdoms.client.packet;
 
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
+import com.convallyria.taleofkingdoms.common.packet.context.ClientPacketContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.ClientConnection;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
@@ -22,12 +21,14 @@ public abstract class ClientPacketHandler extends PacketHandler {
 
     @Override
     protected void register() {
-        ClientSidePacketRegistry.INSTANCE.register(this.getPacket(),
-                (packetContext, attachedData) -> handleIncomingPacket(this.getPacket(), packetContext, attachedData));
+        ClientPlayNetworking.registerGlobalReceiver(identifier, (client, handler, buf, responseSender) -> {
+            ClientPacketContext context = new ClientPacketContext(EnvType.CLIENT, client.player, client);
+            handleIncomingPacket(identifier, context, buf);
+        });
     }
 
-    protected void sendPacket(ClientConnection connection, PacketByteBuf passedData) {
-        if (connection == null) MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(identifier, passedData));
-        else connection.send(new CustomPayloadC2SPacket(identifier, passedData));
+    @Override
+    protected void sendPacket(PlayerEntity player, PacketByteBuf passedData) {
+        ClientPlayNetworking.send(identifier, passedData);
     }
 }

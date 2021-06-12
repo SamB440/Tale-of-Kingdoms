@@ -2,8 +2,8 @@ package com.convallyria.taleofkingdoms.client.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
@@ -41,7 +41,7 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
             hunterUuids.add(attachedData.readUuid());
         }
 
-        context.getTaskQueue().execute(() -> TaleOfKingdoms.getAPI().ifPresent(api -> {
+        context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().ifPresent(api -> {
             ClientConquestInstance instance;
             if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
                 instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();

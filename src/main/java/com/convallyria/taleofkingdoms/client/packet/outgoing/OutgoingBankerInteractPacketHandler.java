@@ -3,8 +3,8 @@ package com.convallyria.taleofkingdoms.client.packet.outgoing;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
@@ -29,6 +29,6 @@ public final class OutgoingBankerInteractPacketHandler extends ClientPacketHandl
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         passedData.writeEnumConstant((BankerMethod) data[0]);
         passedData.writeInt((Integer) data[1]);
-        sendPacket(connection, passedData);
+        sendPacket(player, passedData);
     }
 }

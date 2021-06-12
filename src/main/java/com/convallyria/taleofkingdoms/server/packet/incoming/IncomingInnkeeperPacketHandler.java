@@ -3,10 +3,10 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -31,11 +31,11 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
 
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         UUID uuid = player.getUuid();
         String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         boolean resting = attachedData.readBoolean();
-        context.getTaskQueue().execute(() -> {
+        context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 if (!instance.isInGuild(player)) {

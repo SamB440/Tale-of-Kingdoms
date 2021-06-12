@@ -3,9 +3,9 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
@@ -26,12 +26,12 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
 
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+        ServerPlayerEntity player = (ServerPlayerEntity) context;
         UUID uuid = player.getUuid();
         String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         BankerMethod method = attachedData.readEnumConstant(BankerMethod.class);
         int coins = attachedData.readInt();
-        context.getTaskQueue().execute(() -> {
+        context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 if (!instance.isInGuild(player)) {

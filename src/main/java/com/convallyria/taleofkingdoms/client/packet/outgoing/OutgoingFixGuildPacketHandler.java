@@ -2,8 +2,8 @@ package com.convallyria.taleofkingdoms.client.packet.outgoing;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
@@ -26,6 +26,6 @@ public final class OutgoingFixGuildPacketHandler extends ClientPacketHandler {
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
                                      @Nullable ClientConnection connection, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        sendPacket(connection, passedData);
+        sendPacket(player, passedData);
     }
 }

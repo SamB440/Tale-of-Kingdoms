@@ -4,10 +4,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
+import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,11 +28,11 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
 
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.getPlayer();
+        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         String itemName = attachedData.readString(32367);
         int count = attachedData.readInt();
-        context.getTaskQueue().execute(() -> {
+        context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 if (!instance.isInGuild(player)) {
