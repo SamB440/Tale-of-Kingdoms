@@ -13,11 +13,8 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.SERVER)
 public abstract class ServerPacketHandler extends PacketHandler {
 
-    private final Identifier identifier;
-
     public ServerPacketHandler(Identifier packet) {
         super(packet);
-        this.identifier = packet;
     }
 
     @Override
@@ -30,6 +27,6 @@ public abstract class ServerPacketHandler extends PacketHandler {
 
     @Override
     protected void sendPacket(PlayerEntity player, PacketByteBuf passedData) {
-        ServerPlayNetworking.send((ServerPlayerEntity) player, identifier, passedData);
+        ServerPlayNetworking.send((ServerPlayerEntity) player, getPacket(), passedData);
     }
 }

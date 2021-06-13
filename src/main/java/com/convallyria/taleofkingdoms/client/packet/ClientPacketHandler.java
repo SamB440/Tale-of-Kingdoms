@@ -12,23 +12,20 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public abstract class ClientPacketHandler extends PacketHandler {
 
-    private final Identifier identifier;
-
     public ClientPacketHandler(Identifier packet) {
         super(packet);
-        this.identifier = packet;
     }
 
     @Override
     protected void register() {
-        ClientPlayNetworking.registerGlobalReceiver(identifier, (client, handler, buf, responseSender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(getPacket(), (client, handler, buf, responseSender) -> {
             ClientPacketContext context = new ClientPacketContext(EnvType.CLIENT, client.player, client);
-            handleIncomingPacket(identifier, context, buf);
+            handleIncomingPacket(getPacket(), context, buf);
         });
     }
 
     @Override
     protected void sendPacket(PlayerEntity player, PacketByteBuf passedData) {
-        ClientPlayNetworking.send(identifier, passedData);
+        ClientPlayNetworking.send(getPacket(), passedData);
     }
 }
