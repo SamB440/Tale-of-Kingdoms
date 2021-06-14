@@ -49,7 +49,10 @@ public class GuildMasterEntity extends TOKEntity {
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
 
         if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
-        if (instance instanceof ClientConquestInstance clientConquestInstance) this.openScreen(player, clientConquestInstance);
+        if (instance instanceof ClientConquestInstance) {
+            ClientConquestInstance clientConquestInstance = (ClientConquestInstance) instance;
+            this.openScreen(player, clientConquestInstance);
+        }
         return ActionResult.PASS;
     }
 

@@ -63,7 +63,7 @@ public class GameInstanceListener extends Listener {
                                     });
                                 });
                             } else {
-                                if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isEmpty()) {
+                                if (!api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isPresent()) {
                                     api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
                                 }
 

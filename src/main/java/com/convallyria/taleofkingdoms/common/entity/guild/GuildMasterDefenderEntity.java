@@ -74,7 +74,8 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity serverPlayerEntity)) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity)) return ActionResult.FAIL;
+        ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {

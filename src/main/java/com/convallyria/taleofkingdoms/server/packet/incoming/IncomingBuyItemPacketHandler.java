@@ -42,8 +42,8 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
 
                 // Search for either foodshop or blacksmith in the guild
                 Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
-                if (entity.isEmpty()) {
+                if (!entity.isPresent()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                if (!entity.isPresent()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop entity not present in guild.");
                     return;
                 }

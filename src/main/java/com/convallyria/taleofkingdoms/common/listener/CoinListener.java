@@ -58,7 +58,8 @@ public class CoinListener extends Listener {
                         || source.getSource() instanceof HunterEntity
                         || source.getSource() instanceof GuildGuardEntity
                         || source.getSource() instanceof ProjectileEntity) {
-                    if (source.getSource() instanceof ProjectileEntity projectileEntity) {
+                    if (source.getSource() instanceof ProjectileEntity) {
+                        ProjectileEntity projectileEntity = (ProjectileEntity) source.getSource();
                         if (projectileEntity.getOwner() instanceof PlayerEntity) {
                             playerEntity = (PlayerEntity) projectileEntity.getOwner();
                         }
@@ -78,11 +79,13 @@ public class CoinListener extends Listener {
                         instance.addWorthiness(source.getSource().getUuid(), getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world));
                     }
 
-                    if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
+                    if (playerEntity instanceof ServerPlayerEntity) {
+                        ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) playerEntity;
                         instance.attack(serverPlayerEntity, serverPlayerEntity.getServerWorld());
                     }
 
-                    if (instance instanceof ServerConquestInstance serverConquestInstance) {
+                    if (instance instanceof ServerConquestInstance) {
+                        ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                         serverConquestInstance.sync((ServerPlayerEntity) playerEntity, null);
                     }
                 }

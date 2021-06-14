@@ -47,7 +47,8 @@ public class Scheduler {
 			List<Consumer<MinecraftServer>> runnables = this.taskQueue.remove(this.currentTick);
 			if (runnables != null) for (Consumer<MinecraftServer> runnable : runnables) {
 				runnable.accept(m);
-				if (runnable instanceof Repeating repeating) {// reschedule repeating tasks
+				if (runnable instanceof Repeating) {// reschedule repeating tasks
+					Repeating repeating = (Repeating) runnable;
 					if (repeating.shouldQueue(this.currentTick))
 						this.queue(runnable, ((Repeating) runnable).next);
 				}

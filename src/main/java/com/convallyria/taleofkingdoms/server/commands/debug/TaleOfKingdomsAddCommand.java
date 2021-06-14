@@ -24,7 +24,8 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
         UUID playerUuid = player.getUuid();
 
         instance.addCoins(playerUuid, context.getArgument("coins", Integer.class));
-        if (instance instanceof ServerConquestInstance serverConquestInstance) {
+        if (instance instanceof ServerConquestInstance) {
+            ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
             serverConquestInstance.sync(player, null);
         }
 
@@ -38,7 +39,8 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
         UUID playerUuid = player.getUuid();
 
         instance.addWorthiness(playerUuid, context.getArgument("worthiness", Integer.class));
-        if (instance instanceof ServerConquestInstance serverConquestInstance) {
+        if (instance instanceof ServerConquestInstance) {
+            ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
             serverConquestInstance.sync(player, null);
         }
 

@@ -41,7 +41,8 @@ public class FollowPlayerGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        if (this.mob instanceof MovementVaried movementVaried) {
+        if (this.mob instanceof MovementVaried) {
+            MovementVaried movementVaried = (MovementVaried) mob;
             if (!movementVaried.isMovementEnabled()) return false;
         }
 
@@ -61,7 +62,8 @@ public class FollowPlayerGoal extends Goal {
     @Override
     public boolean shouldContinue() {
         boolean flag = true;
-        if (this.mob instanceof MovementVaried movementVaried) {
+        if (this.mob instanceof MovementVaried) {
+            MovementVaried movementVaried = (MovementVaried) mob;
             if (!movementVaried.isMovementEnabled()) flag = false;
         }
         return flag && this.target != null && !this.navigation.isIdle() && this.mob.squaredDistanceTo(this.target) > (double)(this.minDistance * this.minDistance);

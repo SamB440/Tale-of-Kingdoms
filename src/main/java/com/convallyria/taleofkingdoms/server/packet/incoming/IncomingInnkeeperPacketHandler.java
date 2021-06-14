@@ -45,7 +45,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
 
                 // Search for innkeeper
                 Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.INNKEEPER);
-                if (entity.isEmpty()) {
+                if (!entity.isPresent()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Innkeeper entity not present in guild.");
                     return;
                 }

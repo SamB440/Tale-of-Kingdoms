@@ -58,11 +58,11 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
         this.shopItems = FoodShopEntity.getFoodShopItems();
         int guiScale = MinecraftClient.getInstance().options.guiScale;
         Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (scaleSize.isEmpty()) return;
+        if (!scaleSize.isPresent()) return;
         int x = scaleSize.get().getX();
         int y = scaleSize.get().getY();
         Optional<ScaleSize> scaleSizeTwo = SCALE_SIZES_TWO.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (scaleSizeTwo.isEmpty()) return;
+        if (!scaleSizeTwo.isPresent()) return;
         int xTwo = scaleSizeTwo.get().getX();
         int yTwo = scaleSizeTwo.get().getY();
         addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), x, y, new int[]{230, 230}));

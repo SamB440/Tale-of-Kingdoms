@@ -8,7 +8,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Identifier;
 
-public record RenderSetup(TaleOfKingdoms mod) {
+public class RenderSetup {
+
+    private final TaleOfKingdoms mod;
 
     public RenderSetup(TaleOfKingdoms mod) {
         this.mod = mod;

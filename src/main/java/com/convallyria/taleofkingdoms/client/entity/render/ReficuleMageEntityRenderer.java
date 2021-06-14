@@ -6,11 +6,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.IllusionerEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
+import net.minecraft.client.render.entity.model.IllagerEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.mob.IllusionerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -23,12 +26,12 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
     public ReficuleMageEntityRenderer(EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<ReficuleMageEntity> modelBipedIn) {
         super(entityRenderDispatcher, modelBipedIn, 0.5F);
         this.addFeature(new HeadFeatureRenderer<>(this));
-        this.addFeature(new HeldItemFeatureRenderer<>(this) {
-            @Override
+        this.addFeature(new HeldItemFeatureRenderer<ReficuleMageEntity, PlayerEntityModel<ReficuleMageEntity>>(this) {
             public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, ReficuleMageEntity reficuleMageEntity, float f, float g, float h, float j, float k, float l) {
                 if (reficuleMageEntity.isSpellcasting() || reficuleMageEntity.isAttacking()) {
                     super.render(matrixStack, vertexConsumerProvider, i, reficuleMageEntity, f, g, h, j, k, l);
                 }
+
             }
         });
     }

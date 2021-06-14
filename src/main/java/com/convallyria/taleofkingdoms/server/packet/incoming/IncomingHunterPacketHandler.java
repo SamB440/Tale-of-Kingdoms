@@ -41,7 +41,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
 
                 // Search for banker
                 Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
-                if (entity.isEmpty()) {
+                if (!entity.isPresent()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Guildmaster entity not present in guild.");
                     return;
                 }

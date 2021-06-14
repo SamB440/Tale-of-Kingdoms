@@ -6,7 +6,19 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public record Image(Identifier resourceLocation, int x, int y, int[] dimensions) implements IImage {
+public class Image implements IImage {
+
+    private final Identifier resourceLocation;
+    private final int x;
+    private final int y;
+    private final int[] dimensions;
+
+    public Image(Identifier resourceLocation, int x, int y, int[] dimensions) {
+        this.resourceLocation = resourceLocation;
+        this.x = x;
+        this.y = y;
+        this.dimensions = dimensions;
+    }
 
     public int getWidth() {
         return dimensions[0];

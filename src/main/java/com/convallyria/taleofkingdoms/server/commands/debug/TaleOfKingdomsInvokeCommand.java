@@ -66,7 +66,8 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
             instance.setWorthiness(playerUuid, instance.getWorthiness(playerUuid) - 750);
 
-            if (instance instanceof ServerConquestInstance serverConquestInstance) {
+            if (instance instanceof ServerConquestInstance) {
+                ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                 serverConquestInstance.sync(player, null);
             }
 

@@ -42,7 +42,7 @@ public class InnkeeperScreen extends ScreenTOK {
             if (rest != null) {
                 TaleOfKingdoms.getAPI().ifPresent(api -> {
                     Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
-                    if (conquestInstance.isEmpty()) return;
+                    if (!conquestInstance.isPresent()) return;
                     if (conquestInstance.get().getCoins(player.getUuid()) < 10) {
                         return;
                     }
@@ -76,7 +76,7 @@ public class InnkeeperScreen extends ScreenTOK {
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
-                if (conquestInstance.isEmpty()) return;
+                if (!conquestInstance.isPresent()) return;
                 if (conquestInstance.get().getCoins(player.getUuid()) < 10) {
                     return;
                 }
