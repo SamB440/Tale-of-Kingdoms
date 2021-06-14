@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(value = UpdateStructureBlockC2SPacket.class, priority = 1001) // Carpet support - use ours
 public class ClientUpdateStructureBlockUnlimit {
     
-    @ModifyConstant(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", constant = @Constant(intValue = 48))
+    @ModifyConstant(method = "read", constant = @Constant(intValue = 48))
     public int reinitUpper(int value) {
         return 512;
     }
     
-    @ModifyConstant(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", constant = @Constant(intValue = -48))
+    @ModifyConstant(method = "read", constant = @Constant(intValue = -48))
     public int reinitLower(int value) {
         return -512;
     }

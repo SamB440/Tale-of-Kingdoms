@@ -13,7 +13,6 @@
     "common.PlayerLeave",
     "common.PlayerLogin",
     "packet.ClientUpdateStructureBlockUnlimit",
-    "structure.StructureBlockAccessor",
     "structure.StructureBlockUnlimit"
   ],
   "client": [
