@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(value = StructureBlockBlockEntity.class, priority = 1001) // Carpet support - use ours
 public class StructureBlockUnlimit {
     
-    @ModifyConstant(method = "readNbt", constant = @Constant(intValue = 48))
+    @ModifyConstant(method = "fromTag", constant = @Constant(intValue = 48))
     public int readNbtUpper(int value) {
         return 512;
     }
