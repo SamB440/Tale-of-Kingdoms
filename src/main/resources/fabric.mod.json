@@ -42,6 +42,9 @@
   "mixins": [
     "taleofkingdoms.mixins.json"
   ],
+  "conflicts": {
+    "carpet": "*"
+  },
 
   "depends": {
     "fabricloader": ">=0.7.4",

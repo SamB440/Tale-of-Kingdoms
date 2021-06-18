@@ -14,7 +14,7 @@ public class StructureBlockRenderMixin {
      * @reason Increase the distance that the bounding box can be seen up to 256 blocks
      * @author SamB440/Cotander
      */
-    @ModifyConstant(method = "getRenderDistance", constant = @Constant(intValue = 96))
+    @ModifyConstant(method = "getRenderDistance", constant = @Constant(intValue = 96), require = 0)
     @Environment(EnvType.CLIENT)
     public int getRenderDistance(int value) {
         return 256;
