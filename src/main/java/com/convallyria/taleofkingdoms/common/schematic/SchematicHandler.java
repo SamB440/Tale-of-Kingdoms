@@ -47,7 +47,7 @@ public abstract class SchematicHandler {
             StructurePlacementData structurePlacementData = new StructurePlacementData();
             structurePlacementData.addProcessor(new GuildStructureProcessor(options));
             structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-            structure.place(player.getServerWorld(), position, position, structurePlacementData, ThreadLocalRandom.current(), 0);
+            structure.place(player.getServerWorld(), position, BlockPos.ORIGIN, structurePlacementData, ThreadLocalRandom.current(), 0);
             BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
             cf.complete(box);
         });

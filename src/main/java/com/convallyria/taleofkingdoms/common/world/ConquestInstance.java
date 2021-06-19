@@ -154,7 +154,7 @@ public abstract class ConquestInstance {
                     structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
                     structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
                     BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
-                    structure.place(world, newPos, newPos, structurePlacementData, ThreadLocalRandom.current(), 0);
+                    structure.place(world, newPos, BlockPos.ORIGIN, structurePlacementData, ThreadLocalRandom.current(), 0);
                 }
             });
         }
