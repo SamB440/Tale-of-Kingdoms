@@ -7,13 +7,29 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class CityBuilderEntity extends TOKEntity {
+
+    private static final TrackedData<Boolean> MOVING_TO_LOCATION;
+
+    static {
+        MOVING_TO_LOCATION = DataTracker.registerData(CityBuilderEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(MOVING_TO_LOCATION, false);
+    }
 
     public CityBuilderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -30,6 +46,18 @@ public class CityBuilderEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+                if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
+                    BlockPos current = player.getBlockPos();
+                    double distance = instance.getCentre().squaredDistanceTo(current.getX(), current.getY(), current.getZ());
+                    if (distance < (3000 * 2)) {
+                        Translations.CITYBUILDER_DISTANCE.send(player, String.valueOf(distance * 2), String.valueOf(3000));
+                        return;
+                    }
+
+
+                    return;
+                }
+
                 if (instance.getWorthiness(player.getUuid()) >= 1500) {
                     Translations.CITYBUILDER_BUILD.send(player);
                     this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
