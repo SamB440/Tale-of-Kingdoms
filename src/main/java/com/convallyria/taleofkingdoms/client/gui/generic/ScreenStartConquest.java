@@ -86,7 +86,7 @@ public class ScreenStartConquest extends ScreenTOK {
             api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> {
                 api.get().executeOnServer(() -> {
                     BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
-                    BlockPos end = new BlockPos(oi.getMaxX(), oi.getMinY(), oi.getMaxZ());
+                    BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
                     instance.setStart(start);
                     instance.setEnd(end);
                     

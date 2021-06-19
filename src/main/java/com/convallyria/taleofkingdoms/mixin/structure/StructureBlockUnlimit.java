@@ -17,4 +17,9 @@ public class StructureBlockUnlimit {
     public int readNbtLower(int value) {
         return -512;
     }
+
+    @ModifyConstant(method = "detectStructureSize", constant = @Constant(intValue = 80), require = 0)
+    public int detectSize(int value) {
+        return 256;
+    }
 }
