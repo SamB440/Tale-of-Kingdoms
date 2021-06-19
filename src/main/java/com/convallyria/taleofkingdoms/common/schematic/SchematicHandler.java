@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
+import net.minecraft.SharedConstants;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
@@ -43,6 +44,7 @@ public abstract class SchematicHandler {
 
     protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
         TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
+        SharedConstants.isDevelopment = true; // We want to crash if something went wrong
         player.getServerWorld().getStructureManager().getStructure(schematic.getPath()).ifPresent(structure -> {
             StructurePlacementData structurePlacementData = new StructurePlacementData();
             structurePlacementData.addProcessor(new GuildStructureProcessor(options));
@@ -50,6 +52,7 @@ public abstract class SchematicHandler {
             structure.place(player.getServerWorld(), position, BlockPos.ORIGIN, structurePlacementData, ThreadLocalRandom.current(), 0);
             BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
             cf.complete(box);
+            SharedConstants.isDevelopment = false; // Put it back to what it was.
         });
     }
 }

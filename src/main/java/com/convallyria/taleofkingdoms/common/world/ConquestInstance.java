@@ -340,7 +340,7 @@ public abstract class ConquestInstance {
      */
     public boolean isInGuild(BlockPos pos) {
         if (start == null || end == null) return false; // Probably still pasting.
-        BlockBox blockBox = new BlockBox(start.getX(), start.getY(), start.getZ(), end.getX(), end.getY(), end.getZ());
+        BlockBox blockBox = new BlockBox(end.getX(), end.getY(), end.getZ(), start.getX(), start.getY(), start.getZ());
         return blockBox.contains(pos);
     }
 
