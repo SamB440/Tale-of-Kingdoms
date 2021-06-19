@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.mixin.packet;
+package com.convallyria.taleofkingdoms.mixin.structure.packet;
 
 import net.minecraft.network.packet.c2s.play.UpdateStructureBlockC2SPacket;
 import org.spongepowered.asm.mixin.Mixin;

@@ -12,8 +12,8 @@
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
     "common.PlayerLogin",
-    "packet.ClientUpdateStructureBlockUnlimit",
-    "structure.StructureBlockUnlimit"
+    "structure.StructureBlockUnlimit",
+    "structure.packet.ClientUpdateStructureBlockUnlimit"
   ],
   "client": [
     "WorldClose",
