@@ -12,6 +12,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -54,13 +55,15 @@ public class CityBuilderEntity extends TOKEntity {
                         return;
                     }
 
-
+                    player.sendMessage(new LiteralText("would open gui"), false);
+                    //TODO open gui
                     return;
                 }
 
                 if (instance.getWorthiness(player.getUuid()) >= 1500) {
                     Translations.CITYBUILDER_BUILD.send(player);
                     this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
+                    this.getDataTracker().set(MOVING_TO_LOCATION, true);
                 } else {
                     Translations.CITYBUILDER_MESSAGE.send(player);
                 }
