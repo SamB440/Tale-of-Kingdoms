@@ -16,7 +16,10 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.text.DecimalFormat;
 
 public class CityBuilderEntity extends TOKEntity {
 
@@ -48,10 +51,10 @@ public class CityBuilderEntity extends TOKEntity {
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
-                    BlockPos current = player.getBlockPos();
-                    double distance = instance.getCentre().squaredDistanceTo(current.getX(), current.getY(), current.getZ());
-                    if (distance < (3000 * 2)) {
-                        Translations.CITYBUILDER_DISTANCE.send(player, String.valueOf(distance * 2), String.valueOf(3000));
+                    BlockPos current = this.getBlockPos();
+                    int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
+                    if (distance < (3000)) {
+                        Translations.CITYBUILDER_DISTANCE.send(player, String.valueOf(distance), String.valueOf(3000));
                         return;
                     }
 
