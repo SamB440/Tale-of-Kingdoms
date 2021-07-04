@@ -69,7 +69,15 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
     @Override
     public boolean damage(DamageSource damageSource, float f) {
-        return false;
+        if (TaleOfKingdoms.getAPI().isPresent()) {
+            if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) {
+                ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+                if (instance.isUnderAttack() && !instance.hasRebuilt()) {
+                    return false;
+                }
+            }
+        }
+        return super.damage(damageSource, f);
     }
 
     @Override
@@ -107,10 +115,10 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
                         if (stack != null) {
                             playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
-                            serverPlayerEntity.getServerWorld().getEntityById(this.getId()).kill();
                             instance.rebuild(serverPlayerEntity, api);
                             instance.setRebuilt(true);
                             instance.setUnderAttack(false);
+                            serverPlayerEntity.getServerWorld().getEntityById(this.getId()).kill();
                             Translations.GUILDMASTER_THANK_YOU.send(player);
                         } else {
                             Translations.GUILDMASTER_REBUILD.send(player);
