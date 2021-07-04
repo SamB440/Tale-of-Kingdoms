@@ -24,7 +24,7 @@ public class ReficuleVillageFeature extends StructureFeature<DefaultFeatureConfi
     }
 
     @Override
-    public StructureFeature.StructureStartFactory<DefaultFeatureConfig> getStructureStartFactory() {
+    public StructureStartFactory<DefaultFeatureConfig> getStructureStartFactory() {
         return Start::new;
     }
 
