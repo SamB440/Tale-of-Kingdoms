@@ -4,7 +4,7 @@ import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import org.lwjgl.opengl.GL40;
+//import org.lwjgl.opengl.GL40;
 
 public class ScreenBar extends ScreenTOK {
 
