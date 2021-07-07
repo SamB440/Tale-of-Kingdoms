@@ -38,6 +38,7 @@ public abstract class CastSpellGoal extends Goal {
 
     @Override
     public void start() {
+        super.start();
         this.spellCooldown = this.getInitialCooldown();
         spellCaster.setSpellTicks(this.getSpellTicks());
         this.startTime = spellCaster.age + this.startTimeDelay();
@@ -45,14 +46,20 @@ public abstract class CastSpellGoal extends Goal {
         if (soundEvent != null) {
             spellCaster.playSound(soundEvent, 1.0F, 1.0F);
         }
-
         spellCaster.setSpell(this.getSpell());
     }
 
     @Override
     public void tick() {
+        super.tick();
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("TICK: " + spellCaster.getTarget());
         --this.spellCooldown;
-        if (this.spellCooldown == 0) {
+        if (this.spellCooldown <= 0) {
             this.castSpell();
             spellCaster.playSound(spellCaster.getCastSpellSound(), 1.0F, 1.0F);
         }

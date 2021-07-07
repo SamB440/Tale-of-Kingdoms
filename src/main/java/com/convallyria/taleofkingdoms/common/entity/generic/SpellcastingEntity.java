@@ -8,7 +8,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.SpellcastingIllagerEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
@@ -26,6 +26,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
     protected SpellcastingEntity(EntityType<? extends SpellcastingEntity> entityType, World world) {
         super(entityType, world);
         this.spell = SpellcastingEntity.Spell.NONE;
+        MobEntity
     }
 
     @Override
@@ -156,8 +157,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
             SpellcastingEntity.Spell[] var1 = values();
             int var2 = var1.length;
 
-            for(int var3 = 0; var3 < var2; ++var3) {
-                SpellcastingEntity.Spell spell = var1[var3];
+            for (Spell spell : var1) {
                 if (id == spell.id) {
                     return spell;
                 }
