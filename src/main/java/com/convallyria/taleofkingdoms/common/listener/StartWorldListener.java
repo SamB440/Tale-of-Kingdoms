@@ -14,6 +14,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +28,7 @@ public class StartWorldListener extends Listener {
     private String worldName;
     private boolean joined;
 
+    @Nullable
     public String getWorldName() {
         return worldName;
     }
