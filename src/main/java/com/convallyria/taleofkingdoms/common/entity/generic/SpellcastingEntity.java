@@ -26,7 +26,6 @@ public abstract class SpellcastingEntity extends HostileEntity {
     protected SpellcastingEntity(EntityType<? extends SpellcastingEntity> entityType, World world) {
         super(entityType, world);
         this.spell = SpellcastingEntity.Spell.NONE;
-        MobEntity
     }
 
     @Override
