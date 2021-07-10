@@ -36,7 +36,7 @@ public class BankerEntity extends TOKEntity {
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
         BankerScreen screen = new BankerScreen(player, this, instance);
-        MinecraftClient.getInstance().openScreen(screen);
+        MinecraftClient.getInstance().setScreen(screen);
     }
 
     @Override

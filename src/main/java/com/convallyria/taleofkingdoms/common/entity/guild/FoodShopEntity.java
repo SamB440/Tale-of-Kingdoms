@@ -42,7 +42,7 @@ public class FoodShopEntity extends TOKEntity {
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
         FoodShopScreen screen = new FoodShopScreen(player, this, instance);
-        MinecraftClient.getInstance().openScreen(screen);
+        MinecraftClient.getInstance().setScreen(screen);
     }
 
     @Override

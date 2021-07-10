@@ -56,7 +56,7 @@ public class GuildMasterEntity extends TOKEntity {
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
         GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
-        MinecraftClient.getInstance().openScreen(screen);
+        MinecraftClient.getInstance().setScreen(screen);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class BlacksmithEntity extends TOKEntity {
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
         BlacksmithScreen screen = new BlacksmithScreen(player, this, instance);
-        MinecraftClient.getInstance().openScreen(screen);
+        MinecraftClient.getInstance().setScreen(screen);
     }
 
     @Override
