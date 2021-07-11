@@ -59,7 +59,7 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
             try {
-                EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase()).get(EntityTypes.class);
+                EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
                 if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
                         && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER)) {
                     return air;
