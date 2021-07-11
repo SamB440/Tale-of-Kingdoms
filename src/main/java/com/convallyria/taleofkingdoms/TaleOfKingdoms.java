@@ -73,6 +73,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -86,6 +87,8 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private static TaleOfKingdomsAPI api;
+
+    public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
     public static final Identifier INSTANCE_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "instance");
     public static final Identifier SIGN_CONTRACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "sign_contract");
