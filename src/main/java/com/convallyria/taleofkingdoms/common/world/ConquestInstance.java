@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructur
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
+import com.convallyria.taleofkingdoms.quest.Quest;
 import com.google.gson.Gson;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BedBlockEntity;
@@ -18,7 +19,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
@@ -36,7 +36,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -55,6 +57,7 @@ public abstract class ConquestInstance {
     private final List<BlockPos> reficuleAttackLocations;
     private final List<UUID> reficuleAttackers;
     private boolean hasRebuilt;
+    private final Map<UUID, Quest> activeQuests;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -70,6 +73,15 @@ public abstract class ConquestInstance {
         this.loneVillagersWithRooms = new ArrayList<>();
         this.reficuleAttackLocations = new ArrayList<>();
         this.reficuleAttackers = new ArrayList<>();
+        this.activeQuests = new HashMap<>();
+    }
+
+    public boolean hasActiveQuest(UUID uuid) {
+        return activeQuests.containsKey(uuid);
+    }
+
+    public void addActiveQuest(UUID uuid, Quest quest) {
+        activeQuests.put(uuid, quest);
     }
 
     public boolean isClient() {

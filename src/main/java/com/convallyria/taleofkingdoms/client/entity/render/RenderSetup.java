@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.entity.render.model.ImprovedPlayerEntityModel;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
+import com.convallyria.taleofkingdoms.common.entity.generic.ForemanEntity;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
@@ -52,6 +53,7 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.REFICULE_GUARDIAN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficuleguardian.png"));
         register(EntityTypes.REFICULE_MAGE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png"));
         register(EntityTypes.BANDIT, BanditEntity.SKINS);
+        register(EntityTypes.FOREMAN, ForemanEntity.SKINS);
     }
 
     private void register(EntityType type, Identifier... skins) {

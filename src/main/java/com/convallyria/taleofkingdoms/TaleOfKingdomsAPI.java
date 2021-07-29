@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms;
 
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.scheduler.Scheduler;
 import com.convallyria.taleofkingdoms.common.schematic.ClientSchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
@@ -8,6 +9,8 @@ import com.convallyria.taleofkingdoms.common.schematic.ServerSchematicHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
+import com.convallyria.taleofkingdoms.quest.Quest;
+import com.convallyria.taleofkingdoms.quest.guild_captain.MiningVillage;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,7 +21,9 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -37,12 +42,33 @@ public class TaleOfKingdomsAPI {
     private final Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
 
+    private final List<Quest> quests;
+
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
         this.mod = mod;
         this.cis = new ConquestInstanceStorage();
         SoundManager sm = new SoundManager(mod);
         managers.put(sm.getName(), sm);
         this.scheduler = new Scheduler();
+        this.quests = new ArrayList<>();
+        this.initQuests();
+    }
+
+    private void initQuests() {
+        quests.add(new MiningVillage());
+    }
+
+    public List<Quest> getQuests() {
+        return quests;
+    }
+
+    public Optional<Quest> entityHasQuest(TOKEntity entity) {
+        for (Quest quest : quests) {
+            if (quest.getEntity().isAssignableFrom(entity.getClass())) {
+                return Optional.of(quest);
+            }
+        }
+        return Optional.empty();
     }
 
     @Environment(EnvType.SERVER)

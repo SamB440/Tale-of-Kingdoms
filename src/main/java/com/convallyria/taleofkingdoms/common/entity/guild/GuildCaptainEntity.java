@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -36,6 +37,9 @@ public class GuildCaptainEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        TaleOfKingdoms.getAPI().ifPresent(api -> {
+            api.entityHasQuest(this).ifPresent(quest -> quest.start(player));
+        });
         return ActionResult.PASS;
     }
 

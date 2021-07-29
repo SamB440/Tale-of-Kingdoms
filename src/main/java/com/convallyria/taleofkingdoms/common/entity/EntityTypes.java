@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
+import com.convallyria.taleofkingdoms.common.entity.generic.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
@@ -115,5 +116,10 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "bandit"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, BanditEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+    public static final EntityType<ForemanEntity> FOREMAN = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "foreman"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ForemanEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 }
