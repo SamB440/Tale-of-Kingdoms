@@ -63,10 +63,14 @@ public class GatewayGenerator {
 
         public GatewayPiece(ServerWorld serverWorld, NbtCompound nbtCompound) {
             super(TaleOfKingdoms.GATEWAY, nbtCompound, serverWorld, (identifier) -> {
-                return createPlacementData(BlockRotation.valueOf(nbtCompound.getString("Rot")), identifier);
+                String rot = nbtCompound.getString("Rot");
+                BlockRotation rotation = rot.isEmpty() ? BlockRotation.NONE : BlockRotation.valueOf(rot);
+                return createPlacementData(rotation, identifier);
             });
+            String rot = nbtCompound.getString("Rot");
+            BlockRotation rotation = rot.isEmpty() ? BlockRotation.NONE : BlockRotation.valueOf(rot);
             this.template = new Identifier(nbtCompound.getString("Template"));
-            this.rotation = BlockRotation.valueOf(nbtCompound.getString("Rot"));
+            this.rotation = rotation;
             createPlacementData(rotation, template);
         }
 

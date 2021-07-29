@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
@@ -160,6 +161,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.BANDIT, BanditEntity.createMobAttributes());
 
         // Load shop items
         new ShopParser().createShopItems();

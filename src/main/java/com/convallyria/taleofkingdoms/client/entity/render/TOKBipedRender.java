@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.mob.MobEntity;
@@ -30,6 +31,7 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> 
         this.skins = new ArrayList<>();
         this.defaultSkin = new ConcurrentHashMap<>();
         Collections.addAll(this.skins, skins);
+        this.addFeature(new HeldItemFeatureRenderer(this));
     }
 
     @Override

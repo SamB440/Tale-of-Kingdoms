@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
@@ -109,5 +110,10 @@ public class EntityTypes {
             Registry.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "reficule_mage"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, ReficuleMageEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+    public static final EntityType<BanditEntity> BANDIT = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "bandit"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, BanditEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 }
