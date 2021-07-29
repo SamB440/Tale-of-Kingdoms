@@ -53,11 +53,13 @@ public abstract class TOKEntity extends PathAwareEntity {
 
     /**
      * Whether this entity is invulnerable.
+     *
+     * **AI will not function well if this is true!**
      * @return true if invulnerable
      */
     @Override
     public boolean isInvulnerable() {
-        return true;
+        return false;
     }
 
     /**
