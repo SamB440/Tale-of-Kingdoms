@@ -57,7 +57,7 @@ public abstract class ConquestInstance {
     private final List<BlockPos> reficuleAttackLocations;
     private final List<UUID> reficuleAttackers;
     private boolean hasRebuilt;
-    private final Map<UUID, Quest> activeQuests;
+    private transient Map<UUID, Quest> activeQuests;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -77,10 +77,12 @@ public abstract class ConquestInstance {
     }
 
     public boolean hasActiveQuest(UUID uuid) {
+        if (activeQuests == null) this.activeQuests = new HashMap<>();
         return activeQuests.containsKey(uuid);
     }
 
     public void addActiveQuest(UUID uuid, Quest quest) {
+        if (activeQuests == null) this.activeQuests = new HashMap<>();
         activeQuests.put(uuid, quest);
     }
 

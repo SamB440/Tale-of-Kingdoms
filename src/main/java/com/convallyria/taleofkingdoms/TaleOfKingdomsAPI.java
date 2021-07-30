@@ -17,6 +17,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +65,7 @@ public class TaleOfKingdomsAPI {
 
     public Optional<Quest> entityHasQuest(TOKEntity entity) {
         for (Quest quest : quests) {
-            if (quest.getEntity().isAssignableFrom(entity.getClass())) {
+            if (entity.getClass().isAssignableFrom(quest.getEntity())) {
                 return Optional.of(quest);
             }
         }
@@ -180,6 +181,15 @@ public class TaleOfKingdomsAPI {
             return new ServerSchematicHandler();
         } else {
             return new ClientSchematicHandler();
+        }
+    }
+
+    @NotNull
+    public ServerWorld getServerWorld() {
+        if (this.minecraftServer != null) {
+            return minecraftServer.getOverworld();
+        } else {
+            return MinecraftClient.getInstance().getServer().getOverworld();
         }
     }
 }

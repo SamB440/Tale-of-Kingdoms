@@ -66,10 +66,8 @@ public abstract class Quest {
         objectives.add(objective);
     }
 
-    public void testObjectives() {
-        objectives.forEach(objective -> {
-
-        });
+    public void testObjectives(PlayerEntity playerEntity) {
+        objectives.forEach(objective -> objective.test(playerEntity));
     }
 
     public abstract Class<? extends TOKEntity> getEntity();

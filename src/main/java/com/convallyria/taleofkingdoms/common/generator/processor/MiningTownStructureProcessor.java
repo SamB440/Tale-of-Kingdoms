@@ -32,7 +32,7 @@ public class MiningTownStructureProcessor extends StructureProcessor {
     @Nullable
     public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
         ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;
-        BlockPos newPos = blockPos.subtract(new Vec3i(6, 0, 6));
+        //BlockPos newPos = blockPos.subtract(new Vec3i(6, 0, 6));
         if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
             String metadata = structureBlockInfo2.nbt.getString("metadata");
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
@@ -42,7 +42,11 @@ public class MiningTownStructureProcessor extends StructureProcessor {
 
             switch (metadata) {
                 case "Bandit" -> {
-                    //TODO spawn bandit
+                    EntityUtils.spawnEntity(EntityTypes.BANDIT, serverWorldAccess, structureBlockInfo2.pos);
+                    return null;
+                }
+                case "Foreman" -> {
+                    EntityUtils.spawnEntity(EntityTypes.FOREMAN, serverWorldAccess, structureBlockInfo2.pos);
                     return null;
                 }
             }
@@ -51,6 +55,6 @@ public class MiningTownStructureProcessor extends StructureProcessor {
     }
 
     protected StructureProcessorType<?> getType() {
-        return TaleOfKingdoms.GATEWAY_PROCESSOR;
+        return TaleOfKingdoms.MINING_TOWN_PROCESSOR;
     }
 }

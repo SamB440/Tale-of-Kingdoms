@@ -12,6 +12,7 @@
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
     "common.PlayerLogin",
+    "common.quest.ObjectiveTestMixin",
     "structure.StructureBlockUnlimit",
     "structure.packet.ClientUpdateStructureBlockUnlimit"
   ],

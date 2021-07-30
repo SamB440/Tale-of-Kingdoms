@@ -13,12 +13,10 @@ public class ObjectiveTestMixin {
     @Inject(method = "tick", at = @At(value = "INVOKE"))
     private void tick(CallbackInfo ci) {
         PlayerEntity playerEntity = ((PlayerEntity) (Object) this);
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            api.getQuests().forEach(quest -> {
-                if (quest.isTracked(playerEntity.getUuid())) {
-                    quest.getObjectives().forEach(objective -> objective.test(playerEntity));
-                }
-            });
-        });
+        TaleOfKingdoms.getAPI().ifPresent(api -> api.getQuests().forEach(quest -> {
+            if (quest.isTracked(playerEntity.getUuid())) {
+                quest.testObjectives(playerEntity);
+            }
+        }));
     }
 }

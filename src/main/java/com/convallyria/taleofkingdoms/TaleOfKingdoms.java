@@ -25,11 +25,14 @@ import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEnt
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
 import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
+import com.convallyria.taleofkingdoms.common.generator.MiningTownGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
+import com.convallyria.taleofkingdoms.common.generator.feature.MiningTownFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
+import com.convallyria.taleofkingdoms.common.generator.processor.MiningTownStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.listener.BlockListener;
@@ -105,12 +108,18 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final StructurePieceType REFICULE_VILLAGE = ReficuleVillageGenerator.ReficuleVillagePiece::new;
     public static final StructureFeature<DefaultFeatureConfig> REFICULE_VILLAGE_STRUCTURE = new ReficuleVillageFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> REFICULE_VILLAGE_CONFIGURED = REFICULE_VILLAGE_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
+
     public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
     private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
     private static final ConfiguredStructureFeature<?, ?> GATEWAY_CONFIGURED = GATEWAY_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
 
+    public static final StructurePieceType MINING_TOWN = MiningTownGenerator.MiningTownPiece::new;
+    public static final StructureFeature<DefaultFeatureConfig> MINING_TOWN_STRUCTURE = new MiningTownFeature(DefaultFeatureConfig.CODEC);
+    private static final ConfiguredStructureFeature<?, ?> MINING_TOWN_CONFIGURED = MINING_TOWN_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
+
     public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("guild", GuildStructureProcessor.CODEC);
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("gateway", GatewayStructureProcessor.CODEC);
+    public static final StructureProcessorType<?> MINING_TOWN_PROCESSOR = StructureProcessorType.register("mining_town", MiningTownStructureProcessor.CODEC);
 
     public static final ScreenHandlerType<SellScreenHandler> SELL_SCREEN_HANDLER;
 
@@ -204,6 +213,7 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     private void registerFeatures() {
+        // Start - reficule village
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
         Random random = ThreadLocalRandom.current();
         int seed = random.nextInt(9000) + 1000;
@@ -218,7 +228,9 @@ public class TaleOfKingdoms implements ModInitializer {
         BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), REFICULE_VILLAGE_CONFIGURED);
         BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
                 Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), reficuleVillage);
+        // End - reficule village
 
+        // Start - gateway
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), GATEWAY);
         FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
@@ -230,6 +242,21 @@ public class TaleOfKingdoms implements ModInitializer {
         BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), GATEWAY_CONFIGURED);
         BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
                 Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), gateway);
+        // End - gateway
+
+        // Start - mining town
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "mining_town_piece"), MINING_TOWN);
+        FabricStructureBuilder.create(new Identifier(MODID, "mining_town"), MINING_TOWN_STRUCTURE)
+                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
+                .defaultConfig(16, 8, seed - 256)
+                .register();
+
+        RegistryKey<ConfiguredStructureFeature<?, ?>> miningTown = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
+                new Identifier(MODID, "mining_town"));
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, miningTown.getValue(), MINING_TOWN_CONFIGURED);
+        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
+                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), miningTown);
+        // End - mining town
     }
 
     public static Text parse(StringReader stringReader) throws CommandSyntaxException {
