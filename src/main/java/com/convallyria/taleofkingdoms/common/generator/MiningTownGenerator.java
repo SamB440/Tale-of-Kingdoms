@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.biome.GenerationSettings;
 
 import java.util.List;
 import java.util.Random;
@@ -31,33 +30,34 @@ public class MiningTownGenerator {
     private static final Identifier TWO = new Identifier(TaleOfKingdoms.MODID, "mining_town/mining_town_two");
     private static final Identifier THREE = new Identifier(TaleOfKingdoms.MODID, "mining_town/mining_town_three");
     private static final Identifier PIT = new Identifier(TaleOfKingdoms.MODID, "mining_town/mining_town_pit");
+    private static final Identifier TUNNEL = new Identifier(TaleOfKingdoms.MODID, "mining_town/mining_town_tunnel");
 
 
     public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces) {
         final Direction direction = Direction.random(ThreadLocalRandom.current());
-        MiningTownPiece onePiece = new MiningTownPiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);
-        onePiece.setOrientation(direction);
-        pieces.add(onePiece);
+        //MiningTownPiece onePiece = new MiningTownPiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);
+        //onePiece.setOrientation(direction);
+        //pieces.add(onePiece);
 
-        BlockPos middlePos = pos.add(new Vec3i(48, 0, 0));
-        MiningTownPiece middlePiece = new MiningTownPiece(manager, PIT, middlePos, BlockRotation.NONE, 0);
+        MiningTownPiece one = new MiningTownPiece(manager, ONE, pos.add(36, 0, -23), BlockRotation.NONE, 0);
+        one.setOrientation(direction);
+        pieces.add(one);
+
+        MiningTownPiece middlePiece = new MiningTownPiece(manager, PIT, pos.subtract(new Vec3i(0, 23, 0)), BlockRotation.NONE, 0);
         middlePiece.setOrientation(direction);
         pieces.add(middlePiece);
 
-        BlockPos threePos = middlePos.add(new Vec3i(32, 0, 0));
-        MiningTownPiece threePiece = new MiningTownPiece(manager, THREE, threePos, BlockRotation.NONE, 0);
-        threePiece.setOrientation(direction);
-        pieces.add(threePiece);
+        MiningTownPiece two = new MiningTownPiece(manager, TWO, pos.subtract(new Vec3i(0, 0, 41)), BlockRotation.NONE, 0);
+        two.setOrientation(direction);
+        pieces.add(two);
 
-        BlockPos middleTwoPos = middlePos.subtract(new Vec3i(0, 0, 36));
-        MiningTownPiece middleTwoPiece = new MiningTownPiece(manager, TWO, middleTwoPos, BlockRotation.NONE, 0);
-        middleTwoPiece.setOrientation(direction);
-        pieces.add(middleTwoPiece);
+        MiningTownPiece three = new MiningTownPiece(manager, THREE, pos.subtract(new Vec3i(39, 0, 0)), BlockRotation.NONE, 0);
+        three.setOrientation(direction);
+        pieces.add(three);
 
-        BlockPos towerPos = pos.subtract(new Vec3i(0, 0, 32));
-        MiningTownPiece towerPiece = new MiningTownPiece(manager, ONE, towerPos, BlockRotation.NONE, 0);
-        towerPiece.setOrientation(direction);
-        pieces.add(towerPiece);
+        MiningTownPiece tunnel = new MiningTownPiece(manager, TUNNEL, pos.subtract(new Vec3i(58, 23, 7)), BlockRotation.NONE, 0);
+        tunnel.setOrientation(direction);
+        pieces.add(tunnel);
     }
 
     public static class MiningTownPiece extends SimpleStructurePiece {
@@ -66,7 +66,6 @@ public class MiningTownGenerator {
 
         public MiningTownPiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
             super(TaleOfKingdoms.MINING_TOWN, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
-            this.pos = pos;
             this.rotation = blockRotation;
             this.template = identifier;
             createPlacementData(blockRotation, identifier);

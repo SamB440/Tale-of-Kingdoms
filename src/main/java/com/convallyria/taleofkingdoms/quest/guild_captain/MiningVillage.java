@@ -3,7 +3,6 @@ package com.convallyria.taleofkingdoms.quest.guild_captain;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.quest.Quest;
 import com.convallyria.taleofkingdoms.quest.objective.LocateStructureObjective;
 
