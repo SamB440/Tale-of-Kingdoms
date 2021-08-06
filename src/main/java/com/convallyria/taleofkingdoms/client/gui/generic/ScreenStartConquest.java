@@ -54,7 +54,7 @@ public class ScreenStartConquest extends ScreenTOK {
         super.init();
         this.children().clear();
         this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 150, this.height / 2 - 40, 300, 20, new LiteralText("Sir Punchwood"));
-        this.addDrawableChild(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 30, 200, 20, Translations.START_CONQUEST.getTranslation(), (button) -> {
+        this.addDrawableChild(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 15, 200, 20, Translations.START_CONQUEST.getTranslation(), (button) -> {
             if (loading) return;
 
             button.setMessage(Translations.BUILDING_CASTLE.getTranslation());
@@ -116,8 +116,13 @@ public class ScreenStartConquest extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         this.renderBackground(stack);
-        drawCenteredText(stack, this.textRenderer, Translations.DARKNESS.getFormatted(), this.width / 2, this.height / 2, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, this.height / 2 + 10, 0xFFFFFF);
+        String text = Translations.DARKNESS.getFormatted();
+        int currentHeight = this.height / 2 - 110;
+        for (String toRender : text.split("\n")) {
+            drawCenteredText(stack, this.textRenderer, toRender, this.width / 2, currentHeight, 0xFFFFFF);
+            currentHeight = currentHeight + 10;
+        }
+        drawCenteredText(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);
         super.render(stack, par1, par2, par3);
     }
