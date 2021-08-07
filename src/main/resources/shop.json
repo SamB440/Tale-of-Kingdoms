@@ -764,10 +764,15 @@
       "sell": 150
     },
     {
-      "item": "Wheat_Seeds",
-      "sell": 2
     
-		"item": "cooked chicken",
+      
+  
+    
+					"item": "Wheat_Seeds",
+			"sell": 2
+		},
+		{
+			"item": "cooked chicken",
 			"sell": 6,
 			"cost": 8
 		},
@@ -812,3 +817,36 @@
 		}
 	]
 }
+			
+			
+		
+		
+
+		
+			
+			
+		
+		
+
+			
+			
+		
+		
+		
+
+			
+			
+			
+		
+		
+			
+			
+			
+		
+		
+			
+			
+			
+		
+				
+			
