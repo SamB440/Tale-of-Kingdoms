@@ -5,16 +5,16 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,9 +27,9 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
+        ServerPlayer player = (ServerPlayer) context.player();
+        String playerContext = " @ <" + player.getName().getContents() + ":" + player.getIpAddress() + ">";
         boolean close = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
@@ -41,27 +41,27 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
                     }
 
                     // Search for either foodshop or blacksmith in the guild
-                    Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                    if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                    Optional<? extends Entity> entity = instance.getGuildEntity(player.level, EntityTypes.BLACKSMITH);
+                    if (entity.isEmpty()) entity = instance.getGuildEntity(player.level, EntityTypes.FOODSHOP);
                     if (entity.isEmpty()) {
                         TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop entity not present in guild.");
                         return;
                     }
 
-                    BlockPos pos = entity.get().getBlockPos().add(0, 2, 0);
+                    BlockPos pos = entity.get().blockPosition().offset(0, 2, 0);
                     api.getScheduler().queue(server -> {
                         if (close) {
-                            server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
+                            server.overworld().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                             return;
                         }
 
-                        ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
-                        server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
-                        BlockState state = server.getOverworld().getBlockState(pos);
-                        NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
+                        ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());
+                        server.overworld().setBlockAndUpdate(pos, TaleOfKingdoms.SELL_BLOCK.defaultBlockState());
+                        BlockState state = server.overworld().getBlockState(pos);
+                        MenuProvider screenHandlerFactory = state.getMenuProvider(server.overworld(), pos);
                         if (screenHandlerFactory != null) {
                             //With this call the server will request the client to open the appropriate Screenhandler
-                            serverPlayer.openHandledScreen(screenHandlerFactory);
+                            serverPlayer.openMenu(screenHandlerFactory);
                         }
                     }, 1);
                 });
@@ -70,8 +70,8 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
+                                     @Nullable Connection connection, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

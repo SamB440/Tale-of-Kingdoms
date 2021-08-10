@@ -2,12 +2,12 @@ package com.convallyria.taleofkingdoms.mixin.structure;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.block.entity.StructureBlockBlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.StructureBlockRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(value = StructureBlockBlockEntityRenderer.class, priority = 999) // Carpet support - let it control render distance
+@Mixin(value = StructureBlockRenderer.class, priority = 999) // Carpet support - let it control render distance
 public class StructureBlockRenderMixin {
 
     /**

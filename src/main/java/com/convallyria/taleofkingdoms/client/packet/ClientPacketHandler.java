@@ -5,14 +5,14 @@ import com.convallyria.taleofkingdoms.common.packet.context.ClientPacketContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 @Environment(EnvType.CLIENT)
 public abstract class ClientPacketHandler extends PacketHandler {
 
-    public ClientPacketHandler(Identifier packet) {
+    public ClientPacketHandler(ResourceLocation packet) {
         super(packet);
     }
 
@@ -25,7 +25,7 @@ public abstract class ClientPacketHandler extends PacketHandler {
     }
 
     @Override
-    protected void sendPacket(PlayerEntity player, PacketByteBuf passedData) {
+    protected void sendPacket(Player player, FriendlyByteBuf passedData) {
         ClientPlayNetworking.send(getPacket(), passedData);
     }
 }

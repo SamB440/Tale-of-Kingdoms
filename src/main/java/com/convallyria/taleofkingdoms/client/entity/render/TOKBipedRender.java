@@ -2,12 +2,12 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.BipedEntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Environment(EnvType.CLIENT)
-public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> extends BipedEntityRenderer<MobEntity, PlayerEntityModel<MobEntity>> {
+public class TOKBipedRender<T extends Mob, M extends HumanoidModel<T>> extends HumanoidMobRenderer<Mob, PlayerModel<Mob>> {
 
-    private final List<Identifier> skins;
-    private final Map<UUID, Identifier> defaultSkin;
+    private final List<ResourceLocation> skins;
+    private final Map<UUID, ResourceLocation> defaultSkin;
 
-    public TOKBipedRender(EntityRendererFactory.Context context, PlayerEntityModel<MobEntity> modelBipedIn,
-                          float shadowSize, Identifier... skins) {
+    public TOKBipedRender(EntityRendererProvider.Context context, PlayerModel<Mob> modelBipedIn,
+                          float shadowSize, ResourceLocation... skins) {
         super(context, modelBipedIn, shadowSize);
         this.skins = new ArrayList<>();
         this.defaultSkin = new ConcurrentHashMap<>();
@@ -33,9 +33,9 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> 
     }
 
     @Override
-    public Identifier getTexture(MobEntity entity) {
+    public ResourceLocation getTextureLocation(Mob entity) {
         Random random = ThreadLocalRandom.current();
-        defaultSkin.putIfAbsent(entity.getUuid(), skins.get(random.nextInt(skins.size())));
-        return defaultSkin.get(entity.getUuid());
+        defaultSkin.putIfAbsent(entity.getUUID(), skins.get(random.nextInt(skins.size())));
+        return defaultSkin.get(entity.getUUID());
     }
 }

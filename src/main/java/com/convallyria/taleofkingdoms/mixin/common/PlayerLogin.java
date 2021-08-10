@@ -2,10 +2,10 @@ package com.convallyria.taleofkingdoms.mixin.common;
 
 import com.convallyria.taleofkingdoms.common.event.PlayerJoinCallback;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,17 +42,17 @@ import java.net.SocketAddress;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public class PlayerLogin {
 	@Inject(method = "checkCanJoin", at = @At("HEAD"), cancellable = true)
-	private void canJoin(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Text> cir) {
-		Text deny = this.deny(socketAddress, gameProfile);
+	private void canJoin(SocketAddress socketAddress, GameProfile gameProfile, CallbackInfoReturnable<Component> cir) {
+		Component deny = this.deny(socketAddress, gameProfile);
 		if(deny != null)
 			cir.setReturnValue(deny);
 	}
 
 	@Inject(method = "onPlayerConnect", at = @At("HEAD"))
-	private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
+	private void onPlayerConnect(Connection connection, ServerPlayer player, CallbackInfo ci) {
 		PlayerJoinCallback.EVENT.invoker().onJoin(connection, player);
 	}
 
@@ -64,7 +64,7 @@ public class PlayerLogin {
 	 * @return the kick message for the connecting player
 	 */
 	@Unique
-	private Text deny(SocketAddress address, GameProfile player) {
+	private Component deny(SocketAddress address, GameProfile player) {
 		//if(new Random().nextBoolean())
 			//return new LiteralText("You're not welcome here."); // player not allowed in
 		//else

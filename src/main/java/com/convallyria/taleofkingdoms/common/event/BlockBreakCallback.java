@@ -2,24 +2,24 @@ package com.convallyria.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.block.Block;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Block;
 
 public interface BlockBreakCallback {
 
     Event<BlockBreakCallback> EVENT = EventFactory.createArrayBacked(BlockBreakCallback.class,
             (listeners) -> (block, pos) -> {
                 for (BlockBreakCallback listener : listeners) {
-                    ActionResult result = listener.blockBreak(block, pos);
+                    InteractionResult result = listener.blockBreak(block, pos);
 
-                    if (result != ActionResult.PASS) {
+                    if (result != InteractionResult.PASS) {
                         return result;
                     }
                 }
 
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
             });
 
-    ActionResult blockBreak(Block block, BlockPos pos);
+    InteractionResult blockBreak(Block block, BlockPos pos);
 }

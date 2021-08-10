@@ -8,36 +8,36 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Texts;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.Util;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 import java.util.UUID;
 
-public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource> {
+public class TaleOfKingdomsInvokeCommand implements Command<CommandSourceStack> {
     @Override
-    public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Entity entity = context.getSource().getEntity();
         if (entity != null) {
             String message = "{\"text\":\"List of invoke events: saveVillagers, guildAttack\"}";
-            entity.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0), Util.NIL_UUID);
+            entity.sendMessage(ComponentUtils.updateForEntity(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0), Util.NIL_UUID);
             return 1;
         }
         return 0;
     }
 
-    public static int invokeSaveVillagers(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int invokeSaveVillagers(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         try {
-            ServerPlayerEntity player = context.getSource().getPlayer();
+            ServerPlayer player = context.getSource().getPlayerOrException();
 
             Translations.LONE_HELP.send(player);
 
-            BlockPos structureLocation = player.getServerWorld().locateStructure(TaleOfKingdoms.REFICULE_VILLAGE_STRUCTURE, player.getBlockPos(), 100, false);
+            BlockPos structureLocation = player.getLevel().findNearestMapFeature(TaleOfKingdoms.REFICULE_VILLAGE_STRUCTURE, player.blockPosition(), 100, false);
             String message = "[\"\",{\"text\":\"Do you wish to \"},{\"text\":\"teleport\",\"bold\":true,\"underlined\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tp " + structureLocation.getX() + " 100 " + structureLocation.getZ() + "\"}},{\"text\":\" to the village?\"}]";
-            player.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
+            player.sendMessage(ComponentUtils.updateForEntity(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
 
             return 1;
         } catch (CommandSyntaxException e) {
@@ -46,7 +46,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
         }
     }
 
-    public static int invokeGuildAttack(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int invokeGuildAttack(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         try {
             ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
             ServerPlayerEntity player = context.getSource().getPlayer();

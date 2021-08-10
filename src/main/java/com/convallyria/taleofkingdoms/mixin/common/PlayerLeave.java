@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.mixin.common;
 
 import com.convallyria.taleofkingdoms.common.event.PlayerLeaveCallback;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,11 +34,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public class PlayerLeave {
 
 	@Inject(method = "remove", at = @At("HEAD"))
-	private void leave(ServerPlayerEntity player, CallbackInfo ci /*don't even think about it*/) {
+	private void leave(ServerPlayer player, CallbackInfo ci /*don't even think about it*/) {
 		PlayerLeaveCallback.EVENT.invoker().onLeave(player);
 	}
 }

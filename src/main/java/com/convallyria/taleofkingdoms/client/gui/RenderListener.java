@@ -3,8 +3,8 @@ package com.convallyria.taleofkingdoms.client.gui;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.event.InventoryDrawCallback;
 import com.convallyria.taleofkingdoms.common.listener.Listener;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
 
 public class RenderListener extends Listener {
 
@@ -16,7 +16,7 @@ public class RenderListener extends Listener {
         });
     }
 
-    private void drawWithoutShadow(MatrixStack matrices, TextRenderer textRenderer, String text, int centerX, int y, int color) {
-        textRenderer.draw(matrices, text, (float) (centerX - textRenderer.getWidth(text) / 2), (float) y, color);
+    private void drawWithoutShadow(PoseStack matrices, Font textRenderer, String text, int centerX, int y, int color) {
+        textRenderer.draw(matrices, text, (float) (centerX - textRenderer.width(text) / 2), (float) y, color);
     }
 }

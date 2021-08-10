@@ -4,50 +4,50 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.TeleportTowardsPlayerGoal;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class ReficuleSoldierEntity extends TOKEntity implements Monster, TeleportAbility {
+public class ReficuleSoldierEntity extends TOKEntity implements Enemy, TeleportAbility {
 
-    public ReficuleSoldierEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public ReficuleSoldierEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
         ItemStack ironSword = new ItemStack(Items.IRON_SWORD);
-        ironSword.addEnchantment(Enchantments.MENDING, 1); // Want them to look fancy :)
-        this.setStackInHand(Hand.MAIN_HAND, ironSword);
+        ironSword.enchant(Enchantments.MENDING, 1); // Want them to look fancy :)
+        this.setItemInHand(InteractionHand.MAIN_HAND, ironSword);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.targetSelector.add(1, new TeleportTowardsPlayerGoal(this, entity -> {
-            return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(1, new TeleportTowardsPlayerGoal(this, entity -> {
+            return entity.distanceToSqr(this) < this.getAttributeValue(Attributes.FOLLOW_RANGE);
         }));
-        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true));
-        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
-        this.goalSelector.add(2, new WanderAroundGoal(this, 0.6D));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.8D, false));
+        this.targetSelector.addGoal(2, new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true));
+        this.targetSelector.addGoal(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
+        this.targetSelector.addGoal(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
+        this.targetSelector.addGoal(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.6D));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.8D, false));
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() { // Slightly higher stats than guild guards.
+    public static AttributeSupplier.Builder createMobAttributes() { // Slightly higher stats than guild guards.
         return TOKEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 40.0D)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0D) // Big increase! Needs balancing?
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.5D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5D);
+                .add(Attributes.FOLLOW_RANGE, 40.0D)
+                .add(Attributes.MAX_HEALTH, 40.0D) // Big increase! Needs balancing?
+                .add(Attributes.ATTACK_DAMAGE, 7.5D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.5D);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ReficuleSoldierEntity extends TOKEntity implements Monster, Telepor
         double x = entity.getX();
         double y = entity.getY();
         double z = entity.getZ();
-        return this.teleport(x, y, z, true);
+        return this.randomTeleport(x, y, z, true);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ReficuleSoldierEntity extends TOKEntity implements Monster, Telepor
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 

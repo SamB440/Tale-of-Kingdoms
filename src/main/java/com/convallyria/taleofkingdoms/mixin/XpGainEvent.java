@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public class XpGainEvent {
 	@Inject(method = "addExperience", at = @At("HEAD"), cancellable = true)
 	private void addExperience(int experience, CallbackInfo ci) {

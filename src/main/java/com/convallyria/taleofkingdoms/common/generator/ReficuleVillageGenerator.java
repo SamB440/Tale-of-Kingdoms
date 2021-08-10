@@ -3,22 +3,21 @@ package com.convallyria.taleofkingdoms.common.generator;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.SimpleStructurePiece;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
 import java.util.List;
 import java.util.Random;
@@ -26,76 +25,76 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ReficuleVillageGenerator {
 
-    private static final Identifier ONE = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_one");
-    private static final Identifier THREE = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_three");
-    private static final Identifier FOUR = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_four");
-    private static final Identifier MIDDLE = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle");
-    private static final Identifier MIDDLE_TWO = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
-    private static final Identifier TOWER = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
+    private static final ResourceLocation ONE = new ResourceLocation(TaleOfKingdoms.MODID, "reficule_village/reficule_village_one");
+    private static final ResourceLocation THREE = new ResourceLocation(TaleOfKingdoms.MODID, "reficule_village/reficule_village_three");
+    private static final ResourceLocation FOUR = new ResourceLocation(TaleOfKingdoms.MODID, "reficule_village/reficule_village_four");
+    private static final ResourceLocation MIDDLE = new ResourceLocation(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle");
+    private static final ResourceLocation MIDDLE_TWO = new ResourceLocation(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
+    private static final ResourceLocation TOWER = new ResourceLocation(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
 
-    public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces) {
-        final Direction direction = Direction.random(ThreadLocalRandom.current());
-        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);
+    public static void addPieces(StructureManager manager, BlockPos pos, Rotation rotation, List<StructurePiece> pieces) {
+        final Direction direction = Direction.getRandom(ThreadLocalRandom.current());
+        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), Rotation.NONE, 0);
         onePiece.setOrientation(direction);
         pieces.add(onePiece);
 
-        BlockPos middlePos = pos.add(new Vec3i(48, 0, 0));
-        ReficuleVillagePiece middlePiece = new ReficuleVillagePiece(manager, MIDDLE, middlePos, BlockRotation.NONE, 0);
+        BlockPos middlePos = pos.offset(new Vec3i(48, 0, 0));
+        ReficuleVillagePiece middlePiece = new ReficuleVillagePiece(manager, MIDDLE, middlePos, Rotation.NONE, 0);
         middlePiece.setOrientation(direction);
         pieces.add(middlePiece);
 
-        BlockPos threePos = middlePos.add(new Vec3i(32, 0, 0));
-        ReficuleVillagePiece threePiece = new ReficuleVillagePiece(manager, THREE, threePos, BlockRotation.NONE, 0);
+        BlockPos threePos = middlePos.offset(new Vec3i(32, 0, 0));
+        ReficuleVillagePiece threePiece = new ReficuleVillagePiece(manager, THREE, threePos, Rotation.NONE, 0);
         threePiece.setOrientation(direction);
         pieces.add(threePiece);
 
         BlockPos middleTwoPos = middlePos.subtract(new Vec3i(0, 0, 36));
-        ReficuleVillagePiece middleTwoPiece = new ReficuleVillagePiece(manager, MIDDLE_TWO, middleTwoPos, BlockRotation.NONE, 0);
+        ReficuleVillagePiece middleTwoPiece = new ReficuleVillagePiece(manager, MIDDLE_TWO, middleTwoPos, Rotation.NONE, 0);
         middleTwoPiece.setOrientation(direction);
         pieces.add(middleTwoPiece);
 
-        BlockPos fourPos = middleTwoPos.add(new Vec3i(0, 0, 13)).add(new Vec3i(32, 0, 0));
-        ReficuleVillagePiece fourPiece = new ReficuleVillagePiece(manager, FOUR, fourPos, BlockRotation.NONE, 0);
+        BlockPos fourPos = middleTwoPos.offset(new Vec3i(0, 0, 13)).offset(new Vec3i(32, 0, 0));
+        ReficuleVillagePiece fourPiece = new ReficuleVillagePiece(manager, FOUR, fourPos, Rotation.NONE, 0);
         fourPiece.setOrientation(direction);
         pieces.add(fourPiece);
 
         BlockPos towerPos = pos.subtract(new Vec3i(0, 0, 32));
-        ReficuleVillagePiece towerPiece = new ReficuleVillagePiece(manager, TOWER, towerPos, BlockRotation.NONE, 0);
+        ReficuleVillagePiece towerPiece = new ReficuleVillagePiece(manager, TOWER, towerPos, Rotation.NONE, 0);
         towerPiece.setOrientation(direction);
         pieces.add(towerPiece);
     }
 
-    public static class ReficuleVillagePiece extends SimpleStructurePiece {
-        private final BlockRotation rotation;
-        private final Identifier template;
+    public static class ReficuleVillagePiece extends TemplateStructurePiece {
+        private final Rotation rotation;
+        private final ResourceLocation template;
 
-        public ReficuleVillagePiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
+        public ReficuleVillagePiece(StructureManager structureManager, ResourceLocation identifier, BlockPos blockPos, Rotation blockRotation, int i) {
             super(TaleOfKingdoms.REFICULE_VILLAGE, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
-            this.pos = pos;
+            this.templatePosition = templatePosition;
             this.rotation = blockRotation;
             this.template = identifier;
             createPlacementData(blockRotation, identifier);
         }
 
-        public ReficuleVillagePiece(ServerWorld serverWorld, NbtCompound nbtCompound) {
+        public ReficuleVillagePiece(ServerLevel serverWorld, CompoundTag nbtCompound) {
             super(TaleOfKingdoms.REFICULE_VILLAGE, nbtCompound, serverWorld, (identifier) -> {
-                return createPlacementData(BlockRotation.valueOf(nbtCompound.getString("Rot")), identifier);
+                return createPlacementData(Rotation.valueOf(nbtCompound.getString("Rot")), identifier);
             });
-            this.template = new Identifier(nbtCompound.getString("Template"));
-            this.rotation = BlockRotation.valueOf(nbtCompound.getString("Rot"));
+            this.template = new ResourceLocation(nbtCompound.getString("Template"));
+            this.rotation = Rotation.valueOf(nbtCompound.getString("Rot"));
             createPlacementData(rotation, template);
         }
 
-        private static StructurePlacementData createPlacementData(BlockRotation blockRotation, Identifier identifier) {
-            return (new StructurePlacementData())
+        private static StructurePlaceSettings createPlacementData(Rotation blockRotation, ResourceLocation identifier) {
+            return (new StructurePlaceSettings())
                     .setRotation(blockRotation)
-                    .setMirror(BlockMirror.NONE)
-                    .addProcessor(BlockIgnoreStructureProcessor.IGNORE_STRUCTURE_BLOCKS);
+                    .setMirror(Mirror.NONE)
+                    .addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
         }
 
         @Override
-        protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
-                                      BlockBox boundingBox) {
+        protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor serverWorldAccess, Random random,
+                                      BoundingBox boundingBox) {
             double percent = Math.random() * 100;
             if (metadata.equals("Survivor")) {
                 if (percent > 20) {

@@ -1,9 +1,9 @@
 package com.convallyria.taleofkingdoms.mixin.common;
 
 import com.convallyria.taleofkingdoms.common.event.EntityDeathCallback;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTracker;
+import net.minecraft.world.damagesource.CombatTracker;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,10 +41,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class EntityDeathEvent {
 
-	@Shadow @Final private DamageTracker damageTracker;
+	@Shadow @Final private CombatTracker damageTracker;
 
 	@Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;setPose(Lnet/minecraft/entity/EntityPose;)V"))
 	private void death(DamageSource source, CallbackInfo ci) {
-		EntityDeathCallback.EVENT.invoker().death(source, damageTracker.getEntity());
+		EntityDeathCallback.EVENT.invoker().death(source, damageTracker.getMob());
 	}
 }

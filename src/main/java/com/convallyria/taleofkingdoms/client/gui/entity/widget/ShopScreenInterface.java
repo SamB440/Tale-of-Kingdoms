@@ -3,12 +3,12 @@ package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 
 public interface ShopScreenInterface {
 
@@ -16,15 +16,15 @@ public interface ShopScreenInterface {
 
     void setSelectedItem(ShopItem selectedItem);
 
-    default void openSellGui(TOKEntity entity, PlayerEntity player) {
+    default void openSellGui(TOKEntity entity, Player player) {
         /*
          * WHY is this what we need to do for a proper sell GUI?
          * I HATE THIS!!!!
          * someone please rewrite it so blocks are not needed
          */
-        BlockPos pos = entity.getBlockPos().add(0, 2, 0);
+        BlockPos pos = entity.blockPosition().offset(0, 2, 0);
         TaleOfKingdoms.getAPI().ifPresent(api -> {
-            if (MinecraftClient.getInstance().getServer() == null) {
+            if (Minecraft.getInstance().getSingleplayerServer() == null) {
                 api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
                         .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
                                 player,
@@ -33,13 +33,13 @@ public interface ShopScreenInterface {
             }
 
             api.getScheduler().queue(server -> {
-                ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
-                server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
-                BlockState state = server.getOverworld().getBlockState(pos);
-                NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
+                ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());
+                server.overworld().setBlockAndUpdate(pos, TaleOfKingdoms.SELL_BLOCK.defaultBlockState());
+                BlockState state = server.overworld().getBlockState(pos);
+                MenuProvider screenHandlerFactory = state.getMenuProvider(server.overworld(), pos);
                 if (screenHandlerFactory != null) {
                     //With this call the server will request the client to open the appropriate Screenhandler
-                    serverPlayer.openHandledScreen(screenHandlerFactory);
+                    serverPlayer.openMenu(screenHandlerFactory);
                 }
             }, 1);
         });

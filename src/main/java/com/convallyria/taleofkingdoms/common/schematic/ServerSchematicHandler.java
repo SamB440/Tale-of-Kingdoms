@@ -2,9 +2,9 @@ package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
@@ -13,8 +13,8 @@ public final class ServerSchematicHandler extends SchematicHandler {
 
     @Override
     @NotNull
-    public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, SchematicOptions... options) {
-        CompletableFuture<BlockBox> cf = new CompletableFuture<>();
+    public CompletableFuture<BoundingBox> pasteSchematic(Schematic schematic, ServerPlayer player, BlockPos position, SchematicOptions... options) {
+        CompletableFuture<BoundingBox> cf = new CompletableFuture<>();
 
         // WorldEdit requires actions to be done on the server thread.
         TaleOfKingdoms.getAPI().flatMap(TaleOfKingdomsAPI::getServer).ifPresent(minecraftServer -> {

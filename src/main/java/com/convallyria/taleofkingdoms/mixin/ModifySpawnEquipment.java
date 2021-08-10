@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin(MobEntity.class)
+@Mixin(Mob.class)
 public class ModifySpawnEquipment {
 	@Inject(method = "getEquipmentForSlot", at = @At("HEAD"), cancellable = true)
 	private static void get(EquipmentSlot equipmentSlot, int equipmentLevel, CallbackInfoReturnable<Item> cir) {

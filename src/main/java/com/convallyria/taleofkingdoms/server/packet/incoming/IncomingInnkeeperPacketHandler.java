@@ -7,16 +7,16 @@ import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,10 +30,10 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        UUID uuid = player.getUuid();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
+        ServerPlayer player = (ServerPlayer) context.player();
+        UUID uuid = player.getUUID();
+        String playerContext = " @ <" + player.getName().getContents() + ":" + player.getIpAddress() + ">";
         boolean resting = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
@@ -44,7 +44,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                 }
 
                 // Search for innkeeper
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.INNKEEPER);
+                Optional<? extends Entity> entity = instance.getGuildEntity(player.level, EntityTypes.INNKEEPER);
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Innkeeper entity not present in guild.");
                     return;
@@ -61,7 +61,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 10);
+                instance.setCoins(player.getUUID(), instance.getCoins(player.getUUID()) - 10);
 
                 if (resting) {
                     BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
@@ -72,23 +72,23 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
 
                     TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnDedicatedServer(() -> {
                        MinecraftServer server = player.getServer();
-                        server.getOverworld().setTimeOfDay(1000);
-                        player.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                        server.overworld().setDayTime(1000);
+                        player.moveTo(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                        player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 1));
+                        player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
                     }));
                     return;
                 }
 
-                TaleOfKingdoms.getAPI().flatMap(TaleOfKingdomsAPI::getServer).ifPresent(server -> server.getOverworld().setTimeOfDay(13000));
+                TaleOfKingdoms.getAPI().flatMap(TaleOfKingdomsAPI::getServer).ifPresent(server -> server.overworld().setDayTime(13000));
                 instance.sync(player, null);
             });
         });
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
+                                     @Nullable Connection connection, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

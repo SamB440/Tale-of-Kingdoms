@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.utils;
 
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class BlockUtils {
     }
 
     @Nullable
-    public static BlockPos locateRestingPlace(ConquestInstance instance, PlayerEntity player) {
+    public static BlockPos locateRestingPlace(ConquestInstance instance, Player player) {
         List<BlockPos> validRest = instance.getSleepLocations(player);
 
         if (validRest.isEmpty()) return null;

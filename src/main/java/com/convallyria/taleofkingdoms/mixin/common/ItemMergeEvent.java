@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.mixin.common;
 
 import com.convallyria.taleofkingdoms.common.event.ItemMergeCallback;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

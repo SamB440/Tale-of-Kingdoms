@@ -4,41 +4,41 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class CityBuilderEntity extends TOKEntity {
 
-    public CityBuilderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public CityBuilderEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.FAIL;
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (instance.getWorthiness(player.getUuid()) >= 1500) {
+                if (instance.getWorthiness(player.getUUID()) >= 1500) {
                     Translations.CITYBUILDER_BUILD.send(player);
-                    this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
+                    this.goalSelector.addGoal(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
                 } else {
                     Translations.CITYBUILDER_MESSAGE.send(player);
                 }
             });
         });
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -52,12 +52,12 @@ public class CityBuilderEntity extends TOKEntity {
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
     
     @Override
-    public boolean damage(DamageSource damageSource, float f) {
+    public boolean hurt(DamageSource damageSource, float f) {
         return false;
     }
 }

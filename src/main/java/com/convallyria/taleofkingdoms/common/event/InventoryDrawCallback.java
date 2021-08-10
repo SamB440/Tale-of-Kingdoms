@@ -1,10 +1,10 @@
 package com.convallyria.taleofkingdoms.common.event;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 
 public interface InventoryDrawCallback {
 
@@ -15,5 +15,5 @@ public interface InventoryDrawCallback {
                 }
             });
 
-    void render(InventoryScreen screen, MatrixStack matrices, TextRenderer textRenderer);
+    void render(InventoryScreen screen, PoseStack matrices, Font textRenderer);
 }

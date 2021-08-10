@@ -7,12 +7,12 @@ import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,10 +26,10 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        UUID uuid = player.getUuid();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
+        ServerPlayer player = (ServerPlayer) context.player();
+        UUID uuid = player.getUUID();
+        String playerContext = " @ <" + player.getName().getContents() + ":" + player.getIpAddress() + ">";
         boolean retire = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
@@ -40,7 +40,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                 }
 
                 // Search for banker
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
+                Optional<? extends Entity> entity = instance.getGuildEntity(player.level, EntityTypes.GUILDMASTER);
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Guildmaster entity not present in guild.");
                     return;
@@ -57,14 +57,14 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                         return;
                     }
 
-                    HunterEntity hunterEntity = (HunterEntity) player.getServerWorld().getEntity(instance.getHunterUUIDs().get(uuid).get(0));
+                    HunterEntity hunterEntity = (HunterEntity) player.getLevel().getEntity(instance.getHunterUUIDs().get(uuid).get(0));
                     if (hunterEntity == null) {
                         TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Hunter entity returned null.");
                         return;
                     }
 
                     hunterEntity.kill();
-                    instance.removeHunter(uuid, hunterEntity.getUuid());
+                    instance.removeHunter(uuid, hunterEntity.getUUID());
                     instance.setCoins(uuid, instance.getCoins(uuid) + 750);
                     instance.sync(player, null);
                     return;
@@ -75,7 +75,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, player, entity.get().getBlockPos());
+                HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, player, entity.get().blockPosition());
                 instance.addHunter(uuid, hunterEntity);
                 instance.setCoins(uuid, instance.getCoins(uuid) - 1500);
                 instance.sync(player, null);
@@ -84,8 +84,8 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
+                                     @Nullable Connection connection, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

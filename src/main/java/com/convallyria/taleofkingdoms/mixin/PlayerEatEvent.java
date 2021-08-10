@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,12 +35,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public class PlayerEatEvent {
 	@Inject (method = "eatFood",
 	         at = @At ("HEAD"),
 	         cancellable = true)
-	private void eat(World world, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+	private void eat(Level world, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
 		if(!this.eat(stack))
 			cir.cancel();
 	}

@@ -8,13 +8,13 @@ import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,10 +27,10 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
-        String itemName = attachedData.readString(32367);
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
+        ServerPlayer player = (ServerPlayer) context.player();
+        String playerContext = " @ <" + player.getName().getContents() + ":" + player.getIpAddress() + ">";
+        String itemName = attachedData.readUtf(32367);
         int count = attachedData.readInt();
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
@@ -41,8 +41,8 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                 }
 
                 // Search for either foodshop or blacksmith in the guild
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                Optional<? extends Entity> entity = instance.getGuildEntity(player.level, EntityTypes.BLACKSMITH);
+                if (entity.isEmpty()) entity = instance.getGuildEntity(player.level, EntityTypes.FOODSHOP);
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop entity not present in guild.");
                     return;
@@ -55,22 +55,22 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                 }
 
                 int cost = shopItem.getCost() * count;
-                if (instance.getCoins(player.getUuid()) < cost) {
+                if (instance.getCoins(player.getUUID()) < cost) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Coins requirement not met.");
                     return;
                 }
 
-                instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
+                instance.setCoins(player.getUUID(), instance.getCoins(player.getUUID()) - cost);
                 // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
-                player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
+                player.getInventory().add(new ItemStack(shopItem.getItem(), count));
                 instance.sync(player, null);
             });
         });
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
+                                     @Nullable Connection connection, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 

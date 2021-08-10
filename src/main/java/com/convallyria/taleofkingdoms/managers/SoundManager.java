@@ -1,9 +1,9 @@
 package com.convallyria.taleofkingdoms.managers;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,7 @@ public class SoundManager implements IManager {
     }
 
     private void addSound(TOKSound sound) {
-        Identifier identifier = new Identifier(TaleOfKingdoms.MODID, sound.getPath());
+        ResourceLocation identifier = new ResourceLocation(TaleOfKingdoms.MODID, sound.getPath());
         TaleOfKingdoms.LOGGER.info("Loading sound: " + sound.getPath());
         events.put(sound, new SoundEvent(identifier));
     }
@@ -37,7 +37,7 @@ public class SoundManager implements IManager {
 
     private void register() {
         events.forEach((name, event) -> {
-            Identifier identifier = new Identifier(TaleOfKingdoms.MODID, name.getPath());
+            ResourceLocation identifier = new ResourceLocation(TaleOfKingdoms.MODID, name.getPath());
             Registry.register(Registry.SOUND_EVENT, identifier, event);
         });
     }

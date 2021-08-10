@@ -6,19 +6,17 @@ import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.commands.CommandSourceStack;
 
 import java.util.UUID;
 
-public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
+public class TaleOfKingdomsAddCommand implements Command<CommandSourceStack> {
     @Override
-    public int run(CommandContext<ServerCommandSource> commandContext) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
         return 1;
     }
 
-    public static int addCoins(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int addCoins(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
@@ -32,7 +30,7 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
         return 1;
     }
 
-    public static int addWorthiness(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int addWorthiness(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();

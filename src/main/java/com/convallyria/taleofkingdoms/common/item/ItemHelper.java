@@ -2,11 +2,11 @@ package com.convallyria.taleofkingdoms.common.item;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.item.common.ItemCoin;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.item.Item;
 
 import java.util.function.Consumer;
 
@@ -18,7 +18,7 @@ public class ItemHelper {
      * @return true if entity is hostile
      */
     public static boolean isHostileEntity(Entity entityLiving) {
-        return entityLiving instanceof Monster;
+        return entityLiving instanceof Enemy;
     }
 
     /**
@@ -37,6 +37,6 @@ public class ItemHelper {
     }
 
     private static void dropItem(Item item, int meta, LivingEntity livingBase) {
-        livingBase.dropItem(item, meta);
+        livingBase.spawnAtLocation(item, meta);
     }
 }

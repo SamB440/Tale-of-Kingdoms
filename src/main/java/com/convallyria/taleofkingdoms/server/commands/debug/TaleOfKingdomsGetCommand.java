@@ -5,49 +5,49 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
-public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
+public class TaleOfKingdomsGetCommand implements Command<CommandSourceStack> {
     @Override
-    public int run(CommandContext<ServerCommandSource> commandContext) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> commandContext) throws CommandSyntaxException {
         return 1;
     }
 
-    public static int getCoins(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int getCoins(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        UUID playerUuid = player.getUuid();
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        UUID playerUuid = player.getUUID();
 
-        player.sendMessage(new LiteralText("Your balance is: " + instance.getCoins(playerUuid)), false);
+        player.displayClientMessage(new TextComponent("Your balance is: " + instance.getCoins(playerUuid)), false);
         return 1;
     }
 
-    public static int getWorthiness(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int getWorthiness(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        UUID playerUuid = player.getUuid();
+        ServerPlayer player = context.getSource().getPlayerOrException();
+        UUID playerUuid = player.getUUID();
 
-        player.sendMessage(new LiteralText("Your worthiness is: " + instance.getWorthiness(playerUuid)), false);
+        player.displayClientMessage(new TextComponent("Your worthiness is: " + instance.getWorthiness(playerUuid)), false);
         return 1;
     }
 
-    public static int getHasRebuilt(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int getHasRebuilt(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-        ServerPlayerEntity player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayerOrException();
 
-        player.sendMessage(new LiteralText("Has the guild been rebuilt? " + instance.hasRebuilt()), false);
+        player.displayClientMessage(new TextComponent("Has the guild been rebuilt? " + instance.hasRebuilt()), false);
         return 1;
     }
 
-    public static int getHasAttacked(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int getHasAttacked(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-        ServerPlayerEntity player = context.getSource().getPlayer();
+        ServerPlayer player = context.getSource().getPlayerOrException();
 
-        player.sendMessage(new LiteralText("Has the guild been attacked? " + instance.hasAttacked(player.getUuid())), false);
+        player.displayClientMessage(new TextComponent("Has the guild been attacked? " + instance.hasAttacked(player.getUUID())), false);
         return 1;
     }
 }

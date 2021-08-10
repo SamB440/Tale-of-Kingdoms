@@ -2,8 +2,8 @@ package com.convallyria.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.Connection;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface PlayerJoinCallback {
 
@@ -14,5 +14,5 @@ public interface PlayerJoinCallback {
                 }
             });
 
-    void onJoin(ClientConnection connection, ServerPlayerEntity player);
+    void onJoin(Connection connection, ServerPlayer player);
 }

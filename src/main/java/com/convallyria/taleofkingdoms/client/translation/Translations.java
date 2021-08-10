@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.client.translation;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public enum Translations {
@@ -58,16 +58,16 @@ public enum Translations {
         this.key = key;
     }
     
-    public void send(PlayerEntity playerEntity) {
-        playerEntity.sendMessage(getTranslation(), false);
+    public void send(Player playerEntity) {
+        playerEntity.displayClientMessage(getTranslation(), false);
     }
 
-    public void send(PlayerEntity playerEntity, String... values) {
+    public void send(Player playerEntity, String... values) {
         send(playerEntity, false, values);
     }
 
-    public void send(PlayerEntity playerEntity, boolean actionbar, String... values) {
-        playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().getString(), values)), actionbar);
+    public void send(Player playerEntity, boolean actionbar, String... values) {
+        playerEntity.displayClientMessage(new TextComponent(replaceVariables(getTranslation().getString(), values)), actionbar);
     }
 
     @NotNull
@@ -81,8 +81,8 @@ public enum Translations {
         return modifiedMessage;
     }
 
-    public TranslatableText getTranslation() {
-        return new TranslatableText(key);
+    public TranslatableComponent getTranslation() {
+        return new TranslatableComponent(key);
     }
     
     public String getFormatted() {

@@ -6,7 +6,7 @@ import com.convallyria.taleofkingdoms.common.event.EntitySpawnCallback;
 import com.convallyria.taleofkingdoms.common.item.ItemHelper;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
 
 import java.util.Optional;
 

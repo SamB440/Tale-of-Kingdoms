@@ -46,7 +46,7 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
             api.getScheduler().repeating(server -> {
                 api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                     ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
-                    server.getPlayerManager().getPlayerList().forEach(player -> {
+                    server.getPlayerList().getPlayers().forEach(player -> {
                         serverConquestInstance.sync(player, null);
                         TaleOfKingdoms.LOGGER.info("Synced player data");
                     });

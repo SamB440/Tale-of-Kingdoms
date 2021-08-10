@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity.reficule;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 public interface TeleportAbility {
 

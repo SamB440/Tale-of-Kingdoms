@@ -2,22 +2,22 @@ package com.convallyria.taleofkingdoms.common.packet;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PacketHandler {
 
-    private final Identifier packet;
+    private final ResourceLocation packet;
 
     /**
      * Creates a new packet handler and registers it for incoming handling.
-     * @param packet the {@link Identifier} for the packet
+     * @param packet the {@link ResourceLocation} for the packet
      */
-    public PacketHandler(Identifier packet) {
+    public PacketHandler(ResourceLocation packet) {
         TaleOfKingdoms.LOGGER.info("Registered packet handler [" + this.getClass().getSimpleName() + "]");
         this.packet = packet;
         register();
@@ -25,30 +25,30 @@ public abstract class PacketHandler {
 
     /**
      * Gets the packet identifier.
-     * @return the {@link Identifier}
+     * @return the {@link ResourceLocation}
      */
-    public Identifier getPacket() {
+    public ResourceLocation getPacket() {
         return packet;
     }
 
     /**
      * Handles a packet that is incoming (client receiving from server, or server receiving from client)
-     * @param identifier packet {@link Identifier}
-     * @param context the {@link PlayerEntity}
-     * @param attachedData the {@link PacketByteBuf}, which is data sent via {@link #handleOutgoingPacket(Identifier, PlayerEntity, ClientConnection, Object...)}
+     * @param identifier packet {@link ResourceLocation}
+     * @param context the {@link Player}
+     * @param attachedData the {@link FriendlyByteBuf}, which is data sent via {@link #handleOutgoingPacket(ResourceLocation, Player, Connection, Object...)}
      */
-    public abstract void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData);
+    public abstract void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData);
 
     /**
      * Handles a packet that is outgoing (client sending to server, or server sending to client)
-     * @param identifier packet {@link Identifier}
+     * @param identifier packet {@link ResourceLocation}
      * @param player the player sending it
      * @param connection the player's connection, can be null
      * @param data extra data to post with the packet, some packets may require different data
      */
-    public abstract void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data);
+    public abstract void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player, @Nullable Connection connection, @Nullable Object... data);
 
-    protected abstract void sendPacket(PlayerEntity player, PacketByteBuf passedData);
+    protected abstract void sendPacket(Player player, FriendlyByteBuf passedData);
 
     /**
      * Registers the packet to receive incoming data.

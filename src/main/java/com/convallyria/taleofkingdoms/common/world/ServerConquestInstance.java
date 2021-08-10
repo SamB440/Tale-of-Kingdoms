@@ -3,9 +3,9 @@ package com.convallyria.taleofkingdoms.common.world;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.Connection;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -105,7 +105,7 @@ public class ServerConquestInstance extends ConquestInstance {
 
     public void addHunter(UUID playerUuid, HunterEntity hunterEntity) {
         List<UUID> uuids = hunterUUIDs.getOrDefault(playerUuid, new ArrayList<>());
-        uuids.add(hunterEntity.getUuid());
+        uuids.add(hunterEntity.getUUID());
         hunterUUIDs.put(playerUuid, uuids);
     }
 
@@ -115,15 +115,15 @@ public class ServerConquestInstance extends ConquestInstance {
         hunterUUIDs.put(playerUuid, uuids);
     }
 
-    public void reset(@NotNull ServerPlayerEntity player) {
-        this.setBankerCoins(player.getUuid(), 0);
-        this.setCoins(player.getUuid(), 0);
-        this.setFarmerLastBread(player.getUuid(), 0);
-        this.setHasContract(player.getUuid(), false);
-        this.setWorthiness(player.getUuid(), 0);
+    public void reset(@NotNull ServerPlayer player) {
+        this.setBankerCoins(player.getUUID(), 0);
+        this.setCoins(player.getUUID(), 0);
+        this.setFarmerLastBread(player.getUUID(), 0);
+        this.setHasContract(player.getUUID(), false);
+        this.setWorthiness(player.getUUID(), 0);
     }
 
-    public void sync(@NotNull ServerPlayerEntity player, @Nullable ClientConnection connection) {
+    public void sync(@NotNull ServerPlayer player, @Nullable Connection connection) {
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             PacketHandler packetHandler = api.getServerHandler(TaleOfKingdoms.INSTANCE_PACKET_ID);
             packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, connection, this);

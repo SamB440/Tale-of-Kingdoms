@@ -12,8 +12,8 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -53,9 +53,9 @@ public class StartWorldListener extends Listener {
         WorldSessionStartCallback.EVENT.register(worldName -> this.worldName = worldName);
 
         RecipesUpdatedCallback.EVENT.register(() -> {
-            PlayerEntity entity = MinecraftClient.getInstance().player;
+            Player entity = Minecraft.getInstance().player;
             if (entity == null) return;
-            if (!MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) return;
+            if (!Minecraft.getInstance().getConnection().getConnection().isMemoryConnection()) return;
             // Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
             if (joined) return;
             this.joined = true;
@@ -73,9 +73,9 @@ public class StartWorldListener extends Listener {
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
+                            Minecraft.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
+                            Minecraft.getInstance().setScreen(new ScreenContinueConquest(instance));
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }
@@ -87,7 +87,7 @@ public class StartWorldListener extends Listener {
             }
 
             // New world creation
-            api.executeOnMain(() -> MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity)));
+            api.executeOnMain(() -> Minecraft.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity)));
         });
     }
 

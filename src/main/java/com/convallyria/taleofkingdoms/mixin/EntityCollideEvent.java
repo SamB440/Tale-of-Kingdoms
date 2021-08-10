@@ -1,9 +1,9 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,7 +44,7 @@ public class EntityCollideEvent {
 	                   target = "Lnet/minecraft/block/BlockState;onEntityCollision(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/Entity;)V"),
 	         cancellable = true,
 	         locals = LocalCapture.CAPTURE_FAILHARD)
-	private void collide(CallbackInfo ci, Box box, BlockPos.Mutable pooledMutable, BlockPos.Mutable pooledMutable2, BlockPos.Mutable pooledMutable3, int x, int y, int z, BlockState blockState) {
+	private void collide(CallbackInfo ci, AABB box, BlockPos.MutableBlockPos pooledMutable, BlockPos.MutableBlockPos pooledMutable2, BlockPos.MutableBlockPos pooledMutable3, int x, int y, int z, BlockState blockState) {
 		this.onCollide(blockState, x, y, z);
 	}
 

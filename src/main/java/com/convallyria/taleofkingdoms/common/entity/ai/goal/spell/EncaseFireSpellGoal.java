@@ -2,14 +2,14 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal.spell;
 
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Blocks;
 
 public class EncaseFireSpellGoal extends CastSpellGoal {
 
@@ -22,8 +22,8 @@ public class EncaseFireSpellGoal extends CastSpellGoal {
     }
 
     @Override
-    public boolean canStart() {
-        if (!super.canStart()) {
+    public boolean canUse() {
+        if (!super.canUse()) {
             return false;
         } else if (spellCaster.getTarget() == null) {
             return false;
@@ -48,18 +48,18 @@ public class EncaseFireSpellGoal extends CastSpellGoal {
 
     @Override
     protected void castSpell() {
-        spellCaster.swingHand(Hand.OFF_HAND);
+        spellCaster.swing(InteractionHand.OFF_HAND);
         LivingEntity target = spellCaster.getTarget();
-        for (BlockPos blockPos : BlockUtils.getNearbyBlocks(target.getBlockPos(), 1)) {
-            target.world.setBlockState(blockPos, Blocks.NETHERRACK.getDefaultState());
+        for (BlockPos blockPos : BlockUtils.getNearbyBlocks(target.blockPosition(), 1)) {
+            target.level.setBlockAndUpdate(blockPos, Blocks.NETHERRACK.defaultBlockState());
         }
-        target.world.setBlockState(target.getBlockPos(), Blocks.FIRE.getDefaultState());
-        spellCaster.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200));
+        target.level.setBlockAndUpdate(target.blockPosition(), Blocks.FIRE.defaultBlockState());
+        spellCaster.getTarget().addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200));
     }
 
     @Override
     protected SoundEvent getSoundPrepare() {
-        return SoundEvents.ENTITY_ILLUSIONER_PREPARE_BLINDNESS;
+        return SoundEvents.ILLUSIONER_PREPARE_BLINDNESS;
     }
 
     @Override

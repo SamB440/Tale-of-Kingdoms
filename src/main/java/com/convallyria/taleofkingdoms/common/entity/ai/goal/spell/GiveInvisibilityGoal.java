@@ -1,11 +1,11 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal.spell;
 
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import org.jetbrains.annotations.Nullable;
 
 public class GiveInvisibilityGoal extends CastSpellGoal {
@@ -18,11 +18,11 @@ public class GiveInvisibilityGoal extends CastSpellGoal {
     }
 
     @Override
-    public boolean canStart() {
-        if (!super.canStart()) {
+    public boolean canUse() {
+        if (!super.canUse()) {
             return false;
         } else {
-            return !spellCaster.hasStatusEffect(StatusEffects.INVISIBILITY);
+            return !spellCaster.hasEffect(MobEffects.INVISIBILITY);
         }
     }
 
@@ -38,15 +38,15 @@ public class GiveInvisibilityGoal extends CastSpellGoal {
 
     @Override
     protected void castSpell() {
-        spellCaster.swingHand(Hand.OFF_HAND);
-        spellCaster.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 1200));
-        System.out.println("added invisibility: " + spellCaster.hasStatusEffect(StatusEffects.INVISIBILITY));
+        spellCaster.swing(InteractionHand.OFF_HAND);
+        spellCaster.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 1200));
+        System.out.println("added invisibility: " + spellCaster.hasEffect(MobEffects.INVISIBILITY));
     }
 
     @Nullable
     @Override
     protected SoundEvent getSoundPrepare() {
-        return SoundEvents.ENTITY_ILLUSIONER_PREPARE_MIRROR;
+        return SoundEvents.ILLUSIONER_PREPARE_MIRROR;
     }
 
     @Override

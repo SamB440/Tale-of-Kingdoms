@@ -7,18 +7,18 @@ import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.StructureBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StructureBlock;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -39,9 +39,9 @@ public class GuildStructureProcessor extends StructureProcessor {
     }
 
     @Nullable
-    public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
-        ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;
-        Structure.StructureBlockInfo air = new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
+    public StructureTemplate.StructureBlockInfo processBlock(LevelReader worldView, BlockPos pos, BlockPos blockPos, StructureTemplate.StructureBlockInfo structureBlockInfo, StructureTemplate.StructureBlockInfo structureBlockInfo2, StructurePlaceSettings structurePlacementData) {
+        ServerLevelAccessor serverWorldAccess = (ServerLevelAccessor) worldView;
+        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.defaultBlockState(), new CompoundTag());
         if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
             String metadata = structureBlockInfo2.nbt.getString("metadata");
             Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
@@ -57,7 +57,7 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
-            BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
+            BlockPos spawnPos = structureBlockInfo2.pos.offset(0.5, 0, 0.5);
             try {
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
                 if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
@@ -66,9 +66,9 @@ public class GuildStructureProcessor extends StructureProcessor {
                 }
 
                 if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
-                    Optional<? extends Entity> guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
+                    Optional<? extends Entity> guildEntity = instance.get().getGuildEntity(serverWorldAccess.getLevel(), type);
                     if (type == EntityTypes.GUILDMASTER) {
-                        guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
+                        guildEntity = instance.get().getGuildMaster(serverWorldAccess.getLevel());
                     }
 
                     if (guildEntity.isEmpty()) {

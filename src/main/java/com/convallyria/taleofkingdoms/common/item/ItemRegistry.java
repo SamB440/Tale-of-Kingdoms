@@ -5,12 +5,12 @@ import com.convallyria.taleofkingdoms.common.item.common.ItemCoin;
 import com.convallyria.taleofkingdoms.common.item.common.ItemPouch;
 import com.convallyria.taleofkingdoms.common.listener.Listener;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,8 +18,8 @@ import java.util.Map;
 public class ItemRegistry extends Listener {
 
     public static final Map<TOKItem, Item> ITEMS = new HashMap<>();
-    public static final ItemGroup TOK_ITEM_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(TaleOfKingdoms.MODID, "general"))
+    public static final CreativeModeTab TOK_ITEM_GROUP = FabricItemGroupBuilder.create(
+            new ResourceLocation(TaleOfKingdoms.MODID, "general"))
             .icon(() -> new ItemStack(ITEMS.get(TOKItem.COIN)))
             .build();
 
@@ -39,12 +39,12 @@ public class ItemRegistry extends Listener {
     }
 
     public static void init() {
-        ITEMS.put(TOKItem.COIN, new ItemCoin(new Item.Settings().group(TOK_ITEM_GROUP)
-                .maxCount(16)
+        ITEMS.put(TOKItem.COIN, new ItemCoin(new Item.Properties().tab(TOK_ITEM_GROUP)
+                .stacksTo(16)
                 .rarity(Rarity.COMMON)
-                .fireproof()));
-        ITEMS.put(TOKItem.POUCH, new ItemPouch(new Item.Settings().group(TOK_ITEM_GROUP)
-                .maxCount(1)
+                .fireResistant()));
+        ITEMS.put(TOKItem.POUCH, new ItemPouch(new Item.Properties().tab(TOK_ITEM_GROUP)
+                .stacksTo(1)
                 .rarity(Rarity.COMMON)));
         registerItems();
     }
@@ -54,7 +54,7 @@ public class ItemRegistry extends Listener {
         int index = 1;
         for (TOKItem item : ITEMS.keySet()) {
             TaleOfKingdoms.LOGGER.info("[" + index + "/" + ITEMS.values().size() + "] Loading item: " + item.getRegistryName());
-            Registry.register(Registry.ITEM, new Identifier(TaleOfKingdoms.MODID, item.getRegistryName()), ITEMS.get(item));
+            Registry.register(Registry.ITEM, new ResourceLocation(TaleOfKingdoms.MODID, item.getRegistryName()), ITEMS.get(item));
             index++;
         }
     }

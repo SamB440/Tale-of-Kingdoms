@@ -2,57 +2,56 @@ package com.convallyria.taleofkingdoms.common.entity.generic;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
 
-public abstract class SpellcastingEntity extends HostileEntity {
+public abstract class SpellcastingEntity extends Monster {
 
-    private static final TrackedData<Byte> SPELL;
+    private static final EntityDataAccessor<Byte> SPELL;
     protected int spellTicks;
     private SpellcastingEntity.Spell spell;
 
-    protected SpellcastingEntity(EntityType<? extends SpellcastingEntity> entityType, World world) {
+    protected SpellcastingEntity(EntityType<? extends SpellcastingEntity> entityType, Level world) {
         super(entityType, world);
         this.spell = SpellcastingEntity.Spell.NONE;
     }
 
     @Override
-    public boolean cannotDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
     @Override
-    public boolean canImmediatelyDespawn(double distanceSquared) {
+    public boolean removeWhenFarAway(double distanceSquared) {
         return false;
     }
 
     @Override
     public void checkDespawn() { }
 
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(SPELL, (byte)0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(SPELL, (byte)0);
     }
 
-    public void readCustomDataFromTag(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    public void readCustomDataFromTag(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         this.spellTicks = tag.getInt("SpellTicks");
     }
 
-    public void writeCustomDataToTag(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    public void writeCustomDataToTag(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         tag.putInt("SpellTicks", this.spellTicks);
     }
 
@@ -66,8 +65,8 @@ public abstract class SpellcastingEntity extends HostileEntity {
     }
 
     public boolean isSpellcasting() {
-        if (this.world.isClient) {
-            return this.dataTracker.get(SPELL) > 0;
+        if (this.level.isClientSide) {
+            return this.entityData.get(SPELL) > 0;
         } else {
             return this.spellTicks > 0;
         }
@@ -75,15 +74,15 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
     public void setSpell(SpellcastingEntity.Spell spell) {
         this.spell = spell;
-        this.dataTracker.set(SPELL, (byte)spell.id);
+        this.entityData.set(SPELL, (byte)spell.id);
     }
 
     protected SpellcastingEntity.Spell getSpell() {
-        return !this.world.isClient ? this.spell : SpellcastingEntity.Spell.byId(this.dataTracker.get(SPELL));
+        return !this.level.isClientSide ? this.spell : SpellcastingEntity.Spell.byId(this.entityData.get(SPELL));
     }
 
-    protected void mobTick() {
-        super.mobTick();
+    protected void customServerAiStep() {
+        super.customServerAiStep();
         if (this.spellTicks > 0) {
             --this.spellTicks;
         }
@@ -92,16 +91,16 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
     public void tick() {
         super.tick();
-        if (this.world.isClient && this.isSpellcasting()) {
+        if (this.level.isClientSide && this.isSpellcasting()) {
             SpellcastingEntity.Spell spell = this.getSpell();
             double d = spell.particleVelocity[0];
             double e = spell.particleVelocity[1];
             double f = spell.particleVelocity[2];
-            float g = this.bodyYaw * 0.017453292F + MathHelper.cos((float)this.age * 0.6662F) * 0.25F;
-            float h = MathHelper.cos(g);
-            float i = MathHelper.sin(g);
-            this.world.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)h * 0.6D, this.getY() + 1.8D, this.getZ() + (double)i * 0.6D, d, e, f);
-            this.world.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)h * 0.6D, this.getY() + 1.8D, this.getZ() - (double)i * 0.6D, d, e, f);
+            float g = this.yBodyRot * 0.017453292F + Mth.cos((float)this.tickCount * 0.6662F) * 0.25F;
+            float h = Mth.cos(g);
+            float i = Mth.sin(g);
+            this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)h * 0.6D, this.getY() + 1.8D, this.getZ() + (double)i * 0.6D, d, e, f);
+            this.level.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)h * 0.6D, this.getY() + 1.8D, this.getZ() - (double)i * 0.6D, d, e, f);
         }
 
     }
@@ -132,7 +131,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
     }
 
     static {
-        SPELL = DataTracker.registerData(SpellcastingEntity.class, TrackedDataHandlerRegistry.BYTE);
+        SPELL = SynchedEntityData.defineId(SpellcastingEntity.class, EntityDataSerializers.BYTE);
     }
 
     public enum Spell {
@@ -168,10 +167,10 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
     public class LookAtTargetGoal extends Goal {
         public LookAtTargetGoal() {
-            this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
-        public boolean canStart() {
+        public boolean canUse() {
             return SpellcastingEntity.this.getSpellTicks() > 0;
         }
 
@@ -187,7 +186,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
         public void tick() {
             if (SpellcastingEntity.this.getTarget() != null) {
-                SpellcastingEntity.this.getLookControl().lookAt(SpellcastingEntity.this.getTarget(), (float) SpellcastingEntity.this.getBodyYawSpeed(), (float) SpellcastingEntity.this.getLookPitchSpeed());
+                SpellcastingEntity.this.getLookControl().setLookAt(SpellcastingEntity.this.getTarget(), (float) SpellcastingEntity.this.getMaxHeadYRot(), (float) SpellcastingEntity.this.getMaxHeadXRot());
             }
         }
     }

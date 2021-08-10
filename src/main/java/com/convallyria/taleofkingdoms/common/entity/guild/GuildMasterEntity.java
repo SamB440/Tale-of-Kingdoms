@@ -8,42 +8,41 @@ import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
 public class GuildMasterEntity extends TOKEntity {
-    public GuildMasterEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public GuildMasterEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
+    public static AttributeSupplier.Builder createMobAttributes() {
         return TOKEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D);
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.FOLLOW_RANGE)
+                .add(Attributes.ATTACK_DAMAGE, 15.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5D);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
@@ -54,13 +53,13 @@ public class GuildMasterEntity extends TOKEntity {
     }
 
     @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
+    private void openScreen(Player player, ClientConquestInstance instance) {
         GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
-        MinecraftClient.getInstance().setScreen(screen);
+        Minecraft.getInstance().setScreen(screen);
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         if (TaleOfKingdoms.getAPI().isPresent()) {
             Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()) {

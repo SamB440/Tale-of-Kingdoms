@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.shop;
 
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 
 public class ShopItem {
     private final String name;
@@ -33,8 +33,8 @@ public class ShopItem {
         return sell;
     }
 
-    public boolean canBuy(ConquestInstance instance, PlayerEntity player, int count) {
-        return instance.getCoins(player.getUuid()) >= (getCost() * count);
+    public boolean canBuy(ConquestInstance instance, Player player, int count) {
+        return instance.getCoins(player.getUUID()) >= (getCost() * count);
     }
 
     @Override

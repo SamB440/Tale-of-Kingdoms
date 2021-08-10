@@ -15,14 +15,14 @@ import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final FoodShopEntity entity;
     private final ClientConquestInstance instance;
 
@@ -50,13 +50,13 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
             new ScaleSize(3, 360, 55),
             new ScaleSize(4, 275, 27));
 
-    public FoodShopScreen(PlayerEntity player, FoodShopEntity entity, ClientConquestInstance instance) {
+    public FoodShopScreen(Player player, FoodShopEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.foodshop.name");
         this.player = player;
         this.entity = entity;
         this.instance = instance;
         this.shopItems = FoodShopEntity.getFoodShopItems();
-        int guiScale = MinecraftClient.getInstance().options.guiScale;
+        int guiScale = Minecraft.getInstance().options.guiScale;
         Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
         if (scaleSize.isEmpty()) return;
         int x = scaleSize.get().getX();
@@ -65,8 +65,8 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
         if (scaleSizeTwo.isEmpty()) return;
         int xTwo = scaleSizeTwo.get().getX();
         int yTwo = scaleSizeTwo.get().getY();
-        addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), x, y, new int[]{230, 230}));
-        addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), xTwo, yTwo, new int[]{230, 230}));
+        addImage(new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), x, y, new int[]{230, 230}));
+        addImage(new Image(new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), xTwo, yTwo, new int[]{230, 230}));
     }
 
     @Override
@@ -82,19 +82,19 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
+        this.addRenderableWidget(new Button(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new TextComponent("Buy"), button -> {
             int count = 1;
             if (Screen.hasShiftDown()) count = 16;
             ShopBuyUtil.buyItem(instance, player, selectedItem, count);
         }, (button, stack, x, y) -> {
-            Text text = new LiteralText("Use Left Shift to buy 16x.");
+            Component text = new TextComponent("Use Left Shift to buy 16x.");
             this.renderTooltip(stack, text, x, y);
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new LiteralText("Sell"), button -> openSellGui(entity, player)));
-        this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
-        this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160, this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
+        this.addRenderableWidget(new Button(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new TextComponent("Sell"), button -> openSellGui(entity, player)));
+        this.addRenderableWidget(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
+        this.addRenderableWidget(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
+        this.addRenderableWidget(new Button(this.width / 2 - 160, this.height / 2 + 20, 45, 20, new TextComponent("Exit"), button -> this.onClose()));
 
         this.selectedItem = shopItems.get(0);
 
@@ -120,7 +120,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
                 pages.put(page, new ShopPage(page));
             }
 
-            ShopButtonWidget shopButtonWidget = this.addDrawableChild(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
+            ShopButtonWidget shopButtonWidget = this.addRenderableWidget(new ShopButtonWidget(shopItem, this, currentX, currentY, this.font));
             pages.get(page).addItem(shopButtonWidget);
 
             currentY = currentY + 20;
@@ -132,11 +132,11 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        drawCenteredText(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredString(stack, this.font, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         if (this.selectedItem != null) {
-            drawCenteredText(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+            drawCenteredString(stack, this.font, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }
     }
 

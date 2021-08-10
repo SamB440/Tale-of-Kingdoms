@@ -6,26 +6,26 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.Optional;
 
 public class InnkeeperScreen extends ScreenTOK {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final InnkeeperEntity entity;
     private final ConquestInstance instance;
 
-    public InnkeeperScreen(PlayerEntity player, InnkeeperEntity entity, ConquestInstance instance) {
+    public InnkeeperScreen(Player player, InnkeeperEntity entity, ConquestInstance instance) {
         super("taleofkingdoms.menu.innkeeper.name");
         this.player = player;
         this.entity = entity;
@@ -36,18 +36,18 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new TextComponent("Rest in a room."), (button) -> {
             this.onClose();
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
                 TaleOfKingdoms.getAPI().ifPresent(api -> {
                     Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
                     if (conquestInstance.isEmpty()) return;
-                    if (conquestInstance.get().getCoins(player.getUuid()) < 10) {
+                    if (conquestInstance.get().getCoins(player.getUUID()) < 10) {
                         return;
                     }
 
-                    MinecraftServer server = MinecraftClient.getInstance().getServer();
+                    MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
                     if (server == null) {
                         api.getClientHandler(TaleOfKingdoms.INNKEEPER_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.INNKEEPER_PACKET_ID,
@@ -57,27 +57,27 @@ public class InnkeeperScreen extends ScreenTOK {
                     }
 
                     api.executeOnServer(() -> {
-                        server.getOverworld().setTimeOfDay(1000);
-                        ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        server.overworld().setDayTime(1000);
+                        ServerPlayer serverPlayerEntity = Minecraft.getInstance().getSingleplayerServer().getPlayerList().getPlayer(player.getUUID());
                         if (serverPlayerEntity == null) return;
-                        serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                        serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
-                        serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                        serverPlayerEntity.moveTo(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                        serverPlayerEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 1));
+                        serverPlayerEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
                         conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
                     });
                 });
             } else {
-                player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);
+                player.displayClientMessage(new TextComponent("House Keeper: It seems there are no rooms available at this time."), false);
             }
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new TextComponent("Wait for night time."), (button) -> {
             this.onClose();
-            MinecraftServer server = MinecraftClient.getInstance().getServer();
+            MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
                 if (conquestInstance.isEmpty()) return;
-                if (conquestInstance.get().getCoins(player.getUuid()) < 10) {
+                if (conquestInstance.get().getCoins(player.getUUID()) < 10) {
                     return;
                 }
 
@@ -89,20 +89,20 @@ public class InnkeeperScreen extends ScreenTOK {
                     return;
                 }
 
-                server.getOverworld().setTimeOfDay(13000);
+                server.overworld().setDayTime(13000);
                 conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
             });
 
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
+        this.addRenderableWidget(new Button(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new TextComponent("Exit"), (button) -> this.onClose()));
     }
 
     @Override
-    public void render(MatrixStack stack, int par1, int par2, float par3) {
+    public void render(PoseStack stack, int par1, int par2, float par3) {
         super.render(stack, par1, par2, par3);
-        drawCenteredText(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
+        drawCenteredString(stack, this.font, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredString(stack, this.font, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
     }
 
     @Override

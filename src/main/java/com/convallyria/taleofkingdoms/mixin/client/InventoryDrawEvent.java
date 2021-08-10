@@ -1,11 +1,11 @@
 package com.convallyria.taleofkingdoms.mixin.client;
 
 import com.convallyria.taleofkingdoms.common.event.InventoryDrawCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,12 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InventoryDrawEvent {
 
     @Shadow
-    protected TextRenderer textRenderer;
+    protected Font textRenderer;
 
     @Inject(method = "render", at = @At("HEAD"))
-    private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (MinecraftClient.getInstance().currentScreen instanceof InventoryScreen) {
-            InventoryDrawCallback.EVENT.invoker().render((InventoryScreen) MinecraftClient.getInstance().currentScreen, matrices, textRenderer);
+    private void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (Minecraft.getInstance().screen instanceof InventoryScreen) {
+            InventoryDrawCallback.EVENT.invoker().render((InventoryScreen) Minecraft.getInstance().screen, matrices, textRenderer);
         }
     }
 }

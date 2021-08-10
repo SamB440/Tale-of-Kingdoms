@@ -1,12 +1,12 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.BowItem;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.Items;
 
 import java.util.EnumSet;
 
@@ -27,14 +27,14 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
         this.speed = speed;
         this.attackInterval = attackInterval;
         this.squaredRange = range * range;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     public void setAttackInterval(int attackInterval) {
         this.attackInterval = attackInterval;
     }
 
-    public boolean canStart() {
+    public boolean canUse() {
         return this.actor.getTarget() != null && this.isHoldingBow();
     }
 
@@ -43,31 +43,31 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
     }
 
     @Override
-    public boolean shouldContinue() {
-        return (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isHoldingBow() && this.actor.getTarget() != null;
+    public boolean canContinueToUse() {
+        return (this.canUse() || !this.actor.getNavigation().isDone()) && this.isHoldingBow() && this.actor.getTarget() != null;
     }
 
     @Override
     public void start() {
         super.start();
-        this.actor.setAttacking(true);
+        this.actor.setAggressive(true);
     }
 
     @Override
     public void stop() {
         super.stop();
-        this.actor.setAttacking(false);
+        this.actor.setAggressive(false);
         this.targetSeeingTicker = 0;
         this.coolDown = -1;
-        this.actor.clearActiveItem();
+        this.actor.stopUsingItem();
     }
 
     @Override
     public void tick() {
         LivingEntity livingEntity = this.actor.getTarget();
         if (livingEntity != null) {
-            double d = this.actor.squaredDistanceTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
-            boolean bl = this.actor.getVisibilityCache().canSee(livingEntity);
+            double d = this.actor.distanceToSqr(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ());
+            boolean bl = this.actor.getSensing().hasLineOfSight(livingEntity);
             boolean bl2 = this.targetSeeingTicker > 0;
             if (bl != bl2) {
                 this.targetSeeingTicker = 0;
@@ -83,7 +83,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
                 this.actor.getNavigation().stop();
                 ++this.combatTicks;
             } else {
-                this.actor.getNavigation().startMovingTo(livingEntity, this.speed);
+                this.actor.getNavigation().moveTo(livingEntity, this.speed);
                 this.combatTicks = -1;
             }
 
@@ -106,25 +106,25 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
                     this.backward = true;
                 }
 
-                this.actor.getMoveControl().strafeTo(this.backward ? -0.5F : 0.5F, this.movingToLeft ? 0.5F : -0.5F);
-                this.actor.lookAtEntity(livingEntity, 30.0F, 30.0F);
+                this.actor.getMoveControl().strafe(this.backward ? -0.5F : 0.5F, this.movingToLeft ? 0.5F : -0.5F);
+                this.actor.lookAt(livingEntity, 30.0F, 30.0F);
             } else {
-                this.actor.getLookControl().lookAt(livingEntity, 30.0F, 30.0F);
+                this.actor.getLookControl().setLookAt(livingEntity, 30.0F, 30.0F);
             }
 
             if (this.actor.isUsingItem()) {
                 if (!bl && this.targetSeeingTicker < -60) {
-                    this.actor.clearActiveItem();
+                    this.actor.stopUsingItem();
                 } else if (bl) {
-                    int i = this.actor.getItemUseTime();
+                    int i = this.actor.getTicksUsingItem();
                     if (i >= 20) {
-                        this.actor.clearActiveItem();
-                        this.actor.attack(livingEntity, BowItem.getPullProgress(i));
+                        this.actor.stopUsingItem();
+                        this.actor.performRangedAttack(livingEntity, BowItem.getPowerForTime(i));
                         this.coolDown = this.attackInterval;
                     }
                 }
             } else if (--this.coolDown <= 0 && this.targetSeeingTicker >= -60) {
-                this.actor.setCurrentHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.BOW));
+                this.actor.startUsingItem(ProjectileUtil.getWeaponHoldingHand(this.actor, Items.BOW));
             }
         }
     }

@@ -1,18 +1,18 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ExperienceOrbEntity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.decoration.AbstractDecorationEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
-import net.minecraft.entity.projectile.ShulkerBulletEntity;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.entity.projectile.ShulkerBullet;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.Boat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -47,17 +47,17 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin ({
         // @formatter:off
             Entity.class,
-            AbstractDecorationEntity.class,
-            AbstractMinecartEntity.class,
-            AnimalEntity.class,
-            ArmorStandEntity.class,
-            BoatEntity.class,
-            EndCrystalEntity.class,
-            EnderDragonEntity.class,
-            ExperienceOrbEntity.class,
-            ExplosiveProjectileEntity.class,
+            HangingEntity.class,
+            AbstractMinecart.class,
+            Animal.class,
+            ArmorStand.class,
+            Boat.class,
+            EndCrystal.class,
+            EnderDragon.class,
+            ExperienceOrb.class,
+            AbstractHurtingProjectile.class,
             ItemEntity.class,
-            ShulkerBulletEntity.class,
+            ShulkerBullet.class,
         // @formatter:on
         })
 public class EntityDamage {

@@ -5,10 +5,10 @@ import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,15 +19,15 @@ public final class OutgoingBankerInteractPacketHandler extends ClientPacketHandl
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
         throw new IllegalArgumentException("Not supported");
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeEnumConstant((BankerMethod) data[0]);
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
+                                     @Nullable Connection connection, @Nullable Object... data) {
+        FriendlyByteBuf passedData = new FriendlyByteBuf(Unpooled.buffer());
+        passedData.writeEnum((BankerMethod) data[0]);
         passedData.writeInt((Integer) data[1]);
         sendPacket(player, passedData);
     }

@@ -6,12 +6,12 @@ import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,11 +25,11 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context;
-        UUID uuid = player.getUuid();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
-        BankerMethod method = attachedData.readEnumConstant(BankerMethod.class);
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
+        ServerPlayer player = (ServerPlayer) context;
+        UUID uuid = player.getUUID();
+        String playerContext = " @ <" + player.getName().getContents() + ":" + player.getIpAddress() + ">";
+        BankerMethod method = attachedData.readEnum(BankerMethod.class);
         int coins = attachedData.readInt();
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
@@ -40,7 +40,7 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
                 }
 
                 // Search for banker
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BANKER);
+                Optional<? extends Entity> entity = instance.getGuildEntity(player.level, EntityTypes.BANKER);
                 if (!entity.isPresent()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Banker entity not present in guild.");
                     return;
@@ -72,8 +72,8 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
+                                     @Nullable Connection connection, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

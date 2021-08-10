@@ -1,12 +1,12 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal.spell;
 
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 
 public class BlindTargetGoal extends CastSpellGoal {
 
@@ -19,15 +19,15 @@ public class BlindTargetGoal extends CastSpellGoal {
     }
 
     @Override
-    public boolean canStart() {
-        if (!super.canStart()) {
+    public boolean canUse() {
+        if (!super.canUse()) {
             return false;
         } else if (spellCaster.getTarget() == null) {
             return false;
         } else if (spellCaster.getTarget().getId() == this.targetId) {
             return false;
         } else {
-            return spellCaster.world.getLocalDifficulty(spellCaster.getBlockPos()).isHarderThan((float) Difficulty.NORMAL.ordinal());
+            return spellCaster.level.getCurrentDifficultyAt(spellCaster.blockPosition()).isHarderThan((float) Difficulty.NORMAL.ordinal());
         }
     }
 
@@ -49,13 +49,13 @@ public class BlindTargetGoal extends CastSpellGoal {
 
     @Override
     protected void castSpell() {
-        spellCaster.swingHand(Hand.OFF_HAND);
-        spellCaster.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 400));
+        spellCaster.swing(InteractionHand.OFF_HAND);
+        spellCaster.getTarget().addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 400));
     }
 
     @Override
     protected SoundEvent getSoundPrepare() {
-        return SoundEvents.ENTITY_ILLUSIONER_PREPARE_BLINDNESS;
+        return SoundEvents.ILLUSIONER_PREPARE_BLINDNESS;
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,11 +38,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin(AbstractBlock.AbstractBlockState.class)
+@Mixin(BlockBehaviour.BlockStateBase.class)
 public class OnUse {
 	@Inject(method = "onUse", at = @At("RETURN"), cancellable = true)
-	private void use(World world, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
-		if(cir.getReturnValue() == ActionResult.PASS) {
+	private void use(Level world, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
+		if(cir.getReturnValue() == InteractionResult.PASS) {
 			cir.setReturnValue(this.onUse(world, player, hand, hit));
 		}
 	}
@@ -56,8 +56,8 @@ public class OnUse {
 	 * @return the action to perform
 	 */
 	@Unique
-	private ActionResult onUse(World world, PlayerEntity entity, Hand hand, BlockHitResult result) {
-		return ActionResult.PASS;
+	private InteractionResult onUse(Level world, Player entity, InteractionHand hand, BlockHitResult result) {
+		return InteractionResult.PASS;
 	}
 
 }

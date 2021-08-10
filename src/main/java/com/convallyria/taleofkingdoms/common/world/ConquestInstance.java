@@ -11,24 +11,23 @@ import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.google.gson.Gson;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BedBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
-import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.JigsawReplacementProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -140,22 +139,22 @@ public abstract class ConquestInstance {
         return !isUnderAttack() && getWorthiness(uuid) > 750;
     }
 
-    public void attack(PlayerEntity player, ServerWorldAccess world) {
-        if (canAttack(player.getUuid())) {
+    public void attack(Player player, ServerLevelAccessor world) {
+        if (canAttack(player.getUUID())) {
             TaleOfKingdoms.LOGGER.info("Initiating guild attack for player " + player.getName());
-            EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.getBlockPos());
+            EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.blockPosition());
             this.underAttack = true;
             Translations.GUILDMASTER_HELP.send(player);
 
-            Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
-            world.toServerWorld().getStructureManager().getStructure(gateway).ifPresent(structure -> {
+            ResourceLocation gateway = new ResourceLocation(TaleOfKingdoms.MODID, "gateway/gateway");
+            world.getLevel().getStructureManager().get(gateway).ifPresent(structure -> {
                 for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
-                    StructurePlacementData structurePlacementData = new StructurePlacementData();
+                    StructurePlaceSettings structurePlacementData = new StructurePlaceSettings();
                     structurePlacementData.addProcessor(GatewayStructureProcessor.INSTANCE);
-                    structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-                    structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
+                    structurePlacementData.addProcessor(JigsawReplacementProcessor.INSTANCE);
+                    structurePlacementData.addProcessor(BlockIgnoreProcessor.AIR);
                     BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
-                    structure.place(world, newPos, newPos, structurePlacementData, ThreadLocalRandom.current(), Block.NOTIFY_ALL);
+                    structure.placeInWorld(world, newPos, newPos, structurePlacementData, ThreadLocalRandom.current(), Block.UPDATE_ALL);
                 }
             });
         }
@@ -179,7 +178,7 @@ public abstract class ConquestInstance {
 
     public void addLoneVillagerWithRoom(LoneVillagerEntity entity) {
         if (loneVillagersWithRooms == null) this.loneVillagersWithRooms = new ArrayList<>();
-        loneVillagersWithRooms.add(entity.getUuid());
+        loneVillagersWithRooms.add(entity.getUUID());
     }
 
     public List<BlockPos> getReficuleAttackLocations() {
@@ -273,16 +272,16 @@ public abstract class ConquestInstance {
         addWorthiness(null, worthiness);
     }
 
-    public Optional<GuildMasterEntity> getGuildMaster(World world) {
+    public Optional<GuildMasterEntity> getGuildMaster(Level world) {
         if (start == null || end == null) return Optional.empty();
-        Box box = new Box(getStart(), getEnd());
-        return world.getEntitiesByType(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.isFireImmune()).stream().findFirst();
+        AABB box = new AABB(getStart(), getEnd());
+        return world.getEntities(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.fireImmune()).stream().findFirst();
     }
 
-    public Optional<? extends Entity> getGuildEntity(World world, EntityType<?> type) {
+    public Optional<? extends Entity> getGuildEntity(Level world, EntityType<?> type) {
         if (start == null || end == null) return Optional.empty();
-        Box box = new Box(getStart(), getEnd());
-        return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();
+        AABB box = new AABB(getStart(), getEnd());
+        return world.getEntities(type, box, entity -> true).stream().findFirst();
     }
 
     private List<BlockPos> validRest;
@@ -293,7 +292,7 @@ public abstract class ConquestInstance {
      * @return list of signs where sleeping is allowed
      */
     @NotNull
-    public List<BlockPos> getSleepLocations(PlayerEntity player) {
+    public List<BlockPos> getSleepLocations(Player player) {
         if (validRest == null) validRest = new ArrayList<>();
         if (validRest.isEmpty()) { // Find a valid resting place. This will only run if validRest is empty, which is also saved to file.
             int topBlockX = (Math.max(start.getX(), end.getX()));
@@ -309,7 +308,7 @@ public abstract class ConquestInstance {
                 for (int z = bottomBlockZ; z <= topBlockZ; z++) {
                     for (int y = bottomBlockY; y <= topBlockY; y++) {
                         BlockPos blockPos = new BlockPos(x, y, z);
-                        BlockEntity tileEntity = player.getEntityWorld().getChunk(blockPos).getBlockEntity(blockPos);
+                        BlockEntity tileEntity = player.getCommandSenderWorld().getChunk(blockPos).getBlockEntity(blockPos);
                         if (tileEntity instanceof BedBlockEntity) {
                             validRest.add(blockPos);
                         }
@@ -331,7 +330,7 @@ public abstract class ConquestInstance {
      * @return true if player is in guild, false if not
      */
     public boolean isInGuild(Entity entity) {
-        return isInGuild(entity.getBlockPos());
+        return isInGuild(entity.blockPosition());
     }
 
     /**
@@ -341,11 +340,11 @@ public abstract class ConquestInstance {
      */
     public boolean isInGuild(BlockPos pos) {
         if (start == null || end == null) return false; // Probably still pasting.
-        BlockBox blockBox = new BlockBox(end.getX(), end.getY(), end.getZ(), start.getX(), start.getY(), start.getZ());
-        return blockBox.contains(pos);
+        BoundingBox blockBox = new BoundingBox(end.getX(), end.getY(), end.getZ(), start.getX(), start.getY(), start.getZ());
+        return blockBox.isInside(pos);
     }
 
-    public CompletableFuture<BlockBox> rebuild(ServerPlayerEntity serverPlayerEntity, TaleOfKingdomsAPI api, SchematicOptions... options) {
+    public CompletableFuture<BoundingBox> rebuild(ServerPlayer serverPlayerEntity, TaleOfKingdomsAPI api, SchematicOptions... options) {
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 13, 0)), options);
     }
 

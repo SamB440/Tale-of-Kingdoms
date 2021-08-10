@@ -12,12 +12,10 @@ import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +40,7 @@ public class CoinListener extends Listener {
      * When an entity dies this event is called.
      * If the entity is a player then the player's coins are subtracted by the amount of their current coins divided by 20 and the method returns.
      * If the cause of death was a player then the {@link LivingEntity} drops their coins
-     * and the player gets worthiness added equal to the {@link CoinListener#getMobWorthiness(LivingEntity)} times (*) the {@link CoinListener#getDifficultyWorthinessMultiplier(World)}
+     * and the player gets worthiness added equal to the {@link CoinListener#getMobWorthiness(LivingEntity)} times (*) the {@link CoinListener#getDifficultyWorthinessMultiplier(Level)}
      */
     private void dropCoinsOnDeath() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
@@ -95,13 +93,13 @@ public class CoinListener extends Listener {
             if (equalsCoin(item)) {
                 TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
-                    instance.addCoins(player.getUuid(), random.nextInt(10));
+                    instance.addCoins(player.getUUID(), random.nextInt(10));
                     if (instance instanceof ServerConquestInstance) {
-                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, null);
+                        ((ServerConquestInstance) instance).sync((ServerPlayer) player, null);
                     }
                 });
 
-                player.getInventory().remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.getInventory());
+                player.getInventory().clearOrCountMatchingItems(predicate -> predicate.getItem().equals(item.getItem()), -1, player.getInventory());
             }
         });
     }
@@ -143,7 +141,7 @@ public class CoinListener extends Listener {
      * @return the mob's worthiness if and only if the entry exists, else 1
      */
     public int getMobWorthiness(LivingEntity mob) {
-        String mobType = mob.getType().getName().getString();
+        String mobType = mob.getType().getDescription().getString();
 
         if(worthinessJson.has(mobType)) {
             return worthinessJson.get(mobType).getAsInt();
@@ -154,14 +152,14 @@ public class CoinListener extends Listener {
 
     /**
      * Gets the difficulty worthiness from the json file
-     * @param world the {@link World} the entity died in
+     * @param world the {@link Level} the entity died in
      * @return the difficulty's worthiness if and only if the entry exists, else 1
      */
-    public int getDifficultyWorthinessMultiplier(World world) {
+    public int getDifficultyWorthinessMultiplier(Level world) {
         JsonObject difficulty = worthinessJson.getAsJsonObject("difficulty");
 
-        if(difficulty.has(world.getDifficulty().getName())) {
-            return difficulty.get(world.getDifficulty().getName()).getAsInt();
+        if(difficulty.has(world.getDifficulty().getKey())) {
+            return difficulty.get(world.getDifficulty().getKey()).getAsInt();
         } else {
             return 1;
         }

@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.packet.context;
 
 import net.fabricmc.api.EnvType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.thread.ThreadExecutor;
+import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Interface defining a context used during packet processing. Allows access
@@ -27,7 +27,7 @@ public interface PacketContext {
 	 *
 	 * @return The player associated with the packet.
 	 */
-	PlayerEntity player();
+	Player player();
 
 	/**
 	 * Get the task queue for a given side.
@@ -43,5 +43,5 @@ public interface PacketContext {
 	 *
 	 * @return The thread task queue.
 	 */
-	ThreadExecutor taskQueue();
+	BlockableEventLoop taskQueue();
 }

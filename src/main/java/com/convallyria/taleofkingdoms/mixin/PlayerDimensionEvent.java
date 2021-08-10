@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,11 +34,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  *
  * For more information, please refer to <http://unlicense.org/>
  */
-@Mixin (ServerWorld.class)
+@Mixin (ServerLevel.class)
 public class PlayerDimensionEvent {
 	@Inject (method = "onPlayerChangeDimension",
 	         at = @At ("HEAD"), cancellable = true)
-	private void changed(ServerPlayerEntity player, CallbackInfo ci) {
+	private void changed(ServerPlayer player, CallbackInfo ci) {
 		if (!this.change(player)) {
 			ci.cancel();
 		}
@@ -51,7 +51,7 @@ public class PlayerDimensionEvent {
 	 * @return true if the player should not travel to the dimension
 	 */
 	@Unique
-	public boolean change(ServerPlayerEntity type) {
+	public boolean change(ServerPlayer type) {
 		return true;
 	}
 }

@@ -1,11 +1,11 @@
 package com.convallyria.taleofkingdoms.client.gui;
 
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public abstract class ScreenTOK extends Screen {
      * @param translation the translation key
      */
     protected ScreenTOK(String translation) {
-        super(new TranslatableText(translation));
+        super(new TranslatableComponent(translation));
         this.images = new ArrayList<>();
     }
 
@@ -33,7 +33,7 @@ public abstract class ScreenTOK extends Screen {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         images.forEach(image -> image.render(stack, this));
         super.render(stack, mouseX, mouseY, delta);
     }

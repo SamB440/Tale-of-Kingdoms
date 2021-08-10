@@ -6,23 +6,23 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
 
 public class BankerScreen extends ScreenTOK {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final BankerEntity entity;
     private final ClientConquestInstance instance;
 
     // Text fields
-    private TextFieldWidget text;
+    private EditBox text;
 
-    public BankerScreen(PlayerEntity player, BankerEntity entity, ClientConquestInstance instance) {
+    public BankerScreen(Player player, BankerEntity entity, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.banker.name");
         this.player = player;
         //addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/crafting.png"), this.width / 2 + 50, this.height / 2 + 25, new int[]{230, 230}));
@@ -34,10 +34,10 @@ public class BankerScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 77, this.height / 2 - 85, 150, 20, new LiteralText("0"));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new LiteralText("Deposit"), (button) -> {
+        this.text = new EditBox(this.font, this.width / 2 - 77, this.height / 2 - 85, 150, 20, new TextComponent("0"));
+        this.addRenderableWidget(new Button(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new TextComponent("Deposit"), (button) -> {
             try {
-                int coins = Integer.parseInt(this.text.getText());
+                int coins = Integer.parseInt(this.text.getValue());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
                     this.onClose();
@@ -46,7 +46,7 @@ public class BankerScreen extends ScreenTOK {
 
                 if (instance.getCoins() >= coins) {
                     this.onClose();
-                    if (MinecraftClient.getInstance().getServer() == null) {
+                    if (Minecraft.getInstance().getSingleplayerServer() == null) {
                         TaleOfKingdoms.getAPI().get().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
                                         player,
@@ -61,9 +61,9 @@ public class BankerScreen extends ScreenTOK {
                 this.onClose();
             }
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new LiteralText("Withdraw"), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new TextComponent("Withdraw"), (button) -> {
             try {
-                int coins = Integer.parseInt(this.text.getText());
+                int coins = Integer.parseInt(this.text.getValue());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
                     this.onClose();
@@ -71,7 +71,7 @@ public class BankerScreen extends ScreenTOK {
                 }
                 if (instance.getBankerCoins() >= coins) {
                     this.onClose();
-                    if (MinecraftClient.getInstance().getServer() == null) {
+                    if (Minecraft.getInstance().getSingleplayerServer() == null) {
                         TaleOfKingdoms.getAPI().get().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
                                         player,
@@ -86,18 +86,18 @@ public class BankerScreen extends ScreenTOK {
                 this.onClose();
             }
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new TextComponent("Exit"), (button) -> {
             this.onClose();
         }));
 
         this.text.setMaxLength(12);
-        this.text.setText("0");
-        this.text.setTextFieldFocused(true);
-        this.text.setFocusUnlocked(true);
+        this.text.setValue("0");
+        this.text.setFocus(true);
+        this.text.setCanLoseFocus(true);
         this.text.changeFocus(true);
         this.text.setVisible(true);
-        this.text.setCursorToEnd();
-        this.addSelectableChild(this.text);
+        this.text.moveCursorToEnd();
+        this.addWidget(this.text);
     }
 
     @Override
@@ -107,12 +107,12 @@ public class BankerScreen extends ScreenTOK {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
         this.text.render(stack, mouseX, mouseY, delta);
-        drawCenteredText(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Total Money You Have: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Total Money in the Bank: " + instance.getBankerCoins() + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
+        drawCenteredString(stack, this.font, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredString(stack, this.font, "Total Money You Have: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+        drawCenteredString(stack, this.font, "Total Money in the Bank: " + instance.getBankerCoins() + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
     }
 
     @Override

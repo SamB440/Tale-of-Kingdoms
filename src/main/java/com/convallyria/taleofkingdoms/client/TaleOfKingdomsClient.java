@@ -17,14 +17,14 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPa
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -34,9 +34,9 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
 
     private StartWorldListener startWorldListener;
 
-    public static final KeyBinding START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+    public static final KeyMapping START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.taleofkingdoms.startconquest", // The translation key of the keybinding's name
-            InputUtil.Type.KEYSYM,
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_K,
             "category.taleofkingdoms.keys" // The translation key of the keybinding's category.
     ));
@@ -50,7 +50,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         ScreenRegistry.register(TaleOfKingdoms.SELL_SCREEN_HANDLER, ScreenSellItem::new);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (START_CONQUEST_KEYBIND.wasPressed()) {
+            while (START_CONQUEST_KEYBIND.consumeClick()) {
                 String worldName = startWorldListener.getWorldName();
                 if (worldName == null) return;
                 if (api.getConquestInstanceStorage().getConquestInstance(worldName).isPresent()) return;

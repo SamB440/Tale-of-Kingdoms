@@ -5,60 +5,60 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.Optional;
 
-public class ScreenSellItem extends HandledScreen<ScreenHandler> {
+public class ScreenSellItem extends AbstractContainerScreen<AbstractContainerMenu> {
     //A path to the gui texture. In this example we use the texture from the dispenser
-    private static final Identifier TEXTURE = new Identifier(TaleOfKingdoms.MODID, "textures/gui/guisell.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation(TaleOfKingdoms.MODID, "textures/gui/guisell.png");
 
-    private final PlayerInventory playerInventory;
+    private final Inventory playerInventory;
 
-    public ScreenSellItem(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public ScreenSellItem(AbstractContainerMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         this.playerInventory = inventory;
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        int x = (width - backgroundWidth) / 2;
-        int y = (height - backgroundHeight) / 2;
-        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        int x = (width - imageWidth) / 2;
+        int y = (height - imageHeight) / 2;
+        blit(matrices, x, y, 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
-        drawMouseoverTooltip(matrices, mouseX, mouseY);
+        renderTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
-    public void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        this.textRenderer.draw(matrices, new LiteralText("Total Money:"), (float)this.playerInventoryTitleX + 20, (float)this.playerInventoryTitleY - 50, 4210752);
+    public void renderLabels(PoseStack matrices, int mouseX, int mouseY) {
+        this.font.draw(matrices, new TextComponent("Total Money:"), (float)this.inventoryLabelX + 20, (float)this.inventoryLabelY - 50, 4210752);
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
-            int x = this.playerInventoryTitleX + 25;
-            int y = this.playerInventoryTitleY - 40;
+            int x = this.inventoryLabelX + 25;
+            int y = this.inventoryLabelY - 40;
             if (instance.isPresent()) {
-                int coins = instance.get().getCoins(playerInventory.player.getUuid());
-                this.textRenderer.draw(matrices, new LiteralText(coins + " Gold Coins"), x, y, 4210752);
+                int coins = instance.get().getCoins(playerInventory.player.getUUID());
+                this.font.draw(matrices, new TextComponent(coins + " Gold Coins"), x, y, 4210752);
             }
         });
     }
@@ -66,17 +66,17 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        titleX = (backgroundWidth - textRenderer.getWidth(title)) / 2;
+        titleLabelX = (imageWidth - font.width(title)) / 2;
     }
 
     @Override
     public void onClose() {
         TaleOfKingdoms.getAPI().ifPresent(api -> api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-            World world = playerInventory.player.world;
+            Level world = playerInventory.player.level;
             instance.getGuildEntity(world, EntityTypes.BLACKSMITH).ifPresent(entity -> {
                 deleteBlock(api, entity);
             });
-            instance.getGuildEntity(playerInventory.player.world, EntityTypes.FOODSHOP).ifPresent(entity -> {
+            instance.getGuildEntity(playerInventory.player.level, EntityTypes.FOODSHOP).ifPresent(entity -> {
                 deleteBlock(api, entity);
             });
         }));
@@ -84,7 +84,7 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     }
 
     protected void deleteBlock(TaleOfKingdomsAPI api, Entity entity) {
-        if (MinecraftClient.getInstance().getServer() == null) {
+        if (Minecraft.getInstance().getSingleplayerServer() == null) {
             api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
                     .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
                             playerInventory.player,
@@ -92,8 +92,8 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
             return;
         }
         api.getScheduler().queue(server -> {
-            BlockPos pos = entity.getBlockPos().add(0, 2, 0);
-            server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
+            BlockPos pos = entity.blockPosition().offset(0, 2, 0);
+            server.overworld().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         }, 1);
     }
 }

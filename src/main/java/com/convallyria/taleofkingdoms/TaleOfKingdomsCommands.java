@@ -10,116 +10,116 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 
 public class TaleOfKingdomsCommands {
     public TaleOfKingdomsCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> { // Register commands
             // Base node /taleofkingdoms
-            LiteralCommandNode<ServerCommandSource> baseNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> baseNode = Commands
                     .literal(TaleOfKingdoms.MODID)
                     .executes(new TaleOfKingdomsCommand())
                     .build();
 
             // Debug node /taleofkingdoms debug
 
-            LiteralCommandNode<ServerCommandSource> debugNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> debugNode = Commands
                     .literal("debug")
-                    .requires(p -> p.hasPermissionLevel(4))
+                    .requires(p -> p.hasPermission(4))
                     .executes(new TaleOfKingdomsDebugCommand())
                     .build();
 
             // Add node /taleofkingdoms debug add [coins|worthiness] [integer]
 
-            LiteralCommandNode<ServerCommandSource> addNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> addNode = Commands
                     .literal("add")
                     .executes(new TaleOfKingdomsAddCommand())
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> addCoinsNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> addCoinsNode = Commands
                     .literal("coins")
                     .build();
 
-            ArgumentCommandNode<ServerCommandSource, Integer> addCoinsArgumentNode = CommandManager
+            ArgumentCommandNode<CommandSourceStack, Integer> addCoinsArgumentNode = Commands
                     .argument("coins", IntegerArgumentType.integer())
                     .executes(TaleOfKingdomsAddCommand::addCoins)
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> addWorthinessNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> addWorthinessNode = Commands
                     .literal("worthiness")
                     .build();
 
-            ArgumentCommandNode<ServerCommandSource, Integer> addWorthinessArgumentNode = CommandManager
+            ArgumentCommandNode<CommandSourceStack, Integer> addWorthinessArgumentNode = Commands
                     .argument("worthiness", IntegerArgumentType.integer())
                     .executes(TaleOfKingdomsAddCommand::addWorthiness)
                     .build();
 
             // Get node /taleofkingdoms debug get [coins|worthiness]
 
-            LiteralCommandNode<ServerCommandSource> getNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> getNode = Commands
                     .literal("get")
                     .executes(new TaleOfKingdomsGetCommand())
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> getCoinsNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> getCoinsNode = Commands
                     .literal("coins")
                     .executes(TaleOfKingdomsGetCommand::getCoins)
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> getWorthinessNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> getWorthinessNode = Commands
                     .literal("worthiness")
                     .executes(TaleOfKingdomsGetCommand::getWorthiness)
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> getHasRebuiltNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> getHasRebuiltNode = Commands
                     .literal("hasRebuilt")
                     .executes(TaleOfKingdomsGetCommand::getHasRebuilt)
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> getHasAttackedNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> getHasAttackedNode = Commands
                     .literal("hasAttacked")
                     .executes(TaleOfKingdomsGetCommand::getHasAttacked)
                     .build();
 
             // Invoke node /taleofkingdoms debug invoke [saveVillagers|guildAttack]
 
-            LiteralCommandNode<ServerCommandSource> invokeNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> invokeNode = Commands
                     .literal("invoke")
                     .executes(new TaleOfKingdomsInvokeCommand())
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> invokeSaveVillagersNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> invokeSaveVillagersNode = Commands
                     .literal("saveVillagers")
                     .executes(TaleOfKingdomsInvokeCommand::invokeSaveVillagers)
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> invokeGuildAttackNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> invokeGuildAttackNode = Commands
                     .literal("guildAttack")
                     .executes(TaleOfKingdomsInvokeCommand::invokeGuildAttack)
                     .build();
 
             // Set node /taleofkingdoms debug set [coins|worthiness] [integer]
 
-            LiteralCommandNode<ServerCommandSource> setNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> setNode = Commands
                     .literal("set")
                     .executes(new TaleOfKingdomsSetCommand())
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> setCoinsNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> setCoinsNode = Commands
                     .literal("coins")
                     .build();
 
-            ArgumentCommandNode<ServerCommandSource, Integer> setCoinsArgumentNode = CommandManager
+            ArgumentCommandNode<CommandSourceStack, Integer> setCoinsArgumentNode = Commands
                     .argument("coins", IntegerArgumentType.integer())
                     .executes(TaleOfKingdomsSetCommand::setCoins)
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> setWorthinessNode = CommandManager
+            LiteralCommandNode<CommandSourceStack> setWorthinessNode = Commands
                     .literal("worthiness")
                     .build();
 
-            ArgumentCommandNode<ServerCommandSource, Integer> setWorthinessArgumentNode = CommandManager
+            ArgumentCommandNode<CommandSourceStack, Integer> setWorthinessArgumentNode = Commands
                     .argument("worthiness", IntegerArgumentType.integer())
                     .executes(TaleOfKingdomsSetCommand::setWorthiness)
                     .build();

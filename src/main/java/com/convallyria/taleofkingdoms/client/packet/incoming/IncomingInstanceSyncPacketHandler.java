@@ -4,11 +4,11 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +23,9 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
-        String name = attachedData.readString();
-        String world = attachedData.readString();
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
+        String name = attachedData.readUtf();
+        String world = attachedData.readUtf();
         int bankerCoins = attachedData.readInt();
         int coins = attachedData.readInt();
         int worthiness = attachedData.readInt();
@@ -38,7 +38,7 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
         List<UUID> hunterUuids = new ArrayList<>();
         while (attachedData.isReadable()) {
             TaleOfKingdoms.LOGGER.info("Reading uuids!");
-            hunterUuids.add(attachedData.readUuid());
+            hunterUuids.add(attachedData.readUUID());
         }
 
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().ifPresent(api -> {
@@ -62,7 +62,7 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player, @Nullable Connection connection, @Nullable Object... data) {
         throw new IllegalStateException("Not supported");
     }
 }

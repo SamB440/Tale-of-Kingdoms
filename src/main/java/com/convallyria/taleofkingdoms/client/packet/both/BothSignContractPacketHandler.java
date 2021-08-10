@@ -5,10 +5,10 @@ import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public final class BothSignContractPacketHandler extends ClientPacketHandler {
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(ResourceLocation identifier, PacketContext context, FriendlyByteBuf attachedData) {
         boolean sign = attachedData.readBoolean();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
             instance.setHasContract(sign);
@@ -28,10 +28,10 @@ public final class BothSignContractPacketHandler extends ClientPacketHandler {
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player, @Nullable Connection connection, @Nullable Object... data) {
         if (data != null && data[0] instanceof Boolean) {
             boolean sign = (Boolean) data[0];
-            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+            FriendlyByteBuf passedData = new FriendlyByteBuf(Unpooled.buffer());
             passedData.writeBoolean(sign);
             sendPacket(player, passedData);
         }

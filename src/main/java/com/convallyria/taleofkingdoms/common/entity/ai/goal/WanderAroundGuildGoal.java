@@ -2,18 +2,18 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.entity.ai.NoPenaltyTargeting;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
 public class WanderAroundGuildGoal extends Goal {
 
-    protected final PathAwareEntity mob;
+    protected final PathfinderMob mob;
     protected double targetX;
     protected double targetY;
     protected double targetZ;
@@ -21,17 +21,17 @@ public class WanderAroundGuildGoal extends Goal {
     protected int chance;
     protected boolean ignoringChance;
 
-    public WanderAroundGuildGoal(PathAwareEntity mob, double speed) { this(mob, speed, 50); }
+    public WanderAroundGuildGoal(PathfinderMob mob, double speed) { this(mob, speed, 50); }
 
-    public WanderAroundGuildGoal(PathAwareEntity pathAwareEntity, double d, int i) {
+    public WanderAroundGuildGoal(PathfinderMob pathAwareEntity, double d, int i) {
         this.mob = pathAwareEntity;
         this.speed = d;
         this.chance = i;
-        this.setControls(EnumSet.of(Goal.Control.MOVE));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
        if (!this.ignoringChance) {
            // if (this.field_24463 && this.mob.getDespawnCounter() >= 100) {
              //   return false;
@@ -42,7 +42,7 @@ public class WanderAroundGuildGoal extends Goal {
            }
        }
 
-        Vec3d vec3d = this.getWanderTarget();
+        Vec3 vec3d = this.getWanderTarget();
         if (vec3d == null) {
             return false;
         } else {
@@ -63,18 +63,18 @@ public class WanderAroundGuildGoal extends Goal {
     }
 
     @Nullable
-    protected Vec3d getWanderTarget() {
-        return NoPenaltyTargeting.find(this.mob, 30, 7);
+    protected Vec3 getWanderTarget() {
+        return DefaultRandomPos.getPos(this.mob, 30, 7);
     }
 
     @Override
-    public boolean shouldContinue() {
-        return !this.mob.getNavigation().isIdle() && !this.mob.hasPassengers();
+    public boolean canContinueToUse() {
+        return !this.mob.getNavigation().isDone() && !this.mob.isVehicle();
     }
 
     @Override
     public void start() {
-        this.mob.getNavigation().startMovingTo(this.targetX, this.targetY, this.targetZ, this.speed);
+        this.mob.getNavigation().moveTo(this.targetX, this.targetY, this.targetZ, this.speed);
     }
 
     @Override

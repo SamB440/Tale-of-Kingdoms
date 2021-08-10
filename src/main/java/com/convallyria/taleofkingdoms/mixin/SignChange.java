@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.mixin;
 
-import net.minecraft.block.entity.SignBlockEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,10 +40,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SignChange {
 
 	@Shadow @Final
-	private Text[] texts;
+	private Component[] texts;
 
 	@Inject(method = "setTextOnRow(ILnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-	private void set(int row, Text text, CallbackInfo ci) {
+	private void set(int row, Component text, CallbackInfo ci) {
 		if(this.abortSignChange(row, this.texts[row], text))
 			ci.cancel();
 	}
@@ -56,7 +56,7 @@ public class SignChange {
 	 * @return true if the change should be dismissed
 	 */
 	@Unique
-	private boolean abortSignChange(int row, Text old, Text text) {
+	private boolean abortSignChange(int row, Component old, Component text) {
 		return false;
 	}
 }

@@ -10,57 +10,57 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.spell.GiveInvisibili
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * We copied the illusioner AI for now!
  */
-public class ReficuleMageEntity extends SpellcastingEntity implements Monster, TeleportAbility, RangedAttackMob {
+public class ReficuleMageEntity extends SpellcastingEntity implements Enemy, TeleportAbility, RangedAttackMob {
 
     // wtf are these
     private int field_7296;
-    private final Vec3d[][] field_7297;
+    private final Vec3[][] field_7297;
 
-    public ReficuleMageEntity(@NotNull EntityType<? extends ReficuleMageEntity> entityType, @NotNull World world) {
+    public ReficuleMageEntity(@NotNull EntityType<? extends ReficuleMageEntity> entityType, @NotNull Level world) {
         super(entityType, world);
-        this.experiencePoints = 5;
-        this.field_7297 = new Vec3d[2][4];
+        this.xpReward = 5;
+        this.field_7297 = new Vec3[2][4];
 
         for(int i = 0; i < 4; ++i) {
-            this.field_7297[0][i] = Vec3d.ZERO;
-            this.field_7297[1][i] = Vec3d.ZERO;
+            this.field_7297[0][i] = Vec3.ZERO;
+            this.field_7297[1][i] = Vec3.ZERO;
         }
     }
 
@@ -69,7 +69,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         double x = entity.getX();
         double y = entity.getY();
         double z = entity.getZ();
-        return this.teleport(x, y, z, true);
+        return this.randomTeleport(x, y, z, true);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
@@ -88,65 +88,65 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new SpellcastingEntity.LookAtTargetGoal());
-        this.goalSelector.add(2, new GiveInvisibilityGoal(this));
-        this.goalSelector.add(3, new EncaseFireSpellGoal(this));
-        this.goalSelector.add(4, new FireballSpellGoal(this));
-        this.goalSelector.add(5, new BlindTargetGoal(this));
-        this.goalSelector.add(6, new WanderAroundGoal(this, 0.6D));
-        this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.add(8, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
-        this.targetSelector.add(1, new TeleportTowardsPlayerGoal(this, entity -> {
-            return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new SpellcastingEntity.LookAtTargetGoal());
+        this.goalSelector.addGoal(2, new GiveInvisibilityGoal(this));
+        this.goalSelector.addGoal(3, new EncaseFireSpellGoal(this));
+        this.goalSelector.addGoal(4, new FireballSpellGoal(this));
+        this.goalSelector.addGoal(5, new BlindTargetGoal(this));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.6D));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Mob.class, 8.0F));
+        this.targetSelector.addGoal(1, new TeleportTowardsPlayerGoal(this, entity -> {
+            return entity.distanceToSqr(this) < this.getAttributeValue(Attributes.FOLLOW_RANGE);
         }));
-        this.targetSelector.add(2, (new FollowTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
-        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, Player.class, true)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
+        this.targetSelector.addGoal(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
+        this.targetSelector.addGoal(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
-        return HostileEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 18.0D)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D) // Big increase! Needs balancing?
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 9.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5D);
+    public static AttributeSupplier.Builder createMobAttributes() {
+        return Monster.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.5D)
+                .add(Attributes.FOLLOW_RANGE, 18.0D)
+                .add(Attributes.MAX_HEALTH, 20.0D) // Big increase! Needs balancing?
+                .add(Attributes.ATTACK_DAMAGE, 9.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.5D);
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityTag) {
         ItemStack wand = new ItemStack(Items.STICK);
-        wand.addEnchantment(Enchantments.MENDING, 1); // Want them to look fancy :)
-        this.equipStack(EquipmentSlot.OFFHAND, wand);
-        return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
+        wand.enchant(Enchantments.MENDING, 1); // Want them to look fancy :)
+        this.setItemSlot(EquipmentSlot.OFFHAND, wand);
+        return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityTag);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public Box getVisibilityBoundingBox() {
-        return this.getBoundingBox().expand(3.0D, 0.0D, 3.0D);
+    public AABB getBoundingBoxForCulling() {
+        return this.getBoundingBox().inflate(3.0D, 0.0D, 3.0D);
     }
 
     @Override
-    public void tickMovement() {
-        super.tickMovement();
-        if (this.world.isClient && this.isInvisible()) {
+    public void aiStep() {
+        super.aiStep();
+        if (this.level.isClientSide && this.isInvisible()) {
             --this.field_7296;
             if (this.field_7296 < 0) {
                 this.field_7296 = 0;
             }
 
-            if (this.hurtTime != 1 && this.age % 1200 != 0) {
-                if (this.hurtTime == this.maxHurtTime - 1) {
+            if (this.hurtTime != 1 && this.tickCount % 1200 != 0) {
+                if (this.hurtTime == this.hurtDuration - 1) {
                     this.field_7296 = 3;
 
                     for(int l = 0; l < 4; ++l) {
                         this.field_7297[0][l] = this.field_7297[1][l];
-                        this.field_7297[1][l] = new Vec3d(0.0D, 0.0D, 0.0D);
+                        this.field_7297[1][l] = new Vec3(0.0D, 0.0D, 0.0D);
                     }
                 }
             } else {
@@ -156,29 +156,29 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
                 int k;
                 for(k = 0; k < 4; ++k) {
                     this.field_7297[0][k] = this.field_7297[1][k];
-                    this.field_7297[1][k] = new Vec3d((double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D, Math.max(0, this.random.nextInt(6) - 4), (double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D);
+                    this.field_7297[1][k] = new Vec3((double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D, Math.max(0, this.random.nextInt(6) - 4), (double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D);
                 }
 
                 for(k = 0; k < 16; ++k) {
-                    this.world.addParticle(ParticleTypes.CLOUD, this.getParticleX(0.5D), this.getRandomBodyY(), this.offsetZ(0.5D), 0.0D, 0.0D, 0.0D);
+                    this.level.addParticle(ParticleTypes.CLOUD, this.getRandomX(0.5D), this.getRandomY(), this.getZ(0.5D), 0.0D, 0.0D, 0.0D);
                 }
 
-                this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, this.getSoundCategory(), 1.0F, 1.0F, false);
+                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, this.getSoundSource(), 1.0F, 1.0F, false);
             }
         }
     }
 
     @Environment(EnvType.CLIENT)
-    public Vec3d[] method_7065(float f) {
+    public Vec3[] method_7065(float f) {
         if (this.field_7296 <= 0) {
             return this.field_7297[1];
         } else {
             double d = ((float)this.field_7296 - f) / 3.0F;
             d = Math.pow(d, 0.25D);
-            Vec3d[] vec3ds = new Vec3d[4];
+            Vec3[] vec3ds = new Vec3[4];
 
             for(int i = 0; i < 4; ++i) {
-                vec3ds[i] = this.field_7297[1][i].multiply(1.0D - d).add(this.field_7297[0][i].multiply(d));
+                vec3ds[i] = this.field_7297[1][i].scale(1.0D - d).add(this.field_7297[0][i].scale(d));
             }
 
             return vec3ds;
@@ -187,20 +187,20 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
 
     @Override
     public SoundEvent getCastSpellSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL;
+        return SoundEvents.ILLUSIONER_CAST_SPELL;
     }
 
     @Override
-    public void attack(LivingEntity livingEntity, float f) {
-        ItemStack itemStack = this.getArrowType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity persistentProjectileEntity = ProjectileUtil.createArrowProjectile(this, itemStack, f);
+    public void performRangedAttack(LivingEntity livingEntity, float f) {
+        ItemStack itemStack = this.getProjectile(this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW)));
+        AbstractArrow persistentProjectileEntity = ProjectileUtil.getMobArrow(this, itemStack, f);
         double d = livingEntity.getX() - this.getX();
-        double e = livingEntity.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
+        double e = livingEntity.getY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = livingEntity.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
-        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
-        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.world.spawnEntity(persistentProjectileEntity);
+        persistentProjectileEntity.shoot(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.level.getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.level.addFreshEntity(persistentProjectileEntity);
     }
 
     @Environment(EnvType.CLIENT)
@@ -209,7 +209,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         if (this.isSpellcasting()) {
             return State.SPELLCASTING;
         } else {
-            return this.isAttacking() ? State.BOW_AND_ARROW : State.CROSSED;
+            return this.isAggressive() ? State.BOW_AND_ARROW : State.CROSSED;
         }
     }
 }

@@ -14,11 +14,11 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.network.Connection;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,9 +39,9 @@ public class GameInstanceListener extends Listener {
         PlayerJoinCallback.EVENT.register((connection, player) -> {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 if (!api.executeOnDedicatedServer(() -> {
-                    MinecraftDedicatedServer server = api.getServer().get();
-                    boolean loaded = load(server.getLevelName(), api);
-                    File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ".conquestworld");
+                    DedicatedServer server = api.getServer().get();
+                    boolean loaded = load(server.getLevelIdName(), api);
+                    File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelIdName() + ".conquestworld");
                     if (loaded) {
                         // Already exists
                         Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
@@ -63,13 +63,13 @@ public class GameInstanceListener extends Listener {
                                     });
                                 });
                             } else {
-                                if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isEmpty()) {
-                                    api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+                                if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelIdName()).isEmpty()) {
+                                    api.getConquestInstanceStorage().addConquest(server.getLevelIdName(), instance, true);
                                 }
 
-                                api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
+                                api.getConquestInstanceStorage().getConquestInstance(server.getLevelIdName()).ifPresent(conquestInstance -> {
                                     ServerConquestInstance serverConquestInstance = (ServerConquestInstance) conquestInstance;
-                                    if (!serverConquestInstance.hasPlayer(player.getUuid())) {
+                                    if (!serverConquestInstance.hasPlayer(player.getUUID())) {
                                         serverConquestInstance.reset(player);
                                     }
                                     serverConquestInstance.sync(player, connection);
@@ -89,7 +89,7 @@ public class GameInstanceListener extends Listener {
             TaleOfKingdoms.getAPI().ifPresent(api -> {
                 api.executeOnDedicatedServer(() -> {
                     api.getServer().flatMap(server -> api.getConquestInstanceStorage()
-                            .getConquestInstance(server.getLevelName())).ifPresent(conquestInstance -> {
+                            .getConquestInstance(server.getLevelIdName())).ifPresent(conquestInstance -> {
                         conquestInstance.save(api);
                     });
                 });
@@ -114,27 +114,27 @@ public class GameInstanceListener extends Listener {
         }
     }
 
-    private CompletableFuture<Void> create(ClientConnection connection, TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server, File toSave) {
+    private CompletableFuture<Void> create(Connection connection, TaleOfKingdomsAPI api, ServerPlayer player, DedicatedServer server, File toSave) {
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
-        BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 12, 0));
-        ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
+        BlockPos pastePos = player.blockPosition().subtract(new Vec3i(0, 12, 0));
+        ServerConquestInstance instance = new ServerConquestInstance(server.getLevelIdName(), server.name(), null, null, player.blockPosition().offset(0, 1, 0));
         try (Writer writer = new FileWriter(toSave)) {
             Gson gson = api.getMod().getGson();
             gson.toJson(instance, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+        api.getConquestInstanceStorage().addConquest(server.getLevelIdName(), instance, true);
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
-            BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
-            BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
+            BlockPos start = new BlockPos(oi.maxX(), oi.maxY(), oi.maxZ());
+            BlockPos end = new BlockPos(oi.minX(), oi.minY(), oi.minZ());
             instance.setStart(start);
             instance.setEnd(end);
-            instance.setBankerCoins(player.getUuid(), 0);
-            instance.setCoins(player.getUuid(), 0);
-            instance.setFarmerLastBread(player.getUuid(), 0);
-            instance.setHasContract(player.getUuid(), false);
-            instance.setWorthiness(player.getUuid(), 0);
+            instance.setBankerCoins(player.getUUID(), 0);
+            instance.setCoins(player.getUUID(), 0);
+            instance.setFarmerLastBread(player.getUUID(), 0);
+            instance.setHasContract(player.getUUID(), false);
+            instance.setWorthiness(player.getUUID(), 0);
             
             TaleOfKingdoms.LOGGER.info("Summoning citizens of the realm...");
             KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
