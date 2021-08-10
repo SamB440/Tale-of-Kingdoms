@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -43,13 +44,13 @@ public class GuildMasterEntity extends TOKEntity {
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
 
-        if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
+        if (player instanceof ServerPlayer) return InteractionResult.FAIL;
         if (instance instanceof ClientConquestInstance clientConquestInstance) this.openScreen(player, clientConquestInstance);
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Environment(EnvType.CLIENT)

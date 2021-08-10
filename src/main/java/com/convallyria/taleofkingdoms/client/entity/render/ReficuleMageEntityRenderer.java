@@ -34,7 +34,7 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
     }
 
     @Override
-    public ResourceLocation getTexture(ReficuleMageEntity reficuleMageEntity) {
+    public ResourceLocation getTextureLocation(ReficuleMageEntity reficuleMageEntity) {
         return TEXTURE;
     }
 
@@ -56,7 +56,7 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
     }
 
     @Override
-    protected boolean isVisible(ReficuleMageEntity reficuleMageEntity) {
+    protected boolean isBodyVisible(ReficuleMageEntity reficuleMageEntity) {
         return true;
     }
 

@@ -29,7 +29,7 @@ public class ReficuleVillageFeature extends StructureFeature<NoneFeatureConfigur
     }
 
     @Override
-    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, WorldgenRandom chunkRandom, ChunkPos chunkPos, Biome biome, ChunkPos chunkPos2, NoneFeatureConfiguration featureConfig, LevelHeightAccessor heightLimitView) {
+    protected boolean isFeatureChunk(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, WorldgenRandom chunkRandom, ChunkPos chunkPos, Biome biome, ChunkPos chunkPos2, NoneFeatureConfiguration featureConfig, LevelHeightAccessor heightLimitView) {
         double percent = Math.random() * 100;
         return percent >= 30;
     }
@@ -42,7 +42,7 @@ public class ReficuleVillageFeature extends StructureFeature<NoneFeatureConfigur
 
         // Called when the world attempts to spawn in a new structure, and is the gap between your feature and generator.
         @Override
-        public void init(RegistryAccess dynamicRegistryManager, ChunkGenerator chunkGenerator,
+        public void generatePieces(RegistryAccess dynamicRegistryManager, ChunkGenerator chunkGenerator,
                          StructureManager structureManager, ChunkPos chunkPos, Biome biome,
                          NoneFeatureConfiguration featureConfig, LevelHeightAccessor heightLimitView) {
             int x = chunkPos.x * 16;

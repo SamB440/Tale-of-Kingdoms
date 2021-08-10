@@ -13,7 +13,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
@@ -45,43 +48,44 @@ public class CoinListener extends Listener {
     private void dropCoinsOnDeath() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
-                PlayerEntity playerEntity = null;
-                if (entity instanceof PlayerEntity) {
-                    int subtract = (instance.getCoins(entity.getUuid()) / 20);
-                    instance.setCoins(entity.getUuid(), instance.getCoins(entity.getUuid()) - subtract);
+                Player playerEntity = null;
+                if (entity instanceof Player) {
+                    int subtract = (instance.getCoins(entity.getUUID()) / 20);
+                    instance.setCoins(entity.getUUID(), instance.getCoins(entity.getUUID()) - subtract);
                     return;
                 }
 
-                if (source.getSource() instanceof PlayerEntity
-                        || source.getSource() instanceof HunterEntity
-                        || source.getSource() instanceof GuildGuardEntity
-                        || source.getSource() instanceof ProjectileEntity) {
-                    if (source.getSource() instanceof ProjectileEntity projectileEntity) {
-                        if (projectileEntity.getOwner() instanceof PlayerEntity) {
-                            playerEntity = (PlayerEntity) projectileEntity.getOwner();
+                Entity directEntity = source.getDirectEntity();
+                if (directEntity instanceof Player
+                        || directEntity instanceof HunterEntity
+                        || directEntity instanceof GuildGuardEntity
+                        || directEntity instanceof Projectile) {
+                    if (directEntity instanceof Projectile projectileEntity) {
+                        if (projectileEntity.getOwner() instanceof Player) {
+                            playerEntity = (Player) projectileEntity.getOwner();
                         }
 
-                        if (!(projectileEntity.getOwner() instanceof PlayerEntity)
+                        if (!(projectileEntity.getOwner() instanceof Player)
                                 && !(projectileEntity.getOwner() instanceof HunterEntity)) {
                             return;
                         }
-                    } else if (source.getSource() instanceof PlayerEntity) {
-                        playerEntity = (PlayerEntity) source.getSource();
+                    } else if (directEntity instanceof Player) {
+                        playerEntity = (Player) directEntity;
                     }
 
                     //TODO associate owner with hunter entity
                     ItemHelper.dropCoins(entity);
 
-                    if (source.getSource() instanceof PlayerEntity) {
-                        instance.addWorthiness(source.getSource().getUuid(), getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world));
+                    if (directEntity instanceof Player) {
+                        instance.addWorthiness(directEntity.getUUID(), getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(directEntity.level));
                     }
 
-                    if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                        instance.attack(serverPlayerEntity, serverPlayerEntity.getServerWorld());
+                    if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+                        instance.attack(serverPlayerEntity, serverPlayerEntity.getLevel());
                     }
 
                     if (instance instanceof ServerConquestInstance serverConquestInstance) {
-                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, null);
+                        serverConquestInstance.sync((ServerPlayer) playerEntity, null);
                     }
                 }
             });

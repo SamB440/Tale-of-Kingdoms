@@ -49,8 +49,8 @@ public class TaleOfKingdomsInvokeCommand implements Command<CommandSourceStack> 
     public static int invokeGuildAttack(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         try {
             ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-            ServerPlayerEntity player = context.getSource().getPlayer();
-            UUID playerUuid = player.getUuid();
+            ServerPlayer player = context.getSource().getPlayerOrException();
+            UUID playerUuid = player.getUUID();
 
             // Pre-requisites for attack
 
@@ -62,7 +62,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<CommandSourceStack> 
             // The guild must not be rebuilt
             instance.setRebuilt(false);
 
-            instance.attack(player, player.getServerWorld());
+            instance.attack(player, player.getLevel());
 
             instance.setWorthiness(playerUuid, instance.getWorthiness(playerUuid) - 750);
 

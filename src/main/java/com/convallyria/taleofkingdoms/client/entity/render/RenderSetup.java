@@ -3,9 +3,11 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 
 public record RenderSetup(TaleOfKingdoms mod) {
 
@@ -48,17 +50,16 @@ public record RenderSetup(TaleOfKingdoms mod) {
     }
 
     private void register(EntityType type, ResourceLocation... skins) {
-        Minecraft.getInstance()();
         if (type == EntityTypes.REFICULE_MAGE) {
             EntityRendererRegistry.INSTANCE.register(type, (context) ->
                     new ReficuleMageEntityRenderer(context,
-                            new Pla<>(context.getPart(EntityModelLayers.PLAYER), false)));
+                            new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false)));
             return;
         }
 
         EntityRendererRegistry.INSTANCE.register(type, (context) ->
-                new TOKBipedRender<MobEntity, PlayerEntityModel<MobEntity>>(context,
-                        new PlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
+                new TOKBipedRender<Mob, PlayerModel<Mob>>(context,
+                        new PlayerModel<>(context.bakeLayer(ModelLayers.PLAYER), false),
                         0.5F,
                         skins));
     }

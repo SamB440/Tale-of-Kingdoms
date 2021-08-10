@@ -8,6 +8,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,21 +28,21 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
     public void handleOutgoingPacket(ResourceLocation identifier, @NotNull Player player,
                                      @Nullable Connection connection, @Nullable Object... data) {
         if (data != null && data[0] instanceof ServerConquestInstance instance
-                && player instanceof ServerPlayerEntity serverPlayerEntity) {
-            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-            passedData.writeString(instance.getName());
-            passedData.writeString(instance.getWorld());
-            passedData.writeInt(instance.getBankerCoins(player.getUuid()));
-            passedData.writeInt(instance.getCoins(player.getUuid()));
-            passedData.writeInt(instance.getWorthiness(player.getUuid()));
-            passedData.writeLong(instance.getFarmerLastBread(player.getUuid()));
-            passedData.writeBoolean(instance.hasContract(player.getUuid()));
+                && player instanceof ServerPlayer serverPlayerEntity) {
+            FriendlyByteBuf passedData = new FriendlyByteBuf(Unpooled.buffer());
+            passedData.writeUtf(instance.getName());
+            passedData.writeUtf(instance.getWorld());
+            passedData.writeInt(instance.getBankerCoins(player.getUUID()));
+            passedData.writeInt(instance.getCoins(player.getUUID()));
+            passedData.writeInt(instance.getWorthiness(player.getUUID()));
+            passedData.writeLong(instance.getFarmerLastBread(player.getUUID()));
+            passedData.writeBoolean(instance.hasContract(player.getUUID()));
             passedData.writeBoolean(instance.isLoaded());
             passedData.writeBlockPos(instance.getStart());
             passedData.writeBlockPos(instance.getEnd());
             passedData.writeBlockPos(instance.getOrigin());
             instance.getHunterUUIDs().forEach((playerUuid, hunterUuids) -> {
-                hunterUuids.forEach(passedData::writeUuid);
+                hunterUuids.forEach(passedData::writeUUID);
             });
             sendPacket(player,passedData);
         }

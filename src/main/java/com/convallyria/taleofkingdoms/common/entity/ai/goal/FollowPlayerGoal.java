@@ -45,9 +45,9 @@ public class FollowPlayerGoal extends Goal {
             if (!movementVaried.isMovementEnabled()) return false;
         }
 
-        List<PlayerEntity> list = this.mob.world.getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(this.maxDistance), this.targetPredicate);
+        List<Player> list = this.mob.level.getEntitiesOfClass(Player.class, this.mob.getBoundingBox().inflate(this.maxDistance), this.targetPredicate);
         if (!list.isEmpty()) {
-            for (PlayerEntity playerEntity : list) {
+            for (Player playerEntity : list) {
                 if (!playerEntity.isInvisible()) {
                     this.target = playerEntity;
                     return true;
@@ -64,7 +64,7 @@ public class FollowPlayerGoal extends Goal {
         if (this.mob instanceof MovementVaried movementVaried) {
             if (!movementVaried.isMovementEnabled()) flag = false;
         }
-        return flag && this.target != null && !this.navigation.isIdle() && this.mob.squaredDistanceTo(this.target) > (double)(this.minDistance * this.minDistance);
+        return flag && this.target != null && !this.navigation.isDone() && this.mob.distanceToSqr(this.target) > (double)(this.minDistance * this.minDistance);
     }
 
     @Override
