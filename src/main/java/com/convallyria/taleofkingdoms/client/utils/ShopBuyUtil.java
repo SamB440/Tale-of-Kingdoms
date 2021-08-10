@@ -3,15 +3,15 @@ package com.convallyria.taleofkingdoms.client.utils;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ShopBuyUtil {
 
     public static void buyItem(ConquestInstance instance, Player player, ShopItem shopItem, int count) {

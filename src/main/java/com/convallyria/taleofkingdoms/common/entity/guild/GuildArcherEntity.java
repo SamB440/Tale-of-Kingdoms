@@ -7,8 +7,6 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.CrossbowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
@@ -37,6 +35,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -50,7 +50,7 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowAttackMob, R
         super(entityType, world);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean isCharging() {
         return charging;
     }

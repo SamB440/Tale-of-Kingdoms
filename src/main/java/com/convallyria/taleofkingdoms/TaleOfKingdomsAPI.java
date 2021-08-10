@@ -9,12 +9,12 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,11 +29,11 @@ public class TaleOfKingdomsAPI {
     private final TaleOfKingdoms mod;
     private final ConquestInstanceStorage cis;
     private final Map<String, IManager> managers = new HashMap<>();
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     private DedicatedServer minecraftServer;
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     private final Map<ResourceLocation, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private final Map<ResourceLocation, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
 
@@ -45,22 +45,22 @@ public class TaleOfKingdomsAPI {
         this.scheduler = new Scheduler();
     }
 
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public ServerPacketHandler getServerHandler(ResourceLocation identifier) {
         return serverPacketHandlers.get(identifier);
     }
 
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public void registerServerHandler(ServerPacketHandler serverPacketHandler) {
         serverPacketHandlers.put(serverPacketHandler.getPacket(), serverPacketHandler);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ClientPacketHandler getClientHandler(ResourceLocation identifier) {
         return clientPacketHandlers.get(identifier);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerClientHandler(ClientPacketHandler clientPacketHandler) {
         clientPacketHandlers.put(clientPacketHandler.getPacket(), clientPacketHandler);
     }
@@ -105,12 +105,12 @@ public class TaleOfKingdomsAPI {
         return managers.keySet();
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void executeOnMain(Runnable runnable) {
         Minecraft.getInstance().execute(runnable);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void executeOnServer(Runnable runnable) {
         MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
         if (server != null) {
@@ -125,7 +125,7 @@ public class TaleOfKingdomsAPI {
      * @param runnable task to run
      * @return true if {@link DedicatedServer} was present, false if not
      */
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public boolean executeOnDedicatedServer(Runnable runnable) {
         if (minecraftServer != null) {
             minecraftServer.execute(runnable);
@@ -134,12 +134,12 @@ public class TaleOfKingdomsAPI {
         return false;
     }
 
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public Optional<DedicatedServer> getServer() {
         return Optional.ofNullable(minecraftServer);
     }
 
-    @Environment(EnvType.SERVER)
+    @OnlyIn(Dist.DEDICATED_SERVER)
     public void setServer(DedicatedServer minecraftServer) {
         if (this.minecraftServer != null) {
             throw new IllegalStateException("Server already registered");

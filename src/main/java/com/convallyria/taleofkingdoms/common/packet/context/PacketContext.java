@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.packet.context;
 
-import net.fabricmc.api.EnvType;
 import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
 
 /**
  * Interface defining a context used during packet processing. Allows access
@@ -13,10 +13,10 @@ public interface PacketContext {
 	/**
 	 * Get the environment associated with the packet.
 	 *
-	 * @return EnvType.CLIENT if processing packet on the client side,
-	 * EnvType.SERVER otherwise.
+	 * @return Dist.CLIENT if processing packet on the client side,
+	 * Dist.DEDICATED_SERVER otherwise.
 	 */
-	EnvType packetEnvironment();
+	Dist packetEnvironment();
 
 	/**
 	 * Get the player associated with the packet.

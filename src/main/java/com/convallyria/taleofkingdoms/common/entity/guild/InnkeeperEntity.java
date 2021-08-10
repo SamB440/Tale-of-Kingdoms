@@ -6,8 +6,6 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,6 +14,8 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class InnkeeperEntity extends TOKEntity {
 
@@ -29,7 +29,7 @@ public class InnkeeperEntity extends TOKEntity {
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 15.0F, 100F));
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if (hand == InteractionHand.OFF_HAND || !player.level.isClientSide()) return InteractionResult.FAIL;
@@ -43,7 +43,7 @@ public class InnkeeperEntity extends TOKEntity {
         return InteractionResult.PASS;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     private void openScreen(Player player, ConquestInstance instance) {
         InnkeeperScreen screen = new InnkeeperScreen(player, this, instance);
         Minecraft.getInstance().setScreen(screen);

@@ -2,8 +2,11 @@ package com.convallyria.taleofkingdoms.common.scheduler;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,17 +45,20 @@ public class Scheduler {
 	private int currentTick = 0;
 
 	public Scheduler() {
-		ServerTickEvents.START_SERVER_TICK.register(m -> {
-			this.currentTick = m.getTickCount();
-			List<Consumer<MinecraftServer>> runnables = this.taskQueue.remove(this.currentTick);
-			if (runnables != null) for (Consumer<MinecraftServer> runnable : runnables) {
-				runnable.accept(m);
-				if (runnable instanceof Repeating repeating) {// reschedule repeating tasks
-					if (repeating.shouldQueue(this.currentTick))
-						this.queue(runnable, ((Repeating) runnable).next);
-				}
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@SubscribeEvent
+	public void onTick(TickEvent.ServerTickEvent event) {
+		this.currentTick = Minecraft.getInstance().getSingleplayerServer().getTickCount();
+		List<Consumer<MinecraftServer>> runnables = this.taskQueue.remove(this.currentTick);
+		if (runnables != null) for (Consumer<MinecraftServer> runnable : runnables) {
+			runnable.accept(Minecraft.getInstance().getSingleplayerServer());
+			if (runnable instanceof Repeating repeating) {// reschedule repeating tasks
+				if (repeating.shouldQueue(this.currentTick))
+					this.queue(runnable, ((Repeating) runnable).next);
 			}
-		});
+		}
 	}
 
 	/**

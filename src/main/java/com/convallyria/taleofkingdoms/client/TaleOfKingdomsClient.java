@@ -4,8 +4,6 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.entity.render.RenderSetup;
 import com.convallyria.taleofkingdoms.client.gui.RenderListener;
-import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
-import com.convallyria.taleofkingdoms.client.gui.shop.ScreenSellItem;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
@@ -17,39 +15,29 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPa
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
-import com.mojang.blaze3d.platform.InputConstants;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.io.File;
-
-@Environment(EnvType.CLIENT)
-public class TaleOfKingdomsClient implements ClientModInitializer {
+@OnlyIn(Dist.CLIENT)
+public class TaleOfKingdomsClient {
 
     private StartWorldListener startWorldListener;
 
-    public static final KeyMapping START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+    /*public static final KeyMapping START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
             "key.taleofkingdoms.startconquest", // The translation key of the keybinding's name
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_K,
             "category.taleofkingdoms.keys" // The translation key of the keybinding's category.
-    ));
+    ));*/
 
-    @Override
     public void onInitializeClient() {
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
         new RenderSetup(api.getMod());
         registerPacketHandlers();
         registerEvents();
-        ScreenRegistry.register(TaleOfKingdoms.SELL_SCREEN_HANDLER, ScreenSellItem::new);
+        //ScreenRegistry.register(TaleOfKingdoms.SELL_SCREEN_HANDLER, ScreenSellItem::new);
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+        /*ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (START_CONQUEST_KEYBIND.consumeClick()) {
                 String worldName = startWorldListener.getWorldName();
                 if (worldName == null) return;
@@ -57,7 +45,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
                 File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
                 client.setScreen(new ScreenStartConquest(worldName, file, client.player));
             }
-        });
+        });*/
     }
 
     private void registerPacketHandlers() {

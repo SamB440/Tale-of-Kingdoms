@@ -2,15 +2,15 @@ package com.convallyria.taleofkingdoms.client.gui;
 
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public abstract class ScreenTOK extends Screen {
 
     private final List<IImage> images;

@@ -8,8 +8,6 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.spell.EncaseFireSpel
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.spell.FireballSpellGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.spell.GiveInvisibilityGoal;
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -41,6 +39,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -125,7 +125,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Enemy, Tel
         return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityTag);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public AABB getBoundingBoxForCulling() {
         return this.getBoundingBox().inflate(3.0D, 0.0D, 3.0D);
@@ -168,7 +168,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Enemy, Tel
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public Vec3[] method_7065(float f) {
         if (this.field_7296 <= 0) {
             return this.field_7297[1];
@@ -203,7 +203,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Enemy, Tel
         this.level.addFreshEntity(persistentProjectileEntity);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     @Override
     public State getState() {
         if (this.isSpellcasting()) {

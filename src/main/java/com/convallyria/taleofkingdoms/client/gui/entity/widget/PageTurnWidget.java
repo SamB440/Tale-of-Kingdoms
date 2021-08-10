@@ -2,8 +2,6 @@ package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.BookViewScreen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -11,8 +9,10 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class PageTurnWidget extends Button {
     private final boolean isNextPageButton;
     private final boolean playPageTurnSound;

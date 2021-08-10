@@ -12,13 +12,13 @@ import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.Connection;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.concurrent.CompletableFuture;
 
-@Environment(EnvType.SERVER)
+@OnlyIn(Dist.DEDICATED_SERVER)
 public class GameInstanceListener extends Listener {
 
     public GameInstanceListener() {

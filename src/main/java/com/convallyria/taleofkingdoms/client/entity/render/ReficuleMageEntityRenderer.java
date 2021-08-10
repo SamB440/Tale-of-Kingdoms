@@ -3,8 +3,6 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -14,8 +12,10 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends MobRenderer<ReficuleMageEntity, PlayerModel<ReficuleMageEntity>> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png");

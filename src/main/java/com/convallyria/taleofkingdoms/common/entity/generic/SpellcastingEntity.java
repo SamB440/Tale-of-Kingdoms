@@ -1,7 +1,5 @@
 package com.convallyria.taleofkingdoms.common.entity.generic;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,6 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.EnumSet;
 
@@ -55,7 +55,7 @@ public abstract class SpellcastingEntity extends Monster {
         tag.putInt("SpellTicks", this.spellTicks);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public State getState() {
         if (this.isSpellcasting()) {
             return State.SPELLCASTING;
@@ -115,7 +115,7 @@ public abstract class SpellcastingEntity extends Monster {
 
     public abstract SoundEvent getCastSpellSound();
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public enum State {
         CROSSED,
         ATTACKING,

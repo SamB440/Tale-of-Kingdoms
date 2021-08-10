@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
@@ -43,32 +44,31 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.feature.StructurePieceType;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +79,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TaleOfKingdoms implements ModInitializer {
+@Mod("taleofkingdoms")
+public class TaleOfKingdoms {
 
     public static final String MODID = "taleofkingdoms";
     public static final String NAME = "Tale of Kingdoms";
@@ -122,16 +123,22 @@ public class TaleOfKingdoms implements ModInitializer {
         //We use registerSimple here because our Entity is not an ExtendedScreenHandlerFactory
         //but a NamedScreenHandlerFactory.
         //In a later Tutorial you will see what ExtendedScreenHandlerFactory can do!
-        SELL_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new ResourceLocation(TaleOfKingdoms.MODID, "sell_screen"), SellScreenHandler::new);
+        SELL_SCREEN_HANDLER = IForgeContainerType.create((windowId, inv, data) -> new SellScreenHandler(windowId, inv));
+        ForgeRegistries.CONTAINERS.register(SELL_SCREEN_HANDLER);
+        //SELL_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new ResourceLocation(TaleOfKingdoms.MODID, "sell_screen"), SellScreenHandler::new);
 
-        SELL_BLOCK = Registry.register(Registry.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
+        SELL_BLOCK = Registry.register(Registry.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(BlockBehaviour.Properties.copy(Blocks.CHEST)));
 
         //The parameter of build at the very end is always null, do not worry about it
-        SELL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, FabricBlockEntityTypeBuilder.create(SellBlockEntity::new, SELL_BLOCK).build(null));
+        SELL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, BlockEntityType.Builder.of(SellBlockEntity::new, SELL_BLOCK).build(null));
     }
 
-    @Override
-    public void onInitialize() {
+    public TaleOfKingdoms() {
+        // Register ourselves for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void setup(final FMLCommonSetupEvent event) {
         ItemRegistry.init();
 
         File file = new File(this.getDataFolder() + "worlds");
@@ -142,28 +149,36 @@ public class TaleOfKingdoms implements ModInitializer {
 
         this.registerFeatures();
 
-        FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDMASTER, GuildMasterEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDMASTER_DEFENDER, GuildMasterDefenderEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BLACKSMITH, BlacksmithEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.CITYBUILDER, CityBuilderEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDGUARD, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDARCHER, GuildArcherEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, BankerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.LONE, LoneEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDCAPTAIN, GuildCaptainEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.LONEVILLAGER, LoneVillagerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
-
         // Load shop items
         new ShopParser().createShopItems();
         ShopParser.guiShopItems.values().forEach(shopItems -> shopItems.forEach(shopItem -> LOGGER.info("Loaded item value " + shopItem.toString())));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void setupClient(final FMLClientSetupEvent event) {
+        new TaleOfKingdomsClient().onInitializeClient();
+    }
+
+    @SubscribeEvent
+    public void registerAttributes(EntityAttributeCreationEvent event) {
+        event.put(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes().build());
+        event.put(EntityTypes.FARMER, FarmerEntity.createMobAttributes().build());
+        event.put(EntityTypes.GUILDMASTER, GuildMasterEntity.createMobAttributes().build());
+        event.put(EntityTypes.GUILDMASTER_DEFENDER, GuildMasterDefenderEntity.createMobAttributes().build());
+        event.put(EntityTypes.BLACKSMITH, BlacksmithEntity.createMobAttributes().build());
+        event.put(EntityTypes.CITYBUILDER, CityBuilderEntity.createMobAttributes().build());
+        event.put(EntityTypes.KNIGHT, KnightEntity.createMobAttributes().build());
+        event.put(EntityTypes.HUNTER, HunterEntity.createMobAttributes().build());
+        event.put(EntityTypes.GUILDGUARD, GuildGuardEntity.createMobAttributes().build());
+        event.put(EntityTypes.GUILDARCHER, GuildArcherEntity.createMobAttributes().build());
+        event.put(EntityTypes.BANKER, BankerEntity.createMobAttributes().build());
+        event.put(EntityTypes.LONE, LoneEntity.createMobAttributes().build());
+        event.put(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes().build());
+        event.put(EntityTypes.GUILDCAPTAIN, GuildCaptainEntity.createMobAttributes().build());
+        event.put(EntityTypes.LONEVILLAGER, LoneVillagerEntity.createMobAttributes().build());
+        event.put(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity.createMobAttributes().build());
+        event.put(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes().build());
+        event.put(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes().build());
     }
 
     /**
@@ -200,9 +215,10 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     private void registerFeatures() {
-        Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
+        //Registry.register(Registry.STRUCTURE_PIECE, new ResourceLocation(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
         Random random = ThreadLocalRandom.current();
         int seed = random.nextInt(9000) + 1000;
+        /*
         FabricStructureBuilder.create(new ResourceLocation(MODID, "reficule_village"), REFICULE_VILLAGE_STRUCTURE)
                 .step(GenerationStep.Decoration.SURFACE_STRUCTURES)
                 .defaultConfig(48, 8, seed)
@@ -225,7 +241,7 @@ public class TaleOfKingdoms implements ModInitializer {
                 new ResourceLocation(MODID, "gateway"));
         BuiltinRegistries.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.location(), GATEWAY_CONFIGURED);
         BiomeModifications.addStructure(BiomeSelectors.categories(Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.FOREST,
-                Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.ICY, Biome.BiomeCategory.DESERT, Biome.BiomeCategory.MESA), gateway);
+                Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.ICY, Biome.BiomeCategory.DESERT, Biome.BiomeCategory.MESA), gateway);*/
     }
 
     public static Component parse(StringReader stringReader) throws CommandSyntaxException {
