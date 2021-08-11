@@ -6,6 +6,8 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -63,7 +65,8 @@ public class GuildGuardEntity extends TOKEntity {
                         if (player.world.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
                         final int[] countdown = {3};
                         api.getScheduler().repeatN(server -> {
-                            player.sendMessage(new LiteralText("" + countdown[0]), false);
+                            boolean send = FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT || player.world.isClient();
+                            if (send) player.sendMessage(new LiteralText("" + countdown[0]), false);
                             countdown[0] = countdown[0] - 1;
                         }, 3, 0, 20);
                         api.getScheduler().queue(server -> {
