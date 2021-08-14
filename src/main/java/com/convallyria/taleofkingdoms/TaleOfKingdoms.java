@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms;
 import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
+import com.convallyria.taleofkingdoms.common.config.TaleOfKingdomsConfig;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
@@ -43,6 +44,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -88,6 +92,7 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private static TaleOfKingdomsAPI api;
+    public static TaleOfKingdomsConfig config; // TODO make not static in future?
 
     public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
@@ -164,6 +169,7 @@ public class TaleOfKingdoms implements ModInitializer {
         // Load shop items
         new ShopParser().createShopItems();
         ShopParser.guiShopItems.values().forEach(shopItems -> shopItems.forEach(shopItem -> LOGGER.info("Loaded item value " + shopItem.toString())));
+        config = AutoConfig.register(TaleOfKingdomsConfig.class, PartitioningSerializer.wrap(Toml4jConfigSerializer::new)).getConfig();
     }
 
     /**
