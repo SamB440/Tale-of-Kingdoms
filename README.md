@@ -1,12 +1,12 @@
 <br/>
-<center>
+<div align="center">
   <a href="https://gitlab.com/SamB440/tale-of-kingdoms">
     <img src="https://gitlab.com/SamB440/tale-of-kingdoms/-/raw/master/src/main/resources/assets/taleofkingdoms/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Tale of Kingdoms</h3>
 
-  <p dir="none" align="center">
+  <p>
     The adventure RPG mod
     <br/>
     <br/>
@@ -17,17 +17,13 @@
     .
     <a href="/issues/new">Request Feature</a>
   </p>
-</center>
-
-<center>
 
 ![Build](https://img.shields.io/gitlab/pipeline/SamB440/tale-of-kingdoms/master)
 ![Forks](https://img.shields.io/badge/dynamic/json?color=white&label=Forks&query=%24.forks_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
 ![Stargazers](https://img.shields.io/badge/dynamic/json?color=white&label=Stars&query=%24.star_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
 ![Issues](https://img.shields.io/badge/dynamic/json?color=white&label=Issues&query=%24.open_issues_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
 ![License](https://img.shields.io/badge/license-GPL-blue)
-
-</center>
+</div>
 
 ## Table Of Contents
 
