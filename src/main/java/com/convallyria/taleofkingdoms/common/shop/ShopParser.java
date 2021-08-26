@@ -92,7 +92,7 @@ public class ShopParser {
     }
 
     private Item getItem(String name) throws ReflectiveOperationException {
-        return Registry.ITEM.get(new Identifier(name.toLowerCase()));
+        return Registry.ITEM.get(new Identifier(name.toLowerCase(TaleOfKingdoms.DEFAULT_LOCALE)));
     }
 
     private String getName(JsonObject jsonObject) {
@@ -117,7 +117,7 @@ public class ShopParser {
      */
     private void addToShopItems(String key, ShopItem shopItem) {
         // gui key from json
-        String upperCaseKey = key.toUpperCase();
+        String upperCaseKey = key.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE);
         if (guiShopItems.containsKey(GUI.valueOf(upperCaseKey))) {
             guiShopItems.get(GUI.valueOf(upperCaseKey)).add(shopItem);
         } else {

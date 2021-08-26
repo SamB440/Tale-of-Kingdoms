@@ -6,7 +6,6 @@ import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.SimpleStructurePiece;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.StructurePlacementData;
@@ -71,7 +70,7 @@ public class ReficuleVillageGenerator {
 
         public ReficuleVillagePiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
             super(TaleOfKingdoms.REFICULE_VILLAGE, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
-            this.pos = pos;
+            this.pos = blockPos;
             this.rotation = blockRotation;
             this.template = identifier;
             createPlacementData(blockRotation, identifier);

@@ -9,7 +9,6 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.Structure;
@@ -59,14 +58,14 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
             try {
-                EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase()).get(EntityTypes.class);
+                EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
                 if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
                         && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER)) {
                     return air;
                 }
 
                 if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
-                    Optional<? extends Entity> guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
+                    Optional guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
                     if (type == EntityTypes.GUILDMASTER) {
                         guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
                     }

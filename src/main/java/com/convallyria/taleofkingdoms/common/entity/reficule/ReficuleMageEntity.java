@@ -20,7 +20,6 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.FollowTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.RevengeGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -31,7 +30,6 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.entity.raid.RaiderEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -101,14 +99,13 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         this.goalSelector.add(6, new WanderAroundGoal(this, 0.6D));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.add(8, new LookAtEntityGoal(this, MobEntity.class, 8.0F));
-        this.targetSelector.add(1, (new RevengeGoal(this, RaiderEntity.class)).setGroupRevenge());
-        this.targetSelector.add(2, new TeleportTowardsPlayerGoal(this, entity -> {
+        this.targetSelector.add(1, new TeleportTowardsPlayerGoal(this, entity -> {
             return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
         }));
-        this.targetSelector.add(3, (new FollowTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
+        this.targetSelector.add(2, (new FollowTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
+        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
+        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
@@ -126,11 +123,6 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         wand.addEnchantment(Enchantments.MENDING, 1); // Want them to look fancy :)
         this.equipStack(EquipmentSlot.OFFHAND, wand);
         return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
-    }
-
-    @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
     }
 
     @Environment(EnvType.CLIENT)
@@ -159,6 +151,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
                 }
             } else {
                 this.field_7296 = 3;
+                float f = -6.0F;
 
                 int k;
                 for(k = 0; k < 4; ++k) {
@@ -166,7 +159,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
                     this.field_7297[1][k] = new Vec3d((double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D, Math.max(0, this.random.nextInt(6) - 4), (double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D);
                 }
 
-                for (k = 0; k < 16; ++k) {
+                for(k = 0; k < 16; ++k) {
                     this.world.addParticle(ParticleTypes.CLOUD, this.getParticleX(0.5D), this.getRandomBodyY(), this.offsetZ(0.5D), 0.0D, 0.0D, 0.0D);
                 }
 
@@ -198,20 +191,16 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     }
 
     @Override
-    public void attack(LivingEntity target, float pullProgress) {
+    public void attack(LivingEntity livingEntity, float f) {
         ItemStack itemStack = this.getArrowType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
-        double d = target.getX() - this.getX();
-        double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
-        double g = target.getZ() - this.getZ();
+        PersistentProjectileEntity persistentProjectileEntity = ProjectileUtil.createArrowProjectile(this, itemStack, f);
+        double d = livingEntity.getX() - this.getX();
+        double e = livingEntity.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
+        double g = livingEntity.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
         persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.world.spawnEntity(persistentProjectileEntity);
-    }
-
-    protected PersistentProjectileEntity createArrowProjectile(ItemStack itemStack, float f) {
-        return ProjectileUtil.createArrowProjectile(this, itemStack, f);
     }
 
     @Environment(EnvType.CLIENT)

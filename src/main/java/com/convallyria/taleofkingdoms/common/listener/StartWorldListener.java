@@ -14,6 +14,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +28,7 @@ public class StartWorldListener extends Listener {
     private String worldName;
     private boolean joined;
 
+    @Nullable
     public String getWorldName() {
         return worldName;
     }
@@ -71,9 +73,12 @@ public class StartWorldListener extends Listener {
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity));
+                            if (TaleOfKingdoms.config.mainConfig.showStartKingdomGUI)
+                                MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            MinecraftClient.getInstance().openScreen(new ScreenContinueConquest(instance));
+                            if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
+                                MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
+                            }
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }
@@ -85,7 +90,7 @@ public class StartWorldListener extends Listener {
             }
 
             // New world creation
-            api.executeOnMain(() -> MinecraftClient.getInstance().openScreen(new ScreenStartConquest(worldName, file, entity)));
+            api.executeOnMain(() -> MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity)));
         });
     }
 

@@ -32,29 +32,29 @@ public class ItemPouch extends Item {
         if (!world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
         ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
         ItemStack itemStack = user.getStackInHand(hand);
-        if (itemStack.hasTag()) {
-            NbtCompound compoundTag = itemStack.getTag();
+        if (itemStack.hasNbt()) {
+            NbtCompound compoundTag = itemStack.getNbt();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
                 if (coins == maxCoins) {
                     instance.setCoins(instance.getCoins() + coins);
                     compoundTag.remove("coins");
                     user.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.MASTER, 1f, 1f);
-                    itemStack.setTag(compoundTag);
+                    itemStack.setNbt(compoundTag);
                     return TypedActionResult.pass(itemStack);
                 }
             }
         }
 
         if (instance.getCoins() >= 100) {
-            if (!itemStack.hasTag()) {
+            if (!itemStack.hasNbt()) {
                 NbtCompound compoundTag = new NbtCompound();
                 compoundTag.putInt("coins", 100);
                 instance.setCoins(instance.getCoins() - 100);
-                itemStack.setTag(compoundTag);
+                itemStack.setNbt(compoundTag);
                 user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
             } else {
-                NbtCompound compoundTag = itemStack.getTag();
+                NbtCompound compoundTag = itemStack.getNbt();
                 if (!compoundTag.contains("coins")) {
                     compoundTag.putInt("coins", 100);
                     instance.setCoins(instance.getCoins() - 100);
@@ -67,7 +67,7 @@ public class ItemPouch extends Item {
                         user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
                     }
                 }
-                itemStack.setTag(compoundTag);
+                itemStack.setNbt(compoundTag);
             }
         }
         return TypedActionResult.pass(itemStack);
@@ -75,8 +75,8 @@ public class ItemPouch extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (stack.hasTag()) {
-            NbtCompound compoundTag = stack.getTag();
+        if (stack.hasNbt()) {
+            NbtCompound compoundTag = stack.getNbt();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
                 tooltip.add(new LiteralText("Coins: " + coins).formatted(Formatting.GOLD, Formatting.ITALIC));

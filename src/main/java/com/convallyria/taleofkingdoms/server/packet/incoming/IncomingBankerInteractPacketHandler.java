@@ -2,11 +2,11 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
@@ -40,8 +40,8 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
                 }
 
                 // Search for banker
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BANKER);
-                if (!entity.isPresent()) {
+                Optional<BankerEntity> entity = instance.getGuildEntity(player.world, EntityTypes.BANKER);
+                if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Banker entity not present in guild.");
                     return;
                 }

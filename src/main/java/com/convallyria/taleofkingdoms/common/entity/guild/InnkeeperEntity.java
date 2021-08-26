@@ -46,7 +46,7 @@ public class InnkeeperEntity extends TOKEntity {
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ConquestInstance instance) {
         InnkeeperScreen screen = new InnkeeperScreen(player, this, instance);
-        MinecraftClient.getInstance().openScreen(screen);
+        MinecraftClient.getInstance().setScreen(screen);
     }
 
     @Override

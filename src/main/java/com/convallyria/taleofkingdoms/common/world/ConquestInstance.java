@@ -11,6 +11,7 @@ import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.google.gson.Gson;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -158,7 +159,7 @@ public abstract class ConquestInstance {
                     structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
                     structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
                     BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
-                    structure.place(world, newPos, BlockPos.ORIGIN, structurePlacementData, ThreadLocalRandom.current(), 0);
+                    structure.place(world, newPos, newPos, structurePlacementData, ThreadLocalRandom.current(), Block.NOTIFY_ALL);
                 }
             });
         }
@@ -282,7 +283,7 @@ public abstract class ConquestInstance {
         return world.getEntitiesByType(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.isFireImmune()).stream().findFirst();
     }
 
-    public Optional<? extends Entity> getGuildEntity(World world, EntityType<?> type) {
+    public <T extends Entity> Optional<T> getGuildEntity(World world, EntityType<T> type) {
         if (start == null || end == null) return Optional.empty();
         Box box = new Box(getStart(), getEnd());
         return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();

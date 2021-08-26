@@ -2,7 +2,6 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.Durations;
 import net.minecraft.entity.ai.RangedAttackMob;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.MobEntity;
@@ -10,12 +9,13 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.EnumSet;
 
 public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & CrossbowUser> extends Goal {
-    public static final UniformIntProvider COOLDOWN_RANGE = Durations.betweenSeconds(1, 2);
+    public static final UniformIntProvider COOLDOWN_RANGE = TimeHelper.betweenSeconds(1, 2);
     private final T actor;
     private Stage stage;
     private final double speed;

@@ -2,14 +2,16 @@ package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.opengl.GL40;
 
 
 public class ShopButtonWidget extends ButtonWidget {
@@ -36,8 +38,9 @@ public class ShopButtonWidget extends ButtonWidget {
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Identifier identifier = new Identifier(TaleOfKingdoms.MODID,"textures/gui/gui.png");
-        MinecraftClient.getInstance().getTextureManager().bindTexture(identifier);
-        GL40.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, identifier);
         boolean flag = isMouseOver(mouseX, mouseY);
         int k;
         if (shopScreen.getSelectedItem().equals(shopItem)) {

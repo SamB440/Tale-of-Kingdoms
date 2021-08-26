@@ -3,11 +3,11 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +44,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                 }
 
                 // Search for innkeeper
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.INNKEEPER);
+                Optional<InnkeeperEntity> entity = instance.getGuildEntity(player.world, EntityTypes.INNKEEPER);
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Innkeeper entity not present in guild.");
                     return;
