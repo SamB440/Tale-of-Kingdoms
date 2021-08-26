@@ -28,8 +28,9 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.HUNTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/hunter2.png"));
         register(EntityTypes.GUILDGUARD, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmember.png"));
         register(EntityTypes.GUILDARCHER,
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/guildarcherone.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/guildarchertwo.png"));
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildarcher/guildarcherone.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildarcher/guildarchertwo.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildarcher/guildarcherthree.png"));
         register(EntityTypes.BANKER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/banker.png"));
         register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
