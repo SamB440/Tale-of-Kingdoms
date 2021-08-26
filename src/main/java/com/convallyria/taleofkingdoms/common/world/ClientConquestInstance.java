@@ -98,4 +98,8 @@ public class ClientConquestInstance extends ConquestInstance {
     public void removeHunter(HunterEntity entity) {
         this.hunterUUIDs.remove(entity.getUuid());
     }
+
+    public void removeHunter(UUID hunterUuid) {
+        this.hunterUUIDs.remove(hunterUuid);
+    }
 }

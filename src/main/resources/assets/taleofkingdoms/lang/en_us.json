@@ -1,4 +1,10 @@
 {
+    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms Configuration",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Show continue conquest GUI",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Gateway spawn rate",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
+
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Start Conquest",
 
@@ -54,8 +60,8 @@
     "generic.taleofkingdoms.building_castle": "Building a great castle...",
     "generic.taleofkingdoms.summon_citizens": "Summoning citizens of the realm...",
     "generic.taleofkingdoms.new_citizen": "A new Citizen has arrived: ",
-    "generic.taleofkingdoms.darkness": "The Great Tides of Darkness are coming. Build your forces and vanquish evil.",
-    "generic.taleofkingdoms.hero": "Be the hero you were born for. The Guild will prepare you...",
+    "generic.taleofkingdoms.darkness": "The Great Tides of Darkness have come.\nThe Reficules have ravaged the Kingdom's land, and it is you that must save what is left.\nYou are the last heir to the throne - the only hope for the overworld.\nBuild your forces and vanquish evil.",
+    "generic.taleofkingdoms.hero": "Your adventure starts here, hero. The Guild will prepare you...",
     "entity.taleofkingdoms.guild_guard": "Guild Guard",
     "entity.taleofkingdoms.blacksmith": "Blacksmith",
     "entity.taleofkingdoms.farmer": "Farmer",

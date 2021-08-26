@@ -1,6 +1,8 @@
 package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
@@ -11,6 +13,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public final class IncomingSignContractPacketHandler extends ServerPacketHandler {
 
@@ -25,7 +29,17 @@ public final class IncomingSignContractPacketHandler extends ServerPacketHandler
             TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
                 ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                 PlayerEntity playerEntity = context.player();
-                //TODO verification server-side
+                Optional<GuildMasterEntity> entity = instance.getGuildEntity(playerEntity.world, EntityTypes.GUILDMASTER);
+                if (entity.isEmpty()) {
+                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + ": GuildMaster entity returned null.");
+                    return;
+                }
+
+                if (!playerEntity.getEyePos().isInRange(entity.get().getPos(), 8)) {
+                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + ": Not in range.");
+                    return;
+                }
+
                 serverConquestInstance.setHasContract(playerEntity.getUuid(), sign);
                 this.handleOutgoingPacket(identifier, playerEntity, null, true);
             });

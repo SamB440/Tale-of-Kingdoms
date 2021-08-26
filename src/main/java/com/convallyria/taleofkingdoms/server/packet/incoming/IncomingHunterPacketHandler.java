@@ -3,11 +3,11 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
@@ -40,7 +40,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                 }
 
                 // Search for banker
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
+                Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Guildmaster entity not present in guild.");
                     return;
@@ -58,6 +58,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     }
 
                     HunterEntity hunterEntity = (HunterEntity) player.getServerWorld().getEntity(instance.getHunterUUIDs().get(uuid).get(0));
+                    //TODO we need to match client logic here
                     if (hunterEntity == null) {
                         TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Hunter entity returned null.");
                         return;

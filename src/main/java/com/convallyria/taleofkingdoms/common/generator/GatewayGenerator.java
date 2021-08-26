@@ -5,12 +5,8 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.IglooGenerator;
 import net.minecraft.structure.SimpleStructurePiece;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructurePieceType;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
@@ -22,12 +18,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.gen.feature.IglooFeature;
 
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Function;
 
 public class GatewayGenerator {
 
@@ -55,7 +48,7 @@ public class GatewayGenerator {
 
         public GatewayPiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
             super(TaleOfKingdoms.GATEWAY, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
-            this.pos = pos;
+            this.pos = blockPos;
             this.rotation = blockRotation;
             this.template = identifier;
             createPlacementData(blockRotation, identifier);

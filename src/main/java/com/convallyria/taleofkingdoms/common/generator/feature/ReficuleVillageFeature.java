@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.common.generator.feature;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.mojang.serialization.Codec;
 import net.minecraft.structure.StructureManager;
@@ -31,7 +32,7 @@ public class ReficuleVillageFeature extends StructureFeature<DefaultFeatureConfi
     @Override
     protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long l, ChunkRandom chunkRandom, ChunkPos chunkPos, Biome biome, ChunkPos chunkPos2, DefaultFeatureConfig featureConfig, HeightLimitView heightLimitView) {
         double percent = Math.random() * 100;
-        return percent >= 30;
+        return percent < TaleOfKingdoms.config.mainConfig.reficuleVillageSpawnRate;
     }
 
     public static class Start extends StructureStart<DefaultFeatureConfig> {
