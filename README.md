@@ -1,12 +1,12 @@
 <br/>
-<p align="center">
+<center>
   <a href="https://gitlab.com/SamB440/tale-of-kingdoms">
     <img src="https://gitlab.com/SamB440/tale-of-kingdoms/-/raw/master/src/main/resources/assets/taleofkingdoms/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Tale of Kingdoms</h3>
 
-  <p align="center">
+  <p dir="none" align="center">
     The adventure RPG mod
     <br/>
     <br/>
@@ -17,7 +17,7 @@
     .
     <a href="/issues/new">Request Feature</a>
   </p>
-</p>
+</center>
 
 <center>
 
