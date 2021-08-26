@@ -1,11 +1,14 @@
 {
+    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms Configuration",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Show continue conquest GUI",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Gateway spawn rate",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Start Conquest",
-
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
     "item.taleofkingdoms.coin": "Kolikko",
     "item.taleofkingdoms.pouch": "Kukkaro",
-
     "menu.taleofkingdoms.guildmaster.name": "Kiltamestari",
     "menu.taleofkingdoms.blacksmith.name": "Seppä",
     "menu.taleofkingdoms.blacksmith.sell": "Myynti-ikkuna",
@@ -13,7 +16,6 @@
     "menu.taleofkingdoms.foodshop.name": "Ruoan myyjä",
     "menu.taleofkingdoms.continueconquest.name": "Jatka matkaasi",
     "menu.taleofkingdoms.startconquest.name": "Aloita matkasi",
-
     "entity_type.taleofkingdoms.farmer.take_bread": "Maanviljelijä: Tässä teille leivänpala!",
     "entity_type.taleofkingdoms.farmer.got_bread": "Maanviljelijä: Saitte jo leipänne.",
     "entity_type.taleofkingdoms.guildmaster.contract.sign": "Kiltamestari: Olet nyt yksi meistä, ystävä. Lähde surmaamaan hirviöitä ja voit pian kantaa titteliäsi kunnialla.",
@@ -45,6 +47,7 @@
     "entity_type.taleofkingdoms.bank.zero": "Pankkiiri: Sinulla ei ole rahaa! Surmaa hirviöitä ansaitaksesi kultaa.",
     "entity_type.taleofkingdoms.bank.input": "Pankkiiri: Ole hyvä ja syötä lukumäärä.",
     "entity_type.taleofkingdoms.citybuilder.message": "Rakentaja: Kuninkaani, kunniatasonne ei riitä vielä kuningaskunnan rakentamiseen. Kiltamestari ohjaa sinua!",
+    "entity_type.taleofkingdoms.citybuilder.build": "City Builder: Let us build your city my liege! Lead the way!",
     "menu.taleofkingdoms.innkeeper.name": "Majatalon isäntä",
     "generic.taleofkingdoms.need_contract": "Majatalon isäntä: Tarvitset sopimuksen! Käy kiltamestarin luona rakennuksen ylimmässä kerroksessa.",
     "generic.taleofkingdoms.serve": "Olen palveluksessanne, herrani!",
