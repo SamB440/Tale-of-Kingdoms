@@ -91,6 +91,7 @@ public class GameInstanceListener extends Listener {
                     api.getServer().flatMap(server -> api.getConquestInstanceStorage()
                             .getConquestInstance(server.getLevelName())).ifPresent(conquestInstance -> {
                         conquestInstance.save(api);
+                        api.getConquestInstanceStorage().quit();
                     });
                 });
             });

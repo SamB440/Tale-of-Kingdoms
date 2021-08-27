@@ -12,7 +12,9 @@
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
     "common.PlayerLogin",
-    "common.quest.ObjectiveTestMixin",
+    "common.quest.objective.LocateStructureObjectiveMixinListener",
+    "common.quest.objective.SlayEntityObjectiveMixinListener",
+    "common.quest.objective.SpeakToNPCObjectiveMixinListener",
     "structure.StructureBlockUnlimit",
     "structure.packet.ClientUpdateStructureBlockUnlimit"
   ],

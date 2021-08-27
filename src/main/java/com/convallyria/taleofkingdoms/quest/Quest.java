@@ -8,7 +8,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,12 +25,12 @@ public abstract class Quest {
 
     private String startMessage; //todo: make this a list
     private final List<UUID> trackedPlayers;
-    private final List<QuestObjective> objectives;
+    private final Map<Integer, QuestObjective> objectives;
     //todo here: list of requirements/objectives/rewards
 
     public Quest() {
         this.trackedPlayers = new ArrayList<>();
-        this.objectives = new ArrayList<>();
+        this.objectives = new HashMap<>();
     }
 
     public Optional<String> getStartMessage() {
@@ -58,16 +61,23 @@ public abstract class Quest {
         });
     }
 
-    public List<QuestObjective> getObjectives() {
-        return objectives;
+    public Collection<QuestObjective> getObjectives() {
+        return objectives.values();
     }
 
     public void addObjective(QuestObjective objective) {
-        objectives.add(objective);
+        objectives.put(objectives.size() + 1, objective);
     }
 
-    public void testObjectives(PlayerEntity playerEntity) {
-        objectives.forEach(objective -> objective.test(playerEntity));
+    public boolean isCurrentPriority(PlayerEntity player, QuestObjective objective) {
+        int lowestKey = objectives.size() + 1;
+        for (Integer key : objectives.keySet()) {
+            QuestObjective value = objectives.get(key);
+            if (key < lowestKey && !value.hasCompleted(player.getUuid())) {
+                lowestKey = key;
+            }
+        }
+        return objective.equals(objectives.get(lowestKey));
     }
 
     public abstract Class<? extends TOKEntity> getEntity();

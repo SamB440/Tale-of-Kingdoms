@@ -30,6 +30,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -58,6 +59,7 @@ public abstract class ConquestInstance {
     private final List<UUID> reficuleAttackers;
     private boolean hasRebuilt;
     private transient Map<UUID, Quest> activeQuests;
+    private BlockPos miningVillage;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
@@ -285,6 +287,15 @@ public abstract class ConquestInstance {
 
     public void addWorthiness(int worthiness) {
         addWorthiness(null, worthiness);
+    }
+
+    @Nullable
+    public BlockPos getMiningVillage() {
+        return miningVillage;
+    }
+
+    public void setMiningVillage(BlockPos miningVillage) {
+        this.miningVillage = miningVillage;
     }
 
     public Optional<GuildMasterEntity> getGuildMaster(World world) {

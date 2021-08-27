@@ -31,7 +31,7 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> 
         this.skins = new ArrayList<>();
         this.defaultSkin = new ConcurrentHashMap<>();
         Collections.addAll(this.skins, skins);
-        this.addFeature(new HeldItemFeatureRenderer(this));
+        this.addFeature(new HeldItemFeatureRenderer<>(this));
     }
 
     @Override

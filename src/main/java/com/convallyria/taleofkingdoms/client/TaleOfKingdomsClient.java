@@ -34,6 +34,10 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
 
     private StartWorldListener startWorldListener;
 
+    public StartWorldListener getStartWorldListener() {
+        return startWorldListener;
+    }
+
     public static final KeyBinding START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.taleofkingdoms.startconquest", // The translation key of the keybinding's name
             InputUtil.Type.KEYSYM,

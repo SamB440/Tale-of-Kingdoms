@@ -7,11 +7,10 @@ import net.minecraft.world.gen.feature.StructureFeature;
 
 public class LocateStructureObjective extends QuestObjective {
 
-    private final StructureFeature identifier;
+    private final StructureFeature<?> identifier;
 
-    public LocateStructureObjective(final StructureFeature identifier) {
+    public LocateStructureObjective(final StructureFeature<?> identifier) {
         this.identifier = identifier;
-        this.setCompletionText("New Objective: Locate the Foreman.");
     }
 
     @Override

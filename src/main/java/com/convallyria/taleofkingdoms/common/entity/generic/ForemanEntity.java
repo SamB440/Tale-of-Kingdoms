@@ -5,6 +5,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.quest.Quest;
+import com.convallyria.taleofkingdoms.quest.guild_captain.MiningVillage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityType;
@@ -14,6 +16,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -54,6 +57,12 @@ public class ForemanEntity extends TOKEntity {
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
 
         if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
+        for (Quest quest : api.getQuests()) {
+            if (quest instanceof MiningVillage && quest.isTracked(player.getUuid())) {
+                player.sendMessage(new LiteralText("My king! The mine has been overrun by bandits. They have slaughtered my miners. Please help me and I will reward you greatly!"), false);
+                return ActionResult.PASS;
+            }
+        }
         if (instance instanceof ClientConquestInstance clientConquestInstance) this.openScreen(player, clientConquestInstance);
         return ActionResult.PASS;
     }

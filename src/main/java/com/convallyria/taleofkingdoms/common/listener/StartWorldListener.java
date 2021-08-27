@@ -47,6 +47,7 @@ public class StartWorldListener extends Listener {
                 e1.printStackTrace();
             }
             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(instance.getWorld());
+            TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().quit();
             this.joined = false;
         });
 

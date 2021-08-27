@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.generator;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -47,7 +48,7 @@ public class GatewayGenerator {
         private final Identifier template;
 
         public GatewayPiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
-            super(TaleOfKingdoms.GATEWAY, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
+            super(GatewayFeature.GATEWAY, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
             this.pos = blockPos;
             this.rotation = blockRotation;
             this.template = identifier;
@@ -55,7 +56,7 @@ public class GatewayGenerator {
         }
 
         public GatewayPiece(ServerWorld serverWorld, NbtCompound nbtCompound) {
-            super(TaleOfKingdoms.GATEWAY, nbtCompound, serverWorld, (identifier) -> {
+            super(GatewayFeature.GATEWAY, nbtCompound, serverWorld, (identifier) -> {
                 String rot = nbtCompound.getString("Rot");
                 BlockRotation rotation = rot.isEmpty() ? BlockRotation.NONE : BlockRotation.valueOf(rot);
                 return createPlacementData(rotation, identifier);

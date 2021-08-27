@@ -4,30 +4,7 @@ import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
 import com.convallyria.taleofkingdoms.common.config.TaleOfKingdomsConfig;
-import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
-import com.convallyria.taleofkingdoms.common.entity.generic.ForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
-import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
-import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.FarmerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildArcherEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterDefenderEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
-import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
-import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
-import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
-import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
-import com.convallyria.taleofkingdoms.common.generator.MiningTownGenerator;
-import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
+import com.convallyria.taleofkingdoms.common.entity.attribute.AttributeRegistry;
 import com.convallyria.taleofkingdoms.common.generator.feature.GatewayFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.MiningTownFeature;
 import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
@@ -53,31 +30,19 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.structure.StructurePieceType;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -109,18 +74,6 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Identifier BANKER_INTERACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "banker_interact");
     public static final Identifier HUNTER_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "hunter");
     public static final Identifier INNKEEPER_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "innkeeper");
-
-    public static final StructurePieceType REFICULE_VILLAGE = ReficuleVillageGenerator.ReficuleVillagePiece::new;
-    public static final StructureFeature<DefaultFeatureConfig> REFICULE_VILLAGE_STRUCTURE = new ReficuleVillageFeature(DefaultFeatureConfig.CODEC);
-    private static final ConfiguredStructureFeature<?, ?> REFICULE_VILLAGE_CONFIGURED = REFICULE_VILLAGE_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
-
-    public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
-    private static final StructureFeature<DefaultFeatureConfig> GATEWAY_STRUCTURE = new GatewayFeature(DefaultFeatureConfig.CODEC);
-    private static final ConfiguredStructureFeature<?, ?> GATEWAY_CONFIGURED = GATEWAY_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
-
-    public static final StructurePieceType MINING_TOWN = MiningTownGenerator.MiningTownPiece::new;
-    public static final StructureFeature<DefaultFeatureConfig> MINING_TOWN_STRUCTURE = new MiningTownFeature(DefaultFeatureConfig.CODEC);
-    private static final ConfiguredStructureFeature<?, ?> MINING_TOWN_CONFIGURED = MINING_TOWN_STRUCTURE.configure(DefaultFeatureConfig.DEFAULT);
 
     public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("guild", GuildStructureProcessor.CODEC);
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("gateway", GatewayStructureProcessor.CODEC);
@@ -158,26 +111,7 @@ public class TaleOfKingdoms implements ModInitializer {
 
         this.registerFeatures();
 
-        FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDMASTER, GuildMasterEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDMASTER_DEFENDER, GuildMasterDefenderEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BLACKSMITH, BlacksmithEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.CITYBUILDER, CityBuilderEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDGUARD, GuildGuardEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDARCHER, GuildArcherEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BANKER, BankerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.LONE, LoneEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.GUILDCAPTAIN, GuildCaptainEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.LONEVILLAGER, LoneVillagerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.BANDIT, BanditEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.FOREMAN, ForemanEntity.createMobAttributes());
+        AttributeRegistry.registerAll(); // Register all entity attributes
 
         // Load shop items
         new ShopParser().createShopItems();
@@ -219,50 +153,11 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     private void registerFeatures() {
-        // Start - reficule village
-        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
         Random random = ThreadLocalRandom.current();
-        int seed = random.nextInt(9000) + 1000;
-        FabricStructureBuilder.create(new Identifier(MODID, "reficule_village"), REFICULE_VILLAGE_STRUCTURE)
-                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(48, 8, seed)
-                .adjustsSurface()
-                .register();
-
-        RegistryKey<ConfiguredStructureFeature<?, ?>> reficuleVillage = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-                new Identifier(MODID, "reficule_village"));
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), REFICULE_VILLAGE_CONFIGURED);
-        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), reficuleVillage);
-        // End - reficule village
-
-        // Start - gateway
-        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), GATEWAY);
-        FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
-                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(16, 8, seed - 256)
-                .register();
-
-        RegistryKey<ConfiguredStructureFeature<?, ?>> gateway = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-                new Identifier(MODID, "gateway"));
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), GATEWAY_CONFIGURED);
-        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), gateway);
-        // End - gateway
-
-        // Start - mining town
-        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "mining_town_piece"), MINING_TOWN);
-        FabricStructureBuilder.create(new Identifier(MODID, "mining_town"), MINING_TOWN_STRUCTURE)
-                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-                .defaultConfig(16, 8, seed - 256)
-                .register();
-
-        RegistryKey<ConfiguredStructureFeature<?, ?>> miningTown = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-                new Identifier(MODID, "mining_town"));
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, miningTown.getValue(), MINING_TOWN_CONFIGURED);
-        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), miningTown);
-        // End - mining town
+        int seed = random.nextInt(9000) + 1000; // I have no clue what the point of the seed is.
+        ReficuleVillageFeature.register(seed);
+        GatewayFeature.register(seed);
+        MiningTownFeature.register(seed);
     }
 
     public static Text parse(StringReader stringReader) throws CommandSyntaxException {

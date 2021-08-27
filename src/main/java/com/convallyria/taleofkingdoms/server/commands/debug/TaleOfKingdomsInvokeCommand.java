@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.server.commands.debug;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.generator.feature.ReficuleVillageFeature;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.mojang.brigadier.Command;
@@ -35,7 +36,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
             Translations.LONE_HELP.send(player);
 
-            BlockPos structureLocation = player.getServerWorld().locateStructure(TaleOfKingdoms.REFICULE_VILLAGE_STRUCTURE, player.getBlockPos(), 100, false);
+            BlockPos structureLocation = player.getServerWorld().locateStructure(ReficuleVillageFeature.REFICULE_VILLAGE_STRUCTURE, player.getBlockPos(), 100, false);
             String message = "[\"\",{\"text\":\"Do you wish to \"},{\"text\":\"teleport\",\"bold\":true,\"underlined\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tp " + structureLocation.getX() + " 100 " + structureLocation.getZ() + "\"}},{\"text\":\" to the village?\"}]";
             player.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
 
