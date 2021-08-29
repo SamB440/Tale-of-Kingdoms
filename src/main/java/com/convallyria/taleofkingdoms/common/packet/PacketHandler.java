@@ -3,7 +3,6 @@ package com.convallyria.taleofkingdoms.common.packet;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +34,7 @@ public abstract class PacketHandler {
      * Handles a packet that is incoming (client receiving from server, or server receiving from client)
      * @param identifier packet {@link Identifier}
      * @param context the {@link PlayerEntity}
-     * @param attachedData the {@link PacketByteBuf}, which is data sent via {@link #handleOutgoingPacket(Identifier, PlayerEntity, ClientConnection, Object...)}
+     * @param attachedData the {@link PacketByteBuf}, which is data sent via {@link #handleOutgoingPacket(Identifier, PlayerEntity, Object...)}
      */
     public abstract void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData);
 
@@ -43,10 +42,9 @@ public abstract class PacketHandler {
      * Handles a packet that is outgoing (client sending to server, or server sending to client)
      * @param identifier packet {@link Identifier}
      * @param player the player sending it
-     * @param connection the player's connection, can be null
      * @param data extra data to post with the packet, some packets may require different data
      */
-    public abstract void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable ClientConnection connection, @Nullable Object... data);
+    public abstract void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data);
 
     protected abstract void sendPacket(PlayerEntity player, PacketByteBuf passedData);
 

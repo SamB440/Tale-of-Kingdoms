@@ -123,10 +123,10 @@ public class ServerConquestInstance extends ConquestInstance {
         this.setWorthiness(player.getUuid(), 0);
     }
 
-    public void sync(@NotNull ServerPlayerEntity player, @Nullable ClientConnection connection) {
+    public void sync(@NotNull ServerPlayerEntity player) {
         TaleOfKingdoms.getAPI().ifPresent(api -> {
             PacketHandler packetHandler = api.getServerHandler(TaleOfKingdoms.INSTANCE_PACKET_ID);
-            packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, connection, this);
+            packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, this);
         });
     }
 }

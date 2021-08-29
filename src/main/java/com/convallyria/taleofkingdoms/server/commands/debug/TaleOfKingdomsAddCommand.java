@@ -25,7 +25,7 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
 
         instance.addCoins(playerUuid, context.getArgument("coins", Integer.class));
         if (instance instanceof ServerConquestInstance serverConquestInstance) {
-            serverConquestInstance.sync(player, null);
+            serverConquestInstance.sync(player);
         }
 
         player.sendMessage(new LiteralText("Your new balance is: " + instance.getCoins(playerUuid)), false);
@@ -39,7 +39,7 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
 
         instance.addWorthiness(playerUuid, context.getArgument("worthiness", Integer.class));
         if (instance instanceof ServerConquestInstance serverConquestInstance) {
-            serverConquestInstance.sync(player, null);
+            serverConquestInstance.sync(player);
         }
 
         player.sendMessage(new LiteralText("Your new worthiness is: " + instance.getWorthiness(playerUuid)), false);

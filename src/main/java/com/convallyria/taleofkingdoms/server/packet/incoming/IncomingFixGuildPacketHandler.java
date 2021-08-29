@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.ItemTags;
@@ -60,7 +59,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
                     playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
                     instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
                     instance.rebuild(player, api, SchematicOptions.IGNORE_DEFENDERS);
-                    instance.sync(player, null);
+                    instance.sync(player);
                     this.lastRebuild = System.currentTimeMillis();
                 });
             });
@@ -70,8 +69,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
 
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }
