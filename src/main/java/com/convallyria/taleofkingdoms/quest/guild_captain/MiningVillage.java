@@ -15,17 +15,20 @@ public final class MiningVillage extends Quest {
     public MiningVillage() {
         super();
         this.setStartMessage("Guild Captain: My King, one of our mining towns is running wild with bandits! The guild cannot spare any more men to locate and save the mining town. Please, find the mining town and save them!");
-        LocateStructureObjective locateObjective = new LocateStructureObjective(MiningTownFeature.MINING_TOWN_STRUCTURE);
+        LocateStructureObjective locateObjective = new LocateStructureObjective(this, MiningTownFeature.MINING_TOWN_STRUCTURE);
         locateObjective.setCompletionText("New Objective: Locate the Foreman.");
         this.addObjective(locateObjective);
 
-        SpeakToNPCObjective speakToNPCObjective = new SpeakToNPCObjective(ForemanEntity.class);
+        SpeakToNPCObjective speakToNPCObjective = new SpeakToNPCObjective(this, ForemanEntity.class);
         speakToNPCObjective.setCompletionText("New Objective: Kill all bandits in the mining outpost.");
         this.addObjective(speakToNPCObjective);
 
-        SlayEntityObjective slayEntityObjective = new SlayEntityObjective(BanditEntity.class,10);
+        SlayEntityObjective slayEntityObjective = new SlayEntityObjective(this, BanditEntity.class,10);
         slayEntityObjective.setCompletionText("Foreman: Thank you my king! Please tell the guild captain he has my thanks!");
         this.addObjective(slayEntityObjective);
+
+        SpeakToNPCObjective speakToCaptain = new SpeakToNPCObjective(this, GuildCaptainEntity.class);
+        this.addObjective(speakToCaptain);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.quest.objective;
 
+import com.convallyria.taleofkingdoms.quest.Quest;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -9,7 +10,8 @@ public class LocateStructureObjective extends QuestObjective {
 
     private final StructureFeature<?> identifier;
 
-    public LocateStructureObjective(final StructureFeature<?> identifier) {
+    public LocateStructureObjective(final Quest quest, final StructureFeature<?> identifier) {
+        super(quest);
         this.identifier = identifier;
     }
 

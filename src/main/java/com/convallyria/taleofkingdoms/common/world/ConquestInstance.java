@@ -59,6 +59,7 @@ public abstract class ConquestInstance {
     private final List<UUID> reficuleAttackers;
     private boolean hasRebuilt;
     private transient Map<UUID, Quest> activeQuests;
+    private Map<UUID, String> completedQuests;
     private BlockPos miningVillage;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
@@ -76,6 +77,7 @@ public abstract class ConquestInstance {
         this.reficuleAttackLocations = new ArrayList<>();
         this.reficuleAttackers = new ArrayList<>();
         this.activeQuests = new HashMap<>();
+        this.completedQuests = new HashMap<>();
     }
 
     public boolean hasActiveQuest(UUID uuid) {
@@ -86,6 +88,10 @@ public abstract class ConquestInstance {
     public void addActiveQuest(UUID uuid, Quest quest) {
         if (activeQuests == null) this.activeQuests = new HashMap<>();
         activeQuests.put(uuid, quest);
+    }
+
+    public Map<UUID, String> getCompletedQuests() {
+        return completedQuests;
     }
 
     public boolean isClient() {

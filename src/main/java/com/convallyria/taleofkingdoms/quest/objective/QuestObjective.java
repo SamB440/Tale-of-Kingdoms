@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.quest.objective;
 
+import com.convallyria.taleofkingdoms.quest.Quest;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
@@ -10,16 +11,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class QuestObjective {
 
+    private Quest quest;
     private int storyKey;
     private int completionAmount;
     private final Map<UUID, Integer> progress;
     private String completionText;
 
-    public QuestObjective() {
+    public QuestObjective(final Quest quest) {
         this.storyKey = 0;
         this.completionAmount = 1;
         this.progress = new ConcurrentHashMap<>();
         this.completionText = "";
+        this.quest = quest;
     }
 
     public abstract void test(PlayerEntity player);
@@ -49,6 +52,7 @@ public abstract class QuestObjective {
         if (hasCompleted(player.getUuid())) {
             player.sendMessage(new LiteralText(completionText), false);
             player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1f, 0.6f);
+            quest.tryComplete(player);
         }
     }
 

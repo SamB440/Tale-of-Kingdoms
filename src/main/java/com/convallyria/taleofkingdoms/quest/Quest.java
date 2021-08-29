@@ -80,6 +80,23 @@ public abstract class Quest {
         return objective.equals(objectives.get(lowestKey));
     }
 
+    public void tryComplete(PlayerEntity player) {
+        boolean completed = true;
+        for (QuestObjective objective : objectives.values()) {
+            if (!objective.hasCompleted(player.getUuid())) {
+                completed = false;
+                break;
+            }
+        }
+
+        if (completed) {
+            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+                instance.getCompletedQuests().put(player.getUuid(), this.getName());
+            });
+            player.sendMessage(new LiteralText("Quest Completed: " + getName()), false);
+        }
+    }
+
     public abstract Class<? extends TOKEntity> getEntity();
 
     public abstract String getName();

@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.quest.objective;
 
+import com.convallyria.taleofkingdoms.quest.Quest;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -7,7 +8,8 @@ public class SlayEntityObjective extends QuestObjective {
 
     private final Class<? extends Entity> entity;
 
-    public SlayEntityObjective(Class<? extends Entity> entity, int count) {
+    public SlayEntityObjective(final Quest quest, Class<? extends Entity> entity, int count) {
+        super(quest);
         this.entity = entity;
         this.setCompletionAmount(count);
     }
