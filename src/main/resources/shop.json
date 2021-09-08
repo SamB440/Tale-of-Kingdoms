@@ -764,8 +764,89 @@
       "sell": 150
     },
     {
-      "item": "Wheat_Seeds",
-      "sell": 2
-    }
-  ]
+    
+      
+  
+    
+					"item": "Wheat_Seeds",
+			"sell": 2
+		},
+		{
+			"item": "cooked chicken",
+			"sell": 6,
+			"cost": 8
+		},
+		{
+
+			"item": "cooked porkshop",
+			"cost": 6,
+			"sell": 4
+		},
+		{
+
+			"item": "cooked rabbit",
+			"cost": 8,
+			"sell": 6
+		},
+		{
+
+			"item": "cooked salmon",
+			"cost": 6,
+			"sell": 4
+		},
+		{
+
+			"item": "cooked cod",
+			"cost": 8,
+			"sell": 6
+		},
+		{
+			"item": "cooked chicken",
+			"cost": 6,
+			"sell": 4
+		},
+		{
+			"item": "cooked mutton",
+			"cost": 7,
+			"sell": 5
+		},
+		{
+			"item": "steak",
+			"cost": 15,
+			"sell": 8
+		}
+	]
 }
+			
+			
+		
+		
+
+		
+			
+			
+		
+		
+
+			
+			
+		
+		
+		
+
+			
+			
+			
+		
+		
+			
+			
+			
+		
+		
+			
+			
+			
+		
+				
+			
