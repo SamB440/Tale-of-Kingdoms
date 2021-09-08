@@ -83,7 +83,7 @@ public class CoinListener extends Listener {
                     }
 
                     if (instance instanceof ServerConquestInstance serverConquestInstance) {
-                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity, null);
+                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity);
                     }
                 }
             });
@@ -97,7 +97,7 @@ public class CoinListener extends Listener {
                     Random random = ThreadLocalRandom.current();
                     instance.addCoins(player.getUuid(), random.nextInt(10));
                     if (instance instanceof ServerConquestInstance) {
-                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player, null);
+                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player);
                     }
                 });
 

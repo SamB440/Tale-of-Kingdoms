@@ -11,7 +11,6 @@ import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -63,14 +62,13 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                 instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
                 // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
                 player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
-                instance.sync(player, null);
+                instance.sync(player);
             });
         });
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 
