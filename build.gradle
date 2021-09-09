@@ -89,6 +89,9 @@ java {
 }
 
 jar {
+    from("CHANGELOG.md") {
+        include()
+    }
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
     }

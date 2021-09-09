@@ -43,6 +43,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
 
+    public static final int CURRENT_VERSION = 1;
+
+    private int version;
     private final String world;
     private final String name;
     private boolean hasLoaded;
@@ -61,6 +64,7 @@ public abstract class ConquestInstance {
                 .orElseThrow(() -> new IllegalArgumentException("API not present"))
                 .getConquestInstance(world);
         if (instance.isPresent() && instance.get().isLoaded()) throw new IllegalArgumentException("World already registered");
+        this.version = CURRENT_VERSION;
         this.world = world;
         this.name = name;
         this.start = start;
@@ -69,6 +73,18 @@ public abstract class ConquestInstance {
         this.loneVillagersWithRooms = new ArrayList<>();
         this.reficuleAttackLocations = new ArrayList<>();
         this.reficuleAttackers = new ArrayList<>();
+    }
+
+    public boolean isOld() {
+        return this.version != CURRENT_VERSION;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public boolean isClient() {

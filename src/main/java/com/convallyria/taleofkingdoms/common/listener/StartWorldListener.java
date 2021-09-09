@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
+import com.convallyria.taleofkingdoms.client.gui.generic.UpdateScreen;
 import com.convallyria.taleofkingdoms.common.event.RecipesUpdatedCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldSessionStartCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldStopCallback;
@@ -69,7 +70,7 @@ public class StartWorldListener extends Listener {
                 Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
                 // Load from json into class
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    ConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
+                    ClientConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
@@ -81,6 +82,8 @@ public class StartWorldListener extends Listener {
                             }
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+
+                            MinecraftClient.getInstance().setScreen(new UpdateScreen(entity, instance));
                         }
                     });
                 } catch (JsonSyntaxException | JsonIOException | IOException e) {
