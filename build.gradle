@@ -88,6 +88,12 @@ java {
     withSourcesJar()
 }
 
+processResources {
+    from("CHANGELOG.md") {
+        include()
+    }
+}
+
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}

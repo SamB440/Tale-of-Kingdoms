@@ -13,7 +13,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public abstract class ScreenTOK extends Screen {
 
-    private final List<IImage> images;
+    protected final List<IImage> images;
 
     /**
      * Constructs a new {@link Screen}
