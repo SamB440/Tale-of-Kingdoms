@@ -37,7 +37,7 @@ public class StartWorldListener extends Listener {
     public StartWorldListener() {
         WorldStopCallback.EVENT.register(() -> {
             if (!joined) return;
-            if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
+            if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isEmpty()) return;
 
             ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
             File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
@@ -61,7 +61,7 @@ public class StartWorldListener extends Listener {
             if (joined) return;
             this.joined = true;
 
-            if (!TaleOfKingdoms.getAPI().isPresent()) return;
+            if (TaleOfKingdoms.getAPI().isEmpty()) return;
             TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
             boolean loaded = load(worldName, api);
             File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
@@ -77,13 +77,14 @@ public class StartWorldListener extends Listener {
                             if (TaleOfKingdoms.config.mainConfig.showStartKingdomGUI)
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
+                            if (instance.isOld()) {
+                                MinecraftClient.getInstance().setScreen(new UpdateScreen(entity, instance));
+                            } else if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
+
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
-
-                            MinecraftClient.getInstance().setScreen(new UpdateScreen(entity, instance));
                         }
                     });
                 } catch (JsonSyntaxException | JsonIOException | IOException e) {

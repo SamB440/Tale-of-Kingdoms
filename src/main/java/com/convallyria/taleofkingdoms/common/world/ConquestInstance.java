@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -43,9 +44,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
 
-    public static final int CURRENT_VERSION = 1;
+    public static final String CURRENT_VERSION = TaleOfKingdoms.VERSION;
 
-    private int version;
+    private String version;
     private final String world;
     private final String name;
     private boolean hasLoaded;
@@ -76,14 +77,14 @@ public abstract class ConquestInstance {
     }
 
     public boolean isOld() {
-        return this.version != CURRENT_VERSION;
+        return !Objects.equals(this.version, CURRENT_VERSION);
     }
 
-    public int getVersion() {
+    public String getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 

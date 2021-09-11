@@ -3,9 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui.generic;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.image.Image;
-import com.convallyria.taleofkingdoms.client.gui.image.ScaleSize;
 import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,18 +26,6 @@ public class UpdateScreen extends ScreenTOK {
 
     private final List<TextRender> textRenders;
 
-    private static final ImmutableList<ScaleSize> SCALE_SIZES = ImmutableList.of(
-            new ScaleSize(1, 810, 265),
-            new ScaleSize(2, 310, 113),
-            new ScaleSize(3, 170, 55),
-            new ScaleSize(4, 100, 27));
-
-    private static final ImmutableList<ScaleSize> SCALE_SIZES_TWO = ImmutableList.of(
-            new ScaleSize(1, 1000, 265),
-            new ScaleSize(2, 540, 113),
-            new ScaleSize(3, 360, 55),
-            new ScaleSize(4, 275, 27));
-
     public UpdateScreen(PlayerEntity player, ClientConquestInstance instance) {
         super("menu.taleofkingdoms.update.name");
         this.player = player;
@@ -52,11 +38,11 @@ public class UpdateScreen extends ScreenTOK {
         super.init();
         textRenders.clear();
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2, this.height / 2 + 40, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 22, this.height / 2 + 40, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
         int currentY = this.height / 4;
         int currentX = this.width / 2 - 100;
 
-        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("shop.json");
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("CHANGELOG.md");
         try (BufferedReader input = new BufferedReader(new InputStreamReader(in))) {
             String update;
             while ((update = input.readLine()) != null) {
