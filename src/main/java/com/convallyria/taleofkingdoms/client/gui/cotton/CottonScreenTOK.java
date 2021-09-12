@@ -1,26 +1,27 @@
-package com.convallyria.taleofkingdoms.client.gui;
+package com.convallyria.taleofkingdoms.client.gui.cotton;
 
 import com.convallyria.taleofkingdoms.client.gui.image.IImage;
+import io.github.cottonmc.cotton.gui.GuiDescription;
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public abstract class ScreenTOK extends Screen {
+@Deprecated
+public abstract class CottonScreenTOK extends CottonClientScreen {
 
     protected final List<IImage> images;
 
     /**
-     * Constructs a new {@link Screen}
-     * @param translation the translation key
+     * Constructs a new {@link CottonClientScreen}
      */
-    protected ScreenTOK(String translation) {
-        super(new TranslatableText(translation));
+    protected CottonScreenTOK(GuiDescription description) {
+        super(description);
         this.images = new ArrayList<>();
     }
 

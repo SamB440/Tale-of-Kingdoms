@@ -4,6 +4,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
+import com.convallyria.taleofkingdoms.client.gui.generic.cotton.update.UpdateGui;
+import com.convallyria.taleofkingdoms.client.gui.generic.cotton.update.UpdateScreen;
 import com.convallyria.taleofkingdoms.common.event.RecipesUpdatedCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldSessionStartCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldStopCallback;
@@ -36,7 +38,7 @@ public class StartWorldListener extends Listener {
     public StartWorldListener() {
         WorldStopCallback.EVENT.register(() -> {
             if (!joined) return;
-            if (!TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) return;
+            if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isEmpty()) return;
 
             ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
             File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
@@ -60,7 +62,7 @@ public class StartWorldListener extends Listener {
             if (joined) return;
             this.joined = true;
 
-            if (!TaleOfKingdoms.getAPI().isPresent()) return;
+            if (TaleOfKingdoms.getAPI().isEmpty()) return;
             TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
             boolean loaded = load(worldName, api);
             File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
@@ -69,16 +71,19 @@ public class StartWorldListener extends Listener {
                 Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
                 // Load from json into class
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    ConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
+                    ClientConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
                             if (TaleOfKingdoms.config.mainConfig.showStartKingdomGUI)
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
+                            if (instance.isOld()) {
+                                MinecraftClient.getInstance().setScreen(new UpdateScreen(new UpdateGui()));
+                            } else if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
+
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }

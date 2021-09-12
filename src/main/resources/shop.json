@@ -766,6 +766,74 @@
     {
       "item": "Wheat_Seeds",
       "sell": 2
+    },
+    {
+      "item": "COOKED_PORKCHOP",
+      "cost": 6,
+      "sell": 4
+    },
+    {
+      "item": "COOKED_RABBIT",
+      "cost": 8,
+      "sell": 6
+    },
+    {
+      "item": "COOKED_SALMON",
+      "cost": 6,
+      "sell": 4
+    },
+    {
+      "item": "COOKED_COD",
+      "cost": 8,
+      "sell": 6
+    },
+    {
+      "item": "COOKED_CHICKEN",
+      "cost": 6,
+      "sell": 4
+    },
+    {
+      "item": "COOKED_MUTTON",
+      "cost": 7,
+      "sell": 5
+    },
+    {
+      "item": "COOKED_BEEF",
+      "cost": 15,
+      "sell": 8
     }
   ]
 }
+			
+			
+		
+		
+
+		
+			
+			
+		
+		
+
+			
+			
+		
+		
+		
+
+			
+			
+			
+		
+		
+			
+			
+			
+		
+		
+			
+			
+			
+		
+				
+			
