@@ -1,7 +1,7 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms Configuration",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Show continue conquest GUI",
+    "text.autoconfig.taleofkingdoms.title": "Configuración de Relato de los Reinos",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Mostrar GUI del reino inicial",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar la GUI de la conquista continua",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Gateway spawn rate",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
