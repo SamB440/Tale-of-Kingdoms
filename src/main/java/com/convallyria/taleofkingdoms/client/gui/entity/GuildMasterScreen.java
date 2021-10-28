@@ -94,7 +94,9 @@ public class GuildMasterScreen extends ScreenTOK {
                         return;
                     }
 
-                    hunter.kill();
+                    // I hate java sometimes
+                    final HunterEntity finalHunter = hunter;
+                    TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(finalHunter::kill));
                     instance.removeHunter(hunter);
                     instance.setCoins(instance.getCoins() + 750);
                 } else {
