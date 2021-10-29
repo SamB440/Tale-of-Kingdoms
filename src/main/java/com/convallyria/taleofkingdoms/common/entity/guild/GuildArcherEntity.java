@@ -15,7 +15,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -86,7 +86,7 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
         this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
-        this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100,
+        this.targetSelector.add(4, new ActiveTargetGoal<>(this, MobEntity.class, 100,
                 true, true, livingEntity -> livingEntity instanceof Monster));
     }
 

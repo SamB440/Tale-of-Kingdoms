@@ -5,7 +5,7 @@ import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.TargetPredicate;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
 
-public class TeleportTowardsPlayerGoal extends FollowTargetGoal<PlayerEntity> {
+public class TeleportTowardsPlayerGoal extends ActiveTargetGoal<PlayerEntity> {
 
     private final MobEntity entity;
     private PlayerEntity targetPlayer;
