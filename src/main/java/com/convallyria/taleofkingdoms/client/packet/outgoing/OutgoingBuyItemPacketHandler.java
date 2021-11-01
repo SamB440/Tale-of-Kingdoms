@@ -5,7 +5,6 @@ import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -23,8 +22,7 @@ public final class OutgoingBuyItemPacketHandler extends ClientPacketHandler {
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         passedData.writeString((String) data[0]);
         passedData.writeInt((Integer) data[1]);

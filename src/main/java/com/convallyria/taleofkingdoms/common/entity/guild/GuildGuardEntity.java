@@ -9,7 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoa
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -41,7 +41,7 @@ public class GuildGuardEntity extends TOKEntity {
         this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
         this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
-        this.targetSelector.add(4, new FollowTargetGoal<>(this, MobEntity.class, 100,
+        this.targetSelector.add(4, new ActiveTargetGoal<>(this, MobEntity.class, 100,
                 true, true, livingEntity -> livingEntity instanceof Monster));
         this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }

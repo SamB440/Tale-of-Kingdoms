@@ -78,25 +78,20 @@ public class GuildMasterScreen extends ScreenTOK {
                     }
 
                     ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                    HunterEntity hunter = null;
                     for (UUID uuid : instance.getHunterUUIDs()) {
-                        HunterEntity find = (HunterEntity) serverWorld.getEntity(uuid);
-                        if (find == null) {
+                        HunterEntity hunter = (HunterEntity) serverWorld.getEntity(uuid);
+                        if (hunter == null) {
                             instance.removeHunter(uuid);
+                            TaleOfKingdoms.LOGGER.info("Removed hunter by uuid " + uuid + " that no longer exists.");
                         } else {
-                            hunter = find;
-                            break;
+                            TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(hunter::kill));
+                            instance.removeHunter(hunter);
+                            instance.setCoins(instance.getCoins() + 750);
+                            return;
                         }
                     }
-
-                    if (hunter == null) {
-                        player.sendMessage(new LiteralText("Unable to find an alive hunter!"), false);
-                        return;
-                    }
-
-                    hunter.kill();
-                    instance.removeHunter(hunter);
-                    instance.setCoins(instance.getCoins() + 750);
+                    player.sendMessage(new LiteralText("Unable to find an alive hunter!"), false);
+                    return;
                 } else {
                     Translations.GUILDMASTER_NOHUNTER.send(player);
                 }

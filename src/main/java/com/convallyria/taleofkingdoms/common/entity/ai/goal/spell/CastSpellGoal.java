@@ -52,12 +52,6 @@ public abstract class CastSpellGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
-        try {
-            throw new Exception();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("TICK: " + spellCaster.getTarget());
         --this.spellCooldown;
         if (this.spellCooldown <= 0) {
             this.castSpell();
