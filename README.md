@@ -23,6 +23,7 @@
 ![Stargazers](https://img.shields.io/badge/dynamic/json?color=white&label=Stars&query=%24.star_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
 ![Issues](https://img.shields.io/badge/dynamic/json?color=white&label=Issues&query=%24.open_issues_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
 ![License](https://img.shields.io/badge/license-GPL-blue)
+[![Crowdin](https://badges.crowdin.net/tale-of-kingdoms/localized.svg)](https://crowdin.com/project/tale-of-kingdoms)
 </div>
 
 ## Table Of Contents
@@ -153,8 +154,9 @@ Distributed under the GNU GPL v3 License. See [LICENSE](LICENSE.md) for more inf
 
 ## Acknowledgements
 
-* Translators
-* Sheepguard
+* Crowdin for providing us with an OS license
+* Translators for their contributions
+* Sheepguard for music and translations
 
 ## Links
 Curseforge: https://www.curseforge.com/minecraft/mc-mods/tale-of-kingdoms-a-new-conquest

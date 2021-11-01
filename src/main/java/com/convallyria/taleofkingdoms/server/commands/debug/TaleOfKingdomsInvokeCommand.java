@@ -68,7 +68,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             instance.setWorthiness(playerUuid, instance.getWorthiness(playerUuid) - 750);
 
             if (instance instanceof ServerConquestInstance serverConquestInstance) {
-                serverConquestInstance.sync(player, null);
+                serverConquestInstance.sync(player);
             }
 
             TaleOfKingdoms.LOGGER.debug("Guild attack forcefully activated!");

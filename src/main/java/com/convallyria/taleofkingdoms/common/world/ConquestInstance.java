@@ -39,6 +39,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +48,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
 
+    public static final String CURRENT_VERSION = TaleOfKingdoms.VERSION;
+
+    private String version;
     private final String world;
     private final String name;
     private boolean hasLoaded;
@@ -68,6 +72,7 @@ public abstract class ConquestInstance {
                 .orElseThrow(() -> new IllegalArgumentException("API not present"))
                 .getConquestInstance(world);
         if (instance.isPresent() && instance.get().isLoaded()) throw new IllegalArgumentException("World already registered");
+        this.version = CURRENT_VERSION;
         this.world = world;
         this.name = name;
         this.start = start;
@@ -92,6 +97,18 @@ public abstract class ConquestInstance {
 
     public Map<UUID, String> getCompletedQuests() {
         return completedQuests;
+    }
+
+    public boolean isOld() {
+        return !Objects.equals(this.version, CURRENT_VERSION);
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public boolean isClient() {

@@ -9,7 +9,6 @@ import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -67,7 +66,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     hunterEntity.kill();
                     instance.removeHunter(uuid, hunterEntity.getUuid());
                     instance.setCoins(uuid, instance.getCoins(uuid) + 750);
-                    instance.sync(player, null);
+                    instance.sync(player);
                     return;
                 }
 
@@ -79,14 +78,13 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                 HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, player, entity.get().getBlockPos());
                 instance.addHunter(uuid, hunterEntity);
                 instance.setCoins(uuid, instance.getCoins(uuid) - 1500);
-                instance.sync(player, null);
+                instance.sync(player);
             });
         });
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

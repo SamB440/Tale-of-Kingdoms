@@ -9,7 +9,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -70,8 +69,7 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player,
-                                     @Nullable ClientConnection connection, @Nullable Object... data) {
+    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

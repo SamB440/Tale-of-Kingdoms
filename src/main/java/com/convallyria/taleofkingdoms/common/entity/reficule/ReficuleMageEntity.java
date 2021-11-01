@@ -18,7 +18,9 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.FollowTargetGoal;
+import net.minecraft.entity.ai.brain.task.FollowMobTask;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.FollowMobGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundGoal;
@@ -102,7 +104,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         this.targetSelector.add(1, new TeleportTowardsPlayerGoal(this, entity -> {
             return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
         }));
-        this.targetSelector.add(2, (new FollowTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
+        this.targetSelector.add(2, (new ActiveTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
         this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
         this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
