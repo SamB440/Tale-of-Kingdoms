@@ -1,8 +1,8 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms Configuration",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Show continue conquest GUI",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Gateway spawn rate",
+    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms の構成",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "始めるために王国のGUIを開いてください。",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "征服GUIを表示",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "ゲートウェイの生成率",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Start Conquest",
