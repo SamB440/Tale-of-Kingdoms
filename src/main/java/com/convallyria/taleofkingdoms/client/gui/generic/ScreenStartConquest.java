@@ -133,6 +133,11 @@ public class ScreenStartConquest extends ScreenTOK {
     }
 
     @Override
+    public boolean isPauseScreen() {
+        return true;
+    }
+
+    @Override
     public void onClose() {
         super.onClose();
         TaleOfKingdoms.getAPI().ifPresent(api -> {
