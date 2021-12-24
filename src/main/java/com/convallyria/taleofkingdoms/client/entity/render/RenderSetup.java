@@ -5,7 +5,7 @@ import com.convallyria.taleofkingdoms.client.entity.render.model.ImprovedPlayerE
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.ForemanEntity;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.EntityType;
