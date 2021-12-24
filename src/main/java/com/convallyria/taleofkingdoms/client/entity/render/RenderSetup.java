@@ -6,10 +6,8 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.ForemanEntity;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Identifier;
@@ -57,15 +55,15 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.FOREMAN, ForemanEntity.SKINS);
     }
 
-    private void register(EntityType type, Identifier... skins) {
+    private void register(EntityType<? extends MobEntity> type, Identifier... skins) {
         if (type == EntityTypes.REFICULE_MAGE) {
-            EntityRendererRegistry.INSTANCE.register(type, (context) ->
+            EntityRendererRegistry.register(type, (context) ->
                     new ReficuleMageEntityRenderer(context,
                             new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false)));
             return;
         }
 
-        EntityRendererRegistry.INSTANCE.register(type, (context) ->
+        EntityRendererRegistry.register(type, (context) ->
                 new TOKBipedRender<MobEntity, PlayerEntityModel<MobEntity>>(context,
                         new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
                         0.5F,
