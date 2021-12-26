@@ -17,9 +17,13 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPa
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
+import com.convallyria.taleofkingdoms.server.commands.general.TaleOfKingdomsUpdatesCommand;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -62,6 +66,12 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
                 client.setScreen(new ScreenStartConquest(worldName, file, client.player));
             }
         });
+
+        // /taleofkingdomsupdates
+        final LiteralArgumentBuilder<FabricClientCommandSource> updates = ClientCommandManager
+                .literal(TaleOfKingdoms.MODID + "updates")
+                .executes(new TaleOfKingdomsUpdatesCommand());
+        ClientCommandManager.DISPATCHER.register(updates);
     }
 
     private void registerPacketHandlers() {

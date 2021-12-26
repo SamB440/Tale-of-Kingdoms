@@ -61,7 +61,7 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
     }
 
     @Override
-    protected void scale(ReficuleMageEntity illagerEntity, MatrixStack matrixStack, float f) {
+    protected void scale(ReficuleMageEntity reficuleMageEntity, MatrixStack matrixStack, float f) {
         matrixStack.scale(0.9375F, 0.9375F, 0.9375F);
     }
 }

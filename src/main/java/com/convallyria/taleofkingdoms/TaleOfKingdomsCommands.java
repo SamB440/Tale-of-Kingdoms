@@ -14,8 +14,11 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
 public class TaleOfKingdomsCommands {
+
     public TaleOfKingdomsCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> { // Register commands
+
+
             // Base node /taleofkingdoms
             LiteralCommandNode<ServerCommandSource> baseNode = CommandManager
                     .literal(TaleOfKingdoms.MODID)
