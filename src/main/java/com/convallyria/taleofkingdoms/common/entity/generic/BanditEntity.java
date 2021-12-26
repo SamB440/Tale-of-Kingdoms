@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class BanditEntity extends TOKEntity implements CrossbowUser, RangedAttackMob, States {
+public class BanditEntity extends TOKEntity implements CrossbowUser, RangedAttackMob, States, Monster {
 
     public static final Identifier[] SKINS = new Identifier[]{
             new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/archer_tok.png"),
