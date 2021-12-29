@@ -1,6 +1,7 @@
-package com.convallyria.taleofkingdoms.common.world;
+package com.convallyria.taleofkingdoms.client.schematic;
 
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.math.BlockPos;
 

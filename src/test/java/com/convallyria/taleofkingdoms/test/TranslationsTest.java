@@ -36,7 +36,7 @@ public class TranslationsTest {
                 }.getType());
                 for (Translations translation : Translations.values()) {
                     if (!translationMap.containsKey(translation.getKey())) {
-                        Assert.fail(translation.toString() + "(" + translation.getKey() + ") not found in " + fileName + ".");
+                        Assert.fail(translation + "(" + translation.getKey() + ") not found in " + fileName + ".");
                     }
                 }
             } catch (JsonSyntaxException | JsonIOException e) {

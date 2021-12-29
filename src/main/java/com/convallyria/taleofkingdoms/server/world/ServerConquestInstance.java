@@ -1,13 +1,14 @@
-package com.convallyria.taleofkingdoms.common.world;
+package com.convallyria.taleofkingdoms.server.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
-import net.minecraft.network.ClientConnection;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Environment(EnvType.SERVER)
 public class ServerConquestInstance extends ConquestInstance {
 
     private final Map<UUID, Integer> playerCoins;

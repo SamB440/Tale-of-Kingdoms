@@ -8,7 +8,7 @@ import com.convallyria.taleofkingdoms.common.event.EntityPickupItemCallback;
 import com.convallyria.taleofkingdoms.common.event.ItemMergeCallback;
 import com.convallyria.taleofkingdoms.common.item.ItemHelper;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;

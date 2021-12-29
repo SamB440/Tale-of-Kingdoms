@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.server.packet.outgoing;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
