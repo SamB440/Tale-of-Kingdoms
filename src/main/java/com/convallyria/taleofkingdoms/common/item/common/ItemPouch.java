@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.item.common;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

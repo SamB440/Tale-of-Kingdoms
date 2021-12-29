@@ -6,7 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -13,7 +13,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.client.utils.ShopBuyUtil;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

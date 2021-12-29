@@ -1,6 +1,8 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
@@ -8,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
+@Environment(EnvType.CLIENT)
 public final class ClientSchematicHandler extends SchematicHandler {
 
     @Override

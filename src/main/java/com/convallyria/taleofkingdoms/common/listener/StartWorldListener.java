@@ -9,7 +9,7 @@ import com.convallyria.taleofkingdoms.client.gui.generic.cotton.update.UpdateScr
 import com.convallyria.taleofkingdoms.common.event.RecipesUpdatedCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldSessionStartCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldStopCallback;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;

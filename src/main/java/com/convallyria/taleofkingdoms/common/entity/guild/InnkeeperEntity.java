@@ -4,7 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.entity.InnkeeperScreen;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.common.world.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

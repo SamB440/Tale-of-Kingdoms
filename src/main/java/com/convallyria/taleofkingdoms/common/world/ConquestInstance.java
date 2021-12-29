@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
@@ -10,6 +11,7 @@ import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructur
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BedBlockEntity;

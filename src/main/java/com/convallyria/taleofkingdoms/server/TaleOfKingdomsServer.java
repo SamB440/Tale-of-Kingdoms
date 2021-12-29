@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.server;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBankerInteractPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuyItemPacketHandler;

@@ -9,7 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.HealPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.convallyria.taleofkingdoms.common.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
