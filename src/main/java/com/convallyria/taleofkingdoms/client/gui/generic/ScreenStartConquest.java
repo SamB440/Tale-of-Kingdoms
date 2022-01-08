@@ -119,6 +119,7 @@ public class ScreenStartConquest extends ScreenTOK {
         String text = Translations.DARKNESS.getFormatted();
         int currentHeight = this.height / 2 - 110;
         for (String toRender : text.split("\n")) {
+            //todo change colour? 11111111 is nice
             drawCenteredText(stack, this.textRenderer, toRender, this.width / 2, currentHeight, 0xFFFFFF);
             currentHeight = currentHeight + 10;
         }
