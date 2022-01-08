@@ -18,7 +18,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
     }
 
     public static int getCoins(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
 
@@ -27,7 +27,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
     }
 
     public static int getWorthiness(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
 
@@ -36,7 +36,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
     }
 
     public static int getHasRebuilt(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
 
         player.sendMessage(new LiteralText("Has the guild been rebuilt? " + instance.hasRebuilt()), false);
@@ -44,7 +44,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
     }
 
     public static int getHasAttacked(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
 
         player.sendMessage(new LiteralText("Has the guild been attacked? " + instance.hasAttacked(player.getUuid())), false);

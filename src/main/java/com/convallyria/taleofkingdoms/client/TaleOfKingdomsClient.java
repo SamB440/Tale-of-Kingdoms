@@ -43,7 +43,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         new RenderSetup(api.getMod());
         registerPacketHandlers();
         registerEvents();
@@ -76,7 +76,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
     }
 
     protected void registerHandler(ClientPacketHandler clientPacketHandler) {
-        TaleOfKingdoms.getAPI().ifPresent(api -> api.registerClientHandler(clientPacketHandler));
+        TaleOfKingdoms.getAPI().registerClientHandler(clientPacketHandler);
     }
 
     private void registerEvents() {

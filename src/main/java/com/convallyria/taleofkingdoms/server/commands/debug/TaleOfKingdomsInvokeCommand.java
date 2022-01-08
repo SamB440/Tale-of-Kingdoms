@@ -48,7 +48,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
     public static int invokeGuildAttack(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         try {
-            ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+            ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
             ServerPlayerEntity player = context.getSource().getPlayer();
             UUID playerUuid = player.getUuid();
 

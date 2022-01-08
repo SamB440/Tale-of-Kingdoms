@@ -28,15 +28,13 @@ public class CityBuilderEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (instance.getWorthiness(player.getUuid()) >= 1500) {
-                    Translations.CITYBUILDER_BUILD.send(player);
-                    this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
-                } else {
-                    Translations.CITYBUILDER_MESSAGE.send(player);
-                }
-            });
+        TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            if (instance.getWorthiness(player.getUuid()) >= 1500) {
+                Translations.CITYBUILDER_BUILD.send(player);
+                this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
+            } else {
+                Translations.CITYBUILDER_MESSAGE.send(player);
+            }
         });
         return ActionResult.PASS;
     }

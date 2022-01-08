@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
@@ -28,42 +29,41 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         boolean close = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().ifPresent(api -> {
-                api.getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                    ServerConquestInstance instance = (ServerConquestInstance) inst;
-                    if (!instance.isInGuild(player)) {
-                        TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not in guild.");
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
+                ServerConquestInstance instance = (ServerConquestInstance) inst;
+                if (!instance.isInGuild(player)) {
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
+                    return;
+                }
+
+                // Search for either foodshop or blacksmith in the guild
+                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
+                if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                if (entity.isEmpty()) {
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop entity not present in guild.");
+                    return;
+                }
+
+                BlockPos pos = entity.get().getBlockPos().add(0, 2, 0);
+                api.getScheduler().queue(server -> {
+                    if (close) {
+                        server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
                         return;
                     }
 
-                    // Search for either foodshop or blacksmith in the guild
-                    Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                    if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
-                    if (entity.isEmpty()) {
-                        TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop entity not present in guild.");
-                        return;
+                    ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+                    server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
+                    BlockState state = server.getOverworld().getBlockState(pos);
+                    NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
+                    if (screenHandlerFactory != null) {
+                        //With this call the server will request the client to open the appropriate Screenhandler
+                        serverPlayer.openHandledScreen(screenHandlerFactory);
                     }
-
-                    BlockPos pos = entity.get().getBlockPos().add(0, 2, 0);
-                    api.getScheduler().queue(server -> {
-                        if (close) {
-                            server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
-                            return;
-                        }
-
-                        ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
-                        server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
-                        BlockState state = server.getOverworld().getBlockState(pos);
-                        NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
-                        if (screenHandlerFactory != null) {
-                            //With this call the server will request the client to open the appropriate Screenhandler
-                            serverPlayer.openHandledScreen(screenHandlerFactory);
-                        }
-                    }, 1);
-                });
+                }, 1);
             });
         });
     }

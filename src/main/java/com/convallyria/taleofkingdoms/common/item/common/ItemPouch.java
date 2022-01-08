@@ -30,7 +30,7 @@ public class ItemPouch extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
-        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.hasNbt()) {
             NbtCompound compoundTag = itemStack.getNbt();

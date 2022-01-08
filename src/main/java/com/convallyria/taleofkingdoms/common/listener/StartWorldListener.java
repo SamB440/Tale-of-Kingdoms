@@ -38,17 +38,17 @@ public class StartWorldListener extends Listener {
     public StartWorldListener() {
         WorldStopCallback.EVENT.register(() -> {
             if (!joined) return;
-            if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isEmpty()) return;
+            if (TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().isEmpty()) return;
 
-            ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
-            File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + instance.getWorld() + ".conquestworld");
+            ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
+            File file = new File(TaleOfKingdoms.getAPI().getDataFolder() + "worlds/" + instance.getWorld() + ".conquestworld");
             try (Writer writer = new FileWriter(file)) {
-                Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+                Gson gson = TaleOfKingdoms.getAPI().getMod().getGson();
                 gson.toJson(instance, writer);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().removeConquest(instance.getWorld());
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().removeConquest(instance.getWorld());
             this.joined = false;
         });
 
@@ -62,13 +62,13 @@ public class StartWorldListener extends Listener {
             if (joined) return;
             this.joined = true;
 
-            if (TaleOfKingdoms.getAPI().isEmpty()) return;
-            TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            if (api == null) return;
             boolean loaded = load(worldName, api);
             File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
             if (loaded) {
                 // Already exists
-                Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+                Gson gson = api.getMod().getGson();
                 // Load from json into class
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     ClientConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
@@ -85,7 +85,7 @@ public class StartWorldListener extends Listener {
                             }
 
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
-                            TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+                            api.getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }
                     });
                 } catch (JsonSyntaxException | JsonIOException | IOException e) {

@@ -33,7 +33,7 @@ public class InnkeeperEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         if (!instance.hasContract()) {
             Translations.NEED_CONTRACT.send(player);
             return ActionResult.FAIL;

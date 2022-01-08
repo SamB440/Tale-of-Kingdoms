@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
@@ -40,7 +41,8 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
             hunterUuids.add(attachedData.readUuid());
         }
 
-        context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().ifPresent(api -> {
+        context.taskQueue().execute(() -> {
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             ClientConquestInstance instance;
             if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
                 instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();
@@ -57,7 +59,7 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
             instance.clearHunters();
             hunterUuids.forEach(instance::addHunter);
             api.getConquestInstanceStorage().addConquest(world, instance, true);
-        }));
+        });
     }
 
     @Override

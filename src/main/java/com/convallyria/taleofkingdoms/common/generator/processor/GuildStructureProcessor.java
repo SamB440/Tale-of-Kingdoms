@@ -43,9 +43,9 @@ public class GuildStructureProcessor extends StructureProcessor {
         Structure.StructureBlockInfo air = new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
         if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
             String metadata = structureBlockInfo2.nbt.getString("metadata");
-            Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
-            if (api.isEmpty()) return structureBlockInfo2;
-            Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            if (api == null) return structureBlockInfo2;
+            Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             TaleOfKingdoms.LOGGER.debug(structureBlockInfo2.pos);
             if (instance.isEmpty()) return structureBlockInfo2;
 

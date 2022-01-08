@@ -26,7 +26,7 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
     @Override
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         if (data != null && data[0] instanceof ServerConquestInstance instance
-                && player instanceof ServerPlayerEntity serverPlayerEntity) {
+                && player instanceof ServerPlayerEntity) {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
             passedData.writeString(instance.getName());
             passedData.writeString(instance.getWorld());

@@ -45,8 +45,8 @@ public class FarmerEntity extends TOKEntity {
         if (hand == Hand.OFF_HAND || player.world.isClient) return ActionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
-        if (TaleOfKingdoms.getAPI().isEmpty()) return ActionResult.FAIL;
-        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        if (api == null) return ActionResult.FAIL;
         if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();

@@ -58,8 +58,9 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
     @Override
     public boolean isFireImmune() {
-        if (TaleOfKingdoms.getAPI().isPresent()) {
-            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        if (api != null) {
+            Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()) {
                 return instance.get().isUnderAttack();
             }
@@ -69,9 +70,10 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
 
     @Override
     public boolean damage(DamageSource damageSource, float f) {
-        if (TaleOfKingdoms.getAPI().isPresent()) {
-            if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) {
-                ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        if (api != null) {
+            if (api.getConquestInstanceStorage().mostRecentInstance().isPresent()) {
+                ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
                 if (instance.isUnderAttack() && !instance.hasRebuilt()) {
                     return false;
                 }
@@ -83,7 +85,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity serverPlayerEntity)) return ActionResult.FAIL;
-        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {
             if (!givenSword && !player.getInventory().containsAny(new HashSet<>(FabricToolTags.SWORDS.values()))) { // Use containsAny method as it is present on both server and client

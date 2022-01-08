@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
 import net.minecraft.entity.ai.goal.Goal;
@@ -46,9 +47,10 @@ public class WanderAroundGuildGoal extends Goal {
         if (vec3d == null) {
             return false;
         } else {
-            if (TaleOfKingdoms.getAPI().isPresent()) {
-                if (TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().isPresent()) {
-                    ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            if (api != null) {
+                if (api.getConquestInstanceStorage().mostRecentInstance().isPresent()) {
+                    ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
                     BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
                     if (!instance.isInGuild(blockPos)) return false;
                 }

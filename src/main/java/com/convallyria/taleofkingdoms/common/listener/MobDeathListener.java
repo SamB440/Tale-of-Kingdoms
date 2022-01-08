@@ -7,7 +7,7 @@ public class MobDeathListener extends Listener {
 
     public MobDeathListener() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (instance.getReficuleAttackers().contains(entity.getUuid())) {
                     instance.getReficuleAttackers().remove(entity.getUuid());
                     TaleOfKingdoms.LOGGER.debug("Reficule attacker died with UUID " + entity.getUuid());

@@ -30,9 +30,7 @@ public class ItemHelper {
     public static void dropCoins(LivingEntity entityLiving) {
         if (isHostileEntity(entityLiving)) {
             Consumer<MinecraftServer> dropCoins = server -> dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entityLiving);
-            TaleOfKingdoms.getAPI().ifPresent(api -> {
-                api.getScheduler().repeatN(dropCoins, 25, 0, 1);
-            });
+            TaleOfKingdoms.getAPI().getScheduler().repeatN(dropCoins, 25, 0, 1);
         }
     }
 

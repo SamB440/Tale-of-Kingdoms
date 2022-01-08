@@ -79,7 +79,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -186,8 +185,8 @@ public class TaleOfKingdoms implements ModInitializer {
      * Gets the API. This will only be present after the mod has finished loading.
      * @return api of {@link TaleOfKingdoms}
      */
-    public static Optional<TaleOfKingdomsAPI> getAPI() {
-        return Optional.ofNullable(api);
+    public static TaleOfKingdomsAPI getAPI() {
+        return api;
     }
 
     private void registerEvents() {

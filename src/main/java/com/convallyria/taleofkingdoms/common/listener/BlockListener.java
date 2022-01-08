@@ -14,7 +14,7 @@ public class BlockListener extends Listener {
     public BlockListener() {
         BlockBreakCallback.EVENT.register((block, pos) -> {
             if (MinecraftClient.getInstance().getServer() == null) return ActionResult.FAIL;
-            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
+            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()) {
                 BlockPos remove = null;
                 for (BlockPos blockPos : instance.get().getValidRest()) {

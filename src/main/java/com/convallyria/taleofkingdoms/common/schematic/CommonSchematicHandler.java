@@ -1,7 +1,6 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,12 +19,12 @@ public final class CommonSchematicHandler extends SchematicHandler {
 
         if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
             // WorldEdit requires actions to be done on the dedicated server thread.
-            TaleOfKingdoms.getAPI().flatMap(TaleOfKingdomsAPI::getServer).ifPresent(minecraftServer -> {
+            TaleOfKingdoms.getAPI().getServer().ifPresent(minecraftServer -> {
                 minecraftServer.execute(() -> pasteSchematic(schematic, player, position, cf, options));
             });
         } else {
             // WorldEdit requires actions to be done on the client server thread.
-            TaleOfKingdoms.getAPI().ifPresent(api -> api.executeOnServer(() -> pasteSchematic(schematic, player, position, cf, options)));
+            TaleOfKingdoms.getAPI().executeOnServer(() -> pasteSchematic(schematic, player, position, cf, options));
         }
         return cf;
     }

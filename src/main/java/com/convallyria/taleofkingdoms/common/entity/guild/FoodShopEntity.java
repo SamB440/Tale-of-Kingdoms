@@ -34,7 +34,7 @@ public class FoodShopEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         this.openScreen(player, instance);
         return ActionResult.PASS;
     }

@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import net.minecraft.block.BlockState;
@@ -23,25 +24,24 @@ public interface ShopScreenInterface {
          * someone please rewrite it so blocks are not needed
          */
         BlockPos pos = entity.getBlockPos().add(0, 2, 0);
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            if (MinecraftClient.getInstance().getServer() == null) {
-                api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
-                        .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
-                                player,
-                                null, false);
-                return;
-            }
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        if (MinecraftClient.getInstance().getServer() == null) {
+            api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
+                    .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
+                            player,
+                            null, false);
+            return;
+        }
 
-            api.getScheduler().queue(server -> {
-                ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
-                server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
-                BlockState state = server.getOverworld().getBlockState(pos);
-                NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
-                if (screenHandlerFactory != null) {
-                    //With this call the server will request the client to open the appropriate Screenhandler
-                    serverPlayer.openHandledScreen(screenHandlerFactory);
-                }
-            }, 1);
-        });
+        api.getScheduler().queue(server -> {
+            ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            server.getOverworld().setBlockState(pos, TaleOfKingdoms.SELL_BLOCK.getDefaultState());
+            BlockState state = server.getOverworld().getBlockState(pos);
+            NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(server.getOverworld(), pos);
+            if (screenHandlerFactory != null) {
+                //With this call the server will request the client to open the appropriate Screenhandler
+                serverPlayer.openHandledScreen(screenHandlerFactory);
+            }
+        }, 1);
     }
 }

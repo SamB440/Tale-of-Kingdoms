@@ -39,7 +39,7 @@ public class LoneEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || player.world.isClient()) return ActionResult.FAIL;
-        TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+        TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             BlockPos startPos = instance.getStart();
             BlockPos endPos = instance.getEnd();
             Vec3d start = new Vec3d(startPos.getX(), startPos.getY(), startPos.getZ());

@@ -20,7 +20,7 @@ public final class BothSignContractPacketHandler extends ClientPacketHandler {
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         boolean sign = attachedData.readBoolean();
-        context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+        context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             instance.setHasContract(sign);
             if (sign) Translations.GUILDMASTER_CONTRACT_SIGN.send(context.player());
         }));

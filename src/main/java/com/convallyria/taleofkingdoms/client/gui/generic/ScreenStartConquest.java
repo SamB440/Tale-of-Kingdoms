@@ -58,8 +58,8 @@ public class ScreenStartConquest extends ScreenTOK {
             if (loading) return;
 
             button.setMessage(Translations.BUILDING_CASTLE.getTranslation());
-            Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
-            if (api.isEmpty()) {
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            if (api == null) {
                 button.setMessage(new LiteralText("No API present"));
                 return;
             }
@@ -75,16 +75,16 @@ public class ScreenStartConquest extends ScreenTOK {
             // Load guild castle schematic
             ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
             try (Writer writer = new FileWriter(toSave)) {
-                Gson gson = api.get().getMod().getGson();
+                Gson gson = api.getMod().getGson();
                 gson.toJson(instance, writer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            api.get().getConquestInstanceStorage().addConquest(worldName, instance, true);
+            api.getConquestInstanceStorage().addConquest(worldName, instance, true);
 
             BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 12, 0));
-            api.get().getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> {
-                api.get().executeOnServer(() -> {
+            api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> {
+                api.executeOnServer(() -> {
                     BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
                     BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
                     instance.setStart(start);
@@ -92,7 +92,7 @@ public class ScreenStartConquest extends ScreenTOK {
                     
                     button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
     
-                    api.get().executeOnMain(() -> {
+                    api.executeOnMain(() -> {
                         button.setMessage(new LiteralText("Reloading chunks..."));
                         MinecraftClient.getInstance().worldRenderer.reload();
                         onClose();
@@ -140,12 +140,11 @@ public class ScreenStartConquest extends ScreenTOK {
     @Override
     public void onClose() {
         super.onClose();
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
-            if (instance.isEmpty()) {
-                Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
-                player.sendMessage(new LiteralText("Start conquest menu was closed. Press ").append(keyName).append(" to open it again."), false);
-            }
-        });
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
+        if (instance.isEmpty()) {
+            Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
+            player.sendMessage(new LiteralText("Start conquest menu was closed. Press ").append(keyName).append(" to open it again."), false);
+        }
     }
 }
