@@ -124,7 +124,7 @@ public class GameInstanceListener extends Listener {
             instance.setEnd(end);
             instance.setBankerCoins(player.getUuid(), 0);
             instance.setCoins(player.getUuid(), 0);
-            instance.setFarmerLastBread(player.getUuid(), 0);
+            instance.setFarmerLastBread(player.getUuid(), -1);
             instance.setHasContract(player.getUuid(), false);
             instance.setWorthiness(player.getUuid(), 0);
             
