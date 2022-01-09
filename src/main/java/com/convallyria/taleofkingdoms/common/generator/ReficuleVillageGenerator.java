@@ -105,15 +105,9 @@ public class ReficuleVillageGenerator {
 
             if (percent > 60) {
                 switch (metadata) {
-                    case "ReficuleSoldier":
-                        EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, pos);
-                        break;
-                    case "ReficuleArcher":
-                        EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, pos);
-                        break;
-                    case "ReficuleMage":
-                        EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, pos);
-                        break;
+                    case "ReficuleSoldier" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, pos);
+                    case "ReficuleArcher" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, pos);
+                    case "ReficuleMage" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, pos);
                 }
             }
         }
