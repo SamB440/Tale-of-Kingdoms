@@ -19,8 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.text.DecimalFormat;
-
 public class CityBuilderEntity extends TOKEntity {
 
     private static final TrackedData<Boolean> MOVING_TO_LOCATION;
@@ -53,7 +51,7 @@ public class CityBuilderEntity extends TOKEntity {
                 BlockPos current = this.getBlockPos();
                 int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
                 if (distance < (3000)) {
-                    Translations.CITYBUILDER_DISTANCE.send(player, String.valueOf(distance), String.valueOf(3000));
+                    Translations.CITYBUILDER_DISTANCE.send(player, distance, 3000);
                     return;
                 }
 

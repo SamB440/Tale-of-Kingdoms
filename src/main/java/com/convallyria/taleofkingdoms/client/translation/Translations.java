@@ -73,19 +73,19 @@ public enum Translations {
         playerEntity.sendMessage(getTranslation(), false);
     }
 
-    public void send(PlayerEntity playerEntity, String... values) {
+    public void send(PlayerEntity playerEntity, Object... values) {
         send(playerEntity, false, values);
     }
 
-    public void send(PlayerEntity playerEntity, boolean actionbar, String... values) {
+    public void send(PlayerEntity playerEntity, boolean actionbar, Object... values) {
         playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().getString(), values)), actionbar);
     }
 
     @NotNull
-    private String replaceVariables(String message, String... values) {
+    private String replaceVariables(String message, Object... values) {
         String modifiedMessage = message;
         for (int i = 0; i < 10; i++) {
-            if (values.length > i) modifiedMessage = modifiedMessage.replaceAll("%" + i, values[i]);
+            if (values.length > i) modifiedMessage = modifiedMessage.replaceAll("%" + i, String.valueOf(values[i]));
             else break;
         }
 
