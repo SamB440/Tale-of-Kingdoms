@@ -70,5 +70,6 @@
     "entity.taleofkingdoms.foodshop": "Мазагин еды",
     "entity_type.taleofkingdoms.lostvillager.thank": "Хвала небесам! Наша деревня была атакована рефикулами. Отведи меня в гильдию, пожалуйста.",
     "entity_type.taleofkingdoms.lone.thank": "Мой король! Спасибо вам, за то, что спасли их! Я дам знать §eГлаве Гильдии§r о твоих усилиях.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Потерянный житель: Мой король! Спасибо за спасение!"
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Потерянный житель: Мой король! Спасибо за спасение!",
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
 }

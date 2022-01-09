@@ -70,5 +70,6 @@
     "entity.taleofkingdoms.foodshop": "Keittomestari",
     "entity_type.taleofkingdoms.lostvillager.thank": "Luojan kiitos! Demonit hyökkäsivät kyläämme. Voisitteko johdattaa minut takaisin killan suojaan?",
     "entity_type.taleofkingdoms.lone.thank": "Kuninkaani! Suuret kiitokset kyläläisten pelastamisesta! Kerron ponnistuksistasi §eKiltamestarille§r.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Eksynyt kyläläinen: Kuninkaani! Kiitän teitä pelastamisestani."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Eksynyt kyläläinen: Kuninkaani! Kiitän teitä pelastamisestani.",
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
 }
