@@ -70,5 +70,6 @@
     "entity.taleofkingdoms.foodshop": "Essensladen",
     "entity_type.taleofkingdoms.lostvillager.thank": "Danke den Himmel! Unser Dorf wurde von den Reficules angegriffen. Bitte führe mich zurück in die Gilde.",
     "entity_type.taleofkingdoms.lone.thank": "Mein König! Vielen Dank, dass du sie gerettet hast! Ich werde den §eGildenmeister§r deine Bemühungen wissen lassen.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Verlorener Bewohner: Mein König! Vielen Dank für die Rettung."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Verlorener Bewohner: Mein König! Vielen Dank für die Rettung.",
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
 }

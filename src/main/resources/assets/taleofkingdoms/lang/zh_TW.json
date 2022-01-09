@@ -70,5 +70,6 @@
     "entity.taleofkingdoms.foodshop": "食品商人",
     "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild.",
     "entity_type.taleofkingdoms.lone.thank": "My king! Thank you for saving them! I will let the §eGuild Master§r know of your efforts.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me.",
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
 }
