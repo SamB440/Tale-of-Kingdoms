@@ -70,5 +70,6 @@
     "entity.taleofkingdoms.foodshop": "Voedsel winkel",
     "entity_type.taleofkingdoms.lostvillager.thank": "Godzijdank! Ons drop is aangevallen door de reficules. Alsjeblieft, leid mij terug naar de gilde.",
     "entity_type.taleofkingdoms.lone.thank": "Mijn Koning! Dank u zeer voor het redden van hen! Ik zal de §eGilde Meester§r laten weten wat van je daad.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Verloren dropeling: Mijn koning! Bedankt dat u me geredt hebt."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "Verloren dropeling: Mijn koning! Bedankt dat u me geredt hebt.",
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
 }
