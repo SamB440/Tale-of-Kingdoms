@@ -70,5 +70,6 @@
     "entity.taleofkingdoms.foodshop": "חנות מזון",
     "entity_type.taleofkingdoms.lostvillager.thank": "תודה לאל! היישוב שלנו היה מותקף על ידי הנבלים. בבקשה, תוביל אותי בחזרה לממלכה.",
     "entity_type.taleofkingdoms.lone.thank": "מלכי! תודה לך שהצלתה אותם! אני אגיד ל§אדון הממלכה§r על המאמצים שלך.",
-    "entity_type.taleofkingdoms.lostvillager.guild_thank": "כפרי אבוד: מלכי! תודה לך שהצלת אותי."
+    "entity_type.taleofkingdoms.lostvillager.guild_thank": "כפרי אבוד: מלכי! תודה לך שהצלת אותי.",
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
 }
