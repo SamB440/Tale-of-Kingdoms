@@ -189,6 +189,7 @@ public class GuildMasterScreen extends ScreenTOK {
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
             if (MinecraftClient.getInstance().getServer() != null) {
                 instance.setHasContract(false);
+                Translations.GUILDMASTER_CONTRACT_CANCEL_AWAIT.send(player);
             } else {
                 TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
                         .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
