@@ -32,18 +32,17 @@ import java.util.concurrent.CompletableFuture;
 public class GameInstanceListener extends Listener {
 
     public GameInstanceListener() {
-        GameInstanceCallback.EVENT.register(gameInstance -> {
-            TaleOfKingdoms.getAPI().ifPresent(api -> api.setServer(gameInstance));
-        });
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        GameInstanceCallback.EVENT.register(api::setServer);
 
-        PlayerJoinCallback.EVENT.register((no, player) -> TaleOfKingdoms.getAPI().ifPresent(api -> {
+        PlayerJoinCallback.EVENT.register((no, player) -> {
             if (!api.executeOnDedicatedServer(() -> {
                 MinecraftDedicatedServer server = api.getServer().get();
                 boolean loaded = load(server.getLevelName(), api);
                 File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ".conquestworld");
                 if (loaded) {
                     // Already exists
-                    Gson gson = TaleOfKingdoms.getAPI().get().getMod().getGson();
+                    Gson gson = api.getMod().getGson();
                     try {
                         // Load from json into class
                         ConquestInstance instance = null;
@@ -67,9 +66,9 @@ public class GameInstanceListener extends Listener {
             })) {
                 TaleOfKingdoms.LOGGER.error("Dedicated server not present!");
             }
-        }));
+        });
 
-        PlayerJoinWorldCallback.EVENT.register(player -> TaleOfKingdoms.getAPI().ifPresent(api -> {
+        PlayerJoinWorldCallback.EVENT.register(player -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (instance instanceof ServerConquestInstance serverConquestInstance) {
                     if (!serverConquestInstance.hasPlayer(player.getUuid())) {
@@ -78,16 +77,16 @@ public class GameInstanceListener extends Listener {
                     serverConquestInstance.sync(player);
                 }
             });
-        }));
+        });
 
-        PlayerLeaveCallback.EVENT.register(player -> TaleOfKingdoms.getAPI().ifPresent(api -> {
+        PlayerLeaveCallback.EVENT.register(player -> {
             api.executeOnDedicatedServer(() -> {
                 api.getServer().flatMap(server -> api.getConquestInstanceStorage()
                         .getConquestInstance(server.getLevelName())).ifPresent(conquestInstance -> {
                     conquestInstance.save(api);
                 });
             });
-        }));
+        });
     }
 
     private boolean load(String worldName, TaleOfKingdomsAPI api) {
@@ -125,7 +124,7 @@ public class GameInstanceListener extends Listener {
             instance.setEnd(end);
             instance.setBankerCoins(player.getUuid(), 0);
             instance.setCoins(player.getUuid(), 0);
-            instance.setFarmerLastBread(player.getUuid(), 0);
+            instance.setFarmerLastBread(player.getUuid(), -1);
             instance.setHasContract(player.getUuid(), false);
             instance.setWorthiness(player.getUuid(), 0);
             

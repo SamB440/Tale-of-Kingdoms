@@ -52,15 +52,14 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     @Override
     public void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         this.textRenderer.draw(matrices, new LiteralText("Total Money:"), (float)this.playerInventoryTitleX + 20, (float)this.playerInventoryTitleY - 50, 4210752);
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
-            int x = this.playerInventoryTitleX + 25;
-            int y = this.playerInventoryTitleY - 40;
-            if (instance.isPresent()) {
-                int coins = instance.get().getCoins(playerInventory.player.getUuid());
-                this.textRenderer.draw(matrices, new LiteralText(coins + " Gold Coins"), x, y, 4210752);
-            }
-        });
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
+        int x = this.playerInventoryTitleX + 25;
+        int y = this.playerInventoryTitleY - 40;
+        if (instance.isPresent()) {
+            int coins = instance.get().getCoins(playerInventory.player.getUuid());
+            this.textRenderer.draw(matrices, new LiteralText(coins + " Gold Coins"), x, y, 4210752);
+        }
     }
 
     @Override
@@ -71,15 +70,12 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     @Override
     public void onClose() {
-        TaleOfKingdoms.getAPI().ifPresent(api -> api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             World world = playerInventory.player.world;
-            instance.getGuildEntity(world, EntityTypes.BLACKSMITH).ifPresent(entity -> {
-                deleteBlock(api, entity);
-            });
-            instance.getGuildEntity(playerInventory.player.world, EntityTypes.FOODSHOP).ifPresent(entity -> {
-                deleteBlock(api, entity);
-            });
-        }));
+            instance.getGuildEntity(world, EntityTypes.BLACKSMITH).ifPresent(entity -> deleteBlock(api, entity));
+            instance.getGuildEntity(playerInventory.player.world, EntityTypes.FOODSHOP).ifPresent(entity -> deleteBlock(api, entity));
+        });
         super.onClose();
     }
 

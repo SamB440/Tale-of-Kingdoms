@@ -63,7 +63,7 @@ public abstract class ConquestInstance {
     private boolean hasRebuilt;
 
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
-        Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI()
+        Optional<ConquestInstance> instance = Optional.ofNullable(TaleOfKingdoms.getAPI())
                 .map(TaleOfKingdomsAPI::getConquestInstanceStorage)
                 .orElseThrow(() -> new IllegalArgumentException("API not present"))
                 .getConquestInstance(world);

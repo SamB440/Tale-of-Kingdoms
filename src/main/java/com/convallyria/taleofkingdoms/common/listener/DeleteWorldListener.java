@@ -10,7 +10,13 @@ public class DeleteWorldListener extends Listener {
 
     public DeleteWorldListener() {
         WorldDeleteCallback.EVENT.register(worldName -> {
-            File file = new File(TaleOfKingdoms.getAPI().map(TaleOfKingdomsAPI::getDataFolder).orElseThrow(() -> new IllegalArgumentException("API not present")) + "worlds/" + worldName + ".conquestworld");
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            if (api == null) {
+                TaleOfKingdoms.LOGGER.warn("Unable to delete world as api is null.");
+                return;
+            }
+
+            File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
             if (!file.delete() && file.exists()) {
                 TaleOfKingdoms.LOGGER.error("Unable to delete " + worldName + ".conquestworld file");
             }

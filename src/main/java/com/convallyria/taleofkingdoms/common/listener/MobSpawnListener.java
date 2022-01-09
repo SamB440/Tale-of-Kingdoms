@@ -20,8 +20,8 @@ public class MobSpawnListener extends Listener {
     public MobSpawnListener() {
         EntitySpawnCallback.EVENT.register(entity -> {
             if (!BLACKLIST.contains(entity.getType()) && ItemHelper.isHostileEntity(entity)) {
-                Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
-                return !instance.isPresent() || !instance.get().isInGuild(entity);
+                Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance();
+                return instance.isEmpty() || !instance.get().isInGuild(entity);
             }
             return true;
         });

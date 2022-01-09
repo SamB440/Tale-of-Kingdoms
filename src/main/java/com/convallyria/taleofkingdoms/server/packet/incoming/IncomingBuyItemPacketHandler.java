@@ -28,14 +28,14 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         String itemName = attachedData.readString(32367);
         int count = attachedData.readInt();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 if (!instance.isInGuild(player)) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not in guild.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
                 }
 
@@ -43,19 +43,19 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                 Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
                 if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
                 if (entity.isEmpty()) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop entity not present in guild.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop entity not present in guild.");
                     return;
                 }
 
                 ShopItem shopItem = getShopItem(itemName);
                 if (shopItem == null) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Shop item not found.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop item not found.");
                     return;
                 }
 
                 int cost = shopItem.getCost() * count;
                 if (instance.getCoins(player.getUuid()) < cost) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Coins requirement not met.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Coins requirement not met.");
                     return;
                 }
 

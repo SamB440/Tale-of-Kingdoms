@@ -112,10 +112,31 @@ To enable hot-swapping, do the following (in IntelliJ):
 4. Uncheck `enable JVM will hang warning`
 5. Set reload classes after compilation to `always`.
 
-You can reload a class by right clicking it in the explorer then selecting 'Recompile x.class'
+Then follow this tutorial: https://medium.com/@jonastm/jdk-17-with-dcevm-and-hotswapagent-4fee7095617a
 
-Run the `runClient` task by pressing `ALT + SHIFT + F9`, going to `tale-of-kingdoms [runClient]`, pressing the arrow and selecting debug.
-See things change as you code!
+**Important**: Make sure you download the correct JBR, it should have this format (note the **sdk**): ` jbrsdk_dcevm-17_0_1-windows-x64-b164.4.tar.gz`
+
+Then you need to disable using Gradle for hot-swapping and instead use your IDE.
+
+**IntelliJ**:
+- `CTRL+ALT+S`
+- `Build, Execution, Deployment > Build Tools > Gradle`
+- `Build and run using: IntelliJ`
+- `Run tests using: IntelliJ`
+
+Now navigate to `Run > Edit Configurations`. Select `Application > Minecraft Client`. 
+Add the `-XX:+AllowEnhancedClassRedefinition` flag, and the `-XX:HotswapAgent=fatjar` flag.
+
+Ensure your `Working Directory` is set to the `run` folder in your project.
+
+You then need to add mixin hot-swaps: https://fabricmc.net/wiki/tutorial:mixin_hotswaps
+
+**Final Steps**
+Ensure the Gradle JDK is set to JBR for the project.
+
+You can now run the Minecraft Client task by going to `ALT+SHIFT+F9 > Minecraft Client`!
+
+You can reload a class by doing `CTRL+SHIFT+F9` or right-clicking it in the explorer then selecting 'Recompile x.class'
 
 #### Upgrading textures
 Some textures are in the old 64x32 format. 1.9+ uses 64x64 for skin textures.

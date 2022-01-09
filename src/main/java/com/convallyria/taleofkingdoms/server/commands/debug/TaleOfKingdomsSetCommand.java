@@ -19,7 +19,7 @@ public class TaleOfKingdomsSetCommand implements Command<ServerCommandSource> {
     }
 
     public static int setCoins(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
 
@@ -33,7 +33,7 @@ public class TaleOfKingdomsSetCommand implements Command<ServerCommandSource> {
     }
 
     public static int setWorthiness(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
 

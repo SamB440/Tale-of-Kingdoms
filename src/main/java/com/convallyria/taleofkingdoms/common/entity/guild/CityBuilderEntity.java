@@ -48,29 +48,27 @@ public class CityBuilderEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
-                    BlockPos current = this.getBlockPos();
-                    int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
-                    if (distance < (3000)) {
-                        Translations.CITYBUILDER_DISTANCE.send(player, String.valueOf(distance), String.valueOf(3000));
-                        return;
-                    }
-
-                    player.sendMessage(new LiteralText("would open gui"), false);
-                    //TODO open gui
+        TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
+                BlockPos current = this.getBlockPos();
+                int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
+                if (distance < (3000)) {
+                    Translations.CITYBUILDER_DISTANCE.send(player, String.valueOf(distance), String.valueOf(3000));
                     return;
                 }
 
-                if (instance.getWorthiness(player.getUuid()) >= 1500) {
-                    Translations.CITYBUILDER_BUILD.send(player);
-                    this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
-                    this.getDataTracker().set(MOVING_TO_LOCATION, true);
-                } else {
-                    Translations.CITYBUILDER_MESSAGE.send(player);
-                }
-            });
+                player.sendMessage(new LiteralText("would open gui"), false);
+                //TODO open gui
+                return;
+            }
+
+            if (instance.getWorthiness(player.getUuid()) >= 1500) {
+                Translations.CITYBUILDER_BUILD.send(player);
+                this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
+                this.getDataTracker().set(MOVING_TO_LOCATION, true);
+            } else {
+                Translations.CITYBUILDER_MESSAGE.send(player);
+            }
         });
         return ActionResult.PASS;
     }

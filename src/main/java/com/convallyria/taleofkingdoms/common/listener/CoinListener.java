@@ -46,7 +46,7 @@ public class CoinListener extends Listener {
      */
     private void dropCoinsOnDeath() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 PlayerEntity playerEntity = null;
                 if (entity instanceof PlayerEntity) {
                     int subtract = (instance.getCoins(entity.getUuid()) / 20);
@@ -93,7 +93,7 @@ public class CoinListener extends Listener {
     private void coinPickup() {
         EntityPickupItemCallback.EVENT.register((player, item) -> {
             if (equalsCoin(item)) {
-                TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+                TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
                     instance.addCoins(player.getUuid(), random.nextInt(10));
                     if (instance instanceof ServerConquestInstance) {

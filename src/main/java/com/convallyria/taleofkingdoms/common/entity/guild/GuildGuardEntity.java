@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
@@ -57,37 +58,36 @@ public class GuildGuardEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(final PlayerEntity player, final Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (instance.hasAttacked(player.getUuid())) {
-                    if (player.getMainHandStack().getItem() == Items.WOODEN_SWORD) {
-                        this.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
-                        if (player.world.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
-                        final int[] countdown = {3};
-                        api.getScheduler().repeatN(server -> {
-                            boolean send = FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT || player.world.isClient();
-                            if (send) player.sendMessage(new LiteralText("" + countdown[0]), false);
-                            countdown[0] = countdown[0] - 1;
-                        }, 3, 0, 20);
-                        api.getScheduler().queue(server -> {
-                            final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true);
-                            this.targetSelector.add(0, goal);
-                            if (player.world.isClient()) Translations.GUILDMEMBER_BEGIN.send(player);
-                            api.getScheduler().queue(server2 -> {
-                                this.targetSelector.remove(goal);
-                                if (player.world.isClient()) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
-                                instance.addWorthiness(player.getUuid(), 2);
-                                this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-                            }, 160);
-                        }, 80);
-                        player.getInventory().removeOne(player.getMainHandStack());
-                        return;
-                    }
-                    if (player.world.isClient()) Translations.GUILDMEMBER_FIGHTER.send(player);
-                } else {
-                    if (player.world.isClient()) Translations.GUILDMEMBER_START.send(player);
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            if (instance.hasAttacked(player.getUuid())) {
+                if (player.getMainHandStack().getItem() == Items.WOODEN_SWORD) {
+                    this.setStackInHand(Hand.MAIN_HAND, player.getMainHandStack());
+                    if (player.world.isClient()) Translations.GUILDMEMBER_START_FIGHT.send(player);
+                    final int[] countdown = {3};
+                    api.getScheduler().repeatN(server -> {
+                        boolean send = FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT || player.world.isClient();
+                        if (send) player.sendMessage(new LiteralText("" + countdown[0]), false);
+                        countdown[0] = countdown[0] - 1;
+                    }, 3, 0, 20);
+                    api.getScheduler().queue(server -> {
+                        final ImprovedFollowTargetGoal<PlayerEntity> goal = new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true);
+                        this.targetSelector.add(0, goal);
+                        if (player.world.isClient()) Translations.GUILDMEMBER_BEGIN.send(player);
+                        api.getScheduler().queue(server2 -> {
+                            this.targetSelector.remove(goal);
+                            if (player.world.isClient()) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
+                            instance.addWorthiness(player.getUuid(), 2);
+                            this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+                        }, 160);
+                    }, 80);
+                    player.getInventory().removeOne(player.getMainHandStack());
+                    return;
                 }
-            });
+                if (player.world.isClient()) Translations.GUILDMEMBER_FIGHTER.send(player);
+            } else {
+                if (player.world.isClient()) Translations.GUILDMEMBER_START.send(player);
+            }
         });
         return ActionResult.SUCCESS;
     }

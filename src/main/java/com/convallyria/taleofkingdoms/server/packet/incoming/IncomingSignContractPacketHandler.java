@@ -25,7 +25,7 @@ public final class IncomingSignContractPacketHandler extends ServerPacketHandler
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         boolean sign = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
                 PlayerEntity playerEntity = context.player();
                 Optional<GuildMasterEntity> entity = instance.getGuildEntity(playerEntity.world, EntityTypes.GUILDMASTER);

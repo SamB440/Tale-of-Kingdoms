@@ -1,11 +1,10 @@
 package com.convallyria.taleofkingdoms.server.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +15,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Environment(EnvType.SERVER)
 public class ServerConquestInstance extends ConquestInstance {
 
     private final Map<UUID, Integer> playerCoins;
@@ -126,9 +124,8 @@ public class ServerConquestInstance extends ConquestInstance {
     }
 
     public void sync(@NotNull ServerPlayerEntity player) {
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            PacketHandler packetHandler = api.getServerHandler(TaleOfKingdoms.INSTANCE_PACKET_ID);
-            packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, this);
-        });
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        PacketHandler packetHandler = api.getServerHandler(TaleOfKingdoms.INSTANCE_PACKET_ID);
+        packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, this);
     }
 }

@@ -64,9 +64,9 @@ public class SellScreenHandler extends ScreenHandler {
     public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
         if (i == 0) {
             ItemStack itemStack = playerEntity.currentScreenHandler.getCursorStack();
-            Optional<TaleOfKingdomsAPI> api = TaleOfKingdoms.getAPI();
-            if (api.isEmpty()) return;
-            Optional<ConquestInstance> instance = api.get().getConquestInstanceStorage().mostRecentInstance();
+            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            if (api == null) return;
+            Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             if (instance.isEmpty()) return;
             playerEntity.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
 

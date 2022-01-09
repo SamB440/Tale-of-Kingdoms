@@ -27,39 +27,39 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context;
         UUID uuid = player.getUuid();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         BankerMethod method = attachedData.readEnumConstant(BankerMethod.class);
         int coins = attachedData.readInt();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 if (!instance.isInGuild(player)) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not in guild.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
                 }
 
                 // Search for banker
                 Optional<BankerEntity> entity = instance.getGuildEntity(player.world, EntityTypes.BANKER);
                 if (entity.isEmpty()) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Banker entity not present in guild.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Banker entity not present in guild.");
                     return;
                 }
 
                 if (instance.getCoins(uuid) == 0 && instance.getBankerCoins(uuid) == 0) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": No coins.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": No coins.");
                     return;
                 }
 
                 if (method == BankerMethod.DEPOSIT) {
                     if (instance.getCoins(uuid) < coins) {
-                        TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not enough coins.");
+                        TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not enough coins.");
                         return;
                     }
                     instance.setCoins(uuid, instance.getCoins(uuid) - coins);
                     instance.setBankerCoins(uuid, instance.getBankerCoins(uuid) + coins);
                 } else {
                     if (instance.getBankerCoins(uuid) < coins) {
-                        TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not enough coins.");
+                        TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not enough coins.");
                         return;
                     }
                     instance.setBankerCoins(uuid, instance.getBankerCoins(uuid) - coins);

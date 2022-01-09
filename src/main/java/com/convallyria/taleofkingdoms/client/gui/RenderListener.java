@@ -10,7 +10,7 @@ public class RenderListener extends Listener {
 
     public RenderListener() {
         InventoryDrawCallback.EVENT.register((gui, matrices, textRenderer) -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(instance -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 drawWithoutShadow(matrices, textRenderer, "Gold Coins: " + instance.getCoins(), gui.width / 2 - 50, gui.height / 2 - 100, 16763904);
             });
         });

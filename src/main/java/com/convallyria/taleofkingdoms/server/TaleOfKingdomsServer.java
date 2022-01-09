@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.server;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
@@ -38,20 +39,19 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
     }
 
     protected void registerHandler(ServerPacketHandler serverPacketHandler) {
-        TaleOfKingdoms.getAPI().ifPresent(api -> api.registerServerHandler(serverPacketHandler));
+        TaleOfKingdoms.getAPI().registerServerHandler(serverPacketHandler);
     }
 
     private void registerTasks() {
-        TaleOfKingdoms.getAPI().ifPresent(api -> {
-            api.getScheduler().repeating(server -> {
-                api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                    ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
-                    server.getPlayerManager().getPlayerList().forEach(player -> {
-                        serverConquestInstance.sync(player);
-                        TaleOfKingdoms.LOGGER.info("Synced player data");
-                    });
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        api.getScheduler().repeating(server -> {
+            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+                ServerConquestInstance serverConquestInstance = (ServerConquestInstance) instance;
+                server.getPlayerManager().getPlayerList().forEach(player -> {
+                    serverConquestInstance.sync(player);
+                    TaleOfKingdoms.LOGGER.info("Synced player data");
                 });
-            }, 20, 1000);
-        });
+            });
+        }, 20, 1000);
     }
 }

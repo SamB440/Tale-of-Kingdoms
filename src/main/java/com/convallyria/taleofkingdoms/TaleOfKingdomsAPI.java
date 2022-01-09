@@ -2,9 +2,8 @@ package com.convallyria.taleofkingdoms;
 
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.scheduler.Scheduler;
-import com.convallyria.taleofkingdoms.common.schematic.ClientSchematicHandler;
+import com.convallyria.taleofkingdoms.common.schematic.CommonSchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
-import com.convallyria.taleofkingdoms.server.schematic.ServerSchematicHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
@@ -150,10 +149,6 @@ public class TaleOfKingdomsAPI {
 
     @NotNull
     public SchematicHandler getSchematicHandler() {
-        if (this.minecraftServer != null) {
-            return new ServerSchematicHandler();
-        } else {
-            return new ClientSchematicHandler();
-        }
+        return new CommonSchematicHandler();
     }
 }

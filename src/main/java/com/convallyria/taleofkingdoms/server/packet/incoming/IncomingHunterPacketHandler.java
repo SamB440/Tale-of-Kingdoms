@@ -28,38 +28,38 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         UUID uuid = player.getUuid();
-        String playerContext = " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
         boolean retire = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().flatMap(api -> api.getConquestInstanceStorage().mostRecentInstance()).ifPresent(inst -> {
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 if (!instance.isInGuild(player)) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not in guild.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
                 }
 
                 // Search for banker
                 Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
                 if (entity.isEmpty()) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Guildmaster entity not present in guild.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Guildmaster entity not present in guild.");
                     return;
                 }
 
                 if (instance.getCoins(uuid) == 0 && instance.getBankerCoins(uuid) == 0) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": No coins.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": No coins.");
                     return;
                 }
 
                 if (retire) {
                     if (!instance.getHunterUUIDs().containsKey(uuid) || instance.getHunterUUIDs().get(uuid).isEmpty()) {
-                        TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": No hunters to retire.");
+                        TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": No hunters to retire.");
                         return;
                     }
 
                     HunterEntity hunterEntity = (HunterEntity) player.getServerWorld().getEntity(instance.getHunterUUIDs().get(uuid).get(0));
                     //TODO we need to match client logic here
                     if (hunterEntity == null) {
-                        TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Hunter entity returned null.");
+                        TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Hunter entity returned null.");
                         return;
                     }
 
@@ -71,7 +71,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                 }
 
                 if (instance.getCoins(uuid) < 1500) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + identifier.toString() + playerContext + ": Not enough coins.");
+                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not enough coins.");
                     return;
                 }
 

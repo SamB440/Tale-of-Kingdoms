@@ -1,10 +1,8 @@
 package com.convallyria.taleofkingdoms.common.entity.generic;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
-import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -49,7 +47,7 @@ public class KnightEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ConquestInstance instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance().get();
+        //ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         //TODO
         return ActionResult.PASS;
     }

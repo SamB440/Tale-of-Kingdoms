@@ -45,7 +45,7 @@ public class GuildMasterEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
-        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI().get();
+        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
 
         if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
@@ -61,8 +61,9 @@ public class GuildMasterEntity extends TOKEntity {
 
     @Override
     public boolean isFireImmune() {
-        if (TaleOfKingdoms.getAPI().isPresent()) {
-            Optional<ConquestInstance> instance = TaleOfKingdoms.getAPI().get().getConquestInstanceStorage().mostRecentInstance();
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        if (api != null) {
+            Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()) {
                 return instance.get().isUnderAttack();
             }
