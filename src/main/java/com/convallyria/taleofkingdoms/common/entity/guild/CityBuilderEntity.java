@@ -1,9 +1,12 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.CityBuilderBeginGui;
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.CityBuilderBeginScreen;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.damage.DamageSource;
@@ -12,7 +15,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -55,8 +57,7 @@ public class CityBuilderEntity extends TOKEntity {
                     return;
                 }
 
-                player.sendMessage(new LiteralText("would open gui"), false);
-                //TODO open gui
+                TaleOfKingdoms.getAPI().executeOnMain(() -> MinecraftClient.getInstance().setScreen(new CityBuilderBeginScreen(new CityBuilderBeginGui())));
                 return;
             }
 

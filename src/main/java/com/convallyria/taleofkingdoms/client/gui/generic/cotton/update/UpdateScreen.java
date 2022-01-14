@@ -14,8 +14,4 @@ public class UpdateScreen extends CottonClientScreen {
         return true;
     }
 
-    @Override
-    public boolean shouldCloseOnEsc() {
-        return true;
-    }
 }

@@ -34,6 +34,7 @@ public class UpdateGui extends LightweightGuiDescription {
         WSprite icon = new WSprite(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png"));
         root.add(icon, 0, 0, 400, 256);
 
+        // Make a scroll box and read all the changes from CHANGELOG.md
         WBox scrollBox = new WBox(Axis.VERTICAL);
         List<String> updates = new ArrayList<>();
         InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("CHANGELOG.md");
