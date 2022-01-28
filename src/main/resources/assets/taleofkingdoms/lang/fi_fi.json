@@ -1,9 +1,9 @@
 {
     "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms: Asetukset",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Näytä kuningaskunta-ikkuna",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Näytä matkan jatkamisen ikkuna",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Portaalin luontitahti",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Demonikylien luontitahti",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Aloita matka",
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
