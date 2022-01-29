@@ -1,5 +1,5 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "Asetukset: Tale of Kingdoms",
+    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms -asetukset",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Näytä kuningaskunta-ikkuna",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Näytä seikkailun jatkamisen ikkuna",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Portaalin luontitahti",
@@ -47,7 +47,7 @@
     "entity_type.taleofkingdoms.bank.zero": "Pankkiiri: Sinulla ei ole rahaa! Surmaa hirviöitä ansaitaksesi kultaa.",
     "entity_type.taleofkingdoms.bank.input": "Pankkiiri: Ole hyvä ja syötä lukumäärä.",
     "entity_type.taleofkingdoms.citybuilder.message": "Rakentaja: Kuninkaani, kunniatasonne ei vielä riitä kuningaskunnan rakentamiseen. Kiltamestari auttaa sinua!",
-    "entity_type.taleofkingdoms.citybuilder.build": "Rakentaja: Rakentakaamme teille kaupunki, herrani!",
+    "entity_type.taleofkingdoms.citybuilder.build": "Rakentaja: Rakentakaamme teille kaupunki, herrani! Näyttäkää vain mihin!",
     "menu.taleofkingdoms.innkeeper.name": "Majatalon isäntä",
     "generic.taleofkingdoms.need_contract": "Majatalon isäntä: Tarvitset sopimuksen! Käy kiltamestarin luona yläkerrassa.",
     "generic.taleofkingdoms.serve": "Olen palveluksessanne, herrani!",
