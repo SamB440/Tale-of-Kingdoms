@@ -1,7 +1,6 @@
 package com.convallyria.taleofkingdoms.client.translation;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,12 +62,12 @@ public enum Translations {
         playerEntity.sendMessage(getTranslation(), false);
     }
 
-    public void send(PlayerEntity playerEntity, String... values) {
+    public void send(PlayerEntity playerEntity, Object... values) {
         send(playerEntity, false, values);
     }
 
-    public void send(PlayerEntity playerEntity, boolean actionbar, String... values) {
-        playerEntity.sendMessage(new LiteralText(replaceVariables(getTranslation().getString(), values)), actionbar);
+    public void send(PlayerEntity playerEntity, boolean actionbar, Object... values) {
+        playerEntity.sendMessage(new TranslatableText(key, values), actionbar);
     }
 
     @NotNull
