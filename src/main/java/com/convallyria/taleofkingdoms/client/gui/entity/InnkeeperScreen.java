@@ -52,8 +52,7 @@ public class InnkeeperScreen extends ScreenTOK {
                 if (server == null) {
                     api.getClientHandler(TaleOfKingdoms.INNKEEPER_PACKET_ID)
                             .handleOutgoingPacket(TaleOfKingdoms.INNKEEPER_PACKET_ID,
-                                    player,
-                                    null, true);
+                                    player, true);
                     return;
                 }
 
@@ -84,8 +83,7 @@ public class InnkeeperScreen extends ScreenTOK {
             if (server == null) {
                 api.getClientHandler(TaleOfKingdoms.INNKEEPER_PACKET_ID)
                         .handleOutgoingPacket(TaleOfKingdoms.INNKEEPER_PACKET_ID,
-                                player,
-                                null, false);
+                                player, false);
                 return;
             }
 

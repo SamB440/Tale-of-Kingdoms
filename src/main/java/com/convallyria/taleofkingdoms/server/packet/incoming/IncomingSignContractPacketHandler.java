@@ -39,8 +39,9 @@ public final class IncomingSignContractPacketHandler extends ServerPacketHandler
                     return;
                 }
 
+                TaleOfKingdoms.LOGGER.info("Handling contract sign for player " + playerEntity.getUuid() + ": " + sign);
                 serverConquestInstance.setHasContract(playerEntity.getUuid(), sign);
-                this.handleOutgoingPacket(identifier, playerEntity, null, true);
+                this.handleOutgoingPacket(identifier, playerEntity, true);
             });
         });
     }

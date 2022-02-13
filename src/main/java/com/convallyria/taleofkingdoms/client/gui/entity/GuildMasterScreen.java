@@ -169,9 +169,7 @@ public class GuildMasterScreen extends ScreenTOK {
             } else {
                 TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
                         .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
-                                player,
-                                client.getNetworkHandler().getConnection(),
-                                true);
+                                player, true);
             }
             button.visible = false;
             button.active = false;
@@ -193,9 +191,7 @@ public class GuildMasterScreen extends ScreenTOK {
             } else {
                 TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
                         .handleOutgoingPacket(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID,
-                                player,
-                                client.getNetworkHandler().getConnection(),
-                                false);
+                                player, false);
             }
             button.visible = false;
             button.active = false;
@@ -217,9 +213,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     api.getClientHandler(TaleOfKingdoms.HUNTER_PACKET_ID)
                             .handleOutgoingPacket(TaleOfKingdoms.HUNTER_PACKET_ID,
-                                    player,
-                                    client.getNetworkHandler().getConnection(),
-                                    false);
+                                    player, false);
                     return;
                 }
 

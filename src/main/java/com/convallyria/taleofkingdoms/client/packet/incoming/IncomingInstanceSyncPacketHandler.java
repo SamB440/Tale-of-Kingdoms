@@ -50,6 +50,7 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
                 instance = new ClientConquestInstance(world, name, start, end, origin);
             }
 
+            TaleOfKingdoms.LOGGER.info("Has contract? " + hasContract);
             instance.setBankerCoins(bankerCoins);
             instance.setCoins(coins);
             instance.setWorthiness(worthiness);

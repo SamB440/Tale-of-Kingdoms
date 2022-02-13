@@ -39,9 +39,7 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
             passedData.writeBlockPos(instance.getStart());
             passedData.writeBlockPos(instance.getEnd());
             passedData.writeBlockPos(instance.getOrigin());
-            instance.getHunterUUIDs().forEach((playerUuid, hunterUuids) -> {
-                hunterUuids.forEach(passedData::writeUuid);
-            });
+            instance.getHunterUUIDs().forEach((playerUuid, hunterUuids) -> hunterUuids.forEach(passedData::writeUuid));
             sendPacket(player, passedData);
         }
     }

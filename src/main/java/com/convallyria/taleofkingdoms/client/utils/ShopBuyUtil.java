@@ -23,8 +23,7 @@ public class ShopBuyUtil {
                 if (server == null) {
                     api.getClientHandler(TaleOfKingdoms.BUY_ITEM_PACKET_ID)
                             .handleOutgoingPacket(TaleOfKingdoms.BUY_ITEM_PACKET_ID,
-                                    player,
-                                    null, shopItem.getName(), count);
+                                    player, shopItem.getName(), count);
                     return;
                 }
 

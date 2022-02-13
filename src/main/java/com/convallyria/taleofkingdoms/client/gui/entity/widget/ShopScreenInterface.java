@@ -28,8 +28,7 @@ public interface ShopScreenInterface {
         if (MinecraftClient.getInstance().getServer() == null) {
             api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
                     .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
-                            player,
-                            null, false);
+                            player, false);
             return;
         }
 

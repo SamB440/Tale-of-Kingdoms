@@ -49,8 +49,7 @@ public class BankerScreen extends ScreenTOK {
                     if (MinecraftClient.getInstance().getServer() == null) {
                         TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
-                                        player,
-                                        null, BankerMethod.DEPOSIT, coins);
+                                        player, BankerMethod.DEPOSIT, coins);
                         return;
                     }
                     instance.setCoins(instance.getCoins() - coins);
@@ -74,8 +73,7 @@ public class BankerScreen extends ScreenTOK {
                     if (MinecraftClient.getInstance().getServer() == null) {
                         TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
-                                        player,
-                                        null, BankerMethod.WITHDRAW, coins);
+                                        player, BankerMethod.WITHDRAW, coins);
                         return;
                     }
                     instance.setBankerCoins(instance.getBankerCoins() - coins);
