@@ -1,7 +1,7 @@
 <br/>
 <div align="center">
-  <a href="https://gitlab.com/SamB440/tale-of-kingdoms">
-    <img src="https://gitlab.com/SamB440/tale-of-kingdoms/-/raw/master/src/main/resources/assets/taleofkingdoms/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/SamB440/tale-of-kingdoms">
+    <img src="https://github.com/SamB440/Tale-of-Kingdoms/blob/master/src/main/resources/assets/taleofkingdoms/logo.png?raw=true" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Tale of Kingdoms</h3>
@@ -18,11 +18,11 @@
     <a href="/issues/new">Request Feature</a>
   </p>
 
-![Build](https://img.shields.io/gitlab/pipeline/SamB440/tale-of-kingdoms/master)
-![Forks](https://img.shields.io/badge/dynamic/json?color=white&label=Forks&query=%24.forks_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
-![Stargazers](https://img.shields.io/badge/dynamic/json?color=white&label=Stars&query=%24.star_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
-![Issues](https://img.shields.io/badge/dynamic/json?color=white&label=Issues&query=%24.open_issues_count&url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2F13573442) 
-![License](https://img.shields.io/badge/license-GPL-blue)
+![Build](https://img.shields.io/github/workflow/status/SamB440/Tale-of-Kingdoms/build)
+![Forks](https://img.shields.io/github/forks/SamB440/Tale-of-Kingdoms) 
+![Stargazers](https://img.shields.io/github/stars/SamB440/Tale-of-Kingdoms) 
+![Issues](https://img.shields.io/github/issues/SamB440/Tale-of-Kingdoms) 
+![License](https://img.shields.io/github/license/SamB440/Tale-of-Kingdoms)
 [![Crowdin](https://badges.crowdin.net/tale-of-kingdoms/localized.svg)](https://crowdin.com/project/tale-of-kingdoms)
 </div>
 
@@ -73,7 +73,7 @@ sudo apt install adoptopenjdk-16-hotspot
 1. Clone the repo
 
 ```sh
-git clone https://gitlab.com/SamB440/tale-of-kingdoms.git
+git clone https://github.com/SamB440/Tale-of-Kingdoms.git
 ```
 
 2. cd into project
@@ -172,9 +172,9 @@ Distributed under the GNU GPL v3 License. See [LICENSE](LICENSE.md) for more inf
 
 ## Authors
 
-* **SamB440** - [SamB440](https://gitlab.com/SamB440) - *Maintainer/creator*
-* **JordanPlayz158** - [JordanPlayz158](https://gitlab.com/jordanplayz158) - *Developer*
-* **michaelb229** - [michaelb229](https://gitlab.com/epicwarrior) - *Maintainer*
+* **SamB440** - [SamB440](https://github.com/SamB440) - *Maintainer/creator*
+* **JordanPlayz158** - [JordanPlayz158](https://github.com/jordanplayz158) - *Developer*
+* **michaelb229** - [michaelb229](https://github.com/) - *Maintainer*
 
 ## Acknowledgements
 
