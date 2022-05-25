@@ -10,7 +10,7 @@ public class UpdateScreen extends CottonClientScreen {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return true;
     }
 

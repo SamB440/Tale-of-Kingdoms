@@ -72,7 +72,7 @@ public class GuildMasterScreen extends ScreenTOK {
                                         player,
                                         client.getNetworkHandler().getConnection(),
                                         true);
-                        this.onClose();
+                        this.close();
                         return;
                     }
 
@@ -95,11 +95,11 @@ public class GuildMasterScreen extends ScreenTOK {
                     Translations.GUILDMASTER_NOHUNTER.send(player);
                 }
             }
-            this.onClose();
+            this.close();
         }));
 
         PlayerInventory clientPlayerInventory = player.getInventory();
-        ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS.values(), 64);
+        ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS, 64);
         String fixText = "Fix the guild";
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -122,12 +122,12 @@ public class GuildMasterScreen extends ScreenTOK {
                     instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
                 }
             });
-            this.onClose();
+            this.close();
         }));
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 46, 150, 20, new LiteralText("Exit"), (button) -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
-            this.onClose();
+            this.close();
         }));
 
         this.worthness = new ScreenBar(this.width / 2 - 65 , this.height / 2 + 83, 125, 12, 1.0F, ScreenBar.BarColour.RED);
@@ -146,7 +146,7 @@ public class GuildMasterScreen extends ScreenTOK {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 

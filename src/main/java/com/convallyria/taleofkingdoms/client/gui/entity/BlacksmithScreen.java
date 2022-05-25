@@ -97,7 +97,7 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
         }));
         this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
         this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.close()));
 
         this.selectedItem = shopItems.get(0);
 
@@ -144,13 +144,13 @@ public class BlacksmithScreen extends ScreenTOK implements ShopScreenInterface {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void close() {
+        super.close();
         Translations.SHOP_CLOSE.send(player);
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 

@@ -138,6 +138,9 @@ You can now run the Minecraft Client task by going to `ALT+SHIFT+F9 > Minecraft 
 
 You can reload a class by doing `CTRL+SHIFT+F9` or right-clicking it in the explorer then selecting 'Recompile x.class'
 
+Common issues:
+* "Error opening zip file or JAR manifest missing": Your mixin hot-swaps link is outdated. Go through the "mixin hotswaps" tutorial again.
+
 #### Upgrading textures
 Some textures are in the old 64x32 format. 1.9+ uses 64x64 for skin textures.
 Upgrading these skins can be done by going to https://www.minecraftskins.com/skin-editor/,

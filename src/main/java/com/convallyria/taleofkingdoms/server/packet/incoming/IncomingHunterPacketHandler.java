@@ -56,7 +56,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                         return;
                     }
 
-                    HunterEntity hunterEntity = (HunterEntity) player.getServerWorld().getEntity(instance.getHunterUUIDs().get(uuid).get(0));
+                    HunterEntity hunterEntity = (HunterEntity) player.getWorld().getEntity(instance.getHunterUUIDs().get(uuid).get(0));
                     //TODO we need to match client logic here
                     if (hunterEntity == null) {
                         TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Hunter entity returned null.");

@@ -40,12 +40,12 @@ public class BankerScreen extends ScreenTOK {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
-                    this.onClose();
+                    this.close();
                     return;
                 }
 
                 if (instance.getCoins() >= coins) {
-                    this.onClose();
+                    this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
                         TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
@@ -57,7 +57,7 @@ public class BankerScreen extends ScreenTOK {
                 }
             } catch (NumberFormatException e) {
                 Translations.BANK_INPUT.send(player);
-                this.onClose();
+                this.close();
             }
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new LiteralText("Withdraw"), (button) -> {
@@ -65,11 +65,11 @@ public class BankerScreen extends ScreenTOK {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
                     Translations.BANK_ZERO.send(player);
-                    this.onClose();
+                    this.close();
                     return;
                 }
                 if (instance.getBankerCoins() >= coins) {
-                    this.onClose();
+                    this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
                         TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID)
                                 .handleOutgoingPacket(TaleOfKingdoms.BANKER_INTERACT_PACKET_ID,
@@ -81,11 +81,11 @@ public class BankerScreen extends ScreenTOK {
                 }
             } catch (NumberFormatException e) {
                 Translations.BANK_INPUT.send(player);
-                this.onClose();
+                this.close();
             }
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
-            this.onClose();
+            this.close();
         }));
 
         this.text.setMaxLength(12);
@@ -99,8 +99,8 @@ public class BankerScreen extends ScreenTOK {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void close() {
+        super.close();
         Translations.BANK_NO_SPEND.send(player);
     }
 
@@ -114,7 +114,7 @@ public class BankerScreen extends ScreenTOK {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 

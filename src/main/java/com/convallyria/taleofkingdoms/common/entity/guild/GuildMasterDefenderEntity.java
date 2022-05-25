@@ -10,7 +10,6 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTarget
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -21,6 +20,7 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -31,8 +31,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class GuildMasterDefenderEntity extends GuildMasterEntity {
     private boolean givenSword;
@@ -88,7 +88,8 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {
-            if (!givenSword && !player.getInventory().containsAny(new HashSet<>(FabricToolTags.SWORDS.values()))) { // Use containsAny method as it is present on both server and client
+            Set<Item> swords = Set.of(Items.IRON_SWORD, Items.STONE_SWORD, Items.DIAMOND_SWORD, Items.GOLDEN_SWORD, Items.WOODEN_SWORD, Items.NETHERITE_SWORD);
+            if (!givenSword && !player.getInventory().containsAny(swords)) { // Use containsAny method as it is present on both server and client
                 Runnable giveItem = () -> {
                     MinecraftServer server = player.getServer();
                     if (server != null) {
@@ -107,7 +108,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                         PlayerInventory playerInventory = serverPlayerEntity.getInventory();
                         ItemStack stack = null;
                         for (ItemStack itemStack : playerInventory.main) {
-                            if (ItemTags.LOGS.values().contains(itemStack.getItem())) {
+                            if (itemStack.isIn(ItemTags.LOGS)) {
                                 if (itemStack.getCount() == 64) {
                                     stack = itemStack;
                                     break;
@@ -120,7 +121,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             instance.rebuild(serverPlayerEntity, api);
                             instance.setRebuilt(true);
                             instance.setUnderAttack(false);
-                            serverPlayerEntity.getServerWorld().getEntityById(this.getId()).kill();
+                            serverPlayerEntity.getWorld().getEntityById(this.getId()).kill();
                             Translations.GUILDMASTER_THANK_YOU.send(player);
                         } else {
                             Translations.GUILDMASTER_REBUILD.send(player);

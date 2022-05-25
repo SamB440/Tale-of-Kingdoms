@@ -1,0 +1,19 @@
+{
+  "name": "taleofkingdoms:gateway",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "taleofkingdoms:gateway",
+        "projection": "rigid",
+        "processors": [
+          {
+            "processor_type": "taleofkingdoms:gateway"
+          }
+        ]
+      }
+    }
+  ]
+}

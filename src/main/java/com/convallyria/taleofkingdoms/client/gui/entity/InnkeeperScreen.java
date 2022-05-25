@@ -38,7 +38,7 @@ public class InnkeeperScreen extends ScreenTOK {
     public void init() {
         super.init();
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
-            this.onClose();
+            this.close();
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -71,7 +71,7 @@ public class InnkeeperScreen extends ScreenTOK {
         }));
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
-            this.onClose();
+            this.close();
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
@@ -91,7 +91,7 @@ public class InnkeeperScreen extends ScreenTOK {
             conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.close()));
     }
 
     @Override
@@ -102,7 +102,7 @@ public class InnkeeperScreen extends ScreenTOK {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 
@@ -112,8 +112,8 @@ public class InnkeeperScreen extends ScreenTOK {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void close() {
+        super.close();
         Translations.INNKEEPER_LEAVE.send(player);
     }
 }

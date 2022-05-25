@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:village",
+  "config": {
+    "start_pool": "taleofkingdoms:gateway",
+    "size": 1
+  },
+  "biomes": "#minecraft:has_structure/mineshaft",
+  "adapt_noise": false,
+  "spawn_overrides": {}
+}

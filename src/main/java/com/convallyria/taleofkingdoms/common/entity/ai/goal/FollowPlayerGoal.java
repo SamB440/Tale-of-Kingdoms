@@ -84,7 +84,7 @@ public class FollowPlayerGoal extends Goal {
     @Override
     public void tick() {
         if (this.target != null && !this.mob.isLeashed()) {
-            this.mob.getLookControl().lookAt(this.target, 10.0F, (float)this.mob.getLookPitchSpeed());
+            this.mob.getLookControl().lookAt(this.target, 10.0F, (float)this.mob.getMaxLookPitchChange());
             if (--this.updateCountdownTicks <= 0) {
                 this.updateCountdownTicks = 10;
                 double d = this.mob.getX() - this.target.getX();

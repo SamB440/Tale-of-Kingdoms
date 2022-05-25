@@ -69,14 +69,14 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             World world = playerInventory.player.world;
             instance.getGuildEntity(world, EntityTypes.BLACKSMITH).ifPresent(entity -> deleteBlock(api, entity));
             instance.getGuildEntity(playerInventory.player.world, EntityTypes.FOODSHOP).ifPresent(entity -> deleteBlock(api, entity));
         });
-        super.onClose();
+        super.close();
     }
 
     protected void deleteBlock(TaleOfKingdomsAPI api, Entity entity) {

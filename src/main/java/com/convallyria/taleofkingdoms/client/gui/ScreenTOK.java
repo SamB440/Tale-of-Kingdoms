@@ -52,7 +52,7 @@ public abstract class ScreenTOK extends Screen {
      * @return true if it pauses the game
      */
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return true;
     }
 }

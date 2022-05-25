@@ -53,7 +53,7 @@ public abstract class CottonScreenTOK extends CottonClientScreen {
      * @return true if it pauses the game
      */
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return true;
     }
 }

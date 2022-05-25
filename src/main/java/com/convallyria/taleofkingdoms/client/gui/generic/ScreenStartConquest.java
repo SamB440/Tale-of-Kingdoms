@@ -95,7 +95,7 @@ public class ScreenStartConquest extends ScreenTOK {
                     api.executeOnMain(() -> {
                         button.setMessage(new LiteralText("Reloading chunks..."));
                         MinecraftClient.getInstance().worldRenderer.reload();
-                        onClose();
+                        close();
                         loading = false;
                         instance.setLoaded(true);
                         instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
@@ -134,13 +134,13 @@ public class ScreenStartConquest extends ScreenTOK {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return true;
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void close() {
+        super.close();
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
         if (instance.isEmpty()) {

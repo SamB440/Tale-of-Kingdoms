@@ -13,7 +13,6 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
 
@@ -35,9 +34,9 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
             Translations.LONE_HELP.send(player);
 
-            BlockPos structureLocation = player.getServerWorld().locateStructure(TaleOfKingdoms.REFICULE_VILLAGE_STRUCTURE, player.getBlockPos(), 100, false);
-            String message = "[\"\",{\"text\":\"Do you wish to \"},{\"text\":\"teleport\",\"bold\":true,\"underlined\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tp " + structureLocation.getX() + " 100 " + structureLocation.getZ() + "\"}},{\"text\":\" to the village?\"}]";
-            player.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
+            //BlockPos structureLocation = player.getWorld().locateStructure(TaleOfKingdoms.REFICULE_VILLAGE_STRUCTURE, player.getBlockPos(), 100, false);
+            //String message = "[\"\",{\"text\":\"Do you wish to \"},{\"text\":\"teleport\",\"bold\":true,\"underlined\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tp " + structureLocation.getX() + " 100 " + structureLocation.getZ() + "\"}},{\"text\":\" to the village?\"}]";
+            //player.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
 
             return 1;
         } catch (CommandSyntaxException e) {
@@ -62,7 +61,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             // The guild must not be rebuilt
             instance.setRebuilt(false);
 
-            instance.attack(player, player.getServerWorld());
+            instance.attack(player, player.getWorld());
 
             instance.setWorthiness(playerUuid, instance.getWorthiness(playerUuid) - 750);
 

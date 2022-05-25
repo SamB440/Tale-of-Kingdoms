@@ -36,7 +36,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
                 ServerConquestInstance instance = (ServerConquestInstance) inst;
                 PlayerInventory playerInventory = player.getInventory();
-                ItemStack stack = InventoryUtils.getStack(playerInventory, ItemTags.LOGS.values(), 64);
+                ItemStack stack = InventoryUtils.getStack(playerInventory, ItemTags.LOGS, 64);
                 if (stack == null) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Inventory requirement not met. Data mismatch?");
                     return;

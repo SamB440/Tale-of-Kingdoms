@@ -8,7 +8,6 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
@@ -187,7 +186,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
         public void tick() {
             if (SpellcastingEntity.this.getTarget() != null) {
-                SpellcastingEntity.this.getLookControl().lookAt(SpellcastingEntity.this.getTarget(), (float) SpellcastingEntity.this.getBodyYawSpeed(), (float) SpellcastingEntity.this.getLookPitchSpeed());
+                SpellcastingEntity.this.getLookControl().lookAt(SpellcastingEntity.this.getTarget(), (float) SpellcastingEntity.this.getMaxHeadRotation(), (float) SpellcastingEntity.this.getMaxLookPitchChange());
             }
         }
     }

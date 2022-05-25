@@ -53,7 +53,7 @@ public class UpdateGui extends LightweightGuiDescription {
         root.add(new WLabel(new LiteralText("Tale of Kingdoms updates")).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), 200, 10, 8, 2);
         root.add(new WScrollPanel(scrollBox), 50, 50, 300, 100);
         WButton exitButton = new WButton(new LiteralText("Exit"));
-        exitButton.setOnClick(() -> MinecraftClient.getInstance().currentScreen.onClose());
+        exitButton.setOnClick(() -> MinecraftClient.getInstance().currentScreen.close());
         root.add(exitButton, 178, root.getHeight() / 2 + 40, 45, 20);
         root.validate(this);
     }

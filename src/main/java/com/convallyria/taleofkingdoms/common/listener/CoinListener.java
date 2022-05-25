@@ -79,7 +79,7 @@ public class CoinListener extends Listener {
                     }
 
                     if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                        instance.attack(serverPlayerEntity, serverPlayerEntity.getServerWorld());
+                        instance.attack(serverPlayerEntity, serverPlayerEntity.getWorld());
                     }
 
                     if (instance instanceof ServerConquestInstance serverConquestInstance) {
