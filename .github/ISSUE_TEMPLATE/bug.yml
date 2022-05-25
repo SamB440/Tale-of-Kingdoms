@@ -1,0 +1,62 @@
+name: Bug report
+description: Report issues with plugin incompatbility or other behavior related issues.
+labels: [ "bug" ]
+body:
+  - type: textarea
+    attributes:
+      label: Summary
+      description: A short explanation of the bug.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: How one can reproduce the issue - this is very important.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behaviour
+      description: What you would expect to actually happen.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Mod list
+      description: Show all of the mods that you are using alongside ToK.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Possible fixes
+      description: If you can, link to the line of code that might be responsible for the problem
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Relevent logs and/or screenshots/videos
+      description: |
+        Paste any relevant logs - please use code blocks (```) to format console output, logs, and code, as
+        it's very hard to read otherwise. You can also use https://pastebin.com to make our life easier.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Other
+      description: Is there anything else we should know?
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        Before you submit this bug report, please make sure:
+
+        1. Your Minecraft version is supported.
+        2. You are using the latest version of ToK.
