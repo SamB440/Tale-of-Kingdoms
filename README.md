@@ -174,7 +174,7 @@ Distributed under the GNU GPL v3 License. See [LICENSE](LICENSE.md) for more inf
 
 * **SamB440** - [SamB440](https://github.com/SamB440) - *Maintainer/creator*
 * **JordanPlayz158** - [JordanPlayz158](https://github.com/jordanplayz158) - *Developer*
-* **michaelb229** - [michaelb229](https://github.com/) - *Maintainer*
+* **michaelb229** - [michaelb229](https://github.com/epicwarrior229) - *Maintainer*
 
 ## Acknowledgements
 
