@@ -29,6 +29,7 @@ public class GatewayStructureProcessor extends StructureProcessor {
 
     public GatewayStructureProcessor() { }
 
+    // Used for the guild attack - not the general structure spawn. That's why we add to reficule attackers.
     @Nullable
     public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
         ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;

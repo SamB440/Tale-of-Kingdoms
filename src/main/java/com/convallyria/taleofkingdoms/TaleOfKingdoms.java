@@ -89,7 +89,7 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Identifier HUNTER_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "hunter");
     public static final Identifier INNKEEPER_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "innkeeper");
 
-    public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("guild", GuildStructureProcessor.CODEC);
+    public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("taleofkingdoms:guild", GuildStructureProcessor.CODEC);
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("taleofkingdoms:gateway", GatewayStructureProcessor.CODEC);
 
     public static final ScreenHandlerType<SellScreenHandler> SELL_SCREEN_HANDLER;
@@ -183,39 +183,19 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     private void registerFeatures() {
-
-        //todo for 1.18.2: do we need FabricStructureBuilder.create? It seems to have been removed
-        // and moved to BiomeModifications#addFeature instead
-//        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
-//        Random random = ThreadLocalRandom.current();
-//        int seed = random.nextInt(9000) + 1000;
-////        FabricStructureBuilder.create(new Identifier(MODID, "reficule_village"), REFICULE_VILLAGE_STRUCTURE)
-////                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-////                .defaultConfig(48, 8, seed)
-////                .adjustsSurface()
-////                .register();
-//
-//        RegistryKey<ConfiguredStructureFeature<?, ?>> reficuleVillage = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-//                new Identifier(MODID, "reficule_village"));
-//        Registry.register(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), REFICULE_VILLAGE_CONFIGURED);
-//        BiomeModifications.addFeature(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-//                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), GenerationStep.Feature.SURFACE_STRUCTURES, reficuleVillage);
-//
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), TOKStructures.GATEWAY);
-        //Registry.register(Registry.STRUCTURE_FEATURE, new Identifier(MODID, "gateway"), new GatewayFeature());
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
+
+        // Register as features
         TOKStructures.registerStructureFeatures();
-//        FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
-//                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-//                .defaultConfig(16, 8, seed - 256)
-//                .register();
 
         RegistryKey<ConfiguredStructureFeature<?, ?>> gateway = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
                 new Identifier(MODID, "gateway"));
         BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), TOKStructures.GATEWAY_CONFIGURED);
-//        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-//                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), gateway);
 
-
+        RegistryKey<ConfiguredStructureFeature<?, ?>> reficuleVillage = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
+                new Identifier(MODID, "reficule_village"));
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), TOKStructures.REFICULE_VILLAGE_CONFIGURED);
     }
 
     public static Text parse(StringReader stringReader) throws CommandSyntaxException {
