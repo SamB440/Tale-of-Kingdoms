@@ -56,7 +56,10 @@ import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -180,6 +183,7 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     private void registerFeatures() {
+
         //todo for 1.18.2: do we need FabricStructureBuilder.create? It seems to have been removed
         // and moved to BiomeModifications#addFeature instead
 //        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), REFICULE_VILLAGE);
@@ -197,17 +201,21 @@ public class TaleOfKingdoms implements ModInitializer {
 //        BiomeModifications.addFeature(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
 //                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.TAIGA, Biome.Category.SAVANNA, Biome.Category.MESA), GenerationStep.Feature.SURFACE_STRUCTURES, reficuleVillage);
 //
-//        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), GATEWAY);
-////        FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
-////                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
-////                .defaultConfig(16, 8, seed - 256)
-////                .register();
-//
-//
-//        BiomeModifications.addFeature(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
-//                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), GenerationStep.Feature.SURFACE_STRUCTURES,
-//                RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-//                        BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE.getId(GATEWAY_CONFIGURED)));
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), TOKStructures.GATEWAY);
+        //Registry.register(Registry.STRUCTURE_FEATURE, new Identifier(MODID, "gateway"), new GatewayFeature());
+        TOKStructures.registerStructureFeatures();
+//        FabricStructureBuilder.create(new Identifier(MODID, "gateway"), GATEWAY_STRUCTURE)
+//                .step(GenerationStep.Feature.SURFACE_STRUCTURES)
+//                .defaultConfig(16, 8, seed - 256)
+//                .register();
+
+        RegistryKey<ConfiguredStructureFeature<?, ?>> gateway = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
+                new Identifier(MODID, "gateway"));
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), TOKStructures.GATEWAY_CONFIGURED);
+//        BiomeModifications.addStructure(BiomeSelectors.categories(Biome.Category.PLAINS, Biome.Category.FOREST,
+//                Biome.Category.JUNGLE, Biome.Category.ICY, Biome.Category.DESERT, Biome.Category.MESA), gateway);
+
+
     }
 
     public static Text parse(StringReader stringReader) throws CommandSyntaxException {
