@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.client.gui.entity.InnkeeperScreen;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,6 +28,7 @@ public class InnkeeperEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 15.0F, 100F));
+        this.goalSelector.add(2, new WanderAroundGuildGoal(this, 0.5, 25, 3, 1));
     }
 
     @Environment(EnvType.CLIENT)
@@ -48,6 +50,10 @@ public class InnkeeperEntity extends TOKEntity {
         InnkeeperScreen screen = new InnkeeperScreen(player, this, instance);
         MinecraftClient.getInstance().setScreen(screen);
     }
+
+    // Disable jumping
+    @Override
+    public void jump() {}
 
     @Override
     public boolean isStationary() {

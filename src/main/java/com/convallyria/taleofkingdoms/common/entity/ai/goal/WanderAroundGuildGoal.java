@@ -21,13 +21,20 @@ public class WanderAroundGuildGoal extends Goal {
     protected final double speed;
     protected int chance;
     protected boolean ignoringChance;
+    private final int horizontalRange, verticalRange;
 
     public WanderAroundGuildGoal(PathAwareEntity mob, double speed) { this(mob, speed, 50); }
 
-    public WanderAroundGuildGoal(PathAwareEntity pathAwareEntity, double d, int i) {
+    public WanderAroundGuildGoal(PathAwareEntity pathAwareEntity, double speed, int chance) {
+        this(pathAwareEntity, speed, chance, 30, 7);
+    }
+
+    public WanderAroundGuildGoal(PathAwareEntity pathAwareEntity, double speed, int chance, int horizontalRange, int verticalRange) {
         this.mob = pathAwareEntity;
-        this.speed = d;
-        this.chance = i;
+        this.speed = speed;
+        this.chance = chance;
+        this.horizontalRange = horizontalRange;
+        this.verticalRange = verticalRange;
         this.setControls(EnumSet.of(Goal.Control.MOVE));
     }
 
@@ -66,7 +73,7 @@ public class WanderAroundGuildGoal extends Goal {
 
     @Nullable
     protected Vec3d getWanderTarget() {
-        return NoPenaltyTargeting.find(this.mob, 30, 7);
+        return NoPenaltyTargeting.find(this.mob, horizontalRange, verticalRange);
     }
 
     @Override
