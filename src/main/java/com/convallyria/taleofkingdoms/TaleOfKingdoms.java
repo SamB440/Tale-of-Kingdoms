@@ -56,10 +56,7 @@ import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -122,7 +119,7 @@ public class TaleOfKingdoms implements ModInitializer {
         registerCommands();
         TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
 
-        this.registerFeatures();
+        registerFeatures();
 
         FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity.createMobAttributes());
@@ -182,20 +179,12 @@ public class TaleOfKingdoms implements ModInitializer {
         new TaleOfKingdomsCommands();
     }
 
-    private void registerFeatures() {
-        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), TOKStructures.GATEWAY);
+    public void registerFeatures() {
+        //Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway"), TOKStructures.GATEWAY);
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
 
         // Register as features
         TOKStructures.registerStructureFeatures();
-
-        RegistryKey<ConfiguredStructureFeature<?, ?>> gateway = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-                new Identifier(MODID, "gateway"));
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, gateway.getValue(), TOKStructures.GATEWAY_CONFIGURED);
-
-        RegistryKey<ConfiguredStructureFeature<?, ?>> reficuleVillage = RegistryKey.of(Registry.CONFIGURED_STRUCTURE_FEATURE_KEY,
-                new Identifier(MODID, "reficule_village"));
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, reficuleVillage.getValue(), TOKStructures.REFICULE_VILLAGE_CONFIGURED);
     }
 
     public static Text parse(StringReader stringReader) throws CommandSyntaxException {

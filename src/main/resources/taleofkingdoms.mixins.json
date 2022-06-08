@@ -4,7 +4,7 @@
   "package": "com.convallyria.taleofkingdoms.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "StructureFeatureAccessor",
+    "StructureTypeAccessor",
     "common.EntityDeathEvent",
     "common.EntityPickupItemEvent",
     "common.EntitySpawnEvent",
@@ -13,6 +13,7 @@
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
     "common.PlayerLogin",
+    "common.SharedConstantsMixin",
     "structure.StructureBlockUnlimit",
     "structure.packet.ClientUpdateStructureBlockUnlimit"
   ],

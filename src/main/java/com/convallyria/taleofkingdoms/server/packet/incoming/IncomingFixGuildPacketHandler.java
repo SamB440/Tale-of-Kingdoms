@@ -5,8 +5,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -14,7 +14,7 @@ import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.ItemTags;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
@@ -53,7 +53,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
                 if (seconds <= 60) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Rebuilt too recently.");
                     int secondsLeft = 60 - seconds;
-                    player.sendMessage(new LiteralText("The guild was only rebuilt " + seconds + " seconds ago! Please wait " + secondsLeft + " more seconds."), false);
+                    player.sendMessage(Text.literal("The guild was only rebuilt " + seconds + " seconds ago! Please wait " + secondsLeft + " more seconds."), false);
                     return;
                 }
 

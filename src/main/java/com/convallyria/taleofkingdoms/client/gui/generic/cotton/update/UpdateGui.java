@@ -13,7 +13,7 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.io.BufferedReader;
@@ -47,12 +47,12 @@ public class UpdateGui extends LightweightGuiDescription {
         }
 
         for (String update : updates) {
-            scrollBox.add(new WLabel(new LiteralText(update)));
+            scrollBox.add(new WLabel(Text.literal(update)));
         }
 
-        root.add(new WLabel(new LiteralText("Tale of Kingdoms updates")).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), 200, 10, 8, 2);
+        root.add(new WLabel(Text.literal("Tale of Kingdoms updates")).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), 200, 10, 8, 2);
         root.add(new WScrollPanel(scrollBox), 50, 50, 300, 100);
-        WButton exitButton = new WButton(new LiteralText("Exit"));
+        WButton exitButton = new WButton(Text.literal("Exit"));
         exitButton.setOnClick(() -> MinecraftClient.getInstance().currentScreen.close());
         root.add(exitButton, 178, root.getHeight() / 2 + 40, 45, 20);
         root.validate(this);

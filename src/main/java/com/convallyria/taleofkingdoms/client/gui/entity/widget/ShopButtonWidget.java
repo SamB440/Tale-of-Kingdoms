@@ -3,13 +3,11 @@ package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +23,7 @@ public class ShopButtonWidget extends ButtonWidget {
     private final TextRenderer textRenderer;
 
     public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull ShopScreenInterface shopScreen, int x, int y, TextRenderer textRenderer) {
-        super(x, y, 110, 20, new LiteralText("Buy Button"), button -> shopScreen.setSelectedItem(shopItem));
+        super(x, y, 110, 20, Text.literal("Buy Button"), button -> shopScreen.setSelectedItem(shopItem));
         this.textRenderer = textRenderer;
         this.shopScreen = shopScreen;
         this.shopItem = shopItem;

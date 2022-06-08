@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -79,7 +78,7 @@ public class ItemPouch extends Item {
             NbtCompound compoundTag = stack.getNbt();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
-                tooltip.add(new LiteralText("Coins: " + coins).formatted(Formatting.GOLD, Formatting.ITALIC));
+                tooltip.add(Text.literal("Coins: " + coins).formatted(Formatting.GOLD, Formatting.ITALIC));
             }
         }
     }

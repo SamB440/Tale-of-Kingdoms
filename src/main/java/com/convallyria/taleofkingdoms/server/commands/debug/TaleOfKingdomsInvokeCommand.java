@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Texts;
-import net.minecraft.util.Util;
 
 import java.util.UUID;
 
@@ -22,13 +21,13 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
         Entity entity = context.getSource().getEntity();
         if (entity != null) {
             String message = "{\"text\":\"List of invoke events: saveVillagers, guildAttack\"}";
-            entity.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0), Util.NIL_UUID);
+            entity.sendMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0));
             return 1;
         }
         return 0;
     }
 
-    public static int invokeSaveVillagers(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int invokeSaveVillagers(CommandContext<ServerCommandSource> context) {
         try {
             ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -39,13 +38,13 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             //player.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), player, 0), Util.NIL_UUID);
 
             return 1;
-        } catch (CommandSyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
     }
 
-    public static int invokeGuildAttack(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int invokeGuildAttack(CommandContext<ServerCommandSource> context) {
         try {
             ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
             ServerPlayerEntity player = context.getSource().getPlayer();
@@ -71,7 +70,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
             TaleOfKingdoms.LOGGER.debug("Guild attack forcefully activated!");
             return 1;
-        } catch (CommandSyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             TaleOfKingdoms.LOGGER.debug("Guild attack forceful activation failed!");
             return 0;

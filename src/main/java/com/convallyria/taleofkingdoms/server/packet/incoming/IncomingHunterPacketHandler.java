@@ -28,7 +28,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         UUID uuid = player.getUuid();
-        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         boolean retire = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {

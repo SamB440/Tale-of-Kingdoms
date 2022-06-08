@@ -11,7 +11,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -62,7 +62,7 @@ public class LoneEntity extends TOKEntity {
 
                 Translations.LONE_THANK.send(player);
                 instance.setWorthiness(player.getUuid(), instance.getWorthiness(player.getUuid()) + loneVillagers.size() * 6);
-                player.sendMessage(new LiteralText("+" + loneVillagers.size() * 6 + " worthiness"), true);
+                player.sendMessage(Text.literal("+" + loneVillagers.size() * 6 + " worthiness"), true);
             } else {
                 Translations.LONE_HELP.send(player);
             }

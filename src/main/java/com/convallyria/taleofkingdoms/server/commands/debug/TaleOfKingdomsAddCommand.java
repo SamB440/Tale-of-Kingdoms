@@ -8,7 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
             serverConquestInstance.sync(player);
         }
 
-        player.sendMessage(new LiteralText("Your new balance is: " + instance.getCoins(playerUuid)), false);
+        player.sendMessage(Text.literal("Your new balance is: " + instance.getCoins(playerUuid)), false);
         return 1;
     }
 
@@ -42,7 +42,7 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
             serverConquestInstance.sync(player);
         }
 
-        player.sendMessage(new LiteralText("Your new worthiness is: " + instance.getWorthiness(playerUuid)), false);
+        player.sendMessage(Text.literal("Your new worthiness is: " + instance.getWorthiness(playerUuid)), false);
         return 1;
     }
 }

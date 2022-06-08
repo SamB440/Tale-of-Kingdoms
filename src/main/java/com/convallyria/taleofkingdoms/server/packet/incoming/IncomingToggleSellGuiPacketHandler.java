@@ -29,7 +29,7 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         boolean close = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();

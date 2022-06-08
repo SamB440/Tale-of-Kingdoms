@@ -11,8 +11,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
@@ -38,25 +38,26 @@ public class GuildStructureProcessor extends StructureProcessor {
     }
 
     @Nullable
-    public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
-        ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;
-        Structure.StructureBlockInfo air = new Structure.StructureBlockInfo(structureBlockInfo2.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
-        if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
-            String metadata = structureBlockInfo2.nbt.getString("metadata");
+    @Override
+    public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlacementData data) {
+        ServerWorldAccess serverWorldAccess = (ServerWorldAccess) world;
+        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
+        if (currentBlockInfo.state.getBlock() instanceof StructureBlock) {
+            String metadata = currentBlockInfo.nbt.getString("metadata");
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-            if (api == null) return structureBlockInfo2;
+            if (api == null) return currentBlockInfo;
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
-            TaleOfKingdoms.LOGGER.debug(structureBlockInfo2.pos);
-            if (instance.isEmpty()) return structureBlockInfo2;
+            TaleOfKingdoms.LOGGER.debug(currentBlockInfo.pos);
+            if (instance.isEmpty()) return currentBlockInfo;
 
             if (metadata.equalsIgnoreCase("Gateway")) {
-                if (!instance.get().isLoaded()) instance.get().getReficuleAttackLocations().add(structureBlockInfo2.pos);
+                if (!instance.get().isLoaded()) instance.get().getReficuleAttackLocations().add(currentBlockInfo.pos);
                 return air;
             }
 
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
-            BlockPos spawnPos = structureBlockInfo2.pos.add(0.5, 0, 0.5);
+            BlockPos spawnPos = currentBlockInfo.pos.add(0.5, 0, 0.5);
             try {
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
                 if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
@@ -79,7 +80,7 @@ public class GuildStructureProcessor extends StructureProcessor {
             }
             return air;
         }
-        return structureBlockInfo2;
+        return currentBlockInfo;
     }
 
     protected StructureProcessorType<?> getType() {

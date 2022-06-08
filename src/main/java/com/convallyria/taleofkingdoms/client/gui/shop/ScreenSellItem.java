@@ -13,7 +13,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -51,14 +50,14 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     @Override
     public void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        this.textRenderer.draw(matrices, new LiteralText("Total Money:"), (float)this.playerInventoryTitleX + 20, (float)this.playerInventoryTitleY - 50, 4210752);
+        this.textRenderer.draw(matrices, Text.literal("Total Money:"), (float)this.playerInventoryTitleX + 20, (float)this.playerInventoryTitleY - 50, 4210752);
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
         int x = this.playerInventoryTitleX + 25;
         int y = this.playerInventoryTitleY - 40;
         if (instance.isPresent()) {
             int coins = instance.get().getCoins(playerInventory.player.getUuid());
-            this.textRenderer.draw(matrices, new LiteralText(coins + " Gold Coins"), x, y, 4210752);
+            this.textRenderer.draw(matrices, Text.literal(coins + " Gold Coins"), x, y, 4210752);
         }
     }
 

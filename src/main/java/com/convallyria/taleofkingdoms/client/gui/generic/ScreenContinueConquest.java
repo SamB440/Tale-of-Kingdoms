@@ -5,7 +5,7 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class ScreenContinueConquest extends ScreenTOK {
 
@@ -24,7 +24,7 @@ public class ScreenContinueConquest extends ScreenTOK {
     public void init() {
         super.init();
         this.children().clear();
-        this.addDrawableChild(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height - (this.height / 4) + 10, 200, 20, new LiteralText("Continue your Conquest."), (button) -> this.close()));
+        this.addDrawableChild(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height - (this.height / 4) + 10, 200, 20, Text.literal("Continue your Conquest."), (button) -> this.close()));
     }
 
     @Override

@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public abstract class ScreenTOK extends Screen {
      * @param translation the translation key
      */
     protected ScreenTOK(String translation) {
-        super(new TranslatableText(translation));
+        super(Text.translatable(translation));
         this.images = new ArrayList<>();
     }
 

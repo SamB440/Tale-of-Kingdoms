@@ -9,13 +9,13 @@ import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsSetCom
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.tree.ArgumentCommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
 public class TaleOfKingdomsCommands {
     public TaleOfKingdomsCommands() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> { // Register commands
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated, registrationEnvironment) -> { // Register commands
             // Base node /taleofkingdoms
             LiteralCommandNode<ServerCommandSource> baseNode = CommandManager
                     .literal(TaleOfKingdoms.MODID)

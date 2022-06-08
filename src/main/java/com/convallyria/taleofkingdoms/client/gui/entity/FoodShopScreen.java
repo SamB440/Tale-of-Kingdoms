@@ -9,18 +9,17 @@ import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.gui.image.ScaleSize;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
 import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.client.utils.ShopBuyUtil;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -56,7 +55,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
         this.entity = entity;
         this.instance = instance;
         this.shopItems = FoodShopEntity.getFoodShopItems();
-        int guiScale = MinecraftClient.getInstance().options.guiScale;
+        int guiScale = MinecraftClient.getInstance().options.getGuiScale().getValue();
         Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
         if (scaleSize.isEmpty()) return;
         int x = scaleSize.get().getX();
@@ -82,19 +81,19 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, new LiteralText("Buy"), button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, Text.literal("Buy"), button -> {
             int count = 1;
             if (Screen.hasShiftDown()) count = 16;
             ShopBuyUtil.buyItem(instance, player, selectedItem, count);
         }, (button, stack, x, y) -> {
-            Text text = new LiteralText("Use Left Shift to buy 16x.");
+            Text text = Text.literal("Use Left Shift to buy 16x.");
             this.renderTooltip(stack, text, x, y);
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, new LiteralText("Sell"), button -> openSellGui(entity, player)));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30, 55, 20, Text.literal("Sell"), button -> openSellGui(entity, player)));
         this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
         this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160, this.height / 2 + 20, 45, 20, new LiteralText("Exit"), button -> this.close()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160, this.height / 2 + 20, 45, 20, Text.literal("Exit"), button -> this.close()));
 
         this.selectedItem = shopItems.get(0);
 

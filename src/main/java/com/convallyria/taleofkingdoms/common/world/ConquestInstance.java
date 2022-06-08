@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class ConquestInstance {
 
@@ -166,14 +166,14 @@ public abstract class ConquestInstance {
             Translations.GUILDMASTER_HELP.send(player);
 
             Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
-            world.toServerWorld().getStructureManager().getStructure(gateway).ifPresent(structure -> {
+            world.toServerWorld().getStructureTemplateManager().getTemplate(gateway).ifPresent(structure -> {
                 for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
                     StructurePlacementData structurePlacementData = new StructurePlacementData();
                     structurePlacementData.addProcessor(GatewayStructureProcessor.INSTANCE);
                     structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
                     structurePlacementData.addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR);
                     BlockPos newPos = reficuleAttackLocation.subtract(new Vec3i(6, 1, 6));
-                    structure.place(world, newPos, newPos, structurePlacementData, ThreadLocalRandom.current(), Block.NOTIFY_ALL);
+                    structure.place(world, newPos, newPos, structurePlacementData, Random.create(), Block.NOTIFY_ALL);
                 }
             });
         }

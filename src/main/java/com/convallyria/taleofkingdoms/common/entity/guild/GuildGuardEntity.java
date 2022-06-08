@@ -21,7 +21,7 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -67,7 +67,7 @@ public class GuildGuardEntity extends TOKEntity {
                     final int[] countdown = {3};
                     api.getScheduler().repeatN(server -> {
                         boolean send = FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT || player.world.isClient();
-                        if (send) player.sendMessage(new LiteralText("" + countdown[0]), false);
+                        if (send) player.sendMessage(Text.literal("" + countdown[0]), false);
                         countdown[0] = countdown[0] - 1;
                     }, 3, 0, 20);
                     api.getScheduler().queue(server -> {

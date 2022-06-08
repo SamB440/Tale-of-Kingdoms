@@ -4,10 +4,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.gson.Gson;
 import net.minecraft.client.MinecraftClient;
@@ -17,7 +17,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -53,20 +52,20 @@ public class ScreenStartConquest extends ScreenTOK {
     public void init() {
         super.init();
         this.children().clear();
-        this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 150, this.height / 2 - 40, 300, 20, new LiteralText("Sir Punchwood"));
+        this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 150, this.height / 2 - 40, 300, 20, Text.literal("Sir Punchwood"));
         this.addDrawableChild(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 15, 200, 20, Translations.START_CONQUEST.getTranslation(), (button) -> {
             if (loading) return;
 
             button.setMessage(Translations.BUILDING_CASTLE.getTranslation());
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             if (api == null) {
-                button.setMessage(new LiteralText("No API present"));
+                button.setMessage(Text.literal("No API present"));
                 return;
             }
 
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             if (server == null) {
-                button.setMessage(new LiteralText("No server present"));
+                button.setMessage(Text.literal("No server present"));
                 return;
             }
             ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
@@ -93,7 +92,7 @@ public class ScreenStartConquest extends ScreenTOK {
                     button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
     
                     api.executeOnMain(() -> {
-                        button.setMessage(new LiteralText("Reloading chunks..."));
+                        button.setMessage(Text.literal("Reloading chunks..."));
                         MinecraftClient.getInstance().worldRenderer.reload();
                         close();
                         loading = false;
@@ -145,7 +144,7 @@ public class ScreenStartConquest extends ScreenTOK {
         Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
         if (instance.isEmpty()) {
             Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
-            player.sendMessage(new LiteralText("Start conquest menu was closed. Press ").append(keyName).append(" to open it again."), false);
+            player.sendMessage(Text.literal("Start conquest menu was closed. Press ").append(keyName).append(" to open it again."), false);
         }
     }
 }

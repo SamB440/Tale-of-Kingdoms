@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.client.translation;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public enum Translations {
     FARMER_TAKE_BREAD("entity_type.taleofkingdoms.farmer.take_bread"),
@@ -66,11 +66,11 @@ public enum Translations {
     }
 
     public void send(PlayerEntity playerEntity, boolean actionbar, Object... values) {
-        playerEntity.sendMessage(new TranslatableText(key, values), actionbar);
+        playerEntity.sendMessage(Text.translatable(key, values), actionbar);
     }
 
-    public TranslatableText getTranslation() {
-        return new TranslatableText(key);
+    public Text getTranslation() {
+        return Text.translatable(key);
     }
     
     public String getFormatted() {

@@ -7,9 +7,9 @@ import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.SimpleStructurePiece;
 import net.minecraft.structure.StructureContext;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructurePiecesHolder;
 import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -18,10 +18,9 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
-
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ReficuleVillageGenerator {
 
@@ -32,8 +31,8 @@ public class ReficuleVillageGenerator {
     private static final Identifier MIDDLE_TWO = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
     private static final Identifier TOWER = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
 
-    public static void addPieces(StructureManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
-        final Direction direction = Direction.random(ThreadLocalRandom.current());
+    public static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
+        final Direction direction = Direction.random(random);
         ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);
         onePiece.setOrientation(direction);
         structurePiecesHolder.addPiece(onePiece);
@@ -65,58 +64,41 @@ public class ReficuleVillageGenerator {
     }
 
     public static class ReficuleVillagePiece extends SimpleStructurePiece {
-        private final BlockRotation rotation;
-        private final Identifier template;
 
-        public ReficuleVillagePiece(StructureManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
-            super(TOKStructures.REFICULE_VILLAGE, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation, identifier), blockPos);
-            this.pos = blockPos;
-            this.rotation = blockRotation;
-            this.template = identifier;
-            createPlacementData(blockRotation, identifier);
+        public ReficuleVillagePiece(StructureTemplateManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
+            super(TOKStructures.REFICULE_VILLAGE, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation), blockPos);
         }
 
-        public ReficuleVillagePiece(StructureManager structureManager, NbtCompound nbtCompound) {
-            super(TOKStructures.REFICULE_VILLAGE, nbtCompound, structureManager, (identifier) -> {
-                return createPlacementData(BlockRotation.valueOf(nbtCompound.getString("Rot")), identifier);
-            });
-            this.template = new Identifier(nbtCompound.getString("Template"));
-            this.rotation = BlockRotation.valueOf(nbtCompound.getString("Rot"));
-            createPlacementData(rotation, template);
+        public ReficuleVillagePiece(StructureTemplateManager structureManager, NbtCompound nbtCompound) {
+            super(TOKStructures.REFICULE_VILLAGE, nbtCompound, structureManager, (identifier) -> createPlacementData(null));
         }
 
         public ReficuleVillagePiece(StructureContext structureContext, NbtCompound nbtCompound) {
-            super(TOKStructures.REFICULE_VILLAGE, nbtCompound, structureContext.structureManager(), (identifier) -> {
-                return createPlacementData(BlockRotation.valueOf(nbtCompound.getString("Rot")), identifier);
-            });
-            this.template = new Identifier(nbtCompound.getString("Template"));
-            this.rotation = BlockRotation.valueOf(nbtCompound.getString("Rot"));
-            createPlacementData(rotation, template);
+            super(TOKStructures.REFICULE_VILLAGE, nbtCompound, structureContext.structureTemplateManager(), (identifier) -> createPlacementData(null));
         }
 
-        private static StructurePlacementData createPlacementData(BlockRotation blockRotation, Identifier identifier) {
+        private static StructurePlacementData createPlacementData(@Nullable BlockRotation rotation) {
             return (new StructurePlacementData())
-                    .setRotation(blockRotation)
+                    .setRotation(rotation != null ? rotation : BlockRotation.random(Random.create()))
                     .setMirror(BlockMirror.NONE)
                     .addProcessor(BlockIgnoreStructureProcessor.IGNORE_STRUCTURE_BLOCKS);
         }
 
         @Override
-        protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
-                                      BlockBox boundingBox) {
+        protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, net.minecraft.util.math.random.Random random, BlockBox boundingBox) {
             double percent = Math.random() * 100;
             if (metadata.equals("Survivor")) {
                 if (percent > 20) {
-                    EntityUtils.spawnEntity(EntityTypes.LONEVILLAGER, serverWorldAccess, pos);
+                    EntityUtils.spawnEntity(EntityTypes.LONEVILLAGER, world, pos);
                 }
                 return;
             }
 
             if (percent > 60) {
                 switch (metadata) {
-                    case "ReficuleSoldier" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, serverWorldAccess, pos);
-                    case "ReficuleArcher" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, serverWorldAccess, pos);
-                    case "ReficuleMage" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, serverWorldAccess, pos);
+                    case "ReficuleSoldier" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_SOLDIER, world, pos);
+                    case "ReficuleArcher" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_GUARDIAN, world, pos);
+                    case "ReficuleMage" -> EntityUtils.spawnEntity(EntityTypes.REFICULE_MAGE, world, pos);
                 }
             }
         }

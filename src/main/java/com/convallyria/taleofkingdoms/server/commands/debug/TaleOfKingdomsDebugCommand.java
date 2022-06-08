@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Texts;
-import net.minecraft.util.Util;
 
 public class TaleOfKingdomsDebugCommand implements Command<ServerCommandSource> {
     @Override
@@ -16,7 +15,7 @@ public class TaleOfKingdomsDebugCommand implements Command<ServerCommandSource> 
         Entity entity = context.getSource().getEntity();
         if (entity != null) {
             String message = "{\"text\":\"List of debug commands: invoke, set\"}";
-            entity.sendSystemMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0), Util.NIL_UUID);
+            entity.sendMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0));
             return 1;
         }
         return 0;

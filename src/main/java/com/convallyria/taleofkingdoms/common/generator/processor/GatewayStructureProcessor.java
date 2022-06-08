@@ -8,8 +8,8 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.Codec;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
@@ -31,15 +31,16 @@ public class GatewayStructureProcessor extends StructureProcessor {
 
     // Used for the guild attack - not the general structure spawn. That's why we add to reficule attackers.
     @Nullable
-    public Structure.StructureBlockInfo process(WorldView worldView, BlockPos pos, BlockPos blockPos, Structure.StructureBlockInfo structureBlockInfo, Structure.StructureBlockInfo structureBlockInfo2, StructurePlacementData structurePlacementData) {
-        ServerWorldAccess serverWorldAccess = (ServerWorldAccess) worldView;
-        BlockPos newPos = blockPos.subtract(new Vec3i(6, 0, 6));
-        if (structureBlockInfo2.state.getBlock() instanceof StructureBlock) {
-            String metadata = structureBlockInfo2.nbt.getString("metadata");
+    @Override
+    public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlacementData data) {
+        ServerWorldAccess serverWorldAccess = (ServerWorldAccess) world;
+        BlockPos newPos = pos.subtract(new Vec3i(6, 0, 6));
+        if (currentBlockInfo.state.getBlock() instanceof StructureBlock) {
+            String metadata = currentBlockInfo.nbt.getString("metadata");
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-            if (api == null) return structureBlockInfo2;
+            if (api == null) return currentBlockInfo;
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
-            if (instance.isEmpty()) return structureBlockInfo2;
+            if (instance.isEmpty()) return currentBlockInfo;
 
             switch (metadata) {
                 case "ReficuleSoldier" -> {
@@ -59,7 +60,7 @@ public class GatewayStructureProcessor extends StructureProcessor {
                 }
             }
         }
-        return structureBlockInfo2;
+        return currentBlockInfo;
     }
 
     protected StructureProcessorType<?> getType() {

@@ -28,7 +28,7 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         String itemName = attachedData.readString(32367);
         int count = attachedData.readInt();
         context.taskQueue().execute(() -> {

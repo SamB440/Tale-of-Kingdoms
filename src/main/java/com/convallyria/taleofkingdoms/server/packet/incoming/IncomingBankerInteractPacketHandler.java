@@ -27,7 +27,7 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context;
         UUID uuid = player.getUuid();
-        String playerContext = identifier.toString() + " @ <" + player.getName().asString() + ":" + player.getIp() + ">";
+        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         BankerMethod method = attachedData.readEnumConstant(BankerMethod.class);
         int coins = attachedData.readInt();
         context.taskQueue().execute(() -> {

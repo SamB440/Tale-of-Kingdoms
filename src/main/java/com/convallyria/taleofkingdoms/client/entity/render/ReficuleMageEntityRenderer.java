@@ -16,16 +16,16 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 @Environment(EnvType.CLIENT)
-public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends MobEntityRenderer<ReficuleMageEntity, PlayerEntityModel<ReficuleMageEntity>> {
+public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends MobEntityRenderer<T, PlayerEntityModel<T>> {
 
     private static final Identifier TEXTURE = new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png");
 
-    public ReficuleMageEntityRenderer(EntityRendererFactory.Context context, PlayerEntityModel<ReficuleMageEntity> modelBipedIn) {
+    public ReficuleMageEntityRenderer(EntityRendererFactory.Context context, PlayerEntityModel<T> modelBipedIn) {
         super(context, modelBipedIn, 0.5f);
-        this.addFeature(new HeadFeatureRenderer<>(this, context.getModelLoader()));
-        this.addFeature(new HeldItemFeatureRenderer<>(this) {
-            @Override
-            public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, ReficuleMageEntity reficuleMageEntity, float f, float g, float h, float j, float k, float l) {
+        this.addFeature(new HeadFeatureRenderer<>(this, context.getModelLoader(), context.getHeldItemRenderer()));
+        this.addFeature(new HeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()) {
+
+            public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, T reficuleMageEntity, float f, float g, float h, float j, float k, float l) {
                 if (reficuleMageEntity.isSpellcasting() || reficuleMageEntity.isAttacking()) {
                     super.render(matrixStack, vertexConsumerProvider, i, reficuleMageEntity, f, g, h, j, k, l);
                 }
@@ -39,7 +39,7 @@ public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends Mo
     }
 
     @Override
-    public void render(ReficuleMageEntity reficuleMageEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+    public void render(T reficuleMageEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         if (reficuleMageEntity.isInvisible()) {
             Vec3d[] vec3ds = reficuleMageEntity.method_7065(g);
             float h = this.getAnimationProgress(reficuleMageEntity, g);

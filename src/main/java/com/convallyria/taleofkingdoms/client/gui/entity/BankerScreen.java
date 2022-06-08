@@ -2,16 +2,16 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class BankerScreen extends ScreenTOK {
 
@@ -34,8 +34,8 @@ public class BankerScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 77, this.height / 2 - 85, 150, 20, new LiteralText("0"));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, new LiteralText("Deposit"), (button) -> {
+        this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 77, this.height / 2 - 85, 150, 20, Text.literal("0"));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, Text.literal("Deposit"), (button) -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
@@ -60,7 +60,7 @@ public class BankerScreen extends ScreenTOK {
                 this.close();
             }
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, new LiteralText("Withdraw"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, Text.literal("Withdraw"), (button) -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins() == 0 && instance.getBankerCoins() == 0) {
@@ -84,7 +84,7 @@ public class BankerScreen extends ScreenTOK {
                 this.close();
             }
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, Text.literal("Exit"), (button) -> {
             this.close();
         }));
 

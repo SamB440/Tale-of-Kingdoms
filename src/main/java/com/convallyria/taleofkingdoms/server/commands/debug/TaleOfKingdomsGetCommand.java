@@ -7,7 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
 
-        player.sendMessage(new LiteralText("Your balance is: " + instance.getCoins(playerUuid)), false);
+        player.sendMessage(Text.literal("Your balance is: " + instance.getCoins(playerUuid)), false);
         return 1;
     }
 
@@ -31,7 +31,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
 
-        player.sendMessage(new LiteralText("Your worthiness is: " + instance.getWorthiness(playerUuid)), false);
+        player.sendMessage(Text.literal("Your worthiness is: " + instance.getWorthiness(playerUuid)), false);
         return 1;
     }
 
@@ -39,7 +39,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
 
-        player.sendMessage(new LiteralText("Has the guild been rebuilt? " + instance.hasRebuilt()), false);
+        player.sendMessage(Text.literal("Has the guild been rebuilt? " + instance.hasRebuilt()), false);
         return 1;
     }
 
@@ -47,7 +47,7 @@ public class TaleOfKingdomsGetCommand implements Command<ServerCommandSource> {
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
 
-        player.sendMessage(new LiteralText("Has the guild been attacked? " + instance.hasAttacked(player.getUuid())), false);
+        player.sendMessage(Text.literal("Has the guild been attacked? " + instance.hasAttacked(player.getUuid())), false);
         return 1;
     }
 }

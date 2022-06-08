@@ -15,7 +15,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
@@ -37,7 +37,7 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, new LiteralText("Rest in a room."), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 50, 150, 20, Text.literal("Rest in a room."), (button) -> {
             this.close();
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
@@ -66,11 +66,11 @@ public class InnkeeperScreen extends ScreenTOK {
                     conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
                 });
             } else {
-                player.sendMessage(new LiteralText("House Keeper: It seems there are no rooms available at this time."), false);
+                player.sendMessage(Text.literal("House Keeper: It seems there are no rooms available at this time."), false);
             }
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, new LiteralText("Wait for night time."), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 75, 150, 20, Text.literal("Wait for night time."), (button) -> {
             this.close();
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -91,7 +91,7 @@ public class InnkeeperScreen extends ScreenTOK {
             conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, new LiteralText("Exit"), (button) -> this.close()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, Text.literal("Exit"), (button) -> this.close()));
     }
 
     @Override

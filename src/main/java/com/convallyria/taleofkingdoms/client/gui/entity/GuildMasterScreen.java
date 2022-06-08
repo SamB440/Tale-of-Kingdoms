@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenBar;
+import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
@@ -11,7 +12,6 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,7 +22,7 @@ import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.ItemTags;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
@@ -60,7 +60,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.makeHireHuntersButton();
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, new LiteralText("Retire Hunter"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2, 150, 20, Text.literal("Retire Hunter"), (button) -> {
             if (instance.getHunterUUIDs().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
@@ -89,7 +89,7 @@ public class GuildMasterScreen extends ScreenTOK {
                             return;
                         }
                     }
-                    player.sendMessage(new LiteralText("Unable to find an alive hunter!"), false);
+                    player.sendMessage(Text.literal("Unable to find an alive hunter!"), false);
                     return;
                 } else {
                     Translations.GUILDMASTER_NOHUNTER.send(player);
@@ -101,7 +101,7 @@ public class GuildMasterScreen extends ScreenTOK {
         PlayerInventory clientPlayerInventory = player.getInventory();
         ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS, 64);
         String fixText = "Fix the guild";
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, new LiteralText(fixText), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, Text.literal(fixText), (button) -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.executeOnMain(() -> {
                 if (instance.getCoins(player.getUuid()) < 3000) return;
@@ -125,7 +125,7 @@ public class GuildMasterScreen extends ScreenTOK {
             this.close();
         }));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 46, 150, 20, new LiteralText("Exit"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 46, 150, 20, Text.literal("Exit"), (button) -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
             this.close();
         }));
@@ -202,11 +202,11 @@ public class GuildMasterScreen extends ScreenTOK {
     private void makeHireHuntersButton() {
         String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
         if (this.hireHuntersButton != null) {
-            this.hireHuntersButton.setMessage(new LiteralText(hunterText));
+            this.hireHuntersButton.setMessage(Text.literal(hunterText));
             return;
         }
 
-        this.hireHuntersButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, new LiteralText(hunterText), (button) -> {
+        this.hireHuntersButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, Text.literal(hunterText), (button) -> {
             if (instance.getCoins() >= 1500) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 Translations.SERVE.send(player);

@@ -9,10 +9,10 @@ import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Handles schematics for TaleOfKingdoms.
@@ -45,12 +45,12 @@ public abstract class SchematicHandler {
 
     protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
         TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
-        player.getWorld().getStructureManager().getStructure(schematic.getPath()).ifPresent(structure -> {
+        player.getWorld().getStructureTemplateManager().getTemplate(schematic.getPath()).ifPresent(structure -> {
             SharedConstants.isDevelopment = true; // We want to crash if something went wrong
             StructurePlacementData structurePlacementData = new StructurePlacementData();
             structurePlacementData.addProcessor(new GuildStructureProcessor(options));
             structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-            structure.place(player.getWorld(), position, position, structurePlacementData, ThreadLocalRandom.current(), Block.NOTIFY_ALL);
+            structure.place(player.getWorld(), position, position, structurePlacementData, Random.create(), Block.NOTIFY_ALL);
             BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
             cf.complete(box);
             SharedConstants.isDevelopment = false; // Put it back to what it was.
