@@ -180,7 +180,7 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     public void registerFeatures() {
-        //Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway"), TOKStructures.GATEWAY);
+        Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), TOKStructures.GATEWAY);
         Registry.register(Registry.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
 
         // Register as features
