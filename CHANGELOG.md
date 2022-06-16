@@ -1,3 +1,4 @@
+Currently, this changelog is just here as an example (but it is real, just not everything).
 1.0.3
 - Added update screen information
 - Created a Crowdin @ https://crwd.in/tale-of-kingdoms

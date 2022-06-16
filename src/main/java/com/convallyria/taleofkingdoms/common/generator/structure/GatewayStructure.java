@@ -9,9 +9,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.ChunkRandom;
-import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.structure.Structure;
 import net.minecraft.world.gen.structure.StructureType;
 
@@ -28,9 +26,7 @@ public class GatewayStructure extends Structure {
     @Override
     public Optional<StructurePosition> getStructurePosition(Context context) {
         double percent = Math.random() * 100;
-        System.out.println("ahdsahdsahdhsadhsad");
         if (percent >= TaleOfKingdoms.config.mainConfig.gateWaySpawnRate) return Optional.empty();
-        System.out.println("generation agreed");
         return getStructurePosition(context, Heightmap.Type.WORLD_SURFACE_WG, (collector) -> this.addPieces(collector, context));
     }
 
@@ -42,10 +38,8 @@ public class GatewayStructure extends Structure {
     private void addPieces(StructurePiecesCollector collector, Context context) {
         final ChunkPos chunkPos = context.chunkPos();
         final ChunkRandom chunkRandom = context.random();
-        final ChunkGenerator chunkGenerator = context.chunkGenerator();
-        final HeightLimitView world = context.world();
-        int x = chunkPos.x * 16;
-        int z = chunkPos.z * 16;
+        int x = chunkPos.getCenterX();
+        int z = chunkPos.getCenterZ();
         int y = context.chunkGenerator().getHeightInGround(x, z, Heightmap.Type.WORLD_SURFACE_WG, context.world(), context.noiseConfig());
         BlockPos blockPos = new BlockPos(x, y, z);
         BlockRotation blockRotation = BlockRotation.random(chunkRandom);

@@ -108,7 +108,7 @@ public class GameInstanceListener extends Listener {
 
     private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server, File toSave) {
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
-        BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 12, 0));
+        BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 26, 0));
         ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
         try (Writer writer = new FileWriter(toSave)) {
             Gson gson = api.getMod().getGson();
