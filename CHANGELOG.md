@@ -1,5 +1,6 @@
 Currently, this changelog is just here as an example (but it is real, just not everything).
 1.0.3
+- Fixed selling not working, and items being removed even if they cannot be sold
 - Added update screen information
 - Created a Crowdin @ https://crwd.in/tale-of-kingdoms
 - Added new shop items (cooked foods)
