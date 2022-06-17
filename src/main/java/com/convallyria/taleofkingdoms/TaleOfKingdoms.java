@@ -101,7 +101,8 @@ public class TaleOfKingdoms implements ModInitializer {
         //We use registerSimple here because our Entity is not an ExtendedScreenHandlerFactory
         //but a NamedScreenHandlerFactory.
         //In a later Tutorial you will see what ExtendedScreenHandlerFactory can do!
-        SELL_SCREEN_HANDLER = new ScreenHandlerType<>(SellScreenHandler::new); //todo for 1.18.2: is this right?
+        SELL_SCREEN_HANDLER = Registry.register(Registry.SCREEN_HANDLER, new Identifier(TaleOfKingdoms.MODID, "sell_screen_handler"), new ScreenHandlerType<>(SellScreenHandler::new));
+
 
         SELL_BLOCK = Registry.register(Registry.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
 
