@@ -68,11 +68,12 @@ public class SellScreenHandler extends ScreenHandler {
             if (api == null) return;
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             if (instance.isEmpty()) return;
-            playerEntity.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
 
             for (List<ShopItem> shopItems : ShopParser.guiShopItems.values()) {
                 for (ShopItem shopItem : shopItems) {
                     if (itemStack.getItem() == shopItem.getItem()) {
+                        // Only set empty once we've found the item...
+                        playerEntity.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
                         // Issue #59
                         instance.get().addCoins(playerEntity.getUuid(), shopItem.getSell() * itemStack.getCount());
                         return;
