@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +30,16 @@ public class ShopBuyUtil {
 
                 ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
                 if (serverPlayerEntity != null) {
-                    serverPlayerEntity.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
+                    final ItemStack stack = new ItemStack(shopItem.getItem(), count);
+                    final PlayerInventory inventory = serverPlayerEntity.getInventory();
+                    int slotWithRoom = inventory.getOccupiedSlotWithRoomForStack(stack);
+                    // Try to get an empty slot instead...
+                    if (slotWithRoom == -1) slotWithRoom = inventory.getEmptySlot();
+                    if (slotWithRoom == -1) {
+                        serverPlayerEntity.dropItem(stack, true, true);
+                    } else {
+                        inventory.insertStack(slotWithRoom, stack);
+                    }
                     int cost = shopItem.getCost() * count;
                     instance.setCoins(instance.getCoins() - cost);
                 }
