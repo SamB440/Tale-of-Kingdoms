@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.api.EnvType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -24,8 +25,8 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
         UUID playerUuid = player.getUuid();
 
         instance.addCoins(playerUuid, context.getArgument("coins", Integer.class));
-        if (instance instanceof ServerConquestInstance serverConquestInstance) {
-            serverConquestInstance.sync(player);
+        if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
+            ServerConquestInstance.sync(player, instance);
         }
 
         player.sendMessage(Text.literal("Your new balance is: " + instance.getCoins(playerUuid)), false);
@@ -38,8 +39,8 @@ public class TaleOfKingdomsAddCommand implements Command<ServerCommandSource> {
         UUID playerUuid = player.getUuid();
 
         instance.addWorthiness(playerUuid, context.getArgument("worthiness", Integer.class));
-        if (instance instanceof ServerConquestInstance serverConquestInstance) {
-            serverConquestInstance.sync(player);
+        if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
+            ServerConquestInstance.sync(player, instance);
         }
 
         player.sendMessage(Text.literal("Your new worthiness is: " + instance.getWorthiness(playerUuid)), false);

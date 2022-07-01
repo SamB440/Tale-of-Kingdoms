@@ -2,11 +2,10 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
+import net.fabricmc.api.EnvType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -62,7 +61,7 @@ public class FarmerEntity extends TOKEntity {
         Translations.FARMER_TAKE_BREAD.send(player);
 
         int amount = ThreadLocalRandom.current().nextInt(1, 4);
-        if (instance instanceof ClientConquestInstance) {
+        if (api.getEnvironment() == EnvType.CLIENT) {
             api.executeOnMain(() -> {
                 MinecraftServer server = player.getServer();
                 if (server != null) {
@@ -72,7 +71,7 @@ public class FarmerEntity extends TOKEntity {
                     }
                 }
             });
-        } else if (instance instanceof ServerConquestInstance) {
+        } else {
             api.executeOnDedicatedServer(() -> player.getInventory().insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;

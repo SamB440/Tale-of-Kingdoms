@@ -5,7 +5,7 @@ import com.convallyria.taleofkingdoms.client.gui.entity.BlacksmithScreen;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,13 +34,13 @@ public class BlacksmithEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         this.openScreen(player, instance);
         return ActionResult.PASS;
     }
 
     @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
+    private void openScreen(PlayerEntity player, ConquestInstance instance) {
         BlacksmithScreen screen = new BlacksmithScreen(player, this, instance);
         MinecraftClient.getInstance().setScreen(screen);
     }

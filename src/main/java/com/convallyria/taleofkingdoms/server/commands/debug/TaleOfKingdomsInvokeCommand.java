@@ -8,6 +8,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.api.EnvType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -64,8 +65,8 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
 
             instance.setWorthiness(playerUuid, instance.getWorthiness(playerUuid) - 750);
 
-            if (instance instanceof ServerConquestInstance serverConquestInstance) {
-                serverConquestInstance.sync(player);
+            if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
+                ServerConquestInstance.sync(player, instance);
             }
 
             TaleOfKingdoms.LOGGER.debug("Guild attack forcefully activated!");

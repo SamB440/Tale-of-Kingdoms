@@ -41,7 +41,7 @@ public class ShopBuyUtil {
                         inventory.insertStack(slotWithRoom, stack);
                     }
                     int cost = shopItem.getCost() * count;
-                    instance.setCoins(instance.getCoins() - cost);
+                    instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
                 }
             });
         }

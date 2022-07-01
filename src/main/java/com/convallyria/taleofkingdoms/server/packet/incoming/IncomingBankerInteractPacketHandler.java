@@ -5,8 +5,8 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,8 +31,7 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
         BankerMethod method = attachedData.readEnumConstant(BankerMethod.class);
         int coins = attachedData.readInt();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                ServerConquestInstance instance = (ServerConquestInstance) inst;
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
@@ -65,7 +64,7 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
                     instance.setBankerCoins(uuid, instance.getBankerCoins(uuid) - coins);
                     instance.addCoins(uuid, coins);
                 }
-                instance.sync(player);
+                ServerConquestInstance.sync(player, instance);
             });
         });
     }

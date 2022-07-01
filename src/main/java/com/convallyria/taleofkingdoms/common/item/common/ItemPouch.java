@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.item.common;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ItemPouch extends Item {
 
@@ -28,15 +29,16 @@ public class ItemPouch extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        final UUID uuid = user.getUuid();
         if (!world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
-        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.hasNbt()) {
             NbtCompound compoundTag = itemStack.getNbt();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
                 if (coins == maxCoins) {
-                    instance.setCoins(instance.getCoins() + coins);
+                    instance.setCoins(uuid, instance.getCoins(uuid) + coins);
                     compoundTag.remove("coins");
                     user.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.MASTER, 1f, 1f);
                     itemStack.setNbt(compoundTag);
@@ -45,24 +47,24 @@ public class ItemPouch extends Item {
             }
         }
 
-        if (instance.getCoins() >= 100) {
+        if (instance.getCoins(uuid) >= 100) {
             if (!itemStack.hasNbt()) {
                 NbtCompound compoundTag = new NbtCompound();
                 compoundTag.putInt("coins", 100);
-                instance.setCoins(instance.getCoins() - 100);
+                instance.setCoins(uuid, instance.getCoins(uuid) - 100);
                 itemStack.setNbt(compoundTag);
                 user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
             } else {
                 NbtCompound compoundTag = itemStack.getNbt();
                 if (!compoundTag.contains("coins")) {
                     compoundTag.putInt("coins", 100);
-                    instance.setCoins(instance.getCoins() - 100);
+                    instance.setCoins(uuid, instance.getCoins(uuid) - 100);
                     user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
                 } else {
                     int coins = compoundTag.getInt("coins");
                     if (coins <= (maxCoins - 100)) {
                         compoundTag.putInt("coins", coins + 100);
-                        instance.setCoins(instance.getCoins() - 100);
+                        instance.setCoins(uuid, instance.getCoins(uuid) - 100);
                         user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
                     }
                 }

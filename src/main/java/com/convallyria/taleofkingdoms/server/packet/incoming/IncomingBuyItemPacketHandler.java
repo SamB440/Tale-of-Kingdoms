@@ -32,8 +32,7 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
         String itemName = attachedData.readString(32367);
         int count = attachedData.readInt();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                ServerConquestInstance instance = (ServerConquestInstance) inst;
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
@@ -62,7 +61,7 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                 instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
                 // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
                 player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
-                instance.sync(player);
+                ServerConquestInstance.sync(player, instance);
             });
         });
     }

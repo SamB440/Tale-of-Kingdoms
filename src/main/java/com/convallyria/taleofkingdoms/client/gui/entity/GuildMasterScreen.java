@@ -4,7 +4,6 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenBar;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
@@ -12,6 +11,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -26,6 +26,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -33,7 +34,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
     private final PlayerEntity player;
     private final GuildMasterEntity entity;
-    private final ClientConquestInstance instance;
+    private final ConquestInstance instance;
     private ScreenBar worthness;
 
     private ButtonWidget signContractButton;
@@ -41,7 +42,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
     private ButtonWidget hireHuntersButton;
 
-    public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ClientConquestInstance instance) {
+    public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
         super("taleofkingdoms.menu.guildmaster.name");
         this.player = player;
         this.entity = entity;
@@ -51,8 +52,9 @@ public class GuildMasterScreen extends ScreenTOK {
 
     @Override
     public void init() {
+        final UUID playerUuid = player.getUuid();
         super.init();
-        if (!instance.hasContract()) {
+        if (!instance.hasContract(playerUuid)) {
             this.makeContractSignButton();
         } else {
             this.makeCancelContractButton();
@@ -77,15 +79,15 @@ public class GuildMasterScreen extends ScreenTOK {
                     }
 
                     ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                    for (UUID uuid : instance.getHunterUUIDs()) {
+                    for (UUID uuid : instance.getHunterUUIDs().getOrDefault(playerUuid, new ArrayList<>())) {
                         HunterEntity hunter = (HunterEntity) serverWorld.getEntity(uuid);
                         if (hunter == null) {
-                            instance.removeHunter(uuid);
+                            instance.removeHunter(playerUuid, uuid);
                             TaleOfKingdoms.LOGGER.info("Removed hunter by uuid " + uuid + " that no longer exists.");
                         } else {
                             TaleOfKingdoms.getAPI().executeOnServer(hunter::kill);
-                            instance.removeHunter(hunter);
-                            instance.setCoins(instance.getCoins() + 750);
+                            instance.removeHunter(playerUuid, hunter.getUuid());
+                            instance.setCoins(playerUuid, instance.getCoins(playerUuid) + 750);
                             return;
                         }
                     }
@@ -104,7 +106,7 @@ public class GuildMasterScreen extends ScreenTOK {
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 + 23, 150, 20, Text.literal(fixText), (button) -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.executeOnMain(() -> {
-                if (instance.getCoins(player.getUuid()) < 3000) return;
+                if (instance.getCoins(playerUuid) < 3000) return;
                 if (stack == null) return;
                 if (MinecraftClient.getInstance().getServer() == null) {
                     api.getClientHandler(TaleOfKingdoms.FIX_GUILD_PACKET_ID)
@@ -114,11 +116,11 @@ public class GuildMasterScreen extends ScreenTOK {
                     return;
                 }
 
-                ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(playerUuid);
                 if (serverPlayerEntity != null) {
                     PlayerInventory serverPlayerInventory = serverPlayerEntity.getInventory();
                     serverPlayerInventory.setStack(serverPlayerInventory.getSlotWithStack(stack), new ItemStack(Items.AIR));
-                    instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
+                    instance.setCoins(playerUuid, instance.getCoins(playerUuid) - 3000);
                     instance.rebuild(serverPlayerEntity, api, SchematicOptions.IGNORE_DEFENDERS);
                 }
             });
@@ -131,13 +133,13 @@ public class GuildMasterScreen extends ScreenTOK {
         }));
 
         this.worthness = new ScreenBar(this.width / 2 - 65 , this.height / 2 + 83, 125, 12, 1.0F, ScreenBar.BarColour.RED);
-        this.worthness.setBar(instance.getWorthiness() / 1500.0F);
+        this.worthness.setBar(instance.getWorthiness(playerUuid) / 1500.0F);
     }
 
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         super.render(stack, par1, par2, par3);
-        String order = Translations.GUILDMASTER_GUILD_ORDER.getFormatted() + instance.getCoins() + " " + Translations.GOLD_COINS.getFormatted();
+        String order = Translations.GUILDMASTER_GUILD_ORDER.getFormatted() + instance.getCoins(player.getUuid()) + " " + Translations.GOLD_COINS.getFormatted();
         String path = Translations.GUILDMASTER_PATH.getFormatted();
         drawCenteredText(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         drawCenteredText(stack, this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
@@ -164,7 +166,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.signContractButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), (button) -> {
             if (MinecraftClient.getInstance().getServer() != null) {
-                instance.setHasContract(true);
+                instance.setHasContract(player.getUuid(), true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
             } else {
                 TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
@@ -186,7 +188,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 46, 150, 20, Translations.GUILDMASTER_CONTRACT_CANCEL.getTranslation(), (button) -> {
             if (MinecraftClient.getInstance().getServer() != null) {
-                instance.setHasContract(false);
+                instance.setHasContract(player.getUuid(),false);
                 Translations.GUILDMASTER_CONTRACT_CANCEL_AWAIT.send(player);
             } else {
                 TaleOfKingdoms.getAPI().getClientHandler(TaleOfKingdoms.SIGN_CONTRACT_PACKET_ID)
@@ -200,14 +202,15 @@ public class GuildMasterScreen extends ScreenTOK {
     }
 
     private void makeHireHuntersButton() {
-        String hunterText = instance.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
+        final UUID playerUuid = player.getUuid();
+        String hunterText = instance.getCoins(playerUuid) >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
         if (this.hireHuntersButton != null) {
             this.hireHuntersButton.setMessage(Text.literal(hunterText));
             return;
         }
 
         this.hireHuntersButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 2 - 23, 150, 20, Text.literal(hunterText), (button) -> {
-            if (instance.getCoins() >= 1500) {
+            if (instance.getCoins(playerUuid) >= 1500) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 Translations.SERVE.send(player);
                 if (MinecraftClient.getInstance().getServer() == null) {
@@ -221,8 +224,8 @@ public class GuildMasterScreen extends ScreenTOK {
                     ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
                     BlockPos blockPos = entity.getBlockPos();
                     HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, serverWorld, blockPos);
-                    instance.addHunter(hunterEntity);
-                    instance.setCoins(instance.getCoins() - 1500);
+                    instance.addHunter(playerUuid, hunterEntity);
+                    instance.setCoins(playerUuid, instance.getCoins(playerUuid) - 1500);
                 });
 
                 this.makeHireHuntersButton();

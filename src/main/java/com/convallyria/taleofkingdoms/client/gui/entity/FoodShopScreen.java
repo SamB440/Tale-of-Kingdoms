@@ -9,11 +9,11 @@ import com.convallyria.taleofkingdoms.client.gui.image.Image;
 import com.convallyria.taleofkingdoms.client.gui.image.ScaleSize;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
 import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.client.utils.ShopBuyUtil;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -31,7 +31,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
 
     private final PlayerEntity player;
     private final FoodShopEntity entity;
-    private final ClientConquestInstance instance;
+    private final ConquestInstance instance;
 
     private final ImmutableList<ShopItem> shopItems;
     private ShopItem selectedItem;
@@ -49,7 +49,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
             new ScaleSize(3, 360, 55),
             new ScaleSize(4, 275, 27));
 
-    public FoodShopScreen(PlayerEntity player, FoodShopEntity entity, ClientConquestInstance instance) {
+    public FoodShopScreen(PlayerEntity player, FoodShopEntity entity, ConquestInstance instance) {
         super("menu.taleofkingdoms.foodshop.name");
         this.player = player;
         this.entity = entity;
@@ -133,7 +133,7 @@ public class FoodShopScreen extends ScreenTOK implements ShopScreenInterface {
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        drawCenteredText(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins() + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredText(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         if (this.selectedItem != null) {
             drawCenteredText(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }

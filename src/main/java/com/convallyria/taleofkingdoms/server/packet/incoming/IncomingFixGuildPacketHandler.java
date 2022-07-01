@@ -33,8 +33,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
         String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                ServerConquestInstance instance = (ServerConquestInstance) inst;
+            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 PlayerInventory playerInventory = player.getInventory();
                 ItemStack stack = InventoryUtils.getStack(playerInventory, ItemTags.LOGS, 64);
                 if (stack == null) {
@@ -60,7 +59,7 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
                 playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
                 instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - 3000);
                 instance.rebuild(player, api, SchematicOptions.IGNORE_DEFENDERS);
-                instance.sync(player);
+                ServerConquestInstance.sync(player, instance);
                 this.lastRebuild = System.currentTimeMillis();
             });
         });

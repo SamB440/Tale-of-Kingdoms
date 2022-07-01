@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.server.packet.outgoing;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +25,7 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
 
     @Override
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
-        if (data != null && data[0] instanceof ServerConquestInstance instance
+        if (data != null && data[0] instanceof ConquestInstance instance
                 && player instanceof ServerPlayerEntity) {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
             passedData.writeString(instance.getName());

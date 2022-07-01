@@ -12,6 +12,7 @@ import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.fabricmc.api.EnvType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -80,10 +81,7 @@ public class CoinListener extends Listener {
 
                     if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
                         instance.attack(serverPlayerEntity, serverPlayerEntity.getWorld());
-                    }
-
-                    if (instance instanceof ServerConquestInstance serverConquestInstance) {
-                        serverConquestInstance.sync((ServerPlayerEntity) playerEntity);
+                        ServerConquestInstance.sync(serverPlayerEntity, instance);
                     }
                 }
             });
@@ -96,8 +94,8 @@ public class CoinListener extends Listener {
                 TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
                     instance.addCoins(player.getUuid(), random.nextInt(10));
-                    if (instance instanceof ServerConquestInstance) {
-                        ((ServerConquestInstance) instance).sync((ServerPlayerEntity) player);
+                    if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
+                        ServerConquestInstance.sync((ServerPlayerEntity) player, instance);
                     }
                 });
 

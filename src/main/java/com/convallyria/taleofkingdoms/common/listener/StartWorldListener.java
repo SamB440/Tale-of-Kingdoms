@@ -9,7 +9,6 @@ import com.convallyria.taleofkingdoms.client.gui.generic.cotton.update.UpdateScr
 import com.convallyria.taleofkingdoms.common.event.RecipesUpdatedCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldSessionStartCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldStopCallback;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -71,7 +70,7 @@ public class StartWorldListener extends Listener {
                 Gson gson = api.getMod().getGson();
                 // Load from json into class
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    ClientConquestInstance instance = gson.fromJson(reader, ClientConquestInstance.class);
+                    ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
@@ -83,6 +82,9 @@ public class StartWorldListener extends Listener {
                             } else if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
+
+                            // Update version if successfully loaded
+                            instance.setVersion(ConquestInstance.CURRENT_VERSION);
 
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             api.getConquestInstanceStorage().addConquest(worldName, instance, true);

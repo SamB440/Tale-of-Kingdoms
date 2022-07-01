@@ -4,7 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -42,23 +42,25 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
         }
 
         context.taskQueue().execute(() -> {
+            final PlayerEntity player = context.player();
+            final UUID uuid = player.getUuid();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-            ClientConquestInstance instance;
+            ConquestInstance instance;
             if (api.getConquestInstanceStorage().getConquestInstance(world).isPresent()) {
-                instance = (ClientConquestInstance) api.getConquestInstanceStorage().getConquestInstance(world).get();
+                instance = api.getConquestInstanceStorage().getConquestInstance(world).get();
             } else {
-                instance = new ClientConquestInstance(world, name, start, end, origin);
+                instance = new ConquestInstance(world, name, start, end, origin);
             }
 
             TaleOfKingdoms.LOGGER.info("Has contract? " + hasContract);
-            instance.setBankerCoins(bankerCoins);
-            instance.setCoins(coins);
-            instance.setWorthiness(worthiness);
-            instance.setFarmerLastBread(farmerLastBread);
-            instance.setHasContract(hasContract);
+            instance.setBankerCoins(uuid, bankerCoins);
+            instance.setCoins(uuid, coins);
+            instance.setWorthiness(uuid, worthiness);
+            instance.setFarmerLastBread(uuid, farmerLastBread);
+            instance.setHasContract(uuid, hasContract);
             instance.setLoaded(isLoaded);
-            instance.clearHunters();
-            hunterUuids.forEach(instance::addHunter);
+            instance.getHunterUUIDs().clear();
+            instance.getHunterUUIDs().put(uuid, hunterUuids);
             api.getConquestInstanceStorage().addConquest(world, instance, true);
         });
     }

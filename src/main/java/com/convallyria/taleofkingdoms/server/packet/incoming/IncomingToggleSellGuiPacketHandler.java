@@ -4,7 +4,6 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -33,8 +32,7 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
         boolean close = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                ServerConquestInstance instance = (ServerConquestInstance) inst;
+            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;

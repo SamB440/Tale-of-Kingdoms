@@ -63,7 +63,7 @@ public class InnkeeperScreen extends ScreenTOK {
                     serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
                     serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
                     serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
-                    conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
+                    conquestInstance.get().setCoins(serverPlayerEntity.getUuid(), conquestInstance.get().getCoins(serverPlayerEntity.getUuid()) - 10);
                 });
             } else {
                 player.sendMessage(Text.literal("House Keeper: It seems there are no rooms available at this time."), false);
@@ -88,7 +88,7 @@ public class InnkeeperScreen extends ScreenTOK {
             }
 
             server.getOverworld().setTimeOfDay(13000);
-            conquestInstance.get().setCoins(conquestInstance.get().getCoins() - 10);
+            conquestInstance.get().setCoins(player.getUuid(), conquestInstance.get().getCoins(player.getUuid()) - 10);
         }));
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 75, this.height / 4 + 100, 150, 20, Text.literal("Exit"), (button) -> this.close()));

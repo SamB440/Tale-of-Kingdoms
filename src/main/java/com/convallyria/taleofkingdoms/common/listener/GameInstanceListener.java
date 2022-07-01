@@ -47,7 +47,7 @@ public class GameInstanceListener extends Listener {
                         // Load from json into class
                         ConquestInstance instance = null;
                         try (BufferedReader reader = new BufferedReader(new FileReader(conquestFile))) {
-                            instance = gson.fromJson(reader, ServerConquestInstance.class);
+                            instance = gson.fromJson(reader, ConquestInstance.class);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -70,11 +70,11 @@ public class GameInstanceListener extends Listener {
 
         PlayerJoinWorldCallback.EVENT.register(player -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (instance instanceof ServerConquestInstance serverConquestInstance) {
-                    if (!serverConquestInstance.hasPlayer(player.getUuid())) {
-                        serverConquestInstance.reset(player);
+                if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
+                    if (!instance.hasPlayer(player.getUuid())) {
+                        instance.reset(player);
                     }
-                    serverConquestInstance.sync(player);
+                    ServerConquestInstance.sync(player, instance);
                 }
             });
         });
@@ -109,7 +109,7 @@ public class GameInstanceListener extends Listener {
     private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server, File toSave) {
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
         BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 26, 0));
-        ServerConquestInstance instance = new ServerConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
+        ConquestInstance instance = new ConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
         try (Writer writer = new FileWriter(toSave)) {
             Gson gson = api.getMod().getGson();
             gson.toJson(instance, writer);

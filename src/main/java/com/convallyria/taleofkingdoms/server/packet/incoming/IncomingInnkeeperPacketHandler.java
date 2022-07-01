@@ -34,8 +34,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
         String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         boolean resting = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                ServerConquestInstance instance = (ServerConquestInstance) inst;
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
@@ -79,7 +78,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                 }
 
                 TaleOfKingdoms.getAPI().getServer().ifPresent(server -> server.getOverworld().setTimeOfDay(13000));
-                instance.sync(player);
+                ServerConquestInstance.sync(player, instance);
             });
         });
     }

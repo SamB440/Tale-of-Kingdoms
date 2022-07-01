@@ -31,8 +31,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
         String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         boolean retire = attachedData.readBoolean();
         context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(inst -> {
-                ServerConquestInstance instance = (ServerConquestInstance) inst;
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
                     return;
@@ -66,7 +65,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     hunterEntity.kill();
                     instance.removeHunter(uuid, hunterEntity.getUuid());
                     instance.setCoins(uuid, instance.getCoins(uuid) + 750);
-                    instance.sync(player);
+                    ServerConquestInstance.sync(player, instance);
                     return;
                 }
 
@@ -78,7 +77,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                 HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, player, entity.get().getBlockPos());
                 instance.addHunter(uuid, hunterEntity);
                 instance.setCoins(uuid, instance.getCoins(uuid) - 1500);
-                instance.sync(player);
+                ServerConquestInstance.sync(player, instance);
             });
         });
     }

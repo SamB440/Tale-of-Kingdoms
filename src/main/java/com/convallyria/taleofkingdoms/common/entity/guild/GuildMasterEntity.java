@@ -4,8 +4,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.entity.GuildMasterScreen;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -49,12 +49,12 @@ public class GuildMasterEntity extends TOKEntity {
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
 
         if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
-        if (instance instanceof ClientConquestInstance clientConquestInstance) this.openScreen(player, clientConquestInstance);
+        if (api.getEnvironment() == EnvType.CLIENT) this.openScreen(player, instance);
         return ActionResult.PASS;
     }
 
     @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
+    private void openScreen(PlayerEntity player, ConquestInstance instance) {
         GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
         MinecraftClient.getInstance().setScreen(screen);
     }

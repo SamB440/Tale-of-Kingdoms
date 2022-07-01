@@ -4,7 +4,6 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
@@ -72,7 +71,7 @@ public class ScreenStartConquest extends ScreenTOK {
             if (serverPlayer == null) return;
 
             // Load guild castle schematic
-            ClientConquestInstance instance = new ClientConquestInstance(worldName, text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
+            ConquestInstance instance = new ConquestInstance(worldName, text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
             try (Writer writer = new FileWriter(toSave)) {
                 Gson gson = api.getMod().getGson();
                 gson.toJson(instance, writer);
@@ -82,27 +81,25 @@ public class ScreenStartConquest extends ScreenTOK {
             api.getConquestInstanceStorage().addConquest(worldName, instance, true);
 
             BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 26, 0));
-            api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> {
-                api.executeOnServer(() -> {
-                    BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
-                    BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
-                    instance.setStart(start);
-                    instance.setEnd(end);
-                    
-                    button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
-    
-                    api.executeOnMain(() -> {
-                        button.setMessage(Text.literal("Reloading chunks..."));
-                        MinecraftClient.getInstance().worldRenderer.reload();
-                        close();
-                        loading = false;
-                        instance.setLoaded(true);
-                        instance.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
-                    });
-    
-                    KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event
+            api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> api.executeOnServer(() -> {
+                BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
+                BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
+                instance.setStart(start);
+                instance.setEnd(end);
+
+                button.setMessage(Translations.SUMMONING_CITIZENS.getTranslation());
+
+                api.executeOnMain(() -> {
+                    button.setMessage(Text.literal("Reloading chunks..."));
+                    MinecraftClient.getInstance().worldRenderer.reload();
+                    close();
+                    loading = false;
+                    instance.setLoaded(true);
+                    instance.setFarmerLastBread(player.getUuid(), -1); // Set to -1 in order to claim on first day
                 });
-            });
+
+                KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event
+            }));
         }));
         this.text.setMaxLength(32);
         this.text.setText("Sir Punchwood");

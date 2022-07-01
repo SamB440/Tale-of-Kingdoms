@@ -3,7 +3,7 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.entity.BankerScreen;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.client.schematic.ClientConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -28,13 +28,13 @@ public class BankerEntity extends TOKEntity {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
-        ClientConquestInstance instance = (ClientConquestInstance) TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
+        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         this.openScreen(player, instance);
         return ActionResult.PASS;
     }
 
     @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ClientConquestInstance instance) {
+    private void openScreen(PlayerEntity player, ConquestInstance instance) {
         BankerScreen screen = new BankerScreen(player, this, instance);
         MinecraftClient.getInstance().setScreen(screen);
     }

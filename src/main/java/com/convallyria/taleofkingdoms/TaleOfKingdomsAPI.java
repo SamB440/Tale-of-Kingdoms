@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.managers.SoundManager;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
@@ -42,6 +43,10 @@ public class TaleOfKingdomsAPI {
         SoundManager sm = new SoundManager(mod);
         managers.put(sm.getName(), sm);
         this.scheduler = new Scheduler();
+    }
+
+    public EnvType getEnvironment() {
+        return FabricLoader.getInstance().getEnvironmentType();
     }
 
     @Environment(EnvType.SERVER)
