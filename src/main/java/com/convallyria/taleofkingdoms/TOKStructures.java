@@ -36,12 +36,12 @@ public class TOKStructures {
 
           registerStructure("gateway", new GatewayStructure(StructureConfigCreator
                   .create()
-                  .biome(TOKBiomeTags.SOLID_SURFACE)
+                  .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
                   .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
                   .build()));
           registerStructure("reficule_village", new ReficuleVillageStructure(StructureConfigCreator
                   .create()
-                  .biome(TOKBiomeTags.SOLID_SURFACE)
+                  .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
                   .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
                   .build()));
      }

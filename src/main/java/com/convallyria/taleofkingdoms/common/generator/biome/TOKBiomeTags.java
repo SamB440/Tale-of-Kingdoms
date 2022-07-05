@@ -9,6 +9,7 @@ import net.minecraft.world.biome.Biome;
 public class TOKBiomeTags {
 
     public static final TagKey<Biome> SOLID_SURFACE = of("has_structure/solid_surface");
+    public static final TagKey<Biome> NO_MOUNTAINS_DESERTS = of("has_structure/no_mountains_deserts");
 
     private TOKBiomeTags() {}
 
