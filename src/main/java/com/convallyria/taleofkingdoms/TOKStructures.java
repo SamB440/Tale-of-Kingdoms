@@ -2,13 +2,13 @@ package com.convallyria.taleofkingdoms;
 
 import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
+import com.convallyria.taleofkingdoms.common.generator.biome.TOKBiomeTags;
 import com.convallyria.taleofkingdoms.common.generator.structure.GatewayStructure;
 import com.convallyria.taleofkingdoms.common.generator.structure.ReficuleVillageStructure;
 import com.convallyria.taleofkingdoms.common.generator.util.StructureConfigCreator;
 import com.convallyria.taleofkingdoms.mixin.StructureTypeAccessor;
 import com.mojang.serialization.Codec;
 import net.minecraft.structure.StructurePieceType;
-import net.minecraft.tag.BiomeTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -36,12 +36,12 @@ public class TOKStructures {
 
           registerStructure("gateway", new GatewayStructure(StructureConfigCreator
                   .create()
-                  .biome(BiomeTags.MINESHAFT_HAS_STRUCTURE)
+                  .biome(TOKBiomeTags.SOLID_SURFACE)
                   .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
                   .build()));
           registerStructure("reficule_village", new ReficuleVillageStructure(StructureConfigCreator
                   .create()
-                  .biome(BiomeTags.MINESHAFT_HAS_STRUCTURE)
+                  .biome(TOKBiomeTags.SOLID_SURFACE)
                   .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
                   .build()));
      }
