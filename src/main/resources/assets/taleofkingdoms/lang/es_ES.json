@@ -1,15 +1,15 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "Configuración de Relato de los Reinos",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Mostrar GUI del reino inicial",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar la GUI de la conquista continua",
+    "text.autoconfig.taleofkingdoms.title": "Configuración de Tale of Kingdoms",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Mostrar la GUI del reino inicial",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar la GUI de continuar la conquista",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Velocidad de aparición de puerta de enlace",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Velocidad de aparición de Aldeas Reficule",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Ratio de aparición de Aldeas Reficule",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Empezar Conquista",
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
     "item.taleofkingdoms.coin": "Moneda",
-    "item.taleofkingdoms.pouch": "Bolsa de monedas",
-    "menu.taleofkingdoms.guildmaster.name": "Maestro de Gremio",
+    "item.taleofkingdoms.pouch": "Monedero",
+    "menu.taleofkingdoms.guildmaster.name": "Maestro del Gremio",
     "menu.taleofkingdoms.blacksmith.name": "Herrero",
     "menu.taleofkingdoms.blacksmith.sell": "Menú de venta",
     "menu.taleofkingdoms.banker.name": "Banquero",
@@ -71,5 +71,5 @@
     "entity_type.taleofkingdoms.lostvillager.thank": "¡Gracias a los cielos! Nuestra aldea fue atacada por los Reficules. Por favor, envíame de vuelta al gremio.",
     "entity_type.taleofkingdoms.lone.thank": "¡Mi rey! ¡Gracias por salvarlos! Haré saber al §maestro del gremio§ de tus esfuerzos.",
     "entity_type.taleofkingdoms.lostvillager.guild_thank": "Aldeano perdido: ¡Mi rey! Gracias por salvarme.",
-    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Maestro del gremio: Esperamos tu participación, héroe."
 }

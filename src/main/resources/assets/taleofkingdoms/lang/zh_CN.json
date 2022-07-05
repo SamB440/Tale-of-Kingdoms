@@ -1,5 +1,5 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms 配置",
+    "text.autoconfig.taleofkingdoms.title": "王国配置",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "显示建立王国界面",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "显示继续征程界面",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "关口生成率",
@@ -71,5 +71,5 @@
     "entity_type.taleofkingdoms.lostvillager.thank": "谢谢上帝！我们的村庄遭到暴徒的攻击，请带我回到公会。",
     "entity_type.taleofkingdoms.lone.thank": "陛下，感谢您救了他们！我会让§e公会会长§r了解你所做的一切。",
     "entity_type.taleofkingdoms.lostvillager.guild_thank": "迷路的村民：陛下，感谢您救了我！",
-    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "公会会长：我们正等待你的参与，英雄。"
 }
