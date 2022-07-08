@@ -224,10 +224,10 @@ public class ConquestInstance {
     }
 
     public int getCoins(UUID uuid) {
-        return playerCoins.get(uuid);
+        return playerCoins.getOrDefault(uuid, 0);
     }
 
-    public int getBankerCoins(UUID uuid) { return playerBankerCoins.get(uuid); }
+    public int getBankerCoins(UUID uuid) { return playerBankerCoins.getOrDefault(uuid, 0); }
 
     public void setBankerCoins(UUID uuid, int bankerCoins) { this.playerBankerCoins.put(uuid, bankerCoins); }
 
@@ -236,11 +236,11 @@ public class ConquestInstance {
     }
 
     public void addCoins(UUID uuid, int coins) {
-        this.playerCoins.put(uuid, this.playerCoins.get(uuid) + coins);
+        this.playerCoins.put(uuid, getCoins(uuid) + coins);
     }
 
     public long getFarmerLastBread(UUID uuid) {
-        return playerFarmerLastBread.get(uuid);
+        return playerFarmerLastBread.getOrDefault(uuid, 0L);
     }
 
     public void setFarmerLastBread(UUID uuid, long day) {
@@ -248,7 +248,7 @@ public class ConquestInstance {
     }
 
     public boolean hasContract(UUID uuid) {
-        return playerHasContract.get(uuid);
+        return playerHasContract.getOrDefault(uuid, false);
     }
 
     public void setHasContract(UUID uuid, boolean hasContract) {
@@ -256,7 +256,7 @@ public class ConquestInstance {
     }
 
     public int getWorthiness(UUID playerUuid) {
-        return playerWorthiness.get(playerUuid);
+        return playerWorthiness.getOrDefault(playerUuid, 0);
     }
 
     public void setWorthiness(UUID playerUuid, int worthiness) {
@@ -264,7 +264,7 @@ public class ConquestInstance {
     }
 
     public void addWorthiness(UUID playerUuid, int worthiness) {
-        this.playerWorthiness.put(playerUuid, this.playerWorthiness.get(playerUuid) + worthiness);
+        this.playerWorthiness.put(playerUuid, getWorthiness(playerUuid) + worthiness);
     }
 
     public Map<UUID, List<UUID>> getHunterUUIDs() {
