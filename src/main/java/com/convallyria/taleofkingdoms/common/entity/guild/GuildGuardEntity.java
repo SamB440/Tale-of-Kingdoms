@@ -89,7 +89,7 @@ public class GuildGuardEntity extends TOKEntity {
                 if (player.world.isClient()) Translations.GUILDMEMBER_START.send(player);
             }
         });
-        return ActionResult.SUCCESS;
+        return ActionResult.PASS;
     }
 
     @Override
