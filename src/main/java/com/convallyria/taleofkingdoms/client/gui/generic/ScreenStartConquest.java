@@ -80,7 +80,7 @@ public class ScreenStartConquest extends ScreenTOK {
             }
             api.getConquestInstanceStorage().addConquest(worldName, instance, true);
 
-            BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 26, 0));
+            BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 20, 0));
             api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayer, pastePos).thenAccept(oi -> api.executeOnServer(() -> {
                 BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
                 BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
