@@ -2,8 +2,8 @@
     "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms Configuration",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Show continue conquest GUI",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Gateway spawn rate",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Частота спавна шлюза",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Частота спавна деревни",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Начать Завоевание",
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
@@ -47,7 +47,7 @@
     "entity_type.taleofkingdoms.bank.zero": "Банкир: У вас нет денег! Зарабатывайте деньги, убивая монстров.",
     "entity_type.taleofkingdoms.bank.input": "Банкир: Введите число, пожалуйста.",
     "entity_type.taleofkingdoms.citybuilder.message": "Градостроитель: Мой король, вы еще недостоины создания королевства. Глава Гильдии Вас подготовит!",
-    "entity_type.taleofkingdoms.citybuilder.build": "City Builder: Let us build your city my liege! Lead the way!",
+    "entity_type.taleofkingdoms.citybuilder.build": "Градостроитель: Сеньор, давайте построим Ваш город! Поехали!",
     "menu.taleofkingdoms.innkeeper.name": "Трактирщик",
     "generic.taleofkingdoms.need_contract": "Домовладелец: Вам необходим контракт для этого. Сходите к Главе Гильдии вверх по лестнице.",
     "generic.taleofkingdoms.serve": "Я готов вам служить, мой господин.",
@@ -71,5 +71,5 @@
     "entity_type.taleofkingdoms.lostvillager.thank": "Хвала небесам! Наша деревня была атакована рефикулами. Отведи меня в гильдию, пожалуйста.",
     "entity_type.taleofkingdoms.lone.thank": "Мой король! Спасибо вам, за то, что спасли их! Я дам знать §eГлаве Гильдии§r о твоих усилиях.",
     "entity_type.taleofkingdoms.lostvillager.guild_thank": "Потерянный житель: Мой король! Спасибо за спасение!",
-    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Мастер Гильдии: Ждём твоего участия, герой."
 }
