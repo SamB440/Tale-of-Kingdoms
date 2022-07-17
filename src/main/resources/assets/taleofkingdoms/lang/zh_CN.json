@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "银行行长：请输入一组数字。",
     "entity_type.taleofkingdoms.citybuilder.message": "城市建设工人：陛下，您还尚未有资格建立一个王国，公会会长会帮助你做好准备！",
     "entity_type.taleofkingdoms.citybuilder.build": "城市建设工人：陛下，让我们建设您的城市吧！前方带路！",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "旅店店长",
     "generic.taleofkingdoms.need_contract": "旅店店主：你需要一个合约！去楼上找公会会长吧！",
     "generic.taleofkingdoms.serve": "陛下，我将为您服务！",
