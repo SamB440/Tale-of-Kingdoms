@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Pankkiiri: Ole hyvä ja syötä lukumäärä.",
     "entity_type.taleofkingdoms.citybuilder.message": "Rakentaja: Kuninkaani, kunniatasonne ei vielä riitä kuningaskunnan rakentamiseen. Kiltamestari auttaa sinua!",
     "entity_type.taleofkingdoms.citybuilder.build": "Rakentaja: Rakentakaamme teille kaupunki, herrani! Näyttäkää vain mihin!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Majatalon isäntä",
     "generic.taleofkingdoms.need_contract": "Majatalon isäntä: Tarvitset sopimuksen! Käy kiltamestarin luona yläkerrassa.",
     "generic.taleofkingdoms.serve": "Olen palveluksessanne, herrani!",
