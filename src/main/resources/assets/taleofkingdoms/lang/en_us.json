@@ -51,6 +51,7 @@
     "entity_type.taleofkingdoms.bank.input": "Banker: Please enter a number.",
     "entity_type.taleofkingdoms.citybuilder.message": "City Builder: My king you are still not worthy of creating a kingdom. The Guild Master will prepare you!",
     "entity_type.taleofkingdoms.citybuilder.build": "City Builder: Let us build your city my liege! Lead the way!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Innkeeper",
     "generic.taleofkingdoms.need_contract": "House Keeper: You need a contract for that! Go and visit the Guild Master upstairs!",
     "generic.taleofkingdoms.serve": "I will serve you, my liege!",
