@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Bankier: Vær så snill å skriv inn ett nummer.",
     "entity_type.taleofkingdoms.citybuilder.message": "ByBygger: Min konge, du er fortsatt ikke verdig nok til å skape et kongedømme. Klanmesteren vil forberede deg!",
     "entity_type.taleofkingdoms.citybuilder.build": "Bybygger: La os lage byen din, min herre! Led veien!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Vertshuseier",
     "generic.taleofkingdoms.need_contract": "Husholder: Du trenger en kontrakt for det! Gå å besøk Klanmesteren i etasjen over!",
     "generic.taleofkingdoms.serve": "Jeg vil tjene deg, min herre!",
