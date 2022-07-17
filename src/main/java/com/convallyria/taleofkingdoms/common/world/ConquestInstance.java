@@ -26,6 +26,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
@@ -138,6 +139,10 @@ public class ConquestInstance {
 
     public BlockPos getOrigin() {
         return origin;
+    }
+
+    public Vec3d getCentre() {
+        return new Box(start, end).getCenter();
     }
 
     public boolean canAttack(UUID uuid) {
@@ -365,7 +370,7 @@ public class ConquestInstance {
     }
 
     public CompletableFuture<BlockBox> rebuild(ServerPlayerEntity serverPlayerEntity, TaleOfKingdomsAPI api, SchematicOptions... options) {
-        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 13, 0)), options);
+        return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 20, 0)), options);
     }
 
     public void save(TaleOfKingdomsAPI api) {
