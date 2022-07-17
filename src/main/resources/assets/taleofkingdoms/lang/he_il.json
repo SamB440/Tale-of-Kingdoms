@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "בנקאי: בבקשה הזן מספר.",
     "entity_type.taleofkingdoms.citybuilder.message": "בנאי עיר: מלכי אתה עדיין לא ראוי ליצור ממלכה. אדון הממלכה יכין אותך!",
     "entity_type.taleofkingdoms.citybuilder.build": "בנאי העיר: בו נבנה את העיר שלך אדוני! הובל את הדרך!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "פונדקאי",
     "generic.taleofkingdoms.need_contract": "פונדקאי: אתה צריך חוזה בשביל זה! לך לראות את אדון הממלכה למעלה!",
     "generic.taleofkingdoms.serve": "אני אשרת אותך, אדוני!",
