@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Bankir: Var vänlig och ange ett nummer.",
     "entity_type.taleofkingdoms.citybuilder.message": "Stadsbyggare: Min kung du är fortfarande inte värdig att skapa ett rike. Guild Mästaren kommer att förbereda dig!",
     "entity_type.taleofkingdoms.citybuilder.build": "Stadsbyggare: Låt oss bygga din stad min överordnade! Led vägen!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Gästgivare",
     "generic.taleofkingdoms.need_contract": "Hushållerska: Du behöver ett kontrakt för det! Gå och besök Guild Mästaren på övervåningen!",
     "generic.taleofkingdoms.serve": "Jag skall tjäna dig, min överordnade!",
