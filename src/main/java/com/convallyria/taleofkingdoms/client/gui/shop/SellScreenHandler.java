@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import net.fabricmc.api.EnvType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,6 +76,13 @@ public class SellScreenHandler extends ScreenHandler {
                     if (itemStack.getItem() == shopItem.getItem()) {
                         // Only set empty once we've found the item...
                         playerEntity.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
+
+                        // Don't run on local server if we're in a client environment
+                        // Otherwise, the coins will get added twice.
+                        if (playerEntity instanceof ServerPlayerEntity && TaleOfKingdoms.getAPI().getEnvironment() == EnvType.CLIENT) {
+                            return;
+                        }
+
                         // Issue #59
                         instance.get().addCoins(playerEntity.getUuid(), shopItem.getSell() * itemStack.getCount());
                         return;
