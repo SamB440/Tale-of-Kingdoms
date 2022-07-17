@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Bankier: Geef alstublieft een nummer.",
     "entity_type.taleofkingdoms.citybuilder.message": "Stad Bouwer: Uwe Majesteit u bent nog niet waardig genoeg om een koninkrijk te op te zetten. De Gile Meester zal u voorbereiden!",
     "entity_type.taleofkingdoms.citybuilder.build": "Stadsbouwer: Laat ons jouw stad bouwen mijn leenheer! Leid de weg!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Herbergier",
     "generic.taleofkingdoms.need_contract": "Huisbaas: Daar heb je een contract voor nodig! Ga naar boven en bezoek de Gilde Meester!",
     "generic.taleofkingdoms.serve": "Ik zal je dienen, mijn heer!",
