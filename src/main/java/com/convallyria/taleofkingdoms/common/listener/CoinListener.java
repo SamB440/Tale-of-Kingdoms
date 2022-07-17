@@ -81,7 +81,8 @@ public class CoinListener extends Listener {
 
                     if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
                         instance.attack(serverPlayerEntity, serverPlayerEntity.getWorld());
-                        ServerConquestInstance.sync(serverPlayerEntity, instance);
+                        if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER)
+                            ServerConquestInstance.sync(serverPlayerEntity, instance);
                     }
                 }
             });
