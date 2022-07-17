@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Banquero: Introduzca un número.",
     "entity_type.taleofkingdoms.citybuilder.message": "Constructor de la Ciudad: Mi rey aún no eres digno de crear un reino. ¡El Maestro del gremio te preparará!",
     "entity_type.taleofkingdoms.citybuilder.build": "Constructor de ciudades: ¡Construyamos tu ciudad mi señor! ¡Lidera el camino!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Posadero",
     "generic.taleofkingdoms.need_contract": "Ama de llaves: ¡Necesitas un contrato para eso! ¡Ve a visitar al Maestro del gremio!",
     "generic.taleofkingdoms.serve": "¡Yo te serviré, mi señor!",
