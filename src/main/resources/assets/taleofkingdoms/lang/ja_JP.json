@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "数値を入力してください。",
     "entity_type.taleofkingdoms.citybuilder.message": "シティビルダー：あなたは王国を作るに値しない王様です。ギルドマスターはあなたを準備します！",
     "entity_type.taleofkingdoms.citybuilder.build": "シティビルダー：あなたの町を建設しましょう！道を開けましょう！",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "宿の主人",
     "generic.taleofkingdoms.need_contract": "宿屋：契約が必要です！ギルドマスターの居る階に行ってみてください！",
     "generic.taleofkingdoms.serve": "あなたに仕えましょう、私の主君。",
