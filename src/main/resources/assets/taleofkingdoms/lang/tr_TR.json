@@ -48,7 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Lütfen bir sayı yazın.",
     "entity_type.taleofkingdoms.citybuilder.message": "Kralım hala bir krallık oluşturmaya layık değilsin. Lonca lideri seni hazırlayacak!",
     "entity_type.taleofkingdoms.citybuilder.build": "Şehrinizi inşa edelim efendim! Yol göster!",
-    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
+    "entity_type.taleofkingdoms.citybuilder.distance": "İnşaatçı: Loncadan uzak olmalıyız!",
     "menu.taleofkingdoms.innkeeper.name": "Hancı",
     "generic.taleofkingdoms.need_contract": "Bunun için bir sözleşmeye ihtiyacınız var! Git ve üst kattaki lonca liderini ziyaret et!",
     "generic.taleofkingdoms.serve": "Size hizmet edeceğim, efendim!",
