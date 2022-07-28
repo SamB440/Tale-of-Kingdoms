@@ -59,6 +59,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.totobirdcreations.looseendslib.manager.LooseEnd;
+import net.totobirdcreations.looseendslib.manager.LooseEndManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -114,6 +116,10 @@ public class TaleOfKingdoms implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LooseEndManager.getInstance().register(MODID, NAME, VERSION)
+                .whenClientJoins(LooseEnd.Condition.REQUIRED)
+                .whenJoinServer(LooseEnd.Condition.NONE);
+
         ItemRegistry.init();
 
         File file = new File(this.getDataFolder() + "worlds");

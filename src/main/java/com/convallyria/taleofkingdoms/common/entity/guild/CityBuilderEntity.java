@@ -6,6 +6,9 @@ import com.convallyria.taleofkingdoms.client.gui.entity.cotton.CityBuilderBeginS
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -57,7 +60,9 @@ public class CityBuilderEntity extends TOKEntity {
                     return;
                 }
 
-                TaleOfKingdoms.getAPI().executeOnMain(() -> MinecraftClient.getInstance().setScreen(new CityBuilderBeginScreen(new CityBuilderBeginGui())));
+                if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.CLIENT) {
+                    openScreen(player, instance);
+                }
                 return;
             }
 
@@ -70,6 +75,11 @@ public class CityBuilderEntity extends TOKEntity {
             }
         });
         return ActionResult.PASS;
+    }
+
+    @Environment(EnvType.CLIENT)
+    private void openScreen(PlayerEntity player, ConquestInstance instance) {
+        MinecraftClient.getInstance().setScreen(new CityBuilderBeginScreen(new CityBuilderBeginGui()));
     }
 
     @Override
