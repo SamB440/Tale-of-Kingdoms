@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Bankéř: Zadejte číslo.",
     "entity_type.taleofkingdoms.citybuilder.message": "Stavitel města: Můj králi, stále nejsi hoden vytvořit království. Mistr klanu tě připraví!",
     "entity_type.taleofkingdoms.citybuilder.build": "Městský stavitel: Nechte nás postavit vaše město náš pane! Veď nás!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Hospodský",
     "generic.taleofkingdoms.need_contract": "Správce domu: Potřebuješ na to smlouvu! Jdi a navštiv mistra cechu!",
     "generic.taleofkingdoms.serve": "Budu vám sloužit můj pane!",

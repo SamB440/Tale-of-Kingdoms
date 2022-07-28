@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Банкир: Введите число, пожалуйста.",
     "entity_type.taleofkingdoms.citybuilder.message": "Градостроитель: Мой король, вы еще недостоины создания королевства. Глава Гильдии Вас подготовит!",
     "entity_type.taleofkingdoms.citybuilder.build": "Градостроитель: Сеньор, давайте построим Ваш город! Поехали!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Трактирщик",
     "generic.taleofkingdoms.need_contract": "Домовладелец: Вам необходим контракт для этого. Сходите к Главе Гильдии вверх по лестнице.",
     "generic.taleofkingdoms.serve": "Я готов вам служить, мой господин.",

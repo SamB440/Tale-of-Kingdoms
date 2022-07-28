@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Bankier: Proszę wprowadzić kwotę.",
     "entity_type.taleofkingdoms.citybuilder.message": "Architekt: Mój Królu, wciąż nie jesteś godzien założenia własnego Królestwa. Mistrz Gildii przygotuje ciebie!",
     "entity_type.taleofkingdoms.citybuilder.build": "Architekt: Zbudujmy twoje miasto, mój Panie, prowadź.",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Oberżysta",
     "generic.taleofkingdoms.need_contract": "Oberżysta: Potrzebujesz kontraktu aby to zrobić! Idź na górę i odwiedź Mistrza Gildii!",
     "generic.taleofkingdoms.serve": "Będę ci służył, Mój Panie!",

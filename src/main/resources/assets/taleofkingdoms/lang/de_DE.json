@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Banker: Bitte gebe eine Zahl ein.",
     "entity_type.taleofkingdoms.citybuilder.message": "Stadtbauer: Mein König du bist noch nicht würdig, ein Königreich zu erschaffen. Der Gildenmeister wird dich vorbereiten!",
     "entity_type.taleofkingdoms.citybuilder.build": "Stadtbauer: Lass uns eine Stadt errichten mein Lüttich! Zeige den Weg!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Gastwirt",
     "generic.taleofkingdoms.need_contract": "Haushälter: Dafür brauchst du einen Vertrag! Besuche den Gildenmeister oben!",
     "generic.taleofkingdoms.serve": "Ich werde Ihnen dienen, mein Lüttich!",

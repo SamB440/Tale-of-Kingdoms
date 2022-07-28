@@ -1,7 +1,7 @@
 {
     "text.autoconfig.taleofkingdoms.title": "Configuração do Tale of Kingdoms",
     "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Mostrar interface de começo de reino",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar interface de continuar Jornada",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar interface de continuar conquista",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Spawn rate do Portão",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Spawn rate de Vila de Refículos",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: Uma nova Conquista",
@@ -48,6 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Banqueiro: Por favor diga um número.",
     "entity_type.taleofkingdoms.citybuilder.message": "Construtor: Meu Rei, você ainda não é digno de criar um reino. O §eMestre da Guilda§r irá lhe preparar!",
     "entity_type.taleofkingdoms.citybuilder.build": "Construtor: Vamos construir a sua cidade, meu senhor! Lidere o caminho!",
+    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Estalajadeiro",
     "generic.taleofkingdoms.need_contract": "Estalajadeiro: Você precisa de um contrato para fazer isso! Vá visitar o §eMestre da Guilda§r no andar de cima!",
     "generic.taleofkingdoms.serve": "Irei lhe servir, meu lorde!",
