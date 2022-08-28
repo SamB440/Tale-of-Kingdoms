@@ -1,7 +1,7 @@
 {
     "text.autoconfig.taleofkingdoms.title": "Configuración de Tale of Kingdoms",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Mostrar la GUI del reino inicial",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar la GUI de continuar la conquista",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Mostrar la interfaz del reino inicial",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Mostrar la interfaz de reanudar la conquista",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Velocidad de aparición de puerta de enlace",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Ratio de aparición de Aldeas Reficule",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
@@ -69,7 +69,7 @@
     "entity.taleofkingdoms.innkeeper": "Posadero",
     "entity.taleofkingdoms.guild_master": "Maestro del gremio",
     "entity.taleofkingdoms.foodshop": "Tienda de alimentos",
-    "entity_type.taleofkingdoms.lostvillager.thank": "¡Gracias a los cielos! Nuestra aldea fue atacada por los Reficules. Por favor, envíame de vuelta al gremio.",
+    "entity_type.taleofkingdoms.lostvillager.thank": "¡Gracias a los cielos! Nuestra aldea fue atacada por los Reficules. Por favor, guíame de vuelta al gremio.",
     "entity_type.taleofkingdoms.lone.thank": "¡Mi rey! ¡Gracias por salvarlos! Haré saber al §maestro del gremio§ de tus esfuerzos.",
     "entity_type.taleofkingdoms.lostvillager.guild_thank": "Aldeano perdido: ¡Mi rey! Gracias por salvarme.",
     "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Maestro del gremio: Esperamos tu participación, héroe."
