@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.cotton.CityBuilderBeginGui;
-import com.convallyria.taleofkingdoms.client.gui.entity.cotton.CityBuilderBeginScreen;
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderBeginGui;
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.BaseCityBuilderScreen;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
@@ -11,6 +11,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -18,13 +19,14 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class CityBuilderEntity extends TOKEntity {
+public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
     private static final TrackedData<Boolean> MOVING_TO_LOCATION;
 
@@ -37,6 +39,8 @@ public class CityBuilderEntity extends TOKEntity {
         super.initDataTracker();
         this.dataTracker.startTracking(MOVING_TO_LOCATION, false);
     }
+
+    private final SimpleInventory inventory = new SimpleInventory(10);
 
     public CityBuilderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
@@ -55,10 +59,10 @@ public class CityBuilderEntity extends TOKEntity {
             if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
                 BlockPos current = this.getBlockPos();
                 int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
-                if (distance < (3000)) {
-                    Translations.CITYBUILDER_DISTANCE.send(player, distance, 3000);
-                    return;
-                }
+//                if (distance < (3000)) {
+//                    Translations.CITYBUILDER_DISTANCE.send(player, distance, 3000);
+//                    return;
+//                }
 
                 if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.CLIENT) {
                     openScreen(player, instance);
@@ -69,7 +73,7 @@ public class CityBuilderEntity extends TOKEntity {
             if (instance.getWorthiness(player.getUuid()) >= 1500) {
                 Translations.CITYBUILDER_BUILD.send(player);
                 this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
-                this.getDataTracker().set(MOVING_TO_LOCATION, true);
+                this.followPlayer();
             } else {
                 Translations.CITYBUILDER_MESSAGE.send(player);
             }
@@ -77,9 +81,17 @@ public class CityBuilderEntity extends TOKEntity {
         return ActionResult.PASS;
     }
 
+    public void followPlayer() {
+        this.getDataTracker().set(MOVING_TO_LOCATION, true);
+    }
+
+    public void stopFollowingPlayer() {
+        this.getDataTracker().set(MOVING_TO_LOCATION, false);
+    }
+
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ConquestInstance instance) {
-        MinecraftClient.getInstance().setScreen(new CityBuilderBeginScreen(new CityBuilderBeginGui()));
+        MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderBeginGui(player, this, instance)));
     }
 
     @Override
@@ -100,5 +112,10 @@ public class CityBuilderEntity extends TOKEntity {
     @Override
     public boolean damage(DamageSource damageSource, float f) {
         return false;
+    }
+
+    @Override
+    public SimpleInventory getInventory() {
+        return inventory;
     }
 }

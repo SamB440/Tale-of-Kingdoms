@@ -16,19 +16,18 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TaleOfKingdomsAPI {
 
     private final TaleOfKingdoms mod;
     private final ConquestInstanceStorage cis;
-    private final Map<String, IManager> managers = new HashMap<>();
+    private final Map<Class<? extends IManager>, IManager> managers = new HashMap<>();
     @Environment(EnvType.SERVER)
     private MinecraftDedicatedServer minecraftServer;
     @Environment(EnvType.SERVER)
@@ -41,7 +40,7 @@ public class TaleOfKingdomsAPI {
         this.mod = mod;
         this.cis = new ConquestInstanceStorage();
         SoundManager sm = new SoundManager(mod);
-        managers.put(sm.getName(), sm);
+        managers.put(SoundManager.class, sm);
         this.scheduler = new Scheduler();
     }
 
@@ -94,19 +93,13 @@ public class TaleOfKingdomsAPI {
         return mod;
     }
 
-    /**
-     * Gets a manager by its name.
-     * @param name name of the {@link IManager}
-     * @return the {@link IManager} or null if not found
-     */
-    @Nullable
-    public IManager getManager(String name) {
-        return managers.get(name);
+    public <T extends IManager> T getManager(Class<? extends T> clazz) {
+        return (T) managers.getOrDefault(clazz, null);
     }
 
     @NotNull
-    public Set<String> getManagers() {
-        return managers.keySet();
+    public Collection<IManager> getManagers() {
+        return managers.values();
     }
 
     @Environment(EnvType.CLIENT)

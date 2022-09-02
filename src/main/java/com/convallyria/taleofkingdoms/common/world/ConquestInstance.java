@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
@@ -31,6 +32,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -68,15 +71,17 @@ public class ConquestInstance {
     private final Map<UUID, Long> playerFarmerLastBread;
     private final Map<UUID, Boolean> playerHasContract;
     private final Map<UUID, Integer> playerWorthiness;
+    private final Map<UUID, PlayerKingdom> playerKingdoms;
     private Map<UUID, List<UUID>> hunterUUIDs;
 
+    //todo: do we need concurrency?
     public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
         Optional<ConquestInstance> instance = Optional.ofNullable(TaleOfKingdoms.getAPI())
                 .map(TaleOfKingdomsAPI::getConquestInstanceStorage)
                 .orElseThrow(() -> new IllegalArgumentException("API not present"))
                 .getConquestInstance(world);
         if (instance.isPresent() && instance.get().isLoaded()) throw new IllegalArgumentException("World already registered");
-       this.version = CURRENT_VERSION;
+        this.version = CURRENT_VERSION;
         this.world = world;
         this.name = name;
         this.start = start;
@@ -90,6 +95,7 @@ public class ConquestInstance {
         this.playerFarmerLastBread = new ConcurrentHashMap<>();
         this.playerHasContract = new ConcurrentHashMap<>();
         this.playerWorthiness = new ConcurrentHashMap<>();
+        this.playerKingdoms = new ConcurrentHashMap<>();
         this.hunterUUIDs = new ConcurrentHashMap<>();
     }
 
@@ -270,6 +276,18 @@ public class ConquestInstance {
 
     public void addWorthiness(UUID playerUuid, int worthiness) {
         this.playerWorthiness.put(playerUuid, getWorthiness(playerUuid) + worthiness);
+    }
+
+    @Nullable
+    public PlayerKingdom getKingdom(UUID uuid) {
+        return playerKingdoms.getOrDefault(uuid, null);
+    }
+
+    public PlayerKingdom addKingdom(UUID uuid, @NonNull PlayerKingdom kingdom) {
+        if (playerKingdoms.containsKey(uuid)) {
+            throw new IllegalArgumentException("Kingdom already exists for player " + uuid + "!");
+        }
+        return playerKingdoms.put(uuid, kingdom);
     }
 
     public Map<UUID, List<UUID>> getHunterUUIDs() {
