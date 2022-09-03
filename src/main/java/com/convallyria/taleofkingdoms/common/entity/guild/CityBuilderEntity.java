@@ -1,11 +1,12 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderBeginGui;
 import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.BaseCityBuilderScreen;
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderBeginGui;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,6 +41,9 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         this.dataTracker.startTracking(MOVING_TO_LOCATION, false);
     }
 
+    private final FollowPlayerGoal followPlayerGoal = new FollowPlayerGoal(this, 0.75F, 5, 50);
+    private WalkToTargetGoal currentBlockTarget;
+
     private final SimpleInventory inventory = new SimpleInventory(10);
 
     public CityBuilderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
@@ -64,18 +68,17 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 //                    return;
 //                }
 
-                if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.CLIENT) {
+                if (player.world.isClient()) {
                     openScreen(player, instance);
                 }
                 return;
             }
 
             if (instance.getWorthiness(player.getUuid()) >= 1500) {
-                Translations.CITYBUILDER_BUILD.send(player);
-                this.goalSelector.add(2, new FollowPlayerGoal(this, 0.75F, 5, 50));
+                if (player.world.isClient()) Translations.CITYBUILDER_BUILD.send(player);
                 this.followPlayer();
             } else {
-                Translations.CITYBUILDER_MESSAGE.send(player);
+                if (player.world.isClient()) Translations.CITYBUILDER_MESSAGE.send(player);
             }
         });
         return ActionResult.PASS;
@@ -83,10 +86,20 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
     public void followPlayer() {
         this.getDataTracker().set(MOVING_TO_LOCATION, true);
+        this.goalSelector.add(2, followPlayerGoal);
     }
 
     public void stopFollowingPlayer() {
         this.getDataTracker().set(MOVING_TO_LOCATION, false);
+        this.goalSelector.remove(followPlayerGoal);
+    }
+
+    public void setTarget(BlockPos pos) {
+        this.goalSelector.add(3, this.currentBlockTarget = new WalkToTargetGoal(this, 0.75F, pos));
+    }
+
+    public void stopTarget() {
+        this.goalSelector.remove(this.currentBlockTarget);
     }
 
     @Environment(EnvType.CLIENT)

@@ -2,6 +2,8 @@ package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
+import com.convallyria.taleofkingdoms.common.generator.processor.PlayerKingdomStructureProcessor;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -48,6 +50,11 @@ public abstract class SchematicHandler {
         player.getWorld().getStructureTemplateManager().getTemplate(schematic.getPath()).ifPresent(structure -> {
             SharedConstants.isDevelopment = true; // We want to crash if something went wrong
             StructurePlacementData structurePlacementData = new StructurePlacementData();
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+                final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+                if (kingdom == null) return;
+                structurePlacementData.addProcessor(new PlayerKingdomStructureProcessor(kingdom));
+            });
             structurePlacementData.addProcessor(new GuildStructureProcessor(options));
             structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
             structure.place(player.getWorld(), position, position, structurePlacementData, Random.create(), Block.NOTIFY_ALL);
