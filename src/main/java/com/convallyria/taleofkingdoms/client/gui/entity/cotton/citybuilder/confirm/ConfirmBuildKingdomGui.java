@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.conf
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
@@ -37,14 +38,24 @@ public class ConfirmBuildKingdomGui extends LightweightGuiDescription {
         WButton buildButton = new WButton(Text.translatable("menu.taleofkingdoms.citybuilder.build"));
         buildButton.setOnClick(() -> {
             // todo: Will need to send packet to server and verify
+            // Close current screen, calculate paste position, and add their kingdom
             MinecraftClient.getInstance().currentScreen.close();
             final IntegratedServer server = MinecraftClient.getInstance().getServer();
             final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
             BlockPos pos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 8, 85));
+            final PlayerKingdom playerKingdom = new PlayerKingdom(pos);
+            instance.addKingdom(player.getUuid(), playerKingdom);
+
+            // Paste their kingdom
             TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, pos);
             player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MASTER, 0.1f, 1f);
-            instance.addKingdom(player.getUuid(), new PlayerKingdom(pos));
-            entity.stopFollowingPlayer();
+
+            // Make city builder stop following player and move to well POI
+            TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                final CityBuilderEntity cityBuilderServer = (CityBuilderEntity) serverPlayer.world.getEntityById(entity.getId());
+                cityBuilderServer.stopFollowingPlayer();
+                cityBuilderServer.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
+            });
 
             //todo: move towards well placement marker!
         });

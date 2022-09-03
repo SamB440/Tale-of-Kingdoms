@@ -25,6 +25,7 @@ import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
+import com.convallyria.taleofkingdoms.common.generator.processor.PlayerKingdomStructureProcessor;
 import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
 import com.convallyria.taleofkingdoms.common.gson.ConquestInstanceAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
@@ -90,6 +91,7 @@ public class TaleOfKingdoms implements ModInitializer {
 
     public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("taleofkingdoms:guild", GuildStructureProcessor.CODEC);
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("taleofkingdoms:gateway", GatewayStructureProcessor.CODEC);
+    public static final StructureProcessorType<?> KINGDOM_PROCESSOR = StructureProcessorType.register("taleofkingdoms:kingdom", PlayerKingdomStructureProcessor.CODEC);
 
     public static final ScreenHandlerType<SellScreenHandler> SELL_SCREEN_HANDLER;
 
