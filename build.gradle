@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'com.google.code.gson:gson:2.9.0'
     testImplementation 'org.reflections:reflections:0.10.2'
 
@@ -48,6 +48,17 @@ dependencies {
     }
     include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude(group: "net.fabricmc.fabric-api")
+    }
+}
+
+// todo: this needs fixing
+loom {
+    // Used to configure existing or new run configurations
+    runs {
+        client {
+            // Add a program arg
+            programArg "--username Cotander"
+        }
     }
 }
 
