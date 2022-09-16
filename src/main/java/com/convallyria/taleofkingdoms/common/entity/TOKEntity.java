@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.GoalSelector;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -83,4 +84,8 @@ public abstract class TOKEntity extends PathAwareEntity {
 
     @Override
     public void checkDespawn() { }
+
+    public GoalSelector getGoalSelector() {
+        return this.goalSelector;
+    }
 }

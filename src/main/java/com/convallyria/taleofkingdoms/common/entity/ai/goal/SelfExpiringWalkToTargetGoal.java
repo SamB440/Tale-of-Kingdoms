@@ -1,19 +1,26 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
-import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
+import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 
-public class WalkToTargetGoal extends MoveToTargetPosGoal {
+public class SelfExpiringWalkToTargetGoal extends WalkToTargetGoal {
 
-    private final PathAwareEntity entity;
+    private final TOKEntity entity;
     private final BlockPos pos;
 
-    public WalkToTargetGoal(PathAwareEntity entity, double speed, BlockPos pos) {
-        super(entity, speed, 100, entity.world.getHeight());
+    public SelfExpiringWalkToTargetGoal(TOKEntity entity, double speed, BlockPos pos) {
+        super(entity, speed, pos);
         this.entity = entity;
         this.pos = pos;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.pos.isWithinDistance(this.mob.getPos(), this.getDesiredDistanceToTarget())) {
+            entity.getGoalSelector().remove(this);
+        }
     }
 
     @Override
