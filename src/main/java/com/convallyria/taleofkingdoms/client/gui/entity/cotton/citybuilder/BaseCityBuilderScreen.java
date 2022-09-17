@@ -9,5 +9,13 @@ public class BaseCityBuilderScreen extends CottonClientScreen {
         super(description);
     }
 
+    @Override
+    public boolean shouldPause() {
+        return true;
+    }
 
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
 }
