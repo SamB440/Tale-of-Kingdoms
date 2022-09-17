@@ -58,15 +58,15 @@ Please note that this mod is a complete recode unlike previous Tale of Kingdoms 
 
 ## Getting Started
 
-Tale of Kingdoms builds on JDK 16 and uses Gradle to manage dependencies.
+Tale of Kingdoms builds on JDK 17 and uses Gradle to manage dependencies.
 
 ### Prerequisites
 
-You just need Java 16. If you don't have it:
+You just need Java 17. If you don't have it:
 
 Latest from https://adoptopenjdk.net / https://adoptium.net, or;
 ```sh
-sudo apt install adoptopenjdk-16-hotspot
+sudo apt install adoptopenjdk-17-hotspot
 ```
 
 ### Installation
