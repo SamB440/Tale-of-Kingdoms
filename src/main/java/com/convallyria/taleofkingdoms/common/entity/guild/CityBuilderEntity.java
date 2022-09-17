@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.BaseCityBuilderScreen;
 import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderBeginGui;
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderTierOneGui;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
@@ -27,6 +28,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
@@ -64,7 +66,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
             final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
             if (kingdom != null) {
                 if (!player.world.isClient()) return;
-                openScreen(player, instance);
+                openScreen(player, kingdom, instance);
                 return;
             }
 
@@ -77,7 +79,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 //                }
 
                 if (player.world.isClient()) {
-                    openScreen(player, instance);
+                    openScreen(player, null, instance);
                 }
                 return;
             }
@@ -111,8 +113,15 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ConquestInstance instance) {
-        MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderBeginGui(player, this, instance)));
+    private void openScreen(PlayerEntity player, @Nullable PlayerKingdom kingdom, ConquestInstance instance) {
+        if (kingdom == null) {
+            MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderBeginGui(player, this, instance)));
+            return;
+        }
+
+        switch (kingdom.getTier()) {
+            case TIER_ONE -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderTierOneGui(player, this, instance)));
+        }
     }
 
     @Override
