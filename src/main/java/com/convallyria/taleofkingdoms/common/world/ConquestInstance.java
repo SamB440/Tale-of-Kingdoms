@@ -32,9 +32,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -283,7 +282,7 @@ public class ConquestInstance {
         return playerKingdoms.getOrDefault(uuid, null);
     }
 
-    public PlayerKingdom addKingdom(UUID uuid, @NonNull PlayerKingdom kingdom) {
+    public PlayerKingdom addKingdom(UUID uuid, @NotNull PlayerKingdom kingdom) {
         if (playerKingdoms.containsKey(uuid)) {
             throw new IllegalArgumentException("Kingdom already exists for player " + uuid + "!");
         }
