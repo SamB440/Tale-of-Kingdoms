@@ -23,6 +23,8 @@ public enum Translations {
     CITYBUILDER_MESSAGE("entity_type.taleofkingdoms.citybuilder.message"),
     CITYBUILDER_BUILD("entity_type.taleofkingdoms.citybuilder.build"),
     CITYBUILDER_DISTANCE("entity_type.taleofkingdoms.citybuilder.distance"),
+    CITYBUILDER_GUI_OPEN("entity_type.taleokfingdoms.citybuilder.gui.open"),
+    CITYBUILDER_GUI_CLOSE("entity_type.taleokfingdoms.citybuilder.gui.close"),
     INNKEEPER_REST("entity_type.taleofkingdoms.innkeeper.rest"),
     INNKEEPER_LEAVE("entity_type.taleofkingdoms.innkeeper.leave"),
     NEED_CONTRACT("generic.taleofkingdoms.need_contract"),
