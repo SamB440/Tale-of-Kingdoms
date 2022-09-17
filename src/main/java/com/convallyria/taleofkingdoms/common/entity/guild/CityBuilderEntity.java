@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -60,6 +61,13 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+            if (kingdom != null) {
+                if (!player.world.isClient()) return;
+                openScreen(player, instance);
+                return;
+            }
+
             if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
                 BlockPos current = this.getBlockPos();
                 int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
