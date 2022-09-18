@@ -4,8 +4,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
@@ -25,8 +27,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CityBuilderTierOneGui extends LightweightGuiDescription {
 
+    private final CityBuilderEntity entity;
+    private final WButton fixWholeKingdomButton;
+    private final WLabel oakWoodLabel, cobblestoneLabel;
 
     public CityBuilderTierOneGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
+        this.entity = entity;
         final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
         Translations.CITYBUILDER_GUI_OPEN.send(player);
         WPlainPanel root = new WPlainPanel();
@@ -46,8 +52,8 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
 
         //root.add(new WLabel(Text.literal("0      160      320")).setHorizontalAlignment(HorizontalAlignment.LEFT), 100, 30, 16, 2);
 
-        final WLabel oakWoodLabel = new WLabel(Text.literal(oakWoodCount + " / 320 oak wood"));
-        final WLabel cobblestoneLabel = new WLabel(Text.literal(cobblestoneCount + " / 320 cobblestone"));
+        this.oakWoodLabel = new WLabel(Text.literal(oakWoodCount + " / 320 oak wood"));
+        this.cobblestoneLabel = new WLabel(Text.literal(cobblestoneCount + " / 320 cobblestone"));
         root.add(oakWoodLabel, 100, 27, 32, 20);
         root.add(cobblestoneLabel, 100, 47, 32, 20);
 
@@ -62,7 +68,7 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                     serverPlayer.getInventory().removeStack(slot);
                     player.getInventory().removeStack(slot);
                     entity.getInventory().addStack(stack);
-                    cobblestoneLabel.setText(Text.literal((oakWoodCount.addAndGet(64)) + " / 320 oak wood"));
+                    update();
                 }
             });
         });
@@ -79,11 +85,26 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                     serverPlayer.getInventory().removeStack(slot);
                     player.getInventory().removeStack(slot);
                     entity.getInventory().addStack(stack);
-                    cobblestoneLabel.setText(Text.literal((cobblestoneCount.addAndGet(64)) + " / 320 cobblestone"));
+                    update();
                 }
             });
         });
         root.add(cobbleButton, 222, 40, 100, 10);
+
+        this.fixWholeKingdomButton = new WButton(Text.literal("Fix whole kingdom"));
+        fixWholeKingdomButton.addTooltip(new TooltipBuilder().add(
+                Text.literal("Repairing the kingdom costs:"),
+                Text.literal(" - 320 oak wood"),
+                Text.literal(" - 320 cobblestone")));
+        fixWholeKingdomButton.setOnClick(() -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
+            if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320) return;
+            final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
+            entity.getInventory().clear();
+            update();
+        }));
+        root.add(fixWholeKingdomButton, 222, 70, 100, 10);
+        update();
 
         WButton exitButton = new WButton(Text.literal("Exit"));
         exitButton.setOnClick(() -> {
@@ -92,6 +113,15 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
         });
         root.add(exitButton, 178, root.getHeight() / 2 + 65, 45, 20);
         root.validate(this);
+    }
+
+    private void update() {
+        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
+        AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
+        fixWholeKingdomButton.setEnabled(cobblestoneCount.get() == 320 && oakWoodCount.get() == 320);
+
+        oakWoodLabel.setText(Text.literal((oakWoodCount) + " / 320 oak wood"));
+        cobblestoneLabel.setText(Text.literal((cobblestoneCount) + " / 320 cobblestone"));
     }
 
     @Override
