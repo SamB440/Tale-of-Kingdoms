@@ -48,8 +48,8 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
 
         final WLabel oakWoodLabel = new WLabel(Text.literal(oakWoodCount + " / 320 oak wood"));
         final WLabel cobblestoneLabel = new WLabel(Text.literal(cobblestoneCount + " / 320 cobblestone"));
-        root.add(oakWoodLabel, 110, 27, 32, 20);
-        root.add(cobblestoneLabel, 110, 47, 32, 20);
+        root.add(oakWoodLabel, 100, 27, 32, 20);
+        root.add(cobblestoneLabel, 100, 47, 32, 20);
 
         WButton woodButton = new WButton(Text.literal("Give 64 wood"));
         woodButton.setOnClick(() -> {
@@ -58,7 +58,9 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                 final ItemStack stack = new ItemStack(Items.OAK_LOG, 64);
                 if (playerOakWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
                     final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    serverPlayer.getInventory().removeOne(stack);
+                    int slot = serverPlayer.getInventory().getSlotWithStack(stack);
+                    serverPlayer.getInventory().removeStack(slot);
+                    player.getInventory().removeStack(slot);
                     entity.getInventory().addStack(stack);
                     cobblestoneLabel.setText(Text.literal((oakWoodCount.addAndGet(64)) + " / 320 oak wood"));
                 }
@@ -73,7 +75,9 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                 final ItemStack stack = new ItemStack(Items.COBBLESTONE, 64);
                 if (playerCobblestoneCount >= 64 && cobblestoneCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
                     final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    serverPlayer.getInventory().removeOne(stack);
+                    int slot = serverPlayer.getInventory().getSlotWithStack(stack);
+                    serverPlayer.getInventory().removeStack(slot);
+                    player.getInventory().removeStack(slot);
                     entity.getInventory().addStack(stack);
                     cobblestoneLabel.setText(Text.literal((cobblestoneCount.addAndGet(64)) + " / 320 cobblestone"));
                 }
