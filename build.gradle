@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
-    testImplementation 'com.google.code.gson:gson:2.9.0'
+    testImplementation 'com.google.code.gson:gson:2.10'
     testImplementation 'org.reflections:reflections:0.10.2'
 
     compileOnly 'org.jetbrains:annotations:23.0.0'
