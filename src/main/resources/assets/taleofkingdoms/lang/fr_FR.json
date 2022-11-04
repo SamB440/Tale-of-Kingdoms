@@ -48,7 +48,7 @@
     "entity_type.taleofkingdoms.bank.input": "Banquier : Veuillez saisir un nombre.",
     "entity_type.taleofkingdoms.citybuilder.message": "Bâtisseur de Ville: Mon Roi vous n'êtes toujours pas digne de créer un Royaume. Le Maître de Guilde vous préparera !",
     "entity_type.taleofkingdoms.citybuilder.build": "Constructeur: Construisons votre ville mon Seigneur! On vous suit!",
-    "entity_type.taleofkingdoms.citybuilder.distance": "City Builder: We must keep distance from the guild! (%d/%d)",
+    "entity_type.taleofkingdoms.citybuilder.distance": "Constructeur de la cité : Nous devons garder nos distances avec la guilde ! (%d/%d)",
     "menu.taleofkingdoms.innkeeper.name": "Aubergiste",
     "generic.taleofkingdoms.need_contract": "Gardien de la Maison : Vous avez besoin d'un contrat pour cela ! Allez visiter le Maître de Guilde à l'étage !",
     "generic.taleofkingdoms.serve": "A votre service mon Seigneur!",
