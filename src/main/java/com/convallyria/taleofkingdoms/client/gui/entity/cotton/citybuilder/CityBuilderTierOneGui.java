@@ -106,6 +106,11 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
         root.add(fixWholeKingdomButton, 222, 70, 100, 10);
         update();
 
+        // Price list
+        WButton priceListButton = new WButton(Text.literal("Price List"));
+        priceListButton.setOnClick(() -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderPriceListGui(player, entity, instance))));
+        root.add(priceListButton, 222, 100, 100, 10);
+
         WButton exitButton = new WButton(Text.literal("Exit"));
         exitButton.setOnClick(() -> {
             MinecraftClient.getInstance().currentScreen.close();
