@@ -5,7 +5,6 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
-import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -25,6 +24,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CityBuilderTierOneGui extends LightweightGuiDescription {
@@ -32,6 +33,8 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
     private final CityBuilderEntity entity;
     private final WButton fixWholeKingdomButton;
     private final WLabel oakWoodLabel, cobblestoneLabel;
+
+    private final Map<BuildCosts, WButton> buildButtons = new HashMap<>(BuildCosts.values().length);
 
     public CityBuilderTierOneGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
         this.entity = entity;
@@ -113,16 +116,29 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
         priceListButton.setOnClick(() -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderPriceListGui(player, entity, instance))));
         root.add(priceListButton, 222, 100, 100, 10);
 
-        // Item Shop (blacksmith) build
-        WButton blacksmithBuildButton = new WButton(Text.literal("Build Item Shop"));
-        blacksmithBuildButton.setOnClick(() -> {
-            entity.requireResources(BuildCosts.ITEM_SHOP, () -> {
-                final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                MinecraftClient.getInstance().currentScreen.close();
-                TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_BLACKSMITH_HOUSE, serverPlayer, kingdom.getPOIPos(KingdomPOI.TIER_ONE_HOUSE_BLACKSMITH));
+        // Actually starts at 70, first has addition of +20
+        int currentY = 50;
+        int currentX = 20;
+        final int maxPerRow = 7;
+        int currentRow = 0;
+        for (BuildCosts build : BuildCosts.values()) {
+            if (currentRow >= maxPerRow) {
+                currentRow = 0;
+                currentY = 50;
+                currentX += 100;
+            }
+            //todo: small houses / large houses require special changes
+            WButton button = new WButton(Text.literal("Build ").append(build.getDisplayName()));
+            button.setOnClick(() -> {
+                entity.requireResources(build, () -> {
+                    final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                    MinecraftClient.getInstance().currentScreen.close();
+                    TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()));
+                });
             });
-        });
-        root.add(blacksmithBuildButton, 90, 70, 100, 10);
+            root.add(button, currentX, currentY += 20, 100, 10);
+            currentRow++;
+        }
 
         WButton exitButton = new WButton(Text.literal("Exit"));
         exitButton.setOnClick(() -> {
