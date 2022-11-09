@@ -4,6 +4,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
+import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -110,6 +112,17 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
         WButton priceListButton = new WButton(Text.literal("Price List"));
         priceListButton.setOnClick(() -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderPriceListGui(player, entity, instance))));
         root.add(priceListButton, 222, 100, 100, 10);
+
+        // Item Shop (blacksmith) build
+        WButton blacksmithBuildButton = new WButton(Text.literal("Build Item Shop"));
+        blacksmithBuildButton.setOnClick(() -> {
+            entity.requireResources(BuildCosts.ITEM_SHOP, () -> {
+                final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                MinecraftClient.getInstance().currentScreen.close();
+                TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_BLACKSMITH_HOUSE, serverPlayer, kingdom.getPOIPos(KingdomPOI.TIER_ONE_HOUSE_BLACKSMITH));
+            });
+        });
+        root.add(blacksmithBuildButton, 90, 70, 100, 10);
 
         WButton exitButton = new WButton(Text.literal("Exit"));
         exitButton.setOnClick(() -> {
