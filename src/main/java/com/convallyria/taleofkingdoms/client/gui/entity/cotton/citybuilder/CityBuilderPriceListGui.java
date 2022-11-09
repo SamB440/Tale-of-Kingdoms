@@ -9,6 +9,7 @@ import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WButton;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +33,8 @@ public class CityBuilderPriceListGui extends LightweightGuiDescription {
         for (BuildCosts build : BuildCosts.values()) {
             final MutableText text = build.getDisplayName().copy().append(": " + build.getWood() + " wood " + build.getStone() + " cobblestone");
             WLabel label = new WLabel(text, 0xbcbcbc);
-            root.add(label, 100, rootHeight += 10, 45, 10);
+            label.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            root.add(label, root.getWidth() / 2 - 23, rootHeight += 10, 45, 10);
         }
 
         WButton exitButton = new WButton(Text.literal("Back."));
