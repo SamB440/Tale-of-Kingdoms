@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,6 +24,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -122,6 +124,18 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
         switch (kingdom.getTier()) {
             case TIER_ONE -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderTierOneGui(player, this, instance)));
+        }
+    }
+
+    public boolean canAffordBuild(BuildCosts build) {
+       return inventory.count(Items.COBBLESTONE) >= build.getStone() && inventory.count(Items.OAK_LOG) >= build.getWood();
+    }
+
+    public void requireResources(BuildCosts build, Runnable runnable) {
+        if (canAffordBuild(build)) {
+            inventory.removeItem(Items.OAK_LOG, build.getWood());
+            inventory.removeItem(Items.COBBLESTONE, build.getStone());
+            runnable.run();
         }
     }
 

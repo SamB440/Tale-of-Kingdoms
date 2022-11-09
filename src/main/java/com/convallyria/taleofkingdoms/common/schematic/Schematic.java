@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
  */
 public enum Schematic {
     GUILD_CASTLE(new Identifier(TaleOfKingdoms.MODID, "guild/guild")),
-    TIER_1_KINGDOM(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/tier_1")),
+    TIER_1_KINGDOM(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/tier_one")),
     TIER_1_BLACKSMITH_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/blacksmith/tier_one_house_blacksmith"));
     //GUILD_CASTLE_OLD(new Identifier(TaleOfKingdoms.MODID, "/assets/schematics/GuildCastle.schematic"));
 
