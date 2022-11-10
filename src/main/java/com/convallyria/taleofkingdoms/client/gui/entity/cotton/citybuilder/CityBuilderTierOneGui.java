@@ -129,14 +129,14 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
             }
             //todo: small houses / large houses require special changes
             WButton button = new WButton(Text.literal("Build ").append(build.getDisplayName()));
-            button.setOnClick(() -> {
-                entity.requireResources(build, () -> {
-                    final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    MinecraftClient.getInstance().currentScreen.close();
-                    TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()));
-                });
-            });
+            button.setEnabled(entity.canAffordBuild(build));
+            button.setOnClick(() -> entity.requireResources(build, () -> {
+                final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                MinecraftClient.getInstance().currentScreen.close();
+                TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()));
+            }));
             root.add(button, currentX, currentY += 20, 100, 10);
+            buildButtons.put(build, button);
             currentRow++;
         }
 
@@ -156,6 +156,8 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
 
         oakWoodLabel.setText(Text.literal((oakWoodCount) + " / 320 oak wood"));
         cobblestoneLabel.setText(Text.literal((cobblestoneCount) + " / 320 cobblestone"));
+
+        buildButtons.forEach((build, button) -> button.setEnabled(entity.canAffordBuild(build)));
     }
 
     @Override
