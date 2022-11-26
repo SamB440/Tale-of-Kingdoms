@@ -3,11 +3,12 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
+import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -30,6 +31,7 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         boolean close = attachedData.readBoolean();
+        ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
@@ -38,9 +40,14 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
                     return;
                 }
 
-                // Search for either foodshop or blacksmith in the guild
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                // Search for either foodshop, itemshop, or blacksmith in the guild
+                Optional<? extends ShopEntity> entity = Optional.empty();
+                switch (type) {
+                    case BLACKSMITH -> entity = instance.search(player, player.world, EntityTypes.BLACKSMITH);
+                    case FOOD -> entity = instance.search(player, player.world, EntityTypes.FOODSHOP);
+                    case ITEM -> entity = instance.search(player, player.world, EntityTypes.ITEM_SHOP);
+                }
+
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop entity not present in guild.");
                     return;

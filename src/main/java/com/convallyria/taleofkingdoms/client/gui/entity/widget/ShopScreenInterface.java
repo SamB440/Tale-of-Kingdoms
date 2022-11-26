@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity.widget;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -17,7 +17,7 @@ public interface ShopScreenInterface {
 
     void setSelectedItem(ShopItem selectedItem);
 
-    default void openSellGui(TOKEntity entity, PlayerEntity player) {
+    default void openSellGui(ShopEntity entity, PlayerEntity player) {
         /*
          * WHY is this what we need to do for a proper sell GUI?
          * I HATE THIS!!!!
@@ -28,7 +28,7 @@ public interface ShopScreenInterface {
         if (MinecraftClient.getInstance().getServer() == null) {
             api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
                     .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
-                            player, false);
+                            player, false, entity.getGUIType());
             return;
         }
 

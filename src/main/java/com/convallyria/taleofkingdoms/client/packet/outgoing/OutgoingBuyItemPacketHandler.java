@@ -26,6 +26,7 @@ public final class OutgoingBuyItemPacketHandler extends ClientPacketHandler {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         passedData.writeString((String) data[0]);
         passedData.writeInt((Integer) data[1]);
+        passedData.writeEnumConstant((Enum<?>) data[2]);
         sendPacket(player, passedData);
     }
 }

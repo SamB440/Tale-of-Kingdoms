@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.entity.FoodShopScreen;
-import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
@@ -18,10 +18,20 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class FoodShopEntity extends TOKEntity {
+public class FoodShopEntity extends ShopEntity {
 
     public FoodShopEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    public ImmutableList<ShopItem> getShopItems() {
+        return ImmutableList.copyOf(ShopParser.SHOP_ITEMS.get(ShopParser.GUI.FOOD));
+    }
+
+    @Override
+    public ShopParser.GUI getGUIType() {
+        return ShopParser.GUI.FOOD;
     }
 
     @Override
@@ -53,9 +63,5 @@ public class FoodShopEntity extends TOKEntity {
     @Override
     public boolean isPushable() {
         return false;
-    }
-
-    public static ImmutableList<ShopItem> getFoodShopItems() {
-        return ImmutableList.copyOf(ShopParser.guiShopItems.get(ShopParser.GUI.FOOD));
     }
 }

@@ -17,7 +17,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +25,12 @@ public class ShopParser {
     public enum GUI {
         BLACKSMITH,
         FOOD,
-        SELL
+        SELL,
+        ITEM
     }
 
     private JsonObject shopJson;
-    public static Map<Enum<GUI>, List<ShopItem>> guiShopItems = new HashMap<>();
+    public static Map<GUI, List<ShopItem>> SHOP_ITEMS = new EnumMap<>(GUI.class);
 
     public void createShopItems() {
         if(!loadShopJson()) {
@@ -74,7 +75,7 @@ public class ShopParser {
             InputStream fileSrc = Thread.currentThread().getContextClassLoader().getResourceAsStream(internalFile.getPath());
 
             try {
-                if(externalFile.createNewFile()) {
+                if (externalFile.exists() || externalFile.createNewFile()) {
                     Files.copy(fileSrc, externalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
 
@@ -118,10 +119,10 @@ public class ShopParser {
     private void addToShopItems(String key, ShopItem shopItem) {
         // gui key from json
         String upperCaseKey = key.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE);
-        if (guiShopItems.containsKey(GUI.valueOf(upperCaseKey))) {
-            guiShopItems.get(GUI.valueOf(upperCaseKey)).add(shopItem);
+        if (SHOP_ITEMS.containsKey(GUI.valueOf(upperCaseKey))) {
+            SHOP_ITEMS.get(GUI.valueOf(upperCaseKey)).add(shopItem);
         } else {
-            guiShopItems.put(GUI.valueOf(upperCaseKey), new ArrayList<>());
+            SHOP_ITEMS.put(GUI.valueOf(upperCaseKey), new ArrayList<>());
             addToShopItems(key, shopItem);
         }
     }

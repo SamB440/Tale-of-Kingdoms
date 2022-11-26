@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui.shop;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
@@ -10,7 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -69,23 +70,29 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     @Override
     public void close() {
+        System.out.println("closed");
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            System.out.println("is present");
             World world = playerInventory.player.world;
-            instance.getGuildEntity(world, EntityTypes.BLACKSMITH).ifPresent(entity -> deleteBlock(api, entity));
-            instance.getGuildEntity(playerInventory.player.world, EntityTypes.FOODSHOP).ifPresent(entity -> deleteBlock(api, entity));
+            for (EntityType<? extends ShopEntity> shopEntity : EntityTypes.SHOP_ENTITIES) {
+                instance.search(playerInventory.player, world, shopEntity).ifPresent(entity -> deleteBlock(api, entity));
+            }
         });
         super.close();
     }
 
-    protected void deleteBlock(TaleOfKingdomsAPI api, Entity entity) {
+    protected void deleteBlock(TaleOfKingdomsAPI api, ShopEntity entity) {
+        System.out.println("found an entity");
         if (MinecraftClient.getInstance().getServer() == null) {
             api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
                     .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
-                            playerInventory.player, true);
+                            playerInventory.player, true, entity.getGUIType());
             return;
         }
+
         api.getScheduler().queue(server -> {
+            System.out.println("set this damn thing to air");
             BlockPos pos = entity.getBlockPos().add(0, 2, 0);
             server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
         }, 1);

@@ -48,6 +48,9 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.REFICULE_SOLDIER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulesoldier.png"));
         register(EntityTypes.REFICULE_GUARDIAN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficuleguardian.png"));
         register(EntityTypes.REFICULE_MAGE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png"));
+
+        // Player's kingdom entities
+        register(EntityTypes.ITEM_SHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/shopkeeper.png"));
     }
 
     private void register(EntityType<? extends MobEntity> type, Identifier... skins) {
