@@ -802,6 +802,74 @@
       "cost": 15,
       "sell": 8
     }
+  ],
+
+  "item": [
+    {
+      "item": "Flint_And_Steel",
+      "cost": 50,
+      "sell": 39
+    },
+    {
+      "item": "Coal",
+      "cost": 15,
+      "sell": 6
+    },
+    {
+      "item": "Stick",
+      "cost": 5,
+      "sell": 1
+    },
+    {
+      "item": "Gunpowder",
+      "cost": 150,
+      "sell": 80
+    },
+    {
+      "item": "Wooden_Hoe",
+      "cost": 10,
+      "sell": 5
+    },
+    {
+      "item": "Stone_Hoe",
+      "cost": 18,
+      "sell": 12
+    },
+    {
+      "item": "Iron_Hoe",
+      "cost": 75,
+      "sell": 30
+    },
+    {
+      "item": "Diamond_Hoe",
+      "cost": 250,
+      "sell": 125
+    },
+    {
+      "item": "Wheat",
+      "cost": 25,
+      "sell": 12
+    },
+    {
+      "item": "Painting",
+      "cost": 75,
+      "sell": 40
+    },
+    {
+      "item": "Water_Bucket",
+      "cost": 90,
+      "sell": 42
+    },
+    {
+      "item": "Lava_Bucket",
+      "cost": 95,
+      "sell": 45
+    },
+    {
+      "item": "Minecart",
+      "cost": 70,
+      "sell": 50
+    }
   ]
 }
 			

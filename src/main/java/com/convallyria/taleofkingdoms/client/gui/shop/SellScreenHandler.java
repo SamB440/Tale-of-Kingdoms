@@ -71,7 +71,7 @@ public class SellScreenHandler extends ScreenHandler {
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             if (instance.isEmpty()) return;
 
-            for (List<ShopItem> shopItems : ShopParser.guiShopItems.values()) {
+            for (List<ShopItem> shopItems : ShopParser.SHOP_ITEMS.values()) {
                 for (ShopItem shopItem : shopItems) {
                     if (itemStack.getItem() == shopItem.getItem()) {
                         // Only set empty once we've found the item...

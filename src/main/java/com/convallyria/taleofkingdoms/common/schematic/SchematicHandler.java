@@ -48,19 +48,20 @@ public abstract class SchematicHandler {
     protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
         TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
         player.getWorld().getStructureTemplateManager().getTemplate(schematic.getPath()).ifPresent(structure -> {
+            final boolean old = SharedConstants.isDevelopment;
             SharedConstants.isDevelopment = true; // We want to crash if something went wrong
             StructurePlacementData structurePlacementData = new StructurePlacementData();
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
                 if (kingdom == null) return;
-                structurePlacementData.addProcessor(new PlayerKingdomStructureProcessor(kingdom));
+                structurePlacementData.addProcessor(new PlayerKingdomStructureProcessor(kingdom, player));
             });
             structurePlacementData.addProcessor(new GuildStructureProcessor(options));
             structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
             structure.place(player.getWorld(), position, position, structurePlacementData, Random.create(), Block.NOTIFY_ALL);
             BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
             cf.complete(box);
-            SharedConstants.isDevelopment = false; // Put it back to what it was.
+            SharedConstants.isDevelopment = old; // Put it back to what it was.
         });
     }
 }

@@ -2,13 +2,12 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
+import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
-import net.minecraft.entity.Entity;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -29,8 +28,9 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
-        String itemName = attachedData.readString(32367);
+        String itemName = attachedData.readString(128);
         int count = attachedData.readInt();
+        ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
         context.taskQueue().execute(() -> {
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
@@ -38,15 +38,20 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                // Search for either foodshop or blacksmith in the guild
-                Optional<? extends Entity> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
-                if (entity.isEmpty()) entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                // Search for either foodshop, itemshop, or blacksmith in the guild
+                Optional<? extends ShopEntity> entity = Optional.empty();
+                switch (type) {
+                    case BLACKSMITH -> entity = instance.getGuildEntity(player.world, EntityTypes.BLACKSMITH);
+                    case FOOD -> entity = instance.getGuildEntity(player.world, EntityTypes.FOODSHOP);
+                    case ITEM -> entity = instance.getGuildEntity(player.world, EntityTypes.ITEM_SHOP);
+                }
+
                 if (entity.isEmpty()) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop entity not present in guild.");
                     return;
                 }
 
-                ShopItem shopItem = getShopItem(itemName);
+                ShopItem shopItem = getShopItem(itemName, entity.get());
                 if (shopItem == null) {
                     TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop item not found.");
                     return;
@@ -71,13 +76,9 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
         throw new IllegalArgumentException("Not supported");
     }
 
-    private ShopItem getShopItem(String name) {
-        for (ShopItem blacksmithShopItem : BlacksmithEntity.getBlacksmithShopItems()) {
-            if (blacksmithShopItem.getName().equals(name)) return blacksmithShopItem;
-        }
-        // Couldn't find it in blacksmith items, try the food shop.
-        for (ShopItem foodShopItem : FoodShopEntity.getFoodShopItems()) {
-            if (foodShopItem.getName().equals(name)) return foodShopItem;
+    private ShopItem getShopItem(String name, ShopEntity entity) {
+        for (ShopItem shopItem : entity.getShopItems()) {
+            if (shopItem.getName().equals(name)) return shopItem;
         }
         return null; // Nothing found :(
     }

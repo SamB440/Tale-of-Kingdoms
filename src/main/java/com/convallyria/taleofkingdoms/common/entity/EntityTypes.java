@@ -4,7 +4,19 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
-import com.convallyria.taleofkingdoms.common.entity.guild.*;
+import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.FarmerEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildArcherEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterDefenderEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -14,6 +26,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import java.util.List;
 
 public class EntityTypes {
 
@@ -110,4 +124,15 @@ public class EntityTypes {
             new Identifier(TaleOfKingdoms.MODID, "reficule_mage"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, ReficuleMageEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
+
+    // =========================
+    // Player's kingdom entities
+    // =========================
+    public static final EntityType<ItemShopEntity> ITEM_SHOP = Registry.register(
+            Registry.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "item_shop"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ItemShopEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP);
 }

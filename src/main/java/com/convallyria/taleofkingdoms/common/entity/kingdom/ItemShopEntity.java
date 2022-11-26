@@ -1,7 +1,7 @@
-package com.convallyria.taleofkingdoms.common.entity.guild;
+package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.BlacksmithScreen;
+import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.ItemShopScreen;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
@@ -18,20 +18,20 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class BlacksmithEntity extends ShopEntity {
+public class ItemShopEntity extends ShopEntity {
 
-    public BlacksmithEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public ItemShopEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
 
     @Override
     public ImmutableList<ShopItem> getShopItems() {
-        return ImmutableList.copyOf(ShopParser.SHOP_ITEMS.get(ShopParser.GUI.BLACKSMITH));
+        return ImmutableList.copyOf(ShopParser.SHOP_ITEMS.get(ShopParser.GUI.ITEM));
     }
 
     @Override
     public ShopParser.GUI getGUIType() {
-        return ShopParser.GUI.BLACKSMITH;
+        return ShopParser.GUI.ITEM;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BlacksmithEntity extends ShopEntity {
 
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, ConquestInstance instance) {
-        BlacksmithScreen screen = new BlacksmithScreen(player, this, instance);
+        ItemShopScreen screen = new ItemShopScreen(player, this, instance);
         MinecraftClient.getInstance().setScreen(screen);
     }
 

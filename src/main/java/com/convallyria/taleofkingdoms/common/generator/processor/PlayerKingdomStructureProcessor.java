@@ -7,6 +7,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
@@ -23,13 +24,16 @@ public class PlayerKingdomStructureProcessor extends StructureProcessor {
     });
 
     private final PlayerKingdom kingdom;
+    private final ServerPlayerEntity player;
 
     public PlayerKingdomStructureProcessor() {
         this.kingdom = null;
+        this.player = null;
     }
 
-    public PlayerKingdomStructureProcessor(PlayerKingdom kingdom) {
+    public PlayerKingdomStructureProcessor(PlayerKingdom kingdom, ServerPlayerEntity player) {
         this.kingdom = kingdom;
+        this.player = player;
     }
 
     @Nullable
@@ -38,7 +42,7 @@ public class PlayerKingdomStructureProcessor extends StructureProcessor {
         StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
         if (currentBlockInfo.state.getBlock() instanceof StructureBlock) {
             String metadata = currentBlockInfo.nbt.getString("metadata");
-            KingdomPOI.getFrom(metadata).ifPresent(poi -> poi.compute(kingdom, currentBlockInfo));
+            KingdomPOI.getFrom(metadata).ifPresent(poi -> poi.compute(kingdom, player, currentBlockInfo));
             return air;
         }
         return currentBlockInfo;

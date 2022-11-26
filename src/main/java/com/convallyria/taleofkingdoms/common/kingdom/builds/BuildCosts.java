@@ -6,7 +6,8 @@ import net.minecraft.text.Text;
 
 //todo: translatable
 public enum BuildCosts {
-    SMALL_HOUSE(Text.literal("Small Houses"), 192, 128),
+    SMALL_HOUSE_1(Text.literal("Small House"), Schematic.SMALL_HOUSE, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
+    SMALL_HOUSE_2(Text.literal("Small House"), Schematic.SMALL_HOUSE, KingdomPOI.TIER_ONE_SMALL_HOUSE_2, 192, 128),
     LARGE_HOUSE(Text.literal("Large Houses"), 192, 320),
     ITEM_SHOP(Text.literal("Item Shop"), Schematic.TIER_1_BLACKSMITH_HOUSE, KingdomPOI.TIER_ONE_HOUSE_BLACKSMITH, 256, 256),
     STOCK_MARKET(Text.literal("Stock Market"), 192, 192),

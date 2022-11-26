@@ -47,7 +47,12 @@ public class ConfirmBuildKingdomGui extends LightweightGuiDescription {
             instance.addKingdom(player.getUuid(), playerKingdom);
 
             // Paste their kingdom
-            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, pos);
+            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, pos).thenAccept(box -> {
+                BlockPos start = new BlockPos(box.getMaxX(), box.getMaxY(), box.getMaxZ());
+                BlockPos end = new BlockPos(box.getMinX(), box.getMinY(), box.getMinZ());
+                playerKingdom.setStart(start);
+                playerKingdom.setEnd(end);
+            });
             player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MASTER, 0.1f, 1f);
 
             // Make city builder stop following player and move to well POI

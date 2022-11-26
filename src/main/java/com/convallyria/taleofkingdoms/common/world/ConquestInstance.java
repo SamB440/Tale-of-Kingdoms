@@ -386,6 +386,34 @@ public class ConquestInstance {
         return blockBox.contains(pos);
     }
 
+    public boolean isInKingdom(Entity player) {
+        final PlayerKingdom kingdom = getKingdom(player.getUuid());
+        if (kingdom == null) return false;
+        BlockPos start = kingdom.getStart();
+        BlockPos end = kingdom.getEnd();
+        BlockBox blockBox = new BlockBox(end.getX(), end.getY(), end.getZ(), start.getX(), start.getY(), start.getZ());
+        return blockBox.contains(player.getBlockPos());
+    }
+
+    /**
+     * Searches the player's current location (guild or kingdom) for an entity
+     * @param world
+     * @param type
+     * @return
+     * @param <T>
+     */
+    public <T extends Entity> Optional<T> search(PlayerEntity player, World world, EntityType<T> type) {
+        if (start == null || end == null) return Optional.empty();
+        if (isInKingdom(player)) {
+            final PlayerKingdom kingdom = getKingdom(player.getUuid());
+            if (kingdom == null) return Optional.empty();
+            return kingdom.getKingdomEntity(world, type);
+        } else if (isInGuild(player)) {
+            return getGuildEntity(world, type);
+        }
+        return Optional.empty();
+    }
+
     public CompletableFuture<BlockBox> rebuild(ServerPlayerEntity serverPlayerEntity, TaleOfKingdomsAPI api, SchematicOptions... options) {
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 21, 0)), options);
     }
