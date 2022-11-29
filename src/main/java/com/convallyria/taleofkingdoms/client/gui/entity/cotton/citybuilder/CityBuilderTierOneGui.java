@@ -72,6 +72,7 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                     int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                     serverPlayer.getInventory().removeStack(slot);
                     player.getInventory().removeStack(slot);
+                    oakWoodCount.addAndGet(64);
                     entity.getInventory().addStack(stack);
                     update();
                 }
@@ -89,6 +90,7 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                     int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                     serverPlayer.getInventory().removeStack(slot);
                     player.getInventory().removeStack(slot);
+                    cobblestoneCount.addAndGet(64);
                     entity.getInventory().addStack(stack);
                     update();
                 }
@@ -128,11 +130,13 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                 currentX += 100;
             }
             //todo: small houses / large houses require special changes
-            WButton button = new WButton(Text.literal("Build ").append(build.getDisplayName()));
+            String text = kingdom.hasBuilt(build.getKingdomPOI()) ? "Fix " : "Build ";
+            WButton button = new WButton(Text.literal(text).append(build.getDisplayName()));
             button.setEnabled(entity.canAffordBuild(build));
             button.setOnClick(() -> entity.requireResources(build, () -> {
                 final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                 MinecraftClient.getInstance().currentScreen.close();
+                kingdom.addBuilt(build.getKingdomPOI());
                 TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()));
             }));

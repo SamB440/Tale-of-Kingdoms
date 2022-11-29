@@ -51,6 +51,7 @@ public abstract class SchematicHandler {
             final boolean old = SharedConstants.isDevelopment;
             SharedConstants.isDevelopment = true; // We want to crash if something went wrong
             StructurePlacementData structurePlacementData = new StructurePlacementData();
+            //todo: rotation options
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
                 if (kingdom == null) return;
