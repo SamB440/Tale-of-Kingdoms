@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -29,7 +30,11 @@ public abstract class SchematicHandler {
      * @param position the {@link BlockPos} position to paste at
      * @return {@link CompletableFuture} containing the {@link BlockBox}
      */
-    public abstract CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, SchematicOptions... options);
+    public abstract CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, BlockRotation rotation, SchematicOptions... options);
+
+    public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, SchematicOptions... options) {
+        return pasteSchematic(schematic, player, player.getBlockPos().add(0, 1, 0), BlockRotation.NONE, options);
+    }
 
     /**
      * Pastes the selected schematic. Returns a {@link CompletableFuture} containing the {@link BlockBox}.
@@ -45,13 +50,13 @@ public abstract class SchematicHandler {
 	    return pasteSchematic(schematic, player, player.getBlockPos().add(0, 1, 0), options);
     }
 
-    protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
+    protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, BlockRotation rotation, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
         TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
         player.getWorld().getStructureTemplateManager().getTemplate(schematic.getPath()).ifPresent(structure -> {
             final boolean old = SharedConstants.isDevelopment;
             SharedConstants.isDevelopment = true; // We want to crash if something went wrong
             StructurePlacementData structurePlacementData = new StructurePlacementData();
-            //todo: rotation options
+            structurePlacementData.setRotation(rotation);
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
                 if (kingdom == null) return;

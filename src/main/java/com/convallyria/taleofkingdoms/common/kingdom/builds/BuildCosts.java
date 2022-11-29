@@ -3,10 +3,11 @@ package com.convallyria.taleofkingdoms.common.kingdom.builds;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import net.minecraft.text.Text;
+import net.minecraft.util.BlockRotation;
 
 //todo: translatable
 public enum BuildCosts {
-    SMALL_HOUSE_1(Text.literal("Small House"), Schematic.SMALL_HOUSE, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
+    SMALL_HOUSE_1(Text.literal("Small House"), Schematic.SMALL_HOUSE, BlockRotation.CLOCKWISE_180, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
     SMALL_HOUSE_2(Text.literal("Small House"), Schematic.SMALL_HOUSE, KingdomPOI.TIER_ONE_SMALL_HOUSE_2, 192, 128),
     LARGE_HOUSE(Text.literal("Large Houses"), 192, 320),
     ITEM_SHOP(Text.literal("Item Shop"), Schematic.TIER_1_BLACKSMITH_HOUSE, KingdomPOI.TIER_ONE_HOUSE_BLACKSMITH, 256, 256),
@@ -22,20 +23,27 @@ public enum BuildCosts {
 
     private final Text displayName;
     private final Schematic schematic;
+    private final BlockRotation schematicRotation;
     private final KingdomPOI kingdomPOI;
     private final int wood, stone;
 
     BuildCosts(Text displayName, int wood, int stone) {
         this.displayName = displayName;
         this.schematic = null;
+        this.schematicRotation = null;
         this.kingdomPOI = null;
         this.wood = wood;
         this.stone = stone;
     }
 
     BuildCosts(Text displayName, Schematic schematic, KingdomPOI poi, int wood, int stone) {
+        this(displayName, schematic, BlockRotation.NONE, poi, wood, stone);
+    }
+
+    BuildCosts(Text displayName, Schematic schematic, BlockRotation rotation, KingdomPOI poi, int wood, int stone) {
         this.displayName = displayName;
         this.schematic = schematic;
+        this.schematicRotation = rotation;
         this.kingdomPOI = poi;
         this.wood = wood;
         this.stone = stone;
