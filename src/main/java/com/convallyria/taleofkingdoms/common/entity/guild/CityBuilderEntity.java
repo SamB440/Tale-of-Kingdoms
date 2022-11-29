@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
+import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
@@ -122,8 +123,8 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
             return;
         }
 
-        switch (kingdom.getTier()) {
-            case TIER_ONE -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderTierOneGui(player, this, instance)));
+        if (kingdom.getTier() == KingdomTier.TIER_ONE) {
+            MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderTierOneGui(player, this, instance)));
         }
     }
 
