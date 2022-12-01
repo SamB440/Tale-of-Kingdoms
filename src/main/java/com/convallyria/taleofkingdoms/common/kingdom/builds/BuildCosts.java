@@ -28,12 +28,7 @@ public enum BuildCosts {
     private final int wood, stone;
 
     BuildCosts(Text displayName, int wood, int stone) {
-        this.displayName = displayName;
-        this.schematic = null;
-        this.schematicRotation = null;
-        this.kingdomPOI = null;
-        this.wood = wood;
-        this.stone = stone;
+        this(displayName, null, BlockRotation.NONE, null, wood, stone);
     }
 
     BuildCosts(Text displayName, Schematic schematic, KingdomPOI poi, int wood, int stone) {
@@ -55,6 +50,10 @@ public enum BuildCosts {
 
     public Schematic getSchematic() {
         return schematic;
+    }
+
+    public BlockRotation getSchematicRotation() {
+        return schematicRotation;
     }
 
     public KingdomPOI getKingdomPOI() {
