@@ -33,7 +33,7 @@ public abstract class SchematicHandler {
     public abstract CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, BlockRotation rotation, SchematicOptions... options);
 
     public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, SchematicOptions... options) {
-        return pasteSchematic(schematic, player, player.getBlockPos().add(0, 1, 0), BlockRotation.NONE, options);
+        return pasteSchematic(schematic, player, position, BlockRotation.NONE, options);
     }
 
     /**

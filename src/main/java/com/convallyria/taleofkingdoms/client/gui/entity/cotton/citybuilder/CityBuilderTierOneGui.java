@@ -138,7 +138,7 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
                 MinecraftClient.getInstance().currentScreen.close();
                 kingdom.addBuilt(build.getKingdomPOI());
                 TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
-                TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()));
+                TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
             }));
             root.add(button, currentX, currentY += 20, 100, 10);
             buildButtons.put(build, button);
