@@ -61,10 +61,8 @@ public class ConfirmBuildKingdomGui extends LightweightGuiDescription {
                 cityBuilderServer.stopFollowingPlayer();
                 cityBuilderServer.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
             });
-
-            //todo: move towards well placement marker!
         });
-        root.add(buildButton, root.getWidth() / 2 - 100, root.getHeight() / 2 + 35, 120, 30);
+        root.add(buildButton, root.getWidth() / 2 - 60, root.getHeight() / 2 + 35, 120, 30);
 
         WButton exitButton = new WButton(Text.literal("Cancel.")).setAlignment(HorizontalAlignment.CENTER);
         exitButton.setOnClick(() -> MinecraftClient.getInstance().currentScreen.close());
