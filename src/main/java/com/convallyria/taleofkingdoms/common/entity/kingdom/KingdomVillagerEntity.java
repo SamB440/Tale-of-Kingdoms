@@ -25,7 +25,7 @@ public class KingdomVillagerEntity extends TOKEntity {
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.goalSelector.add(1, new WanderAroundKingdomGoal(this, 0.3D));
+        this.goalSelector.add(1, new WanderAroundKingdomGoal(this, 0.6D));
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 5.0F, 60F));
         this.goalSelector.add(3, new LookAroundGoal(this));
     }

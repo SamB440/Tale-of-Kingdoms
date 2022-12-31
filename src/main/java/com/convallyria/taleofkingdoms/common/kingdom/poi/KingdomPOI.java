@@ -29,8 +29,19 @@ public enum KingdomPOI {
         }
     },
 
+    TIER_ONE_STOCK_MARKET("TierOneStockMarket"),
+
     TIER_ONE_SMALL_HOUSE_1("TierOneSmallHouse1"),
-    TIER_ONE_SMALL_HOUSE_2("TierOneSmallHouse2");
+    TIER_ONE_SMALL_HOUSE_2("TierOneSmallHouse2"),
+    TIER_ONE_LARGE_HOUSE("TierOneLargeHouse"),
+
+    KINGDOM_VILLAGER("KingdomVillager") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            EntityUtils.spawnEntity(EntityTypes.KINGDOM_VILLAGER, player, info.pos);
+        }
+    };
 
     private final String poiName;
 

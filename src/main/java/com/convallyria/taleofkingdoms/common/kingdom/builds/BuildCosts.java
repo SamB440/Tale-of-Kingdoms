@@ -9,9 +9,9 @@ import net.minecraft.util.BlockRotation;
 public enum BuildCosts {
     SMALL_HOUSE_1(Text.literal("Small House"), Schematic.SMALL_HOUSE, BlockRotation.CLOCKWISE_180, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
     SMALL_HOUSE_2(Text.literal("Small House"), Schematic.SMALL_HOUSE, KingdomPOI.TIER_ONE_SMALL_HOUSE_2, 192, 128),
-    LARGE_HOUSE(Text.literal("Large Houses"), 192, 320),
+    LARGE_HOUSE(Text.literal("Large Houses"), Schematic.LARGE_HOUSE, KingdomPOI.TIER_ONE_LARGE_HOUSE, 192, 320),
     ITEM_SHOP(Text.literal("Item Shop"), Schematic.TIER_1_BLACKSMITH_HOUSE, KingdomPOI.TIER_ONE_HOUSE_BLACKSMITH, 256, 256),
-    STOCK_MARKET(Text.literal("Stock Market"), 192, 192),
+    STOCK_MARKET(Text.literal("Stock Market"), Schematic.TIER_1_STOCK_MARKET, KingdomPOI.TIER_ONE_STOCK_MARKET, 192, 192),
     BUILDER_HOUSE(Text.literal("Builder House"), 128, 128),
     BLOCK_SHOP(Text.literal("Block Shop"), 256, 320),
     FOOD_SHOP(Text.literal("Food Shop"), 192, 256),
