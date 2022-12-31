@@ -30,4 +30,4 @@ bin/
 
 run/
 logs/
-/src/main/generated/.cache/
+/src/main/generated/
