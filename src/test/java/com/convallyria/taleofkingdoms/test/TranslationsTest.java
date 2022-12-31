@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.Scanners;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ public class TranslationsTest {
 
     @Test
     public void translationTest() {
-        Reflections reflections = new Reflections("assets/taleofkingdoms/lang/", new ResourcesScanner());
+        Reflections reflections = new Reflections("assets/taleofkingdoms/lang/", Scanners.Resources);
         Set<String> fileNames = reflections.getResources(Pattern.compile(".*\\.json"));
         fileNames.forEach(fileName -> {
             InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);

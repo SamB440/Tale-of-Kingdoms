@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.common.generator;
 
-import com.convallyria.taleofkingdoms.TOKStructures;
+import com.convallyria.taleofkingdoms.common.generator.structure.TOKStructures;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;

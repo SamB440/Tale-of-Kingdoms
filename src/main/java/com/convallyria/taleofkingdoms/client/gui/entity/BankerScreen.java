@@ -38,7 +38,7 @@ public class BankerScreen extends ScreenTOK {
         final UUID playerUuid = player.getUuid();
         super.init();
         this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 77, this.height / 2 - 85, 150, 20, Text.literal("0"));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 - 20, 150, 20, Text.literal("Deposit"), (button) -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Deposit"), widget -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins(playerUuid) == 0 && instance.getBankerCoins(playerUuid) == 0) {
@@ -62,8 +62,9 @@ public class BankerScreen extends ScreenTOK {
                 Translations.BANK_INPUT.send(player);
                 this.close();
             }
-        }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 5, 150, 20, Text.literal("Withdraw"), (button) -> {
+        }).dimensions(this.width / 2 - 77, this.height / 2 - 20, 150, 20).build());
+
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Withdraw"), widget -> {
             try {
                 int coins = Integer.parseInt(this.text.getText());
                 if (instance.getCoins(playerUuid) == 0 && instance.getBankerCoins(playerUuid) == 0) {
@@ -86,10 +87,11 @@ public class BankerScreen extends ScreenTOK {
                 Translations.BANK_INPUT.send(player);
                 this.close();
             }
-        }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 77, this.height / 2 + 30, 150, 20, Text.literal("Exit"), (button) -> {
+        }).dimensions(this.width / 2 - 77, this.height / 2 + 5, 150, 20).build());
+
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Exit"), widget -> {
             this.close();
-        }));
+        }).dimensions(this.width / 2 - 77, this.height / 2 + 30, 150, 20).build());
 
         this.text.setMaxLength(12);
         this.text.setText("0");

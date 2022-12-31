@@ -23,7 +23,7 @@ public class ShopButtonWidget extends ButtonWidget {
     private final TextRenderer textRenderer;
 
     public ShopButtonWidget(@NotNull ShopItem shopItem, @NotNull ShopScreenInterface shopScreen, int x, int y, TextRenderer textRenderer) {
-        super(x, y, 110, 20, Text.literal("Buy Button"), button -> shopScreen.setSelectedItem(shopItem));
+        super(x, y, 110, 20, Text.literal("Buy Button"), button -> shopScreen.setSelectedItem(shopItem), textSupplier -> Text.empty());
         this.textRenderer = textRenderer;
         this.shopScreen = shopScreen;
         this.shopItem = shopItem;
@@ -36,7 +36,7 @@ public class ShopButtonWidget extends ButtonWidget {
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Identifier identifier = new Identifier(TaleOfKingdoms.MODID,"textures/gui/gui.png");
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, identifier);
         boolean flag = isMouseOver(mouseX, mouseY);

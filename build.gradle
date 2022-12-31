@@ -1,4 +1,5 @@
 plugins {
+    id 'groovy'
     id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'maven-publish'
 }
@@ -17,6 +18,38 @@ repositories {
     maven { url "https://maven.terraformersmc.com/" }
     maven { url "https://server.bbkr.space/artifactory/libs-release" }
     maven { url "https://jitpack.io" }
+}
+
+sourceSets {
+    // Add a data gen sourceset
+    datagen {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+    }
+
+    main {
+        resources {
+            exclude 'assets/schematics'
+            srcDirs += [
+                    'src/main/generated'
+            ]
+        }
+    }
+}
+
+loom {
+    runs {
+        datagen {
+            server()
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.modid=${modid}"
+            runDir "build/datagen"
+        }
+    }
 }
 
 dependencies {
@@ -49,6 +82,10 @@ dependencies {
     include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    // Thanks Mojang!
+    datagenImplementation('org.apache.groovy:groovy:4.0.7')
+//    datagenImplementation 'org.apache.groovy:groovy:4.0.6'
 }
 
 processResources {
@@ -60,14 +97,6 @@ processResources {
 
     from("CHANGELOG.md") {
         include()
-    }
-}
-
-sourceSets {
-    main {
-        resources {
-            exclude 'assets/schematics'
-        }
     }
 }
 
@@ -102,9 +131,11 @@ java {
 }
 
 jar {
+    from file('src/main/generated')
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}"}
     }
+    dependsOn 'runDatagen'
 }
 
 // configure the maven publication

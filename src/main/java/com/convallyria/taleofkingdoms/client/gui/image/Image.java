@@ -24,7 +24,7 @@ public record Image(Identifier resourceLocation, int x, int y, int[] dimensions)
 
     @Override
     public void render(MatrixStack matrices, Screen gui) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, resourceLocation);
         //client.getTextureManager().bindTexture(resourceLocation);
