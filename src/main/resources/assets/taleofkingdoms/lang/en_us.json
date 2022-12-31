@@ -78,5 +78,7 @@
     "entity_type.taleofkingdoms.lostvillager.thank": "Thank the heavens! Our village was attacked by the reficules. Please, lead me back to the guild.",
     "entity_type.taleofkingdoms.lone.thank": "My king! Thank you for saving them! I will let the §eGuild Master§r know of your efforts.",
     "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me.",
-    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero."
+    "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero.",
+
+    "entity_type.taleofkingdoms.villager.ask_to_work": "Villager: My king! Do you need a worker? Give me an axe and a pickaxe and I will work for you."
 }

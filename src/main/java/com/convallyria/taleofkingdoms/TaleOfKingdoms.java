@@ -21,6 +21,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -151,6 +152,7 @@ public class TaleOfKingdoms implements ModInitializer {
 
         // Player's kingdom entities
         FabricDefaultAttributeRegistry.register(EntityTypes.ITEM_SHOP, ItemShopEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.KINGDOM_VILLAGER, KingdomVillagerEntity.createMobAttributes());
 
         // Load shop items
         new ShopParser().createShopItems();

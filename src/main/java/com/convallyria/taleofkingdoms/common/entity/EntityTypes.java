@@ -17,6 +17,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
@@ -133,6 +134,12 @@ public class EntityTypes {
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "item_shop"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, ItemShopEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<KingdomVillagerEntity> KINGDOM_VILLAGER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "kingdom_villager"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, KingdomVillagerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 
     public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP);
