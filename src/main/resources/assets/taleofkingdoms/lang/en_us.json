@@ -80,5 +80,6 @@
     "entity_type.taleofkingdoms.lostvillager.guild_thank": "Lost Villager: My king! Thank you for saving me.",
     "entity_type.taleofkingdoms.guildmaster.contract.cancel.await": "Guild Master: We await your participation, hero.",
 
-    "entity_type.taleofkingdoms.villager.ask_to_work": "Villager: My king! Do you need a worker? Give me an axe and a pickaxe and I will work for you."
+    "entity_type.taleofkingdoms.villager.ask_to_work": "Villager: My king! Do you need a worker? Give me an axe and a pickaxe and I will work for you.",
+    "entity.taleofkingdoms.kingdom_villager": "Kingdom Villager"
 }
