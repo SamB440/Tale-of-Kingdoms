@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.kingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
@@ -76,5 +77,11 @@ public class PlayerKingdom {
 
     public void addBuilt(KingdomPOI poi) {
         this.builtBuildings.add(poi);
+    }
+
+    public boolean isInKingdom(BlockPos pos) {
+        if (start == null || end == null) return false; // Probably still pasting.
+        BlockBox blockBox = new BlockBox(end.getX(), end.getY(), end.getZ(), start.getX(), start.getY(), start.getZ());
+        return blockBox.contains(pos);
     }
 }

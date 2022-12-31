@@ -51,6 +51,9 @@ public record RenderSetup(TaleOfKingdoms mod) {
 
         // Player's kingdom entities
         register(EntityTypes.ITEM_SHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/shopkeeper.png"));
+        register(EntityTypes.KINGDOM_VILLAGER,
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/woman1.png"),
+                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"));
     }
 
     private void register(EntityType<? extends MobEntity> type, Identifier... skins) {

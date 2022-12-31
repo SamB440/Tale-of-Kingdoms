@@ -33,7 +33,7 @@ public class ConfirmBuildKingdomGui extends LightweightGuiDescription {
 
         //todo: translatable
         root.add(new WLabel(Text.literal("Are you sure you want to build here?"), 0xFFFFFF).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), root.getWidth() / 2 - 16, 100, 16, 2);
-        root.add(new WLabel(Text.literal("WARNING: When building it will destroy the area around it to make space."), 0xFFFFFF).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), root.getWidth() / 2 - 32, 110, 32, 2);
+        root.add(new WLabel(Text.literal("WARNING: When building it will destroy the area around it to make space."), 0xFFFFFF).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), root.getWidth() / 2 - 64, 110, 64, 2);
 
         WButton buildButton = new WButton(Text.translatable("menu.taleofkingdoms.citybuilder.build"));
         buildButton.setOnClick(() -> {
@@ -62,7 +62,7 @@ public class ConfirmBuildKingdomGui extends LightweightGuiDescription {
                 cityBuilderServer.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
             });
         });
-        root.add(buildButton, root.getWidth() / 2 - 60, root.getHeight() / 2 + 35, 120, 30);
+        root.add(buildButton, root.getWidth() / 2 - 65, root.getHeight() / 2 + 35, 120, 30);
 
         WButton exitButton = new WButton(Text.literal("Cancel.")).setAlignment(HorizontalAlignment.CENTER);
         exitButton.setOnClick(() -> MinecraftClient.getInstance().currentScreen.close());

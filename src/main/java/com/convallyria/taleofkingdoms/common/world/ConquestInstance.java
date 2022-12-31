@@ -40,6 +40,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -280,6 +281,10 @@ public class ConquestInstance {
     @Nullable
     public PlayerKingdom getKingdom(UUID uuid) {
         return playerKingdoms.getOrDefault(uuid, null);
+    }
+
+    public Collection<PlayerKingdom> getKingdoms() {
+        return playerKingdoms.values();
     }
 
     public PlayerKingdom addKingdom(UUID uuid, @NotNull PlayerKingdom kingdom) {
