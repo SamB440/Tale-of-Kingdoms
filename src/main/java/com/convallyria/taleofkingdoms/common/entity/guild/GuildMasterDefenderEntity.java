@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTarget
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -121,7 +122,9 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             instance.rebuild(serverPlayerEntity, api);
                             instance.setRebuilt(true);
                             instance.setUnderAttack(false);
-                            serverPlayerEntity.getWorld().getEntityById(this.getId()).kill();
+                            final Entity entity = serverPlayerEntity.getWorld().getEntityById(this.getId());
+                            entity.teleport(entity.getX(), entity.getY() + 100, entity.getZ());
+                            entity.kill();
                             Translations.GUILDMASTER_THANK_YOU.send(player);
                         } else {
                             Translations.GUILDMASTER_REBUILD.send(player);
