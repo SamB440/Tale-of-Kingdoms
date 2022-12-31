@@ -29,6 +29,9 @@
 
   "environment": "*",
   "entrypoints": {
+    "fabric-datagen": [
+      "com.convallyria.taleofkingdoms.datagen.TaleOfKingdomsModDataGeneratorEntry"
+    ],
     "main": [
       "com.convallyria.taleofkingdoms.TaleOfKingdoms"
     ],

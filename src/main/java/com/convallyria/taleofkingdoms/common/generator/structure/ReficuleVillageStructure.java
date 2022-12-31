@@ -1,6 +1,5 @@
 package com.convallyria.taleofkingdoms.common.generator.structure;
 
-import com.convallyria.taleofkingdoms.TOKStructures;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.mojang.serialization.Codec;

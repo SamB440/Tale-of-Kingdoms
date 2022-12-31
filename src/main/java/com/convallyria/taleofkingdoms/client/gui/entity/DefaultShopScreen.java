@@ -17,6 +17,7 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -82,21 +83,23 @@ public abstract class DefaultShopScreen extends ScreenTOK implements ShopScreenI
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132 , this.height / 2 - 55, 55, 20, Text.literal("Buy"), button -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Buy"), widget -> {
             int count = 1;
             if (Screen.hasShiftDown()) count = 16;
             ShopBuyUtil.buyItem(instance, player, selectedItem, count, entity);
-        }, (button, stack, x, y) -> {
-            Text text = Text.literal("Use Left Shift to buy 16x.");
-            this.renderTooltip(stack, text, x, y);
-        }));
+        }).dimensions(this.width / 2 + 132, this.height / 2 - 55, 55, 20)
+                .tooltip(Tooltip.of(Text.literal("Use Left Shift to buy 16x."))).build());
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 132, this.height / 2 - 30 , 55, 20, Text.literal("Sell"), button -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Sell"), widget -> {
             openSellGui(entity, player);
-        }));
+        }).dimensions(this.width / 2 + 132, this.height / 2 - 30, 55, 20).build());
+
         this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
         this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 160 , this.height / 2 + 20, 45, 20, Text.literal("Exit"), button -> this.close()));
+
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Exit"), widget -> {
+            this.close();
+        }).dimensions(this.width / 2 - 160, this.height / 2 + 20, 45, 20).build());
 
         this.selectedItem = shopItems.get(0);
 

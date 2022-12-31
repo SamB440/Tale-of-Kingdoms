@@ -1,9 +1,11 @@
 package com.convallyria.taleofkingdoms.common.generator.util;
 
+import com.convallyria.taleofkingdoms.common.generator.biome.TOKBiomeTags;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.RegistryEntryList;
+import net.minecraft.registry.Registerable;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.world.StructureSpawns;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
@@ -15,13 +17,13 @@ import java.util.Map;
 
 public class StructureConfigCreator {
 
-    private RegistryEntryList<Biome> biomes;
+    private TagKey<Biome> biomes;
     private final Map<SpawnGroup, StructureSpawns> spawns;
     private GenerationStep.Feature step;
     private StructureTerrainAdaptation terrainAdaptation;
 
     private StructureConfigCreator() {
-        this.biomes = RegistryEntryList.of();
+        this.biomes = TOKBiomeTags.SOLID_SURFACE;
         this.spawns = new HashMap<>();
         this.step = GenerationStep.Feature.SURFACE_STRUCTURES;
         this.terrainAdaptation = StructureTerrainAdaptation.NONE;
@@ -32,12 +34,8 @@ public class StructureConfigCreator {
     }
 
     public StructureConfigCreator biome(TagKey<Biome> tag) {
-        this.biomes = getOrCreateBiomeTag(tag);
+        this.biomes = tag;
         return this;
-    }
-
-    private static RegistryEntryList<Biome> getOrCreateBiomeTag(TagKey<Biome> key) {
-        return BuiltinRegistries.BIOME.getOrCreateEntryList(key);
     }
 
     public StructureConfigCreator terrainAdaptation(StructureTerrainAdaptation terrainAdaptation) {
@@ -50,7 +48,8 @@ public class StructureConfigCreator {
         return this;
     }
 
-    public Structure.Config build() {
-        return new Structure.Config(biomes, spawns, step, terrainAdaptation);
+    public Structure.Config build(Registerable<Structure> structureRegisterable) {
+        RegistryEntryLookup<Biome> registryEntryLookup = structureRegisterable.getRegistryLookup(RegistryKeys.BIOME);
+        return new Structure.Config(registryEntryLookup.getOrThrow(biomes), spawns, step, terrainAdaptation);
     }
 }

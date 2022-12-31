@@ -1,9 +1,9 @@
 package com.convallyria.taleofkingdoms.common.generator.biome;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
 public class TOKBiomeTags {
@@ -14,6 +14,6 @@ public class TOKBiomeTags {
     private TOKBiomeTags() {}
 
     private static TagKey<Biome> of(String id) {
-        return TagKey.of(Registry.BIOME_KEY, new Identifier(TaleOfKingdoms.MODID, id));
+        return TagKey.of(RegistryKeys.BIOME, new Identifier(TaleOfKingdoms.MODID, id));
     }
 }

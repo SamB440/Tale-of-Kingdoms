@@ -52,7 +52,7 @@ public class ScreenStartConquest extends ScreenTOK {
         super.init();
         this.children().clear();
         this.text = new TextFieldWidget(this.textRenderer, this.width / 2 - 150, this.height / 2 - 40, 300, 20, Text.literal("Sir Punchwood"));
-        this.addDrawableChild(mButtonClose = new ButtonWidget(this.width / 2 - 100, this.height / 2 + 15, 200, 20, Translations.START_CONQUEST.getTranslation(), (button) -> {
+        this.addDrawableChild(mButtonClose = ButtonWidget.builder(Translations.START_CONQUEST.getTranslation(), button -> {
             if (loading) return;
 
             button.setMessage(Translations.BUILDING_CASTLE.getTranslation());
@@ -100,7 +100,8 @@ public class ScreenStartConquest extends ScreenTOK {
 
                 KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event
             }));
-        }));
+        }).dimensions(this.width / 2 - 100, this.height / 2 + 15, 200, 20).build());
+
         this.text.setMaxLength(32);
         this.text.setText("Sir Punchwood");
         this.text.setFocusUnlocked(false);
