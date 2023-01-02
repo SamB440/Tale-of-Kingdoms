@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.client.gui.entity;
 
+import com.convallyria.taleofkingdoms.client.gui.entity.cotton.shop.DefaultShopScreen;
 import com.convallyria.taleofkingdoms.common.entity.guild.FoodShopEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;

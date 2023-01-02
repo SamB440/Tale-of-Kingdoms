@@ -12,6 +12,7 @@ import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
+import com.convallyria.taleofkingdoms.common.world.data.DataConverters;
 import com.google.gson.Gson;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BedBlockEntity;
@@ -69,6 +70,7 @@ public class ConquestInstance {
     private final Map<UUID, Integer> playerCoins;
     private final Map<UUID, Integer> playerBankerCoins;
     private final Map<UUID, Long> playerFarmerLastBread;
+    public Map<UUID, Long> lastStockMarketUpdate;
     private final Map<UUID, Boolean> playerHasContract;
     private final Map<UUID, Integer> playerWorthiness;
     private final Map<UUID, PlayerKingdom> playerKingdoms;
@@ -93,6 +95,7 @@ public class ConquestInstance {
         this.playerCoins = new ConcurrentHashMap<>();
         this.playerBankerCoins = new ConcurrentHashMap<>();
         this.playerFarmerLastBread = new ConcurrentHashMap<>();
+        this.lastStockMarketUpdate = new ConcurrentHashMap<>();
         this.playerHasContract = new ConcurrentHashMap<>();
         this.playerWorthiness = new ConcurrentHashMap<>();
         this.playerKingdoms = new ConcurrentHashMap<>();
@@ -108,6 +111,13 @@ public class ConquestInstance {
     }
 
     public void setVersion(String version) {
+        if (!version.equals(this.version)) {
+            for (DataConverters converter : DataConverters.values()) {
+                if (converter.getConverter().getVersions().contains(this.version)) {
+                    converter.getConverter().convert(this);
+                }
+            }
+        }
         this.version = version;
     }
     
@@ -256,6 +266,14 @@ public class ConquestInstance {
 
     public void setFarmerLastBread(UUID uuid, long day) {
         this.playerFarmerLastBread.put(uuid, day);
+    }
+
+    public long getLastStockMarketUpdate(UUID uuid) {
+        return lastStockMarketUpdate.getOrDefault(uuid, 0L);
+    }
+
+    public void setLastStockMarketUpdate(UUID uuid, long day) {
+        this.lastStockMarketUpdate.put(uuid, day);
     }
 
     public boolean hasContract(UUID uuid) {

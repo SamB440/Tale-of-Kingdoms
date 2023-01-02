@@ -26,7 +26,8 @@ public class ShopParser {
         BLACKSMITH,
         FOOD,
         SELL,
-        ITEM
+        ITEM,
+        STOCK_MARKET
     }
 
     private JsonObject shopJson;

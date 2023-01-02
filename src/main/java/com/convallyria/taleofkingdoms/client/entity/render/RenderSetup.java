@@ -54,6 +54,7 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.KINGDOM_VILLAGER,
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/woman1.png"),
                 new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"));
+        register(EntityTypes.STOCK_MARKET, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/stock.png"));
     }
 
     private void register(EntityType<? extends MobEntity> type, Identifier... skins) {
