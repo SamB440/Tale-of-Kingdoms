@@ -9,12 +9,14 @@ public class ShopItem {
     private final Item item;
     private final int cost;
     private final int sell;
+    private double modifier;
 
     public ShopItem(String name, Item item, int cost, int sell) {
         this.name = name;
         this.item = item;
         this.cost = cost;
         this.sell = sell;
+        this.modifier = 1;
     }
 
     public String getName() {
@@ -26,15 +28,23 @@ public class ShopItem {
     }
 
     public int getCost() {
-        return cost;
+        return Math.max(1, (int) (cost * modifier));
     }
 
     public int getSell() {
         return sell;
     }
 
+    public double getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(double modifier) {
+        this.modifier = modifier;
+    }
+
     public boolean canBuy(ConquestInstance instance, PlayerEntity player, int count) {
-        return instance.getCoins(player.getUuid()) >= (getCost() * count);
+        return instance.getCoins(player.getUuid()) >= ((getCost() * modifier) * count);
     }
 
     @Override
@@ -44,6 +54,7 @@ public class ShopItem {
                 ", item=" + item +
                 ", cost=" + cost +
                 ", sell=" + sell +
+                ", modifier=" + modifier +
                 '}';
     }
 }

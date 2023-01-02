@@ -1,12 +1,8 @@
-package com.convallyria.taleofkingdoms.client.gui.entity;
+package com.convallyria.taleofkingdoms.client.gui.entity.cotton.shop;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.PageTurnWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopScreenInterface;
-import com.convallyria.taleofkingdoms.client.gui.image.Image;
-import com.convallyria.taleofkingdoms.client.gui.image.ScaleSize;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
 import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
@@ -15,20 +11,18 @@ import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.MinecraftClient;
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-public abstract class DefaultShopScreen extends ScreenTOK implements ShopScreenInterface {
+public abstract class DefaultShopScreen extends CottonClientScreen implements ShopScreenInterface {
 
     private final PlayerEntity player;
     private final ShopEntity entity;
@@ -38,36 +32,12 @@ public abstract class DefaultShopScreen extends ScreenTOK implements ShopScreenI
     private ShopItem selectedItem;
     private Shop shop;
 
-    private static final ImmutableList<ScaleSize> SCALE_SIZES = ImmutableList.of(
-            new ScaleSize(1, 810, 265),
-            new ScaleSize(2, 310, 113),
-            new ScaleSize(3, 170, 55),
-            new ScaleSize(4, 100, 27));
-
-    private static final ImmutableList<ScaleSize> SCALE_SIZES_TWO = ImmutableList.of(
-            new ScaleSize(1, 1000, 265),
-            new ScaleSize(2, 540, 113),
-            new ScaleSize(3, 360, 55),
-            new ScaleSize(4, 275, 27));
-
     public DefaultShopScreen(PlayerEntity player, ShopEntity entity, ConquestInstance instance) {
-        super("menu.taleofkingdoms." + entity.getType().getTranslationKey() + ".name");
+        super(new DefaultShopDescriptor());
         this.player = player;
         this.entity = entity;
         this.instance = instance;
         this.shopItems = entity.getShopItems();
-        int guiScale = MinecraftClient.getInstance().options.getGuiScale().getValue();
-
-        Optional<ScaleSize> scaleSize = SCALE_SIZES.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (scaleSize.isEmpty()) return;
-        int x = scaleSize.get().getX();
-        int y = scaleSize.get().getY();
-        Optional<ScaleSize> scaleSizeTwo = SCALE_SIZES_TWO.stream().filter(size -> size.getGuiScale() == guiScale).findFirst();
-        if (scaleSizeTwo.isEmpty()) return;
-        int xTwo = scaleSizeTwo.get().getX();
-        int yTwo = scaleSizeTwo.get().getY();
-        addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu1.png"), x, y, new int[]{230, 230}));
-        addImage(new Image(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu2.png"), xTwo, yTwo, new int[]{230, 230}));
     }
 
     @Override
@@ -141,7 +111,11 @@ public abstract class DefaultShopScreen extends ScreenTOK implements ShopScreenI
         super.render(stack, mouseX, mouseY, delta);
         drawCenteredText(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
         if (this.selectedItem != null) {
-            drawCenteredText(stack, this.textRenderer, "Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+            StringBuilder text = new StringBuilder("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins");
+            if (this.selectedItem.getModifier() != 1) {
+                text.append(" x ").append(String.format("%.2f", this.selectedItem.getModifier())).append(" modifier");
+            }
+            drawCenteredText(stack, this.textRenderer, text.toString(), this.width / 2, this.height / 4 - 15, 0xFFFFFF);
         }
     }
 
