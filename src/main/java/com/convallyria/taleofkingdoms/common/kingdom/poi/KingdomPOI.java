@@ -41,6 +41,13 @@ public enum KingdomPOI {
             super.compute(kingdom, player, info);
             EntityUtils.spawnEntity(EntityTypes.KINGDOM_VILLAGER, player, info.pos);
         }
+    },
+    STOCK_MARKET_ENTITY("StockMarketEntity") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos);
+        }
     };
 
     private final String poiName;
