@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
+import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
@@ -107,6 +108,13 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
             if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320) return;
             final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
             TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
+            for (BuildCosts buildCost : BuildCosts.values()) {
+                final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
+                final Schematic schematic = buildCost.getSchematic();
+                if (kingdom.hasBuilt(kingdomPOI)) {
+                    TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI));
+                }
+            }
             entity.getInventory().clear();
             update();
         }));
