@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
+import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
@@ -21,6 +22,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -65,16 +67,16 @@ public class CityBuilderTierOneGui extends LightweightGuiDescription {
 
         WButton woodButton = new WButton(Text.literal("Give 64 wood"));
         woodButton.setOnClick(() -> {
-            final int playerOakWoodCount = player.getInventory().count(Items.OAK_LOG);
+            final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
             TaleOfKingdoms.getAPI().executeOnServer(() -> {
-                final ItemStack stack = new ItemStack(Items.OAK_LOG, 64);
-                if (playerOakWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
+                final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
+                if (stack != null && playerWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
                     final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                     int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                     serverPlayer.getInventory().removeStack(slot);
                     player.getInventory().removeStack(slot);
                     oakWoodCount.addAndGet(64);
-                    entity.getInventory().addStack(stack);
+                    entity.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
                     update();
                 }
             });
