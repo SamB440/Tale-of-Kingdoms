@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.utils;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.TagKey;
@@ -31,5 +32,15 @@ public class InventoryUtils {
 
     public static boolean areItemsEqual(ItemStack stack1, ItemStack stack2) {
         return stack1.getItem() == stack2.getItem() && ItemStack.areNbtEqual(stack1, stack2);
+    }
+
+    public static int count(Inventory inventory, TagKey<Item> tag) {
+        int i = 0;
+        for (int j = 0; j < inventory.size(); ++j) {
+            ItemStack itemStack = inventory.getStack(j);
+            if (!itemStack.getItem().getRegistryEntry().isIn(tag)) continue;
+            i += itemStack.getCount();
+        }
+        return i;
     }
 }

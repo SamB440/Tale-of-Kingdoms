@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.resource.ResourcePackManager;
 import net.minecraft.text.Text;
 
 @Environment(EnvType.CLIENT)
