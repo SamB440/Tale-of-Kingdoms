@@ -62,9 +62,12 @@ public class SellScreenHandler extends ScreenHandler {
         return this.inventory.canPlayerUse(player);
     }
 
+    /**
+     * @param clickData 0 = left click, 1 = right, 2 = middle, 3-x = extra mouse buttons
+     */
     @Override
-    public void onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
-        if (i == 0) {
+    public void onSlotClick(int slotIndex, int clickData, SlotActionType actionType, PlayerEntity playerEntity) {
+        if (slotIndex == 0) {
             ItemStack itemStack = playerEntity.currentScreenHandler.getCursorStack();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             if (api == null) return;
@@ -73,25 +76,36 @@ public class SellScreenHandler extends ScreenHandler {
 
             for (List<ShopItem> shopItems : ShopParser.SHOP_ITEMS.values()) {
                 for (ShopItem shopItem : shopItems) {
-                    if (itemStack.getItem() == shopItem.getItem()) {
-                        // Only set empty once we've found the item...
+                    if (itemStack.getItem() != shopItem.getItem()) continue;
+                    if (shopItem.getSell() <= 0) continue;
+
+                    int itemStackCount = itemStack.getCount();
+
+                    if(clickData == 0) {
+                        // Only set empty once we've found the item... and that the item is a valid sell item and that they left-clicked on the slot
                         playerEntity.currentScreenHandler.setCursorStack(ItemStack.EMPTY);
+                    } else {
+                        // Else assume it is right click (will include middle and extra mouse button clicks)
+                        // and only take 1
+                        itemStack.setCount(itemStackCount - 1);
+                        itemStackCount = 1;
+                        playerEntity.currentScreenHandler.setCursorStack(itemStack);
+                    }
 
-                        // Don't run on local server if we're in a client environment
-                        // Otherwise, the coins will get added twice.
-                        if (playerEntity instanceof ServerPlayerEntity && TaleOfKingdoms.getAPI().getEnvironment() == EnvType.CLIENT) {
-                            return;
-                        }
-
-                        // Issue #59
-                        instance.get().addCoins(playerEntity.getUuid(), shopItem.getSell() * itemStack.getCount());
+                    // Don't run on local server if we're in a client environment
+                    // Otherwise, the coins will get added twice.
+                    if (playerEntity instanceof ServerPlayerEntity && TaleOfKingdoms.getAPI().getEnvironment() == EnvType.CLIENT) {
                         return;
                     }
+
+                    // Issue #59
+                    instance.get().addCoins(playerEntity.getUuid(), shopItem.getSell() * itemStackCount);
+                    return;
                 }
             }
             return;
         }
-        super.onSlotClick(i, j, actionType, playerEntity);
+        super.onSlotClick(slotIndex, clickData, actionType, playerEntity);
     }
 
     // Shift + Player Inv Slot
