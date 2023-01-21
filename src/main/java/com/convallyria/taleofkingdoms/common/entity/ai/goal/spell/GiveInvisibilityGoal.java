@@ -40,7 +40,6 @@ public class GiveInvisibilityGoal extends CastSpellGoal {
     protected void castSpell() {
         spellCaster.swingHand(Hand.OFF_HAND);
         spellCaster.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, 1200));
-        System.out.println("added invisibility: " + spellCaster.hasStatusEffect(StatusEffects.INVISIBILITY));
     }
 
     @Nullable

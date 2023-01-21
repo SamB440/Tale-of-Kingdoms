@@ -70,10 +70,8 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     @Override
     public void close() {
-        System.out.println("closed");
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-            System.out.println("is present");
             World world = playerInventory.player.world;
             for (EntityType<? extends ShopEntity> shopEntity : EntityTypes.SHOP_ENTITIES) {
                 instance.search(playerInventory.player, world, shopEntity).ifPresent(entity -> deleteBlock(api, entity));
