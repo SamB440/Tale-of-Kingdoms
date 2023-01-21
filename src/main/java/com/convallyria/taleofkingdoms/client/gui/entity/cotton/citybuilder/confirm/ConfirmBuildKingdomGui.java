@@ -59,6 +59,9 @@ public class ConfirmBuildKingdomGui extends LightweightGuiDescription {
             TaleOfKingdoms.getAPI().executeOnServer(() -> {
                 final CityBuilderEntity cityBuilderServer = (CityBuilderEntity) serverPlayer.world.getEntityById(entity.getId());
                 cityBuilderServer.stopFollowingPlayer();
+                // Teleport to the player first, should avoid getting stuck in ground
+                cityBuilderServer.refreshPositionAfterTeleport(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
+                // Now move to the well location
                 cityBuilderServer.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
             });
         });
