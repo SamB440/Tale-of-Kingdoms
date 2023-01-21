@@ -83,7 +83,6 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     }
 
     protected void deleteBlock(TaleOfKingdomsAPI api, ShopEntity entity) {
-        System.out.println("found an entity");
         if (MinecraftClient.getInstance().getServer() == null) {
             api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
                     .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
@@ -92,7 +91,6 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
         }
 
         api.getScheduler().queue(server -> {
-            System.out.println("set this damn thing to air");
             BlockPos pos = entity.getBlockPos().add(0, 2, 0);
             server.getOverworld().setBlockState(pos, Blocks.AIR.getDefaultState());
         }, 1);
