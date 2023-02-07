@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 
@@ -52,6 +53,7 @@ public abstract class DefaultShopScreen extends CottonClientScreen implements Sh
 
     @Override
     public void init() {
+        FallingBlockEntity
         super.init();
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Buy"), widget -> {
             int count = 1;
