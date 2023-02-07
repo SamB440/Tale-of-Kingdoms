@@ -17,44 +17,49 @@ public record RenderSetup(TaleOfKingdoms mod) {
     }
 
     private void setup() {
-        register(EntityTypes.FARMER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"));
-        register(EntityTypes.GUILDMASTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
-        register(EntityTypes.GUILDMASTER_DEFENDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmaster.png"));
-        register(EntityTypes.BLACKSMITH, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/smith.png"));
-        register(EntityTypes.CITYBUILDER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/builder2.png"));
-        register(EntityTypes.KNIGHT, new Identifier(TaleOfKingdoms.MODID, "textures/entity/knight2.png"));
-        register(EntityTypes.INNKEEPER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"));
-        register(EntityTypes.HUNTER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/hunter2.png"));
-        register(EntityTypes.GUILDGUARD, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildmember.png"));
+        register(EntityTypes.FARMER, identifier("textures/entity/updated_textures/innkeeper.png"));
+        register(EntityTypes.GUILDMASTER, identifier("textures/entity/guildmaster.png"));
+        register(EntityTypes.GUILDMASTER_DEFENDER, identifier("textures/entity/guildmaster.png"));
+        register(EntityTypes.BLACKSMITH, identifier("textures/entity/updated_textures/smith.png"));
+        register(EntityTypes.CITYBUILDER, identifier("textures/entity/builder2.png"));
+        register(EntityTypes.KNIGHT, identifier("textures/entity/knight2.png"));
+        register(EntityTypes.INNKEEPER, identifier("textures/entity/updated_textures/innkeeper.png"));
+        register(EntityTypes.HUNTER, identifier("textures/entity/hunter2.png"));
+        register(EntityTypes.GUILDGUARD, identifier("textures/entity/guildmember.png"));
         register(EntityTypes.GUILDARCHER,
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildarcher/guildarcherone.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildarcher/guildarchertwo.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildarcher/guildarcherthree.png"));
-        register(EntityTypes.BANKER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/banker.png"));
-        register(EntityTypes.LONE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/lone.png"));
-        register(EntityTypes.FOODSHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/foodshop.png"));
-        register(EntityTypes.GUILDCAPTAIN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/guildcaptain.png"));
+                identifier("textures/entity/guildarcher/guildarcherone.png"),
+                identifier("textures/entity/guildarcher/guildarchertwo.png"),
+                identifier("textures/entity/guildarcher/guildarcherthree.png"));
+        register(EntityTypes.BANKER, identifier("textures/entity/updated_textures/banker.png"));
+        register(EntityTypes.LONE, identifier("textures/entity/lone.png"));
+        register(EntityTypes.FOODSHOP, identifier("textures/entity/updated_textures/foodshop.png"));
+        register(EntityTypes.GUILDCAPTAIN, identifier("textures/entity/guildcaptain.png"));
         register(EntityTypes.LONEVILLAGER,
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerone.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagertwo.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerthree.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerfour.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerfive.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagersix.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/lostvillagerseven.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/mantwo.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manfive.png"));
-        register(EntityTypes.REFICULE_SOLDIER, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulesoldier.png"));
-        register(EntityTypes.REFICULE_GUARDIAN, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficuleguardian.png"));
-        register(EntityTypes.REFICULE_MAGE, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png"));
+                identifier("textures/entity/updated_textures/lostvillagerone.png"),
+                identifier("textures/entity/updated_textures/lostvillagertwo.png"),
+                identifier("textures/entity/updated_textures/lostvillagerthree.png"),
+                identifier("textures/entity/updated_textures/lostvillagerfour.png"),
+                identifier("textures/entity/updated_textures/lostvillagerfive.png"),
+                identifier("textures/entity/updated_textures/lostvillagersix.png"),
+                identifier("textures/entity/updated_textures/lostvillagerseven.png"),
+                identifier("textures/entity/updated_textures/manone.png"),
+                identifier("textures/entity/updated_textures/mantwo.png"),
+                identifier("textures/entity/updated_textures/manfive.png"));
+        register(EntityTypes.REFICULE_SOLDIER, identifier("textures/entity/updated_textures/reficulesoldier.png"));
+        register(EntityTypes.REFICULE_GUARDIAN, identifier("textures/entity/updated_textures/reficuleguardian.png"));
+        register(EntityTypes.REFICULE_MAGE, identifier("textures/entity/updated_textures/reficulemage.png"));
 
         // Player's kingdom entities
-        register(EntityTypes.ITEM_SHOP, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/shopkeeper.png"));
+        register(EntityTypes.ITEM_SHOP, identifier("textures/entity/updated_textures/shopkeeper.png"));
         register(EntityTypes.KINGDOM_VILLAGER,
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/woman1.png"),
-                new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/manone.png"));
-        register(EntityTypes.STOCK_MARKET, new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/stock.png"));
+                identifier("textures/entity/updated_textures/woman1.png"),
+                identifier("textures/entity/updated_textures/manone.png"),
+                identifier("textures/entity/updated_textures/mantwo.png"),
+                identifier("textures/entity/updated_textures/manthree.png"),
+                identifier("textures/entity/updated_textures/manfour.png"),
+                identifier("textures/entity/updated_textures/manfive.png"),
+                identifier("textures/entity/updated_textures/mansix.png"));
+        register(EntityTypes.STOCK_MARKET, identifier("textures/entity/updated_textures/stock.png"));
     }
 
     private void register(EntityType<? extends MobEntity> type, Identifier... skins) {
@@ -70,5 +75,9 @@ public record RenderSetup(TaleOfKingdoms mod) {
                         new PlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
                         0.5F,
                         skins));
+    }
+    
+    private static Identifier identifier(String path) {
+        return new Identifier(TaleOfKingdoms.MODID, path);
     }
 }
