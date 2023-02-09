@@ -60,6 +60,7 @@ public record RenderSetup(TaleOfKingdoms mod) {
                 identifier("textures/entity/updated_textures/manfive.png"),
                 identifier("textures/entity/updated_textures/mansix.png"));
         register(EntityTypes.STOCK_MARKET, identifier("textures/entity/updated_textures/stock.png"));
+        register(EntityTypes.FOREMAN, identifier("textures/entity/updated_textures/foremanquarry.png"));
     }
 
     private void register(EntityType<? extends MobEntity> type, Identifier... skins) {

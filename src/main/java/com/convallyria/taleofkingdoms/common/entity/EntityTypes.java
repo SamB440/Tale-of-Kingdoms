@@ -16,6 +16,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterDefenderEnt
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.StockMarketEntity;
@@ -147,6 +148,12 @@ public class EntityTypes {
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "stock_market"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, StockMarketEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<ForemanEntity> FOREMAN = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "foreman"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ForemanEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 
     public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP);
