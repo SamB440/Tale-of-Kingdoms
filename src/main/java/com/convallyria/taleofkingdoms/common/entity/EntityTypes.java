@@ -50,7 +50,7 @@ public class EntityTypes {
     public static final EntityType<GuildMasterDefenderEntity> GUILDMASTER_DEFENDER = Registry.register(
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "guild_master_defender"),
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterDefenderEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildMasterDefenderEntity::new).fireImmune().dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
     public static final EntityType<BlacksmithEntity> BLACKSMITH = Registry.register(
             Registries.ENTITY_TYPE,
