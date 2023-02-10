@@ -48,6 +48,14 @@ public enum KingdomPOI {
             super.compute(kingdom, player, info);
             EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos);
         }
+    },
+
+    QUARRY_FOREMAN("QuarryForeman") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos);
+        }
     };
 
     private final String poiName;
