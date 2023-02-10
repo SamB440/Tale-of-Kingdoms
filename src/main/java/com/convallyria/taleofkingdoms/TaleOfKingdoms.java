@@ -23,6 +23,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.StockMarketEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
@@ -157,6 +158,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.KINGDOM_VILLAGER, KingdomVillagerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.STOCK_MARKET, StockMarketEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.QUARRY_FOREMAN, QuarryForemanEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.QUARRY_WORKER, QuarryWorkerEntity.createMobAttributes());
 
         // Load shop items
         new ShopParser().createShopItems();
