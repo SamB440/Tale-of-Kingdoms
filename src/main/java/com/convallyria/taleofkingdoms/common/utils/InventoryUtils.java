@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.utils;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.TagKey;
@@ -24,6 +25,15 @@ public class InventoryUtils {
     public static int getSlotWithStack(PlayerInventory playerInventory, ItemStack stack) {
         for (int i = 0; i < playerInventory.main.size(); ++i) {
             if (!playerInventory.main.get(i).isEmpty() && areItemsEqual(stack, playerInventory.main.get(i))) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static int getSlotWithStack(SimpleInventory inventory, ItemStack stack) {
+        for (int i = 0; i < inventory.size(); ++i) {
+            if (!inventory.getStack(i).isEmpty() && areItemsEqual(stack, inventory.getStack(i))) {
                 return i;
             }
         }
