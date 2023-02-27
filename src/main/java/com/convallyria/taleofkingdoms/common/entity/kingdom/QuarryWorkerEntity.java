@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.common.entity.ai.goal.SwingArmRandomlyGoal;
+import com.convallyria.taleofkingdoms.common.entity.ai.goal.GatherResourcesPassivelyGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundKingdomGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
@@ -25,8 +25,8 @@ public class QuarryWorkerEntity extends TOKEntity {
     protected void initGoals() {
         super.initGoals();
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 5.0F, 60F));
-        this.goalSelector.add(2, new SwingArmRandomlyGoal(this));
-        this.goalSelector.add(3, new WanderAroundKingdomGoal(this, 0.6D));
+        this.goalSelector.add(2, new GatherResourcesPassivelyGoal(this));
+        this.goalSelector.add(3, new WanderAroundKingdomGoal(this, 0.6D, 50, 5, 3));
         this.goalSelector.add(4, new LookAroundGoal(this));
     }
 
