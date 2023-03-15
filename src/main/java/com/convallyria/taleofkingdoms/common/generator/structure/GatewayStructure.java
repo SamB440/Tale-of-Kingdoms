@@ -25,7 +25,7 @@ public class GatewayStructure extends Structure {
     @Override
     public Optional<StructurePosition> getStructurePosition(Context context) {
         double percent = Math.random() * 100;
-        if (percent >= TaleOfKingdoms.config.mainConfig.gateWaySpawnRate) return Optional.empty();
+        if (percent >= TaleOfKingdoms.CONFIG.mainConfig.gateWaySpawnRate) return Optional.empty();
         return getStructurePosition(context, Heightmap.Type.WORLD_SURFACE_WG, (collector) -> this.addPieces(collector, context));
     }
 
