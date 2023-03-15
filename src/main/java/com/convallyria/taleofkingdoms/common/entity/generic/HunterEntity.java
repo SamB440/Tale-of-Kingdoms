@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HunterEntity extends TOKEntity implements RangedAttackMob {
 
-    private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal(this, 0.6D, 20, 16.0F);
+    private final BowAttackGoal<HunterEntity> bowAttackGoal = new BowAttackGoal<>(this, 0.6D, 20, 16.0F);
     private final MeleeAttackGoal meleeAttackGoal = new MeleeAttackGoal(this, 0.8D, false) {
         public void stop() {
             super.stop();
@@ -93,7 +93,7 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
 
     @Override
     public void attack(LivingEntity target, float pullProgress) {
-        ItemStack itemStack = this.getArrowType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
+        ItemStack itemStack = this.getProjectileType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
         PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();

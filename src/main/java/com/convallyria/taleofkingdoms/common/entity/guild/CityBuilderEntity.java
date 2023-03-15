@@ -1,7 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.BaseCityBuilderScreen;
 import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderBeginGui;
 import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderTierOneGui;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
@@ -119,12 +118,12 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, @Nullable PlayerKingdom kingdom, ConquestInstance instance) {
         if (kingdom == null) {
-            MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderBeginGui(player, this, instance)));
+            MinecraftClient.getInstance().setScreen(new CityBuilderBeginGui(player, this, instance));
             return;
         }
 
         if (kingdom.getTier() == KingdomTier.TIER_ONE) {
-            MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderTierOneGui(player, this, instance)));
+            MinecraftClient.getInstance().setScreen(new CityBuilderTierOneGui(player, this, instance));
         }
     }
 

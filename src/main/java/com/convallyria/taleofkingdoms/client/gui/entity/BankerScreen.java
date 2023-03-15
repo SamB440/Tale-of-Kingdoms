@@ -95,9 +95,8 @@ public class BankerScreen extends ScreenTOK {
 
         this.text.setMaxLength(12);
         this.text.setText("0");
-        this.text.setTextFieldFocused(true);
+        this.text.setFocused(true);
         this.text.setFocusUnlocked(true);
-        this.text.changeFocus(true);
         this.text.setVisible(true);
         this.text.setCursorToEnd();
         this.addSelectableChild(this.text);
@@ -113,9 +112,9 @@ public class BankerScreen extends ScreenTOK {
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
         this.text.render(stack, mouseX, mouseY, delta);
-        drawCenteredText(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Total Money You Have: " + instance.getCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Total Money in the Bank: " + instance.getBankerCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, "Bank Menu - ", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, "Total Money You Have: " + instance.getCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, "Total Money in the Bank: " + instance.getBankerCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 5, 0xFFFFFF);
     }
 
     @Override

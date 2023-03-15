@@ -40,7 +40,7 @@ public class WanderAroundKingdomGoal extends WanderAroundGuildGoal {
             if (api != null) {
                 if (api.getConquestInstanceStorage().mostRecentInstance().isPresent()) {
                     ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-                    BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
+                    BlockPos blockPos = new BlockPos((int) vec3d.x, (int) vec3d.y, (int) vec3d.z);
                     boolean isValid = false;
                     for (PlayerKingdom kingdom : instance.getKingdoms()) {
                         if (kingdom.isInKingdom(blockPos)) isValid = true;

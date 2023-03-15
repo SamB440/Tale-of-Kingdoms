@@ -16,6 +16,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterDefenderEnt
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
@@ -155,6 +156,12 @@ public class EntityTypes {
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "quarry_foreman"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, QuarryForemanEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<LumberForemanEntity> LUMBER_FOREMAN = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "lumber_foreman"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, LumberForemanEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 
     public static final EntityType<QuarryWorkerEntity> QUARRY_WORKER = Registry.register(

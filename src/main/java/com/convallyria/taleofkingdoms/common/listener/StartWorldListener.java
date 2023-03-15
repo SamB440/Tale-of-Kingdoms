@@ -4,8 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
-import com.convallyria.taleofkingdoms.client.gui.generic.cotton.update.UpdateGui;
-import com.convallyria.taleofkingdoms.client.gui.generic.cotton.update.UpdateScreen;
+import com.convallyria.taleofkingdoms.client.gui.generic.owo.update.UpdateScreen;
 import com.convallyria.taleofkingdoms.common.event.RecipesUpdatedCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldSessionStartCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldStopCallback;
@@ -77,8 +76,8 @@ public class StartWorldListener extends Listener {
                             if (TaleOfKingdoms.config.mainConfig.showStartKingdomGUI)
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            if (instance.isOld()) {
-                                MinecraftClient.getInstance().setScreen(new UpdateScreen(new UpdateGui()));
+                            if (TaleOfKingdoms.config.mainConfig.alwaysShowUpdatesGUI || instance.isOld()) {
+                                MinecraftClient.getInstance().setScreen(new UpdateScreen());
                             } else if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }

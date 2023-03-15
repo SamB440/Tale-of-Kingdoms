@@ -22,7 +22,7 @@ public class ItemRegistry extends Listener {
     public static final ItemGroup TOK_ITEM_GROUP = FabricItemGroup
             .builder(new Identifier(TaleOfKingdoms.MODID, "general"))
             .icon(() -> new ItemStack(ITEMS.get(TOKItem.COIN)))
-            .entries((enabledFeatures, entries, operatorEnabled) -> {
+            .entries((context, entries) -> {
                 entries.add(ITEMS.get(TOKItem.COIN));
                 entries.add(ITEMS.get(TOKItem.POUCH));
             })

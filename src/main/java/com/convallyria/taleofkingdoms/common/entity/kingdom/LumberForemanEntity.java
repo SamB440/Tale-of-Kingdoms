@@ -4,9 +4,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.world.World;
 
-public class QuarryForemanEntity extends ForemanEntity {
+public class LumberForemanEntity extends ForemanEntity {
 
-    public QuarryForemanEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public LumberForemanEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
 }

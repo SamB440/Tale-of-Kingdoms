@@ -43,5 +43,5 @@ public interface PacketContext {
 	 *
 	 * @return The thread task queue.
 	 */
-	ThreadExecutor taskQueue();
+	ThreadExecutor<?> taskQueue();
 }

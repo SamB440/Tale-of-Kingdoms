@@ -32,11 +32,11 @@ public class ScreenContinueConquest extends ScreenTOK {
     @Override
     public void render(MatrixStack stack, int par1, int par2, float par3) {
         this.renderBackground(stack);
-        drawCenteredText(stack, this.textRenderer, MinecraftClient.getInstance().player.getName().getString()
+        drawCenteredTextWithShadow(stack, this.textRenderer, MinecraftClient.getInstance().player.getName().getString()
                 + ", your conquest, "
                 + instance.getName() + ", has come far.", this.width / 2, this.height / 2 + 40, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Now you seek to venture further, and continue your journey.", this.width / 2, this.height / 2 + 50, 0xFFFFFF);
-        drawCenteredText(stack, this.textRenderer, "Safe travels, and go forth!", this.width / 2, this.height / 2 + 60, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, "Now you seek to venture further, and continue your journey.", this.width / 2, this.height / 2 + 50, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, "Safe travels, and go forth!", this.width / 2, this.height / 2 + 60, 0xFFFFFF);
         super.render(stack, par1, par2, par3);
     }
 
