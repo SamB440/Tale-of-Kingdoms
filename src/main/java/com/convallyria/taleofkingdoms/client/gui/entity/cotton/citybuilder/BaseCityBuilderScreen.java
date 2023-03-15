@@ -1,12 +1,16 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder;
 
-import io.github.cottonmc.cotton.gui.GuiDescription;
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
+import io.wispforest.owo.ui.base.BaseOwoScreen;
+import io.wispforest.owo.ui.container.Containers;
+import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.OwoUIAdapter;
+import org.jetbrains.annotations.NotNull;
 
-public class BaseCityBuilderScreen extends CottonClientScreen {
+public abstract class BaseCityBuilderScreen extends BaseOwoScreen<FlowLayout> {
 
-    public BaseCityBuilderScreen(GuiDescription description) {
-        super(description);
+    @Override
+    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
+        return OwoUIAdapter.create(this, Containers::horizontalFlow);
     }
 
     @Override

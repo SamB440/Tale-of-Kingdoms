@@ -56,6 +56,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
@@ -112,7 +113,7 @@ public class TaleOfKingdoms implements ModInitializer {
         //We use registerSimple here because our Entity is not an ExtendedScreenHandlerFactory
         //but a NamedScreenHandlerFactory.
         //In a later Tutorial you will see what ExtendedScreenHandlerFactory can do!
-        SELL_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER, new Identifier(TaleOfKingdoms.MODID, "sell_screen_handler"), new ScreenHandlerType<>(SellScreenHandler::new));
+        SELL_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER, new Identifier(TaleOfKingdoms.MODID, "sell_screen_handler"), new ExtendedScreenHandlerType<>(SellScreenHandler::new));
 
 
         SELL_BLOCK = Registry.register(Registries.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
@@ -158,6 +159,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.KINGDOM_VILLAGER, KingdomVillagerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.STOCK_MARKET, StockMarketEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.QUARRY_FOREMAN, QuarryForemanEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.LUMBER_FOREMAN, QuarryForemanEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.QUARRY_WORKER, QuarryWorkerEntity.createMobAttributes());
 
         // Load shop items

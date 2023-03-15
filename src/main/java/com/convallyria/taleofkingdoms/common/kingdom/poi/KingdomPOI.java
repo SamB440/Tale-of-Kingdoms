@@ -56,6 +56,14 @@ public enum KingdomPOI {
             super.compute(kingdom, player, info);
             EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos);
         }
+    },
+
+    LUMBER_FOREMAN("LumberForeman") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos);
+        }
     };
 
     private final String poiName;

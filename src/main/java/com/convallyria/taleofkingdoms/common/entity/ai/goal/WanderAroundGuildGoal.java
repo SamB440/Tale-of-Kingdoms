@@ -58,7 +58,7 @@ public class WanderAroundGuildGoal extends Goal {
             if (api != null) {
                 if (api.getConquestInstanceStorage().mostRecentInstance().isPresent()) {
                     ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-                    BlockPos blockPos = new BlockPos(vec3d.x, vec3d.y, vec3d.z);
+                    BlockPos blockPos = new BlockPos((int) vec3d.x, (int) vec3d.y, (int) vec3d.z);
                     if (!instance.isInGuild(blockPos)) return false;
                 }
             }

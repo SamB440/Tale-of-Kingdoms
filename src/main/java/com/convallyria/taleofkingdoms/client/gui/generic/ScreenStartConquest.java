@@ -105,7 +105,7 @@ public class ScreenStartConquest extends ScreenTOK {
         this.text.setMaxLength(32);
         this.text.setText("Sir Punchwood");
         this.text.setFocusUnlocked(false);
-        this.text.changeFocus(true);
+        this.text.setFocused(true);
         this.text.setVisible(true);
         this.addSelectableChild(this.text);
     }
@@ -117,10 +117,10 @@ public class ScreenStartConquest extends ScreenTOK {
         int currentHeight = this.height / 2 - 110;
         for (String toRender : text.split("\n")) {
             //todo change colour? 11111111 is nice
-            drawCenteredText(stack, this.textRenderer, toRender, this.width / 2, currentHeight, 0xFFFFFF);
+            drawCenteredTextWithShadow(stack, this.textRenderer, toRender, this.width / 2, currentHeight, 0xFFFFFF);
             currentHeight = currentHeight + 10;
         }
-        drawCenteredText(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);
         super.render(stack, par1, par2, par3);
     }

@@ -16,6 +16,7 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +58,7 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
-            BlockPos spawnPos = currentBlockInfo.pos.add(0.5, 0, 0.5);
+            Vec3d spawnPos = currentBlockInfo.pos.toCenterPos();
             try {
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
                 if (type == null) return air;
@@ -73,9 +74,9 @@ public class GuildStructureProcessor extends StructureProcessor {
                     }
 
                     if (guildEntity.isEmpty()) {
-                        EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
+                        EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
                     }
-                } else EntityUtils.spawnEntity(type, serverWorldAccess, spawnPos);
+                } else EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }

@@ -9,15 +9,17 @@ import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
-import io.github.cottonmc.cotton.gui.widget.TooltipBuilder;
-import io.github.cottonmc.cotton.gui.widget.WButton;
-import io.github.cottonmc.cotton.gui.widget.WLabel;
-import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-import io.github.cottonmc.cotton.gui.widget.WSprite;
-import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
-import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
+import io.wispforest.owo.ui.component.ButtonComponent;
+import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.component.LabelComponent;
+import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Color;
+import io.wispforest.owo.ui.core.Component;
+import io.wispforest.owo.ui.core.HorizontalAlignment;
+import io.wispforest.owo.ui.core.Positioning;
+import io.wispforest.owo.ui.core.Sizing;
+import io.wispforest.owo.ui.core.Surface;
+import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,153 +30,185 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CityBuilderTierOneGui extends LightweightGuiDescription {
+public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
+    private static final Identifier BACKGROUND = new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png");
+
+    private final PlayerEntity player;
     private final CityBuilderEntity entity;
-    private final WButton fixWholeKingdomButton;
-    private final WLabel oakWoodLabel, cobblestoneLabel;
+    private final ConquestInstance instance;
+    private ButtonComponent fixWholeKingdomButton;
+    private LabelComponent oakWoodLabel, cobblestoneLabel;
 
-    private final Map<BuildCosts, WButton> buildButtons = new HashMap<>(BuildCosts.values().length);
+    private final Map<BuildCosts, ButtonComponent> buildButtons = new HashMap<>(BuildCosts.values().length);
 
     public CityBuilderTierOneGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
+        this.player = player;
         this.entity = entity;
-        final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+        this.instance = instance;
         Translations.CITYBUILDER_GUI_OPEN.send(player);
-        WPlainPanel root = new WPlainPanel();
-        setRootPanel(root);
-        root.setInsets(Insets.ROOT_PANEL);
-        root.setSize(400, 256);
+    }
 
-        WSprite icon = new WSprite(new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png"));
-        root.add(icon, 0, 0, 400, 256);
+    private void update() {
+        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
+        AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
+        fixWholeKingdomButton.active(cobblestoneCount.get() == 320 && oakWoodCount.get() == 320);
 
-        //todo: translatable
-        root.add(new WLabel(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"), 11111111).setVerticalAlignment(VerticalAlignment.CENTER).setHorizontalAlignment(HorizontalAlignment.CENTER), 200, 10, 16, 2);
-        //root.add(new WScrollPanel(scrollBox), 50, 50, 300, 100);
+        oakWoodLabel.text(Text.literal((oakWoodCount) + " / 320 oak wood"));
+        cobblestoneLabel.text(Text.literal((cobblestoneCount) + " / 320 cobblestone"));
+
+        buildButtons.forEach((build, button) -> button.active(entity.canAffordBuild(build)));
+    }
+
+    @Override
+    protected void build(FlowLayout rootComponent) {
+        rootComponent
+                .surface(Surface.VANILLA_TRANSLUCENT)
+                .horizontalAlignment(HorizontalAlignment.CENTER)
+                .verticalAlignment(VerticalAlignment.CENTER);
+
+        rootComponent.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
+
+        final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+
+        rootComponent.child(
+            Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins")).color(Color.ofRgb(11111111))
+            .positioning(Positioning.relative(50, 10))
+        );
 
         AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
         AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
 
         //root.add(new WLabel(Text.literal("0      160      320")).setHorizontalAlignment(HorizontalAlignment.LEFT), 100, 30, 16, 2);
 
-        this.oakWoodLabel = new WLabel(Text.literal(oakWoodCount + " / 320 oak wood"));
-        this.cobblestoneLabel = new WLabel(Text.literal(cobblestoneCount + " / 320 cobblestone"));
-        root.add(oakWoodLabel, 100, 27, 32, 20);
-        root.add(cobblestoneLabel, 100, 47, 32, 20);
+        rootComponent.child(
+            Components.button(Text.literal("Give 64 wood"), c -> {
+                final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
+                TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                    final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
+                    if (stack != null && playerWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
+                        final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        int slot = serverPlayer.getInventory().getSlotWithStack(stack);
+                        serverPlayer.getInventory().removeStack(slot);
+                        player.getInventory().removeStack(slot);
+                        oakWoodCount.addAndGet(64);
+                        entity.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
+                        update();
+                    }
+                });
+            }).positioning(Positioning.relative(80, 20)).sizing(Sizing.fixed(100), Sizing.fixed(20))
+        );
 
-        WButton woodButton = new WButton(Text.literal("Give 64 wood"));
-        woodButton.setOnClick(() -> {
-            final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
-            TaleOfKingdoms.getAPI().executeOnServer(() -> {
-                final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
-                if (stack != null && playerWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
-                    final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    int slot = serverPlayer.getInventory().getSlotWithStack(stack);
-                    serverPlayer.getInventory().removeStack(slot);
-                    player.getInventory().removeStack(slot);
-                    oakWoodCount.addAndGet(64);
-                    entity.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
-                    update();
-                }
-            });
-        });
-        root.add(woodButton, 222, 20, 100, 10);
+        rootComponent.child(
+            Components.button(Text.literal("Give 64 cobblestone"), c -> {
+                final int playerCobblestoneCount = player.getInventory().count(Items.COBBLESTONE);
+                TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                    final ItemStack stack = new ItemStack(Items.COBBLESTONE, 64);
+                    if (playerCobblestoneCount >= 64 && cobblestoneCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
+                        final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        int slot = serverPlayer.getInventory().getSlotWithStack(stack);
+                        serverPlayer.getInventory().removeStack(slot);
+                        player.getInventory().removeStack(slot);
+                        cobblestoneCount.addAndGet(64);
+                        entity.getInventory().addStack(stack);
+                        update();
+                    }
+                });
+            }).positioning(Positioning.relative(80, 30)).sizing(Sizing.fixed(100), Sizing.fixed(20))
+        );
 
-        WButton cobbleButton = new WButton(Text.literal("Give 64 cobblestone"));
-        cobbleButton.setOnClick(() -> {
-            final int playerCobblestoneCount = player.getInventory().count(Items.COBBLESTONE);
-            TaleOfKingdoms.getAPI().executeOnServer(() -> {
-                final ItemStack stack = new ItemStack(Items.COBBLESTONE, 64);
-                if (playerCobblestoneCount >= 64 && cobblestoneCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
-                    final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                    int slot = serverPlayer.getInventory().getSlotWithStack(stack);
-                    serverPlayer.getInventory().removeStack(slot);
-                    player.getInventory().removeStack(slot);
-                    cobblestoneCount.addAndGet(64);
-                    entity.getInventory().addStack(stack);
-                    update();
-                }
-            });
-        });
-        root.add(cobbleButton, 222, 40, 100, 10);
+        rootComponent.child(
+                this.oakWoodLabel = (LabelComponent) Components.label(Text.literal(oakWoodCount + " / 320 oak wood"))
+                        .positioning(Positioning.relative(80, 40))
+        );
 
-        this.fixWholeKingdomButton = new WButton(Text.literal("Fix whole kingdom"));
-        fixWholeKingdomButton.addTooltip(new TooltipBuilder().add(
-                Text.literal("Repairing the kingdom costs:"),
-                Text.literal(" - 320 oak wood"),
-                Text.literal(" - 320 cobblestone")));
-        fixWholeKingdomButton.setOnClick(() -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
-            if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320) return;
-            final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
-            for (BuildCosts buildCost : BuildCosts.values()) {
-                final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
-                final Schematic schematic = buildCost.getSchematic();
-                if (kingdom.hasBuilt(kingdomPOI)) {
-                    TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI));
+        rootComponent.child(
+                this.cobblestoneLabel = (LabelComponent) Components.label(Text.literal(cobblestoneCount + " / 320 cobblestone"))
+                        .positioning(Positioning.relative(80, 45))
+        );
+
+        rootComponent.child(
+            this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320)
+                    return;
+                final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
+                for (BuildCosts buildCost : BuildCosts.values()) {
+                    final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
+                    final Schematic schematic = buildCost.getSchematic();
+                    if (kingdom.hasBuilt(kingdomPOI)) {
+                        TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI));
+                    }
                 }
-            }
-            entity.getInventory().clear();
-            update();
-        }));
-        root.add(fixWholeKingdomButton, 222, 70, 100, 10);
+                entity.getInventory().clear();
+                update();
+            })).tooltip(List.of(
+                  Text.literal("Repairing the kingdom costs:"),
+                  Text.literal(" - 320 oak wood"),
+                  Text.literal(" - 320 cobblestone")
+            )).positioning(Positioning.relative(80, 70)).sizing(Sizing.fixed(100), Sizing.fixed(20))
+        );
+
         update();
 
         // Price list
-        WButton priceListButton = new WButton(Text.literal("Price List"));
-        priceListButton.setOnClick(() -> MinecraftClient.getInstance().setScreen(new BaseCityBuilderScreen(new CityBuilderPriceListGui(player, entity, instance))));
-        root.add(priceListButton, 222, 100, 100, 10);
+        rootComponent.child(
+            Components.button(Text.literal("Price List"), c -> {
+                MinecraftClient.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance));
+            }).positioning(Positioning.relative(80, 80)).sizing(Sizing.fixed(100), Sizing.fixed(20))
+        );
 
         // Actually starts at 70, first has addition of +20
-        int currentY = 50;
-        int currentX = 20;
+        int currentY = 15;
+        int currentX = 15;
         final int maxPerRow = 7;
         int currentRow = 0;
         for (BuildCosts build : BuildCosts.values()) {
             if (currentRow >= maxPerRow) {
                 currentRow = 0;
-                currentY = 50;
-                currentX += 100;
+                currentY = 15;
+                currentX += 30;
             }
+
             //todo: small houses / large houses require special changes
-            String text = kingdom.hasBuilt(build.getKingdomPOI()) ? "Fix " : "Build ";
-            WButton button = new WButton(Text.literal(text).append(build.getDisplayName()));
-            button.setEnabled(entity.canAffordBuild(build));
-            button.setOnClick(() -> entity.requireResources(build, () -> {
+            final boolean hasBuilt = kingdom.hasBuilt(build.getKingdomPOI());
+            final boolean canAffordBuild = entity.canAffordBuild(build);
+            final String text = hasBuilt ? "Fix " : "Build ";
+            final String pluralText = hasBuilt ? "Repairing " : "Building ";
+
+            final Component button = Components.button(Text.literal(text).append(build.getDisplayName()), c -> {
                 final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                 MinecraftClient.getInstance().currentScreen.close();
                 kingdom.addBuilt(build.getKingdomPOI());
                 TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
-            }));
-            root.add(button, currentX, currentY += 20, 100, 10);
-            buildButtons.put(build, button);
+            }).active(canAffordBuild)
+                    .tooltip(List.of(
+                        Text.literal(pluralText).append(build.getDisplayName()).append(Text.literal(" costs:")),
+                        Text.literal(" - " + build.getWood() + " oak wood"),
+                        Text.literal(" - " + build.getStone() + " cobblestone")
+                    ))
+                    .positioning(Positioning.relative(currentX, currentY += 8))
+                    .sizing(Sizing.fixed(100), Sizing.fixed(20));
+
+            rootComponent.child(button);
+
+            buildButtons.put(build, (ButtonComponent) button);
             currentRow++;
         }
 
-        WButton exitButton = new WButton(Text.literal("Exit"));
-        exitButton.setOnClick(() -> {
-            MinecraftClient.getInstance().currentScreen.close();
-            Translations.CITYBUILDER_GUI_CLOSE.send(player);
-        });
-        root.add(exitButton, 178, root.getHeight() / 2 + 65, 45, 20);
-        root.validate(this);
+        rootComponent.child(
+            Components.button(
+                Text.literal("Exit"),
+                (ButtonComponent button) -> {
+                    this.close();
+                    Translations.CITYBUILDER_GUI_CLOSE.send(player);
+                }
+            ).positioning(Positioning.relative(50, 85))
+        );
     }
-
-    private void update() {
-        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
-        AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
-        fixWholeKingdomButton.setEnabled(cobblestoneCount.get() == 320 && oakWoodCount.get() == 320);
-
-        oakWoodLabel.setText(Text.literal((oakWoodCount) + " / 320 oak wood"));
-        cobblestoneLabel.setText(Text.literal((cobblestoneCount) + " / 320 cobblestone"));
-
-        buildButtons.forEach((build, button) -> button.setEnabled(entity.canAffordBuild(build)));
-    }
-
-    @Override
-    public void addPainters() {}
 }
