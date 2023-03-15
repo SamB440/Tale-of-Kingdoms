@@ -73,12 +73,12 @@ public class StartWorldListener extends Listener {
                     api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            if (TaleOfKingdoms.config.mainConfig.showStartKingdomGUI)
+                            if (TaleOfKingdoms.CONFIG.mainConfig.showStartKingdomGUI)
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            if (TaleOfKingdoms.config.mainConfig.alwaysShowUpdatesGUI || instance.isOld()) {
+                            if (TaleOfKingdoms.CONFIG.mainConfig.alwaysShowUpdatesGUI || instance.isOld()) {
                                 MinecraftClient.getInstance().setScreen(new UpdateScreen());
-                            } else if (TaleOfKingdoms.config.mainConfig.showContinueConquestGUI) {
+                            } else if (TaleOfKingdoms.CONFIG.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
 

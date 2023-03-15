@@ -84,7 +84,7 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger();
 
     private static TaleOfKingdomsAPI api;
-    public static TaleOfKingdomsConfig config; // TODO make not static in future?
+    public static TaleOfKingdomsConfig CONFIG;
 
     public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
@@ -165,7 +165,7 @@ public class TaleOfKingdoms implements ModInitializer {
         // Load shop items
         new ShopParser().createShopItems();
         ShopParser.SHOP_ITEMS.values().forEach(shopItems -> shopItems.forEach(shopItem -> LOGGER.info("Loaded item value " + shopItem.toString())));
-        config = AutoConfig.register(TaleOfKingdomsConfig.class, PartitioningSerializer.wrap(Toml4jConfigSerializer::new)).getConfig();
+        CONFIG = AutoConfig.register(TaleOfKingdomsConfig.class, PartitioningSerializer.wrap(Toml4jConfigSerializer::new)).getConfig();
     }
 
     /**
