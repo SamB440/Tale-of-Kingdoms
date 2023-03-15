@@ -18,7 +18,7 @@
     <a href="/issues/new">Request Feature</a>
   </p>
 
-![Build](https://img.shields.io/github/workflow/status/SamB440/Tale-of-Kingdoms/build)
+![Build](https://img.shields.io/github/actions/workflow/status/SamB440/Tale-of-Kingdoms/build.yml?branch=master)
 ![Forks](https://img.shields.io/github/forks/SamB440/Tale-of-Kingdoms) 
 ![Stargazers](https://img.shields.io/github/stars/SamB440/Tale-of-Kingdoms) 
 ![Issues](https://img.shields.io/github/issues/SamB440/Tale-of-Kingdoms) 
