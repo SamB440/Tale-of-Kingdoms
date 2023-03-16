@@ -59,9 +59,18 @@
     "fabricloader": ">=0.14.17",
     "fabric": "*",
     "minecraft": "1.19.4",
-    "java": ">=17"
+    "java": ">=17",
+    "owo": "^0.10.2 <0.11.0"
   },
   "suggests": {
     "flamingo": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/fh62mxU",
+        "modmenu.crowdin": "https://crowdin.com/project/tale-of-kingdoms"
+      }
+    }
   }
 }
