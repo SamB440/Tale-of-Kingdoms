@@ -1,0 +1,50 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19/owo-ui.xsd">
+    <components>
+        <flow-layout direction="horizontal">
+            <children>
+                <texture texture="taleofkingdoms:textures/gui/menu.png" u="400" v="256" region-width="400"
+                         region-height="256" texture-width="400" texture-height="256"/>
+
+                <button id="buy-button">
+                    <text>Buy</text>
+                    <tooltip-text>Use Left Shift to buy 16x.</tooltip-text>
+                    <positioning type="relative">87,40</positioning>
+                    <sizing>
+                        <horizontal method="fixed">55</horizontal>
+                        <vertical method="fixed">20</vertical>
+                    </sizing>
+                </button>
+
+                <button id="sell-button">
+                    <text>Sell</text>
+                    <positioning type="relative">87,50</positioning>
+                    <sizing>
+                        <horizontal method="fixed">55</horizontal>
+                        <vertical method="fixed">20</vertical>
+                    </sizing>
+                </button>
+
+                <button id="exit-button">
+                    <text>Exit</text>
+                    <positioning type="relative">87,60</positioning>
+                    <sizing>
+                        <horizontal method="fixed">55</horizontal>
+                        <vertical method="fixed">20</vertical>
+                    </sizing>
+                </button>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <sizing>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>

@@ -12,27 +12,18 @@ import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
-import io.wispforest.owo.ui.base.BaseOwoScreen;
+import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
-import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.core.HorizontalAlignment;
-import io.wispforest.owo.ui.core.OwoUIAdapter;
-import io.wispforest.owo.ui.core.Positioning;
-import io.wispforest.owo.ui.core.Surface;
-import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class DefaultShopScreen extends BaseOwoScreen<FlowLayout> implements ShopScreenInterface {
+public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> implements ShopScreenInterface {
 
     private static final Identifier BACKGROUND = new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png");
 
@@ -45,7 +36,7 @@ public abstract class DefaultShopScreen extends BaseOwoScreen<FlowLayout> implem
     private Shop shop;
 
     public DefaultShopScreen(PlayerEntity player, ShopEntity entity, ConquestInstance instance) {
-        super();
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "shop_ui_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -63,50 +54,18 @@ public abstract class DefaultShopScreen extends BaseOwoScreen<FlowLayout> implem
     }
 
     @Override
-    protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
-        return OwoUIAdapter.create(this, Containers::horizontalFlow);
-    }
-
-    @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER);
+        rootComponent.childById(ButtonComponent.class, "buy-button").onPress(button -> {
+            int count = 1;
+            if (Screen.hasShiftDown()) count = 16;
+            ShopBuyUtil.buyItem(instance, player, selectedItem, count, entity);
+        });
 
-        rootComponent.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
-
-        rootComponent.child(
-            Components.button(
-                Text.literal("Buy"),
-                    (ButtonComponent button) -> {
-                        int count = 1;
-                        if (Screen.hasShiftDown()) count = 16;
-                        ShopBuyUtil.buyItem(instance, player, selectedItem, count, entity);
-                    }
-            )
-            .tooltip(Text.literal("Use Left Shift to buy 16x."))
-            .positioning(Positioning.absolute(this.width / 2 + 132, this.height / 2 - 55))
-        );
-
-        rootComponent.child(
-            Components.button(
-                Text.literal("Sell"),
-                (ButtonComponent button) -> openSellGui(entity, player)
-            )
-            .tooltip(Text.literal("Use Left Shift to buy 16x."))
-            .positioning(Positioning.absolute(this.width / 2 + 132, this.height / 2 - 30))
-        );
+        rootComponent.childById(ButtonComponent.class, "sell-button").onPress(button -> openSellGui(entity, player));
 
         //todo page turn?
 
-        rootComponent.child(
-            Components.button(
-                Text.literal("Exit"),
-                (ButtonComponent button) -> this.close()
-            )
-            .positioning(Positioning.absolute(this.width / 2 + 160, this.height / 2 + 20))
-        );
+        rootComponent.childById(ButtonComponent.class, "exit-button").onPress(button -> this.close());
     }
 
     @Override
