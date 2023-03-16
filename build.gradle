@@ -102,11 +102,23 @@ processResources {
     }
 }
 
-tasks.withType(Test) {
-    useJUnitPlatform()
+tasks {
+    jar {
+        // I don't care about your datagen
+        duplicatesStrategy = DuplicatesStrategy.WARN
+        from file('src/main/generated')
+        from("LICENSE") {
+            rename { "${it}_${project.archivesBaseName}"}
+        }
+        dependsOn 'runDatagen'
+    }
 
-    testLogging {
-        events("passed", "skipped", "failed")
+    test {
+        useJUnitPlatform()
+
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
     }
 }
 
@@ -130,14 +142,6 @@ java {
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
-}
-
-jar {
-    from file('src/main/generated')
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
-    dependsOn 'runDatagen'
 }
 
 // configure the maven publication
