@@ -17,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
@@ -102,9 +103,13 @@ public class ScreenStartConquest extends ScreenTOK {
             }));
         }).dimensions(this.width / 2 - 100, this.height / 2 + 15, 200, 20).build());
 
+        this.addDrawableChild(ButtonWidget.builder(Text.literal("Delay your Adventure").formatted(Formatting.RED), (b) -> {
+            this.close();
+        }).dimensions(this.width / 2 - 50, this.height / 2 + 50, 100, 20).build());
+
         this.text.setMaxLength(32);
         this.text.setText("Sir Punchwood");
-        this.text.setFocusUnlocked(false);
+        this.text.setFocusUnlocked(true);
         this.text.setFocused(true);
         this.text.setVisible(true);
         this.addSelectableChild(this.text);
@@ -121,6 +126,7 @@ public class ScreenStartConquest extends ScreenTOK {
             currentHeight = currentHeight + 10;
         }
         drawCenteredTextWithShadow(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, Text.literal("Press ESC to manually generate the guild elsewhere."), this.width / 2, currentHeight + 65, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);
         super.render(stack, par1, par2, par3);
     }
