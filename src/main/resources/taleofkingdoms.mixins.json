@@ -13,7 +13,6 @@
     "common.PlayerDeathEvent",
     "common.PlayerLeave",
     "common.PlayerLogin",
-    "common.SharedConstantsMixin",
     "structure.StructureBlockUnlimit",
     "structure.packet.ClientUpdateStructureBlockUnlimit"
   ],

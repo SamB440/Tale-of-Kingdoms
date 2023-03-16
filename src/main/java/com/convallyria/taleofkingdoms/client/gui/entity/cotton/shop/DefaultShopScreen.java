@@ -25,8 +25,6 @@ import java.util.Map;
 
 public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> implements ShopScreenInterface {
 
-    private static final Identifier BACKGROUND = new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png");
-
     private final PlayerEntity player;
     private final ShopEntity entity;
     private final ConquestInstance instance;
