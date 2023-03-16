@@ -76,8 +76,8 @@ dependencies {
     // Mod Menu, to add the hook for a config screen
     modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    modImplementation "io.wispforest:owo-lib:${project.owo_version}"
-    include "io.wispforest:owo-sentinel:${project.owo_version}"
+    annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
+    modCompileOnly include("io.wispforest:owo-sentinel:${project.owo_version}")
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude(group: "net.fabricmc.fabric-api")
