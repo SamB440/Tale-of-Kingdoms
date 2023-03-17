@@ -9,8 +9,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -27,7 +25,7 @@ public class LoneEntity extends TOKEntity {
 
     public LoneEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+//        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
     @Override
