@@ -19,6 +19,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ShopParser {
@@ -45,20 +46,16 @@ public class ShopParser {
                 JsonObject shopItem = shopItemElement.getAsJsonObject();
 
                 try {
-                    Item item = getItem(shopItem.get("item").getAsString());
+                    Item item = getItem(shopItem.get("item").getAsString().toLowerCase(Locale.ROOT));
 
-                    if (shopItem.has("cost")) {
-                        int cost = shopItem.get("cost").getAsInt();
+                    int cost = 0, sell = -1;
 
-                        String name = getName(shopItem);
-
-                        if(shopItem.has("sell")) {
-                            int sell = shopItem.get("sell").getAsInt();
-                            addToShopItems(jsonElement.getKey(), new ShopItem(name, item, cost, sell));
-                        } else {
-                            addToShopItems(jsonElement.getKey(), new ShopItem(name, item, cost, -1));
-                        }
+                    if (shopItem.has("sell")) {
+                        sell = shopItem.get("sell").getAsInt();
                     }
+
+                    final String name = getName(shopItem);
+                    addToShopItems(jsonElement.getKey(), new ShopItem(name, item, cost, sell));
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
