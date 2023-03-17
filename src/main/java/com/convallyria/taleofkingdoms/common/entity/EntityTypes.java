@@ -14,6 +14,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildCaptainEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterDefenderEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
+import com.convallyria.taleofkingdoms.common.entity.guild.GuildVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberForemanEntity;
@@ -83,6 +84,11 @@ public class EntityTypes {
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "guild_guard"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildGuardEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+    public static final EntityType<GuildVillagerEntity> GUILDVILLAGER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "guild_villager"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, GuildVillagerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
     public static final EntityType<GuildArcherEntity> GUILDARCHER = Registry.register(
             Registries.ENTITY_TYPE,

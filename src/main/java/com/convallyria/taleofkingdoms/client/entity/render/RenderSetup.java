@@ -26,10 +26,11 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.INNKEEPER, identifier("textures/entity/updated_textures/innkeeper.png"));
         register(EntityTypes.HUNTER, identifier("textures/entity/hunter2.png"));
         register(EntityTypes.GUILDGUARD, identifier("textures/entity/guildmember.png"));
+        register(EntityTypes.GUILDVILLAGER, identifier("textures/entity/guildmember.png"));
         register(EntityTypes.GUILDARCHER,
                 identifier("textures/entity/guildarcher/guildarcherone.png"),
-                identifier("textures/entity/guildarcher/guildarchertwo.png"),
-                identifier("textures/entity/guildarcher/guildarcherthree.png"));
+                identifier("textures/entity/guildarcher/guildarchertwo.png")
+                /*identifier("textures/entity/guildarcher/guildarcherthree.png")*/);
         register(EntityTypes.BANKER, identifier("textures/entity/updated_textures/banker.png"));
         register(EntityTypes.LONE, identifier("textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, identifier("textures/entity/updated_textures/foodshop.png"));
