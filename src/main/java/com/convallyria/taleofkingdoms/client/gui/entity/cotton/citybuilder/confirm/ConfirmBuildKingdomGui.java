@@ -11,6 +11,7 @@ import com.convallyria.taleofkingdoms.managers.SoundManager;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Surface;
@@ -51,6 +52,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
 
         rootComponent.child(
                 Components.label(Text.literal("WARNING: When building it will destroy the area around it to make space."))
+                        .color(Color.RED)
                         .positioning(Positioning.relative(50, 50))
         );
 
@@ -84,7 +86,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 });
                 player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MASTER, 0.1f, 1f);
             })
-            .positioning(Positioning.relative(50, 75))
+            .positioning(Positioning.relative(50, 67))
         );
 
         rootComponent.child(
@@ -92,7 +94,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 Text.literal("Cancel."),
                 (ButtonComponent button) -> this.close()
             )
-            .positioning(Positioning.relative(50, 85))
+            .positioning(Positioning.relative(50, 75))
         );
     }
 }

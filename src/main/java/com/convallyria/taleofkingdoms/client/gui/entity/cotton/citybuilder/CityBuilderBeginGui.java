@@ -7,9 +7,11 @@ import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.Positioning;
+import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
@@ -39,15 +41,17 @@ public class CityBuilderBeginGui extends BaseCityBuilderScreen {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
 
-        // u and v is the position in the texture
-        rootComponent.child(Components.texture(BACKGROUND, 0, 0, 400, 256, 400, 256));
+        final FlowLayout inner = rootComponent.child(Containers.horizontalFlow(Sizing.fixed(400), Sizing.fixed(256)));
 
-        rootComponent.child(
+        // u and v is the position in the texture
+        inner.child(Components.texture(BACKGROUND, 0, 0, 400, 256, 400, 256));
+
+        inner.child(
                 Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"))
-                        .positioning(Positioning.relative(50, 25))
+                        .positioning(Positioning.relative(50, 5))
         );
 
-        rootComponent.child(
+        inner.child(
                 Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.build"), c -> {
                     MinecraftClient.getInstance().currentScreen.close();
                     MinecraftClient.getInstance().setScreen(new ConfirmBuildKingdomGui(player, entity, instance));
@@ -55,7 +59,7 @@ public class CityBuilderBeginGui extends BaseCityBuilderScreen {
                 .positioning(Positioning.relative(50, 75))
         );
 
-        rootComponent.child(
+        inner.child(
                 Components.button(
                     Text.literal("Exit"),
                     (ButtonComponent button) -> this.close()

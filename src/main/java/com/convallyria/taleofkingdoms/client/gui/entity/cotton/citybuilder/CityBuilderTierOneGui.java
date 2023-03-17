@@ -12,6 +12,7 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.LabelComponent;
+import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Component;
@@ -71,14 +72,16 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
 
+        final FlowLayout inner = rootComponent.child(Containers.horizontalFlow(Sizing.fixed(400), Sizing.fixed(256)));
+
         // u and v is the position in the texture
-        rootComponent.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
+        inner.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
 
         final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
 
-        rootComponent.child(
+        inner.child(
             Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins")).color(Color.ofRgb(11111111))
-            .positioning(Positioning.relative(50, 10))
+            .positioning(Positioning.relative(50, 5))
         );
 
         AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
@@ -86,7 +89,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         //root.add(new WLabel(Text.literal("0      160      320")).setHorizontalAlignment(HorizontalAlignment.LEFT), 100, 30, 16, 2);
 
-        rootComponent.child(
+        inner.child(
             Components.button(Text.literal("Give 64 wood"), c -> {
                 final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {
@@ -104,7 +107,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
             }).positioning(Positioning.relative(80, 20)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
 
-        rootComponent.child(
+        inner.child(
             Components.button(Text.literal("Give 64 cobblestone"), c -> {
                 final int playerCobblestoneCount = player.getInventory().count(Items.COBBLESTONE);
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {
@@ -122,17 +125,17 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
             }).positioning(Positioning.relative(80, 30)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
 
-        rootComponent.child(
+        inner.child(
                 this.oakWoodLabel = (LabelComponent) Components.label(Text.literal(oakWoodCount + " / 320 oak wood"))
                         .positioning(Positioning.relative(80, 40))
         );
 
-        rootComponent.child(
+        inner.child(
                 this.cobblestoneLabel = (LabelComponent) Components.label(Text.literal(cobblestoneCount + " / 320 cobblestone"))
                         .positioning(Positioning.relative(80, 45))
         );
 
-        rootComponent.child(
+        inner.child(
             this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
                 if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320)
                     return;
@@ -157,7 +160,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         update();
 
         // Price list
-        rootComponent.child(
+        inner.child(
             Components.button(Text.literal("Price List"), c -> {
                 MinecraftClient.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance));
             }).positioning(Positioning.relative(80, 80)).sizing(Sizing.fixed(100), Sizing.fixed(20))
@@ -196,13 +199,13 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                     .positioning(Positioning.relative(currentX, currentY += 8))
                     .sizing(Sizing.fixed(100), Sizing.fixed(20));
 
-            rootComponent.child(button);
+            inner.child(button);
 
             buildButtons.put(build, (ButtonComponent) button);
             currentRow++;
         }
 
-        rootComponent.child(
+        inner.child(
             Components.button(
                 Text.literal("Exit"),
                 (ButtonComponent button) -> {
