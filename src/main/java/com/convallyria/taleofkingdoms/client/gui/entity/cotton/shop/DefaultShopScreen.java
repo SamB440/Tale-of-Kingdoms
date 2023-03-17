@@ -14,10 +14,15 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.common.collect.ImmutableList;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
+import io.wispforest.owo.ui.component.Components;
+import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Color;
+import io.wispforest.owo.ui.core.Positioning;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -32,6 +37,8 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     private final ImmutableList<ShopItem> shopItems;
     private ShopItem selectedItem;
     private Shop shop;
+
+    private LabelComponent coinsLabel, selectedItemLabel;
 
     public DefaultShopScreen(PlayerEntity player, ShopEntity entity, ConquestInstance instance) {
         super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "shop_ui_model")));
@@ -60,6 +67,67 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
             ShopBuyUtil.buyItem(instance, player, selectedItem, count, entity);
         });
 
+        this.selectedItem = shopItems.get(0);
+
+        inner.child(this.coinsLabel = (LabelComponent)
+            Components.label(Text.literal("Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"))
+                .color(Color.WHITE)
+                .positioning(Positioning.relative(50, 5))
+        );
+
+        inner.child(this.selectedItemLabel = (LabelComponent)
+            Components.label(Text.literal("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins"))
+                .color(Color.WHITE)
+                .positioning(Positioning.relative(50, 10))
+        );
+
+        //todo: dynamically generate page turn widgets per-page? how?
+        // Unsure how we can get custom widgets to work with owo dynamic ui
+        inner.child(new PageTurnWidget(false, button -> {
+            shop.previousPage();
+        }, true).positioning(Positioning.relative(3, 18)));
+
+        inner.child(new PageTurnWidget(true, button -> {
+            shop.nextPage();
+        }, true).positioning(Positioning.relative(70, 18)));
+
+        final int maxPerSide = 18;
+        int page = 0;
+        int currentIteration = 0;
+        int currentY = 24;
+        int currentX = 10;
+        Map<Integer, ShopPage> pages = new HashMap<>();
+        pages.put(page, new ShopPage(page));
+
+        for (ShopItem shopItem : shopItems) {
+            // Have we done the maximum items for a single row?
+            // If so, reset to default y pos, move along x pos.
+            if (currentIteration == 9) {
+                currentY = 24;
+                currentX = currentX + 40;
+            }
+
+            // Have we done the maximum items for a single page?
+            // If so, increase page num, set x/y to default.
+            if (currentIteration >= maxPerSide) {
+                page++;
+                currentIteration = 0;
+                currentY = 24;
+                currentX = 10;
+                pages.put(page, new ShopPage(page));
+            }
+
+            final ShopButtonWidget widget = new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer);
+            inner.child(widget.positioning(Positioning.relative(currentX, currentY)));
+            pages.get(page).addItem(widget);
+
+            currentY = currentY + 8;
+            currentIteration++;
+        }
+
+        this.shop = new Shop(pages);
+        pages.get(0).show();
+
         inner.childById(ButtonComponent.class, "sell-button").onPress(button -> openSellGui(entity, player));
 
         //todo page turn?
@@ -68,57 +136,15 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     }
 
     @Override
-    public void init() {
-        super.init();
-
-        this.addDrawableChild(new PageTurnWidget(this.width / 2 - 135, this.height / 2 - 100, false, button -> shop.previousPage(), true));
-        this.addDrawableChild(new PageTurnWidget(this.width / 2 + 130, this.height / 2 - 100, true, button -> shop.nextPage(), true));
-
-        this.selectedItem = shopItems.get(0);
-
-        final int maxPerSide = 18;
-        int page = 0;
-        int currentIteration = 0;
-        int currentY = this.height / 4;
-        int currentX = this.width / 2 - 100;
-        Map<Integer, ShopPage> pages = new HashMap<>();
-        pages.put(page, new ShopPage(page));
-
-        for (ShopItem shopItem : shopItems) {
-            if (currentIteration == 9) {
-                currentY = this.height / 4;
-                currentX = currentX + 115;
-            }
-
-            if (currentIteration >= maxPerSide) {
-                page++;
-                currentIteration = 0;
-                currentY = this.height / 4;
-                currentX = this.width / 2 - 100;
-                pages.put(page, new ShopPage(page));
-            }
-
-            ShopButtonWidget shopButtonWidget = this.addDrawableChild(new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer));
-            pages.get(page).addItem(shopButtonWidget);
-
-            currentY = currentY + 20;
-            currentIteration++;
-        }
-
-        this.shop = new Shop(pages);
-        pages.get(0).show();
-    }
-
-    @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        drawCenteredTextWithShadow(stack, this.textRenderer, "Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        coinsLabel.text(Text.literal("Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"));
         if (this.selectedItem != null) {
             StringBuilder text = new StringBuilder("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins");
             if (this.selectedItem.getModifier() != 1) {
                 text.append(" x ").append(String.format("%.2f", this.selectedItem.getModifier())).append(" modifier");
             }
-            drawCenteredTextWithShadow(stack, this.textRenderer, text.toString(), this.width / 2, this.height / 4 - 15, 0xFFFFFF);
+            this.selectedItemLabel.text(Text.literal(text.toString()));
         }
     }
 
