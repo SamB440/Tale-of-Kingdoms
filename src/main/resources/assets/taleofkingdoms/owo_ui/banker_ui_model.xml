@@ -1,0 +1,87 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19/owo-ui.xsd">
+    <components>
+        <flow-layout direction="horizontal">
+            <children>
+                <flow-layout id="inner" direction="horizontal">
+                    <children>
+                        <texture texture="taleofkingdoms:textures/gui/menu.png" u="0" v="0" region-width="400"
+                                 region-height="256" texture-width="400" texture-height="256"/>
+
+                        <label>
+                            <text>Bank Menu</text>
+                            <color>white</color>
+                            <positioning type="relative">50,5</positioning>
+                        </label>
+
+                        <label id="total-money">
+                            <text translate="true">menu.taleofkingdoms.banker.total_money</text>
+                            <color>white</color>
+                            <positioning type="relative">50,8</positioning>
+                        </label>
+
+                        <label id="total-money-bank">
+                            <text translate="true">menu.taleofkingdoms.banker.total_money_bank</text>
+                            <color>white</color>
+                            <positioning type="relative">50,12</positioning>
+                        </label>
+
+                        <text-box id="input-box">
+                            <text>0</text>
+                            <positioning type="relative">50,20</positioning>
+                            <active>true</active>
+                            <max-length>12</max-length>
+                            <sizing>
+                                <horizontal method="fixed">150</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </text-box>
+
+                        <button id="deposit-button">
+                            <text>Deposit</text>
+                            <positioning type="relative">50,50</positioning>
+                            <sizing>
+                                <horizontal method="fixed">150</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="withdraw-button">
+                            <text>Withdraw</text>
+                            <positioning type="relative">50,60</positioning>
+                            <sizing>
+                                <horizontal method="fixed">150</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="exit-button">
+                            <text>Exit</text>
+                            <positioning type="relative">50,85</positioning>
+                            <sizing>
+                                <horizontal method="fixed">150</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+                    </children>
+
+                    <sizing>
+                        <horizontal method="fixed">400</horizontal>
+                        <vertical method="fixed">256</vertical>
+                    </sizing>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <sizing>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>

@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.client.gui.entity.widget;
+package com.convallyria.taleofkingdoms.client.gui.entity.shop.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

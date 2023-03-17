@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.client.gui.shop;
 
-import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
+import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.ShopButtonWidget;
 
 import java.util.ArrayList;
 import java.util.List;

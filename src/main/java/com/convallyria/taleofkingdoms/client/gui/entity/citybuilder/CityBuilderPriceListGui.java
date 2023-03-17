@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder;
+package com.convallyria.taleofkingdoms.client.gui.entity.citybuilder;
 
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
