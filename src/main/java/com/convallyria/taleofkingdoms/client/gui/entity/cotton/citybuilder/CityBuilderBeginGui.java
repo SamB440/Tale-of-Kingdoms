@@ -39,7 +39,8 @@ public class CityBuilderBeginGui extends BaseCityBuilderScreen {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
 
-        rootComponent.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
+        // u and v is the position in the texture
+        rootComponent.child(Components.texture(BACKGROUND, 0, 0, 400, 256, 400, 256));
 
         rootComponent.child(
                 Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"))
