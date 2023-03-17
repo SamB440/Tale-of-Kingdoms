@@ -27,6 +27,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -79,7 +80,8 @@ public class GuildMasterScreen extends ScreenTOK {
                     }
 
                     ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
-                    for (UUID uuid : instance.getHunterUUIDs().getOrDefault(playerUuid, new ArrayList<>())) {
+                    final List<UUID> list = List.copyOf(instance.getHunterUUIDs().getOrDefault(playerUuid, new ArrayList<>()));
+                    for (UUID uuid : list) {
                         HunterEntity hunter = (HunterEntity) serverWorld.getEntity(uuid);
                         if (hunter == null) {
                             instance.removeHunter(playerUuid, uuid);
@@ -91,6 +93,7 @@ public class GuildMasterScreen extends ScreenTOK {
                             return;
                         }
                     }
+                    instance.getHunterUUIDs().put(playerUuid, list);
                     player.sendMessage(Text.literal("Unable to find an alive hunter!"), false);
                     return;
                 } else {
