@@ -8,28 +8,27 @@
                         <texture texture="taleofkingdoms:textures/gui/menu.png" u="0" v="0" region-width="400"
                                  region-height="256" texture-width="400" texture-height="256"/>
 
-                        <button id="buy-button">
-                            <text>Buy</text>
-                            <tooltip-text>Use Left Shift to buy 16x.</tooltip-text>
-                            <positioning type="relative">87,40</positioning>
-                            <sizing>
-                                <horizontal method="fixed">55</horizontal>
-                                <vertical method="fixed">20</vertical>
-                            </sizing>
-                        </button>
+                        <label>
+                            <text>Tale of Kingdoms updates</text>
+                            <color>dark-gray</color>
+                            <positioning type="relative">50,15</positioning>
+                        </label>
 
-                        <button id="sell-button">
-                            <text>Sell</text>
-                            <positioning type="relative">87,50</positioning>
-                            <sizing>
-                                <horizontal method="fixed">55</horizontal>
-                                <vertical method="fixed">20</vertical>
-                            </sizing>
-                        </button>
+                        <!-- ===================================================================== -->
+                        <!-- I don't know how to make a scroll component dynamically generate text -->
+                        <!-- ===================================================================== -->
+
+<!--                        <scroll id="scroll" direction="vertical">-->
+<!--                            <sizing>-->
+<!--                                <horizontal method="content"/>-->
+<!--                                <vertical method="fill">50</vertical>-->
+<!--                            </sizing>-->
+<!--                            <positioning type="relative">50,50</positioning>-->
+<!--                        </scroll>-->
 
                         <button id="exit-button">
                             <text>Exit</text>
-                            <positioning type="relative">87,60</positioning>
+                            <positioning type="relative">50,85</positioning>
                             <sizing>
                                 <horizontal method="fixed">55</horizontal>
                                 <vertical method="fixed">20</vertical>
@@ -42,7 +41,6 @@
                         <vertical method="fixed">256</vertical>
                     </sizing>
                 </flow-layout>
-
             </children>
 
             <vertical-alignment>center</vertical-alignment>

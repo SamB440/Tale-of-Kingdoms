@@ -53,17 +53,18 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent.childById(ButtonComponent.class, "buy-button").onPress(button -> {
+        final FlowLayout inner = rootComponent.childById(FlowLayout.class, "inner");
+        inner.childById(ButtonComponent.class, "buy-button").onPress(button -> {
             int count = 1;
             if (Screen.hasShiftDown()) count = 16;
             ShopBuyUtil.buyItem(instance, player, selectedItem, count, entity);
         });
 
-        rootComponent.childById(ButtonComponent.class, "sell-button").onPress(button -> openSellGui(entity, player));
+        inner.childById(ButtonComponent.class, "sell-button").onPress(button -> openSellGui(entity, player));
 
         //todo page turn?
 
-        rootComponent.childById(ButtonComponent.class, "exit-button").onPress(button -> this.close());
+        inner.childById(ButtonComponent.class, "exit-button").onPress(button -> this.close());
     }
 
     @Override

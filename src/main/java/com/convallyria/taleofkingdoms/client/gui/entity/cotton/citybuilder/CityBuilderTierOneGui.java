@@ -71,6 +71,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
 
+        // u and v is the position in the texture
         rootComponent.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
 
         final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
