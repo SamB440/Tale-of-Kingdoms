@@ -17,8 +17,8 @@ public class PageTurnWidget extends ButtonWidget {
     private final boolean isNextPageButton;
     private final boolean playPageTurnSound;
 
-    public PageTurnWidget(int x, int y, boolean isNextPageButton, PressAction action, boolean playPageTurnSound) {
-        super(x, y, 23, 13, Text.empty(), action, sup -> Text.empty());
+    public PageTurnWidget(boolean isNextPageButton, PressAction action, boolean playPageTurnSound) {
+        super(0, 0, 23, 13, Text.empty(), action, sup -> Text.empty());
         this.isNextPageButton = isNextPageButton;
         this.playPageTurnSound = playPageTurnSound;
     }

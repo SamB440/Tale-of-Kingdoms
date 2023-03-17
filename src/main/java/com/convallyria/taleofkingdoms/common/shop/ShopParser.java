@@ -50,6 +50,10 @@ public class ShopParser {
 
                     int cost = 0, sell = -1;
 
+                    if (shopItem.has("cost")) {
+                        cost = shopItem.get("cost").getAsInt();
+                    }
+
                     if (shopItem.has("sell")) {
                         sell = shopItem.get("sell").getAsInt();
                     }
