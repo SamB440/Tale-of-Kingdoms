@@ -26,7 +26,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CoinListener extends Listener {
@@ -52,6 +54,16 @@ public class CoinListener extends Listener {
                 if (entity instanceof PlayerEntity) {
                     int subtract = (instance.getCoins(entity.getUuid()) / 20);
                     instance.setCoins(entity.getUuid(), instance.getCoins(entity.getUuid()) - subtract);
+                    return;
+                }
+
+                if (entity instanceof HunterEntity) {
+                    for (UUID playerUuid : instance.getHunterUUIDs().keySet()) {
+                        final List<UUID> hunterUuids = instance.getHunterUUIDs().get(playerUuid);
+                        hunterUuids.remove(entity.getUuid());
+                        instance.getHunterUUIDs().put(playerUuid, hunterUuids);
+                        TaleOfKingdoms.LOGGER.info("Hunter " + entity.getUuid() + " died and was removed");
+                    }
                     return;
                 }
 
