@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.client.gui.entity.widget;
+package com.convallyria.taleofkingdoms.client.gui.entity.shop.widget;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;

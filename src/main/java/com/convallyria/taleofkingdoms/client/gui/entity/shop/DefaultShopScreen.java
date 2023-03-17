@@ -1,9 +1,9 @@
-package com.convallyria.taleofkingdoms.client.gui.entity.cotton.shop;
+package com.convallyria.taleofkingdoms.client.gui.entity.shop;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.widget.PageTurnWidget;
-import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopButtonWidget;
-import com.convallyria.taleofkingdoms.client.gui.entity.widget.ShopScreenInterface;
+import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.PageTurnWidget;
+import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.ShopButtonWidget;
+import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.ShopScreenInterface;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
 import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
 import com.convallyria.taleofkingdoms.client.translation.Translations;

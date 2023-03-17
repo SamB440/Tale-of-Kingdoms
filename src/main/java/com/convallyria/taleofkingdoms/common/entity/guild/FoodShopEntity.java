@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.FoodShopScreen;
+import com.convallyria.taleofkingdoms.client.gui.entity.shop.FoodShopScreen;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;

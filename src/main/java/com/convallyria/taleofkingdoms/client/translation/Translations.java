@@ -31,6 +31,8 @@ public enum Translations {
     SERVE("generic.taleofkingdoms.serve"),
     LONE_HELP("entity_type.taleofkingdoms.lone.help"),
     SHOP_CLOSE("entity_type.taleofkingdoms.shop.close"),
+    BANK_TOTAL_MONEY("menu.taleofkingdoms.banker.total_money"),
+    BANK_TOTAL_MONEY_BANK("menu.taleofkingdoms.banker.total_money_bank"),
     BANK_OPEN("entity_type.taleofkingdoms.bank.open"),
     BANK_INPUT("entity_type.taleofkingdoms.bank.input"),
     BANK_ZERO("entity_type.taleofkingdoms.bank.zero"),

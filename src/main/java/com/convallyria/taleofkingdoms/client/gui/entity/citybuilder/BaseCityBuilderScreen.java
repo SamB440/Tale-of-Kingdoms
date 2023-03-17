@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder;
+package com.convallyria.taleofkingdoms.client.gui.entity.citybuilder;
 
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.container.Containers;

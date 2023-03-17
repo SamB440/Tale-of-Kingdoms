@@ -17,6 +17,8 @@
     "menu.taleofkingdoms.blacksmith.name": "Blacksmith",
     "menu.taleofkingdoms.blacksmith.sell": "Sell Menu",
     "menu.taleofkingdoms.banker.name": "Banker",
+    "menu.taleofkingdoms.banker.total_money": "Total Money You Have: %d Gold Coins",
+    "menu.taleofkingdoms.banker.total_money_bank": "Total Money in the Bank: %d Gold Coins",
     "menu.taleofkingdoms.foodshop.name": "Foodshop",
     "menu.taleofkingdoms.continueconquest.name": "Continue Conquest",
     "menu.taleofkingdoms.startconquest.name": "Start Conquest",

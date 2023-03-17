@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderBeginGui;
-import com.convallyria.taleofkingdoms.client.gui.entity.cotton.citybuilder.CityBuilderTierOneGui;
+import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.CityBuilderBeginGui;
+import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.CityBuilderTierOneGui;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
