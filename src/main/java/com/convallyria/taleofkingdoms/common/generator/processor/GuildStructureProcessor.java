@@ -60,14 +60,15 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             Vec3d spawnPos = currentBlockInfo.pos.toCenterPos();
             try {
+                //TODO: replace with registry lookup
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
                 if (type == null) return air;
                 if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
-                        && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER)) {
+                        && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER || type == EntityTypes.GUILDVILLAGER)) {
                     return air;
                 }
 
-                if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER) {
+                if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER && type != EntityTypes.GUILDVILLAGER) {
                     Optional guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
                     if (type == EntityTypes.GUILDMASTER) {
                         guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
