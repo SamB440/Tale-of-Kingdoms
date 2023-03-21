@@ -28,7 +28,7 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.GUILDGUARD, identifier("textures/entity/guildmember.png"));
         register(EntityTypes.GUILDVILLAGER, identifier("textures/entity/guildmember.png"));
         register(EntityTypes.GUILDARCHER,
-                identifier("textures/entity/guildarcher/guildarcherone.png"),
+                /*identifier("textures/entity/guildarcher/guildarcherone.png"),*/
                 identifier("textures/entity/guildarcher/guildarchertwo.png")
                 /*identifier("textures/entity/guildarcher/guildarcherthree.png")*/);
         register(EntityTypes.BANKER, identifier("textures/entity/updated_textures/banker.png"));
