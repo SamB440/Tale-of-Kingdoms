@@ -2,13 +2,16 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
@@ -41,11 +44,13 @@ public class GatherResourcesPassivelyGoal extends Goal {
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 for (PlayerKingdom kingdom : instance.getKingdoms()) {
                     if (kingdom.isInKingdom(mob.getBlockPos())) {
-                        kingdom.getKingdomEntity(mob.world, EntityTypes.QUARRY_FOREMAN).ifPresent(quarryForeman -> {
+                        final EntityType<? extends ForemanEntity> type = mob instanceof QuarryWorkerEntity ? EntityTypes.QUARRY_FOREMAN : EntityTypes.LUMBER_FOREMAN;
+                        kingdom.getKingdomEntity(mob.world, type).ifPresent(quarryForeman -> {
                             quarryForeman.getInventory().addStack(new ItemStack(Items.COBBLESTONE, 1));
                             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
                                 updateClient(mob, quarryForeman);
                             }
+                            //todo check server compat
                         });
                     }
                 }
@@ -54,8 +59,8 @@ public class GatherResourcesPassivelyGoal extends Goal {
     }
 
     @Environment(EnvType.CLIENT)
-    private void updateClient(MobEntity serverQuarryWorker, QuarryForemanEntity serverQuarryForeman) {
-        final Entity quarryForemanById = MinecraftClient.getInstance().player.world.getEntityById(serverQuarryForeman.getId());
+    private void updateClient(MobEntity serverQuarryWorker, ForemanEntity foreman) {
+        final Entity quarryForemanById = MinecraftClient.getInstance().player.world.getEntityById(foreman.getId());
         if (!(quarryForemanById instanceof QuarryForemanEntity quarryForemanEntity)) return;
         quarryForemanEntity.getInventory().addStack(new ItemStack(Items.COBBLESTONE, 1));
     }

@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.entity.kingdom;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.ForemanScreen;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
@@ -47,6 +48,7 @@ public abstract class ForemanEntity extends TOKEntity implements InventoryOwner 
 
     @Environment(EnvType.CLIENT)
     public void openScreen(PlayerEntity player, ConquestInstance instance) {
+        Translations.FOREMAN_NEED_RESOURCES.send(player);
         MinecraftClient.getInstance().setScreen(new ForemanScreen(player, this, instance));
     }
 

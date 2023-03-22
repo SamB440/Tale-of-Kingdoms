@@ -15,6 +15,10 @@ public final class ShopPage {
         this.buttonWidgets = new ArrayList<>();
     }
 
+    public List<ShopButtonWidget> getItems() {
+        return buttonWidgets;
+    }
+
     public int getPage() {
         return page;
     }

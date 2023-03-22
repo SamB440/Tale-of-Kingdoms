@@ -65,7 +65,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 MinecraftClient.getInstance().currentScreen.close();
                 final IntegratedServer server = MinecraftClient.getInstance().getServer();
                 final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
-                BlockPos pos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 0, 85));
+                BlockPos pos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 25, 85));
                 final PlayerKingdom playerKingdom = new PlayerKingdom(pos);
                 instance.addKingdom(player.getUuid(), playerKingdom);
 

@@ -19,9 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerKingdomStructureProcessor extends StructureProcessor {
 
     public static final PlayerKingdomStructureProcessor INSTANCE = new PlayerKingdomStructureProcessor();
-    public static final Codec<PlayerKingdomStructureProcessor> CODEC = Codec.unit(() -> {
-        return INSTANCE;
-    });
+    public static final Codec<PlayerKingdomStructureProcessor> CODEC = Codec.unit(() -> INSTANCE);
 
     private final PlayerKingdom kingdom;
     private final ServerPlayerEntity player;
