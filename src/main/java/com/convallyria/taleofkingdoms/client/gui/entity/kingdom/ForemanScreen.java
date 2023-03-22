@@ -1,12 +1,12 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.kingdom;
 
+import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarWidget;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
@@ -20,7 +20,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.NotNull;
 
 public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
@@ -28,7 +27,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
     private final PlayerEntity player;
     private final ForemanEntity entity;
     private final ConquestInstance instance;
-    private LabelComponent cobbleLabel;
+    private BarWidget resourcesBar;
 
     public ForemanScreen(PlayerEntity player, ForemanEntity entity, ConquestInstance instance) {
         this.player = player;
@@ -54,17 +53,18 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                     .positioning(Positioning.relative(50, 15))
         );
 
-        rootComponent.child(
-            Components.label(Text.literal("Resources")).color(Color.ofDye(DyeColor.GRAY))
-                    .positioning(Positioning.absolute(this.width / 2 - 10, this.height / 2 - 8))
-        );
-
         final int cobbleCount = entity.getInventory().count(Items.COBBLESTONE);
+        final float cobblePercent = cobbleCount * (100f / 1280f);
+
         rootComponent.child(
-            this.cobbleLabel = (LabelComponent) Components.label(Text.literal(cobbleCount + " / 1280")).color(Color.ofDye(DyeColor.GRAY))
-                    .positioning(Positioning.absolute(this.width / 2 - 12, this.height / 2))
+                Components.label(Text.literal("Resources"))
+                        .positioning(Positioning.relative(50, 40))
         );
 
+        rootComponent.child(this.resourcesBar = (BarWidget) new BarWidget(100, 12, cobblePercent / 100)
+                .positioning(Positioning.relative(50, 45))
+                .tooltip(Text.literal(cobbleCount + " / 1280")));
+        
         rootComponent.child(
             Components.button(Text.literal("Collect 64"), c -> {
                 final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(Items.COBBLESTONE, 64));
@@ -72,8 +72,8 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                 player.getInventory().insertStack(entity.getInventory().removeStack(slotWithStack));
                 update();
             })
-            .sizing(Sizing.fixed(120), Sizing.fixed(30))
-            .positioning(Positioning.absolute(this.width / 2 - 60, this.height / 2 + 35))
+            .sizing(Sizing.fixed(100), Sizing.fixed(20))
+            .positioning(Positioning.relative(50, 65))
         );
 
         rootComponent.child(
@@ -84,8 +84,8 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                 update();
             })
             .tooltip(Text.literal("Buying a worker costs 1500 gold."))
-            .sizing(Sizing.fixed(120), Sizing.fixed(30))
-            .positioning(Positioning.absolute(this.width / 2 - 60, this.height / 2 + 65))
+            .sizing(Sizing.fixed(100), Sizing.fixed(20))
+            .positioning(Positioning.relative(50, 75))
         );
 
         rootComponent.child(
@@ -98,6 +98,8 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
     private void update() {
         final int cobbleCount = entity.getInventory().count(Items.COBBLESTONE);
-        cobbleLabel.text(Text.literal(cobbleCount + " / 1280"));
+        final float cobblePercent = cobbleCount * (100f / 1280f);
+        resourcesBar.setBarProgress(cobblePercent / 100);
+        resourcesBar.tooltip(Text.literal(cobbleCount + " / 1280"));
     }
 }
