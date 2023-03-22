@@ -22,6 +22,7 @@ import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
@@ -32,6 +33,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
     private final ConquestInstance instance;
 
     public ConfirmBuildKingdomGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
+        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_confirm_build_kingdom_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
