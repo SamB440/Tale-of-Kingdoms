@@ -15,6 +15,10 @@ public class BarWidget extends ButtonWidget {
     private final boolean border;
     private BarColour colour;
 
+    public BarWidget(int width, int height, float progress) {
+        this(0, 0, width, height, progress);
+    }
+
     public BarWidget(int x, int y, int width, int height, float progress) {
         super(x, y, width, height, Text.empty(), (w) -> {}, (n) -> null);
         if (progress >= 0.0F && progress <= 1.0F) {
