@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.citybuilder;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarWidget;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
@@ -11,16 +12,11 @@ import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
-import io.wispforest.owo.ui.component.LabelComponent;
-import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Component;
-import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
-import io.wispforest.owo.ui.core.Surface;
-import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -43,11 +39,13 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
     private final CityBuilderEntity entity;
     private final ConquestInstance instance;
     private ButtonComponent fixWholeKingdomButton;
-    private LabelComponent oakWoodLabel, cobblestoneLabel;
+    private BarWidget woodBar, stoneBar;
+//    private LabelComponent oakWoodLabel, cobblestoneLabel;
 
     private final Map<BuildCosts, ButtonComponent> buildButtons = new HashMap<>(BuildCosts.values().length);
 
     public CityBuilderTierOneGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
+        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_tier_one_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -59,23 +57,19 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
         fixWholeKingdomButton.active(cobblestoneCount.get() == 320 && oakWoodCount.get() == 320);
 
-        oakWoodLabel.text(Text.literal((oakWoodCount) + " / 320 oak wood"));
-        cobblestoneLabel.text(Text.literal((cobblestoneCount) + " / 320 cobblestone"));
+        final float oakWoodPercent = oakWoodCount.get() * (100f / 320f);
+        final float cobblestonePercent = cobblestoneCount.get() * (100f / 320f);
+        woodBar.setBarProgress(oakWoodPercent / 100);
+        woodBar.tooltip(Text.literal(oakWoodCount.get() + " / 320"));
+        stoneBar.setBarProgress(cobblestonePercent / 100);
+        stoneBar.tooltip(Text.literal(cobblestoneCount.get() + " / 320"));
 
         buildButtons.forEach((build, button) -> button.active(entity.canAffordBuild(build)));
     }
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER);
-
-        final FlowLayout inner = rootComponent.child(Containers.horizontalFlow(Sizing.fixed(400), Sizing.fixed(256)));
-
-        // u and v is the position in the texture
-        inner.child(Components.texture(BACKGROUND, 400, 256, 400, 256, 400, 256));
+        final FlowLayout inner = rootComponent.childById(FlowLayout.class, "inner");
 
         final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
 
@@ -126,14 +120,24 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         );
 
         inner.child(
-                this.oakWoodLabel = (LabelComponent) Components.label(Text.literal(oakWoodCount + " / 320 oak wood"))
-                        .positioning(Positioning.relative(80, 40))
+            Components.label(Text.literal("Wood Amount"))
+                    .positioning(Positioning.relative(76, 40))
         );
 
+        final float oakWoodPercent = oakWoodCount.get() * (100f / 320f);
+        inner.child(this.woodBar = (BarWidget) new BarWidget(0, 0, 100, 12, oakWoodPercent / 100)
+                .positioning(Positioning.relative(80, 45))
+                .tooltip(Text.literal(oakWoodCount.get() + " / 320")));
+
         inner.child(
-                this.cobblestoneLabel = (LabelComponent) Components.label(Text.literal(cobblestoneCount + " / 320 cobblestone"))
-                        .positioning(Positioning.relative(80, 45))
+                Components.label(Text.literal("Stone Amount"))
+                        .positioning(Positioning.relative(76, 53))
         );
+
+        final float cobblestonePercent = cobblestoneCount.get() * (100f / 320f);
+        inner.child(this.stoneBar = (BarWidget) new BarWidget(0, 0, 100, 12, cobblestonePercent / 100)
+                .positioning(Positioning.relative(80, 57))
+                .tooltip(Text.literal(cobblestoneCount.get() + " / 320")));
 
         inner.child(
             this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
@@ -168,14 +172,14 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         // Actually starts at 70, first has addition of +20
         int currentY = 15;
-        int currentX = 15;
+        int currentX = 10;
         final int maxPerRow = 7;
         int currentRow = 0;
         for (BuildCosts build : BuildCosts.values()) {
             if (currentRow >= maxPerRow) {
                 currentRow = 0;
                 currentY = 15;
-                currentX += 30;
+                currentX += 35;
             }
 
             //todo: small houses / large houses require special changes
@@ -190,6 +194,8 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 kingdom.addBuilt(build.getKingdomPOI());
                 TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
+                entity.getInventory().removeItem(Items.OAK_LOG, build.getWood());
+                entity.getInventory().removeItem(Items.COBBLESTONE, build.getStone());
             }).active(canAffordBuild)
                     .tooltip(List.of(
                         Text.literal(pluralText).append(build.getDisplayName()).append(Text.literal(" costs:")),

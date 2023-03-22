@@ -1,0 +1,33 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.19/owo-ui.xsd">
+    <components>
+        <flow-layout direction="horizontal">
+            <children>
+                <flow-layout id="inner" direction="horizontal">
+                    <children>
+                        <texture texture="taleofkingdoms:textures/gui/menu.png" u="0" v="0" region-width="400"
+                                 region-height="256" texture-width="400" texture-height="256"/>
+
+                    </children>
+
+                    <sizing>
+                        <horizontal method="fixed">400</horizontal>
+                        <vertical method="fixed">256</vertical>
+                    </sizing>
+                </flow-layout>
+
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <sizing>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>

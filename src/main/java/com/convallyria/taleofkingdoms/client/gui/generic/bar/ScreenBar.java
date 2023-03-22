@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.client.gui.generic;
+package com.convallyria.taleofkingdoms.client.gui.generic.bar;
 
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -9,8 +9,8 @@ import net.minecraft.client.util.math.MatrixStack;
 public class ScreenBar extends ScreenTOK {
 
     private final int xPosition;
-    private final int borderColor = -10592674;
     private final int yPosition;
+    private final int borderColor = -10592674;
     private final int width;
     private final int height;
     private float barPosition;
@@ -66,20 +66,4 @@ public class ScreenBar extends ScreenTOK {
 
     @Override
     public boolean mouseClicked(double i, double j, int a) { return (i >= this.xPosition && j >= this.yPosition && i < this.xPosition + this.width && j < this.yPosition + this.height); }
-
-    public enum BarColour {
-        RED(-2553077),
-        GREEN(-16298223),
-        BLUE(-15000608);
-
-        private final int colour;
-
-        BarColour(int colour) {
-            this.colour = colour;
-        }
-
-        public int getColour() {
-            return colour;
-        }
-    }
 }

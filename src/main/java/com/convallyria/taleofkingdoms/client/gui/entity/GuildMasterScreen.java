@@ -3,7 +3,8 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
-import com.convallyria.taleofkingdoms.client.gui.generic.ScreenBar;
+import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarColour;
+import com.convallyria.taleofkingdoms.client.gui.generic.bar.ScreenBar;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
@@ -135,7 +136,7 @@ public class GuildMasterScreen extends ScreenTOK {
             this.close();
         }).dimensions(this.width / 2 - 75, this.height / 2 + 46, 150, 20).build());
 
-        this.worthness = new ScreenBar(this.width / 2 - 65 , this.height / 2 + 83, 125, 12, 1.0F, ScreenBar.BarColour.RED);
+        this.worthness = new ScreenBar(this.width / 2 - 65 , this.height / 2 + 83, 125, 12, 1.0F, BarColour.RED);
         this.worthness.setBar(instance.getWorthiness(playerUuid) / 1500.0F);
     }
 
