@@ -45,10 +45,10 @@ public class GatherResourcesPassivelyGoal extends Goal {
                 for (PlayerKingdom kingdom : instance.getKingdoms()) {
                     if (kingdom.isInKingdom(mob.getBlockPos())) {
                         final EntityType<? extends ForemanEntity> type = mob instanceof QuarryWorkerEntity ? EntityTypes.QUARRY_FOREMAN : EntityTypes.LUMBER_FOREMAN;
-                        kingdom.getKingdomEntity(mob.world, type).ifPresent(quarryForeman -> {
-                            quarryForeman.getInventory().addStack(new ItemStack(Items.COBBLESTONE, 1));
+                        kingdom.getKingdomEntity(mob.world, type).ifPresent(foreman -> {
+                            foreman.getInventory().addStack(new ItemStack(mob instanceof QuarryWorkerEntity ? Items.COBBLESTONE : Items.OAK_LOG, 1));
                             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                                updateClient(mob, quarryForeman);
+                                updateClient(mob, foreman);
                             }
                             //todo check server compat
                         });
