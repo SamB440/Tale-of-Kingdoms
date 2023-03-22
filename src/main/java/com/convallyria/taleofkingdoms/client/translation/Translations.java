@@ -4,6 +4,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 
 public enum Translations {
+    FOREMAN_NEED_RESOURCES("entity.foreman.need_resources"),
+    FOREMAN_COLLECT_RESOURCES_EMPTY("entity.foreman.collect_resources_empty"),
+    FOREMAN_BUY_WORKER("entity.foreman.buy_worker"),
     FARMER_TAKE_BREAD("entity_type.taleofkingdoms.farmer.take_bread"),
     FARMER_GOT_BREAD("entity_type.taleofkingdoms.farmer.got_bread"),
     GUILDMASTER_CONTRACT_SIGN("entity_type.taleofkingdoms.guildmaster.contract.sign"),

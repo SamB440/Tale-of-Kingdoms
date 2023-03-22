@@ -901,6 +901,11 @@
       "item": "Feather",
       "cost": 1,
       "sell": 1
+    },
+    {
+      "item": "Diamond",
+      "cost": 2000,
+      "sell": 1500
     }
   ]
 }

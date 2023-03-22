@@ -22,6 +22,11 @@
     "menu.taleofkingdoms.foodshop.name": "Foodshop",
     "menu.taleofkingdoms.continueconquest.name": "Continue Conquest",
     "menu.taleofkingdoms.startconquest.name": "Start Conquest",
+
+    "entity.foreman.need_resources": "Foreman: Do you need resources sir?",
+    "entity.foreman.collect_resources_empty": "Foreman: Come back again later when we have some resources!",
+    "entity.foreman.buy_worker": "Foreman: They will begin work immediately!",
+
     "entity_type.taleofkingdoms.farmer.take_bread": "Farmer: Here, have some bread!",
     "entity_type.taleofkingdoms.farmer.got_bread": "Farmer: You have your bread for now!",
     "entity_type.taleofkingdoms.guildmaster.contract.sign": "Guild Master: You are now one of us, my friend. Slay monsters and you will soon be worthy of your title.",

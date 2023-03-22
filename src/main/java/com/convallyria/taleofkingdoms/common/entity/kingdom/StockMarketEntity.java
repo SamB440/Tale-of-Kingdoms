@@ -61,6 +61,7 @@ public class StockMarketEntity extends ShopEntity {
                 //todo: figure out a better formula
                 shopItem.setModifier(ThreadLocalRandom.current().nextDouble(0.75, 3));
             }
+            instance.setLastStockMarketUpdate(uuid, day);
         }
 
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;

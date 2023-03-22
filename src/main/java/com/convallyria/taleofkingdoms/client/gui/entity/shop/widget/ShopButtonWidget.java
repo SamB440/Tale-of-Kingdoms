@@ -29,6 +29,10 @@ public class ShopButtonWidget extends ButtonWidget {
         this.height = 20;
     }
 
+    public ShopItem getShopItem() {
+        return shopItem;
+    }
+
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Identifier identifier = new Identifier(TaleOfKingdoms.MODID,"textures/gui/gui.png");

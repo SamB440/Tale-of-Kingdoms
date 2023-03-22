@@ -1,7 +1,15 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.kingdom;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarWidget;
+import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.WorkerEntity;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
@@ -16,10 +24,14 @@ import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.core.VerticalAlignment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
@@ -34,6 +46,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         this.entity = entity;
         this.instance = instance;
     }
+
     @Override
     protected @NotNull OwoUIAdapter<FlowLayout> createAdapter() {
         return OwoUIAdapter.create(this, Containers::horizontalFlow);
@@ -64,11 +77,16 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(this.resourcesBar = (BarWidget) new BarWidget(100, 12, cobblePercent / 100)
                 .positioning(Positioning.relative(50, 45))
                 .tooltip(Text.literal(cobbleCount + " / 1280")));
-        
+
         rootComponent.child(
             Components.button(Text.literal("Collect 64"), c -> {
+                //todo: send server packet
                 final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(Items.COBBLESTONE, 64));
-                if (slotWithStack == -1) return;
+                if (slotWithStack == -1) {
+                    Translations.FOREMAN_COLLECT_RESOURCES_EMPTY.send(player);
+                    return;
+                }
+
                 player.getInventory().insertStack(entity.getInventory().removeStack(slotWithStack));
                 update();
             })
@@ -78,10 +96,22 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
         rootComponent.child(
             Components.button(Text.literal("Buy Worker."), c -> {
-                final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(Items.COBBLESTONE, 64));
-                if (slotWithStack == -1) return;
-                player.getInventory().insertStack(entity.getInventory().removeStack(slotWithStack));
-                update();
+                //todo: send server packet
+                final int coins = instance.getCoins(player.getUuid());
+                if (coins < 1500) return;
+
+                final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+                if (kingdom == null) return;
+
+                instance.setCoins(player.getUuid(), coins - 1500);
+                EntityType<? extends WorkerEntity> type = entity instanceof QuarryForemanEntity ? EntityTypes.QUARRY_WORKER : EntityTypes.LUMBER_WORKER;
+                BlockPos poi = entity instanceof QuarryForemanEntity ? kingdom.getPOIPos(KingdomPOI.QUARRY_WORKER_SPAWN) : kingdom.getPOIPos(KingdomPOI.LUMBER_WORKER_SPAWN);
+                TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                    ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                    if (serverPlayerEntity == null) return;
+                    EntityUtils.spawnEntity(type, serverPlayerEntity, poi);
+                    Translations.FOREMAN_BUY_WORKER.send(player);
+                });
             })
             .tooltip(Text.literal("Buying a worker costs 1500 gold."))
             .sizing(Sizing.fixed(100), Sizing.fixed(20))

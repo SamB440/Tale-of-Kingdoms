@@ -29,8 +29,8 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.GUILDVILLAGER, identifier("textures/entity/guildmember.png"));
         register(EntityTypes.GUILDARCHER,
                 /*identifier("textures/entity/guildarcher/guildarcherone.png"),*/
-                identifier("textures/entity/guildarcher/guildarchertwo.png")
-                /*identifier("textures/entity/guildarcher/guildarcherthree.png")*/);
+                identifier("textures/entity/guildarcher/guildarchertwo.png"),
+                identifier("textures/entity/guildarcher/guildarcherthree.png"));
         register(EntityTypes.BANKER, identifier("textures/entity/updated_textures/banker.png"));
         register(EntityTypes.LONE, identifier("textures/entity/lone.png"));
         register(EntityTypes.FOODSHOP, identifier("textures/entity/updated_textures/foodshop.png"));
@@ -53,7 +53,9 @@ public record RenderSetup(TaleOfKingdoms mod) {
         // Player's kingdom entities
         register(EntityTypes.ITEM_SHOP, identifier("textures/entity/updated_textures/shopkeeper.png"));
         register(EntityTypes.KINGDOM_VILLAGER,
+                // So much for 50/50 gender distribution.
                 identifier("textures/entity/updated_textures/woman1.png"),
+                identifier("textures/entity/updated_textures/woman2.png"),
                 identifier("textures/entity/updated_textures/manone.png"),
                 identifier("textures/entity/updated_textures/mantwo.png"),
                 identifier("textures/entity/updated_textures/manthree.png"),
@@ -64,6 +66,7 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.QUARRY_FOREMAN, identifier("textures/entity/updated_textures/foremanquarry.png"));
         register(EntityTypes.LUMBER_FOREMAN, identifier("textures/entity/updated_textures/foremanlumber.png"));
         register(EntityTypes.QUARRY_WORKER, identifier("textures/entity/updated_textures/worker.png"));
+        register(EntityTypes.LUMBER_WORKER, identifier("textures/entity/updated_textures/worker.png"));
     }
 
     private void register(EntityType<? extends MobEntity> type, Identifier... skins) {

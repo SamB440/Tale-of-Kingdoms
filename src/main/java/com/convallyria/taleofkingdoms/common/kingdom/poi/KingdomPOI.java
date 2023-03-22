@@ -2,8 +2,10 @@ package com.convallyria.taleofkingdoms.common.kingdom.poi;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
+import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructureTemplate;
 
@@ -18,14 +20,18 @@ public enum KingdomPOI {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            EntityUtils.spawnEntity(EntityTypes.BLACKSMITH, player, info.pos);
+            if (!hasEntity(kingdom, player, EntityTypes.BLACKSMITH)) {
+                EntityUtils.spawnEntity(EntityTypes.BLACKSMITH, player, info.pos);
+            }
         }
     },
     TIER_ONE_ITEM_SHOP("TierOneItemShop") {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            EntityUtils.spawnEntity(EntityTypes.ITEM_SHOP, player, info.pos);
+            if (!hasEntity(kingdom, player, EntityTypes.ITEM_SHOP)) {
+                EntityUtils.spawnEntity(EntityTypes.ITEM_SHOP, player, info.pos);
+            }
         }
     },
 
@@ -46,7 +52,9 @@ public enum KingdomPOI {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos);
+            if (!hasEntity(kingdom, player, EntityTypes.STOCK_MARKET)) {
+                EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos);
+            }
         }
     },
 
@@ -54,7 +62,9 @@ public enum KingdomPOI {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos);
+            if (!hasEntity(kingdom, player, EntityTypes.QUARRY_FOREMAN)) {
+                EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos);
+            }
         }
     },
 
@@ -62,9 +72,14 @@ public enum KingdomPOI {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos);
+            if (!hasEntity(kingdom, player, EntityTypes.LUMBER_FOREMAN)) {
+                EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos);
+            }
         }
-    };
+    },
+
+    QUARRY_WORKER_SPAWN("QuarryWorker"),
+    LUMBER_WORKER_SPAWN("lumberworker");
 
     private final String poiName;
 
@@ -75,6 +90,10 @@ public enum KingdomPOI {
     public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
         kingdom.addPOI(this, info.pos);
         TaleOfKingdoms.LOGGER.info("Found '" + poiName + "' POI @ " + info.pos);
+    }
+
+    public boolean hasEntity(PlayerKingdom kingdom, ServerPlayerEntity player, EntityType<? extends TOKEntity> entity) {
+        return kingdom.getKingdomEntity(player.world, entity).isPresent();
     }
 
     public String getPoiName() {

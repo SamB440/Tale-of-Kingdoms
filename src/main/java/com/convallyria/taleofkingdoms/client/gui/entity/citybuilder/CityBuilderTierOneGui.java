@@ -141,6 +141,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         inner.child(
             this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                //todo send server packet
                 if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320)
                     return;
                 final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
@@ -149,7 +150,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                     final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
                     final Schematic schematic = buildCost.getSchematic();
                     if (kingdom.hasBuilt(kingdomPOI)) {
-                        TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI));
+                        TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI), buildCost.getSchematicRotation());
                     }
                 }
                 entity.getInventory().clear();

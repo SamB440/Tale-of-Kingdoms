@@ -81,17 +81,33 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
                 .positioning(Positioning.relative(50, 10))
         );
 
+        this.buildShopPages(inner);
+
+        inner.childById(ButtonComponent.class, "sell-button").onPress(button -> openSellGui(entity, player));
+
+        //todo page turn?
+
+        inner.childById(ButtonComponent.class, "exit-button").onPress(button -> this.close());
+    }
+
+    protected void buildShopPages(FlowLayout inner) {
         //todo: dynamically generate page turn widgets per-page? how?
         // Unsure how we can get custom widgets to work with owo dynamic ui
         inner.child(new PageTurnWidget(false, button -> {
             shop.previousPage();
-        }, true).positioning(Positioning.relative(3, 18)));
+            this.changePage(shop.getCurrentPage());
+        }, true)
+                .positioning(Positioning.relative(3, 18)))
+                .id("page-left");
 
         inner.child(new PageTurnWidget(true, button -> {
             shop.nextPage();
-        }, true).positioning(Positioning.relative(70, 18)));
+            this.changePage(shop.getCurrentPage());
+        }, true)
+                .positioning(Positioning.relative(70, 18)))
+                .id("page-right");
 
-        final int maxPerSide = 18;
+        final int maxPerSide = getMaxPerSide();
         int page = 0;
         int currentIteration = 0;
         int currentY = 24;
@@ -127,13 +143,17 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
 
         this.shop = new Shop(pages);
         pages.get(0).show();
-
-        inner.childById(ButtonComponent.class, "sell-button").onPress(button -> openSellGui(entity, player));
-
-        //todo page turn?
-
-        inner.childById(ButtonComponent.class, "exit-button").onPress(button -> this.close());
     }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    protected int getMaxPerSide() {
+        return 18;
+    }
+
+    protected void changePage(int newPage) {}
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
@@ -142,7 +162,7 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
         if (this.selectedItem != null) {
             StringBuilder text = new StringBuilder("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins");
             if (this.selectedItem.getModifier() != 1) {
-                text.append(" x ").append(String.format("%.2f", this.selectedItem.getModifier())).append(" modifier");
+                text.append(" (x ").append(String.format("%.2f", this.selectedItem.getModifier())).append(" modifier)");
             }
             this.selectedItemLabel.text(Text.literal(text.toString()));
         }

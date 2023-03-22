@@ -18,6 +18,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberWorkerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
@@ -174,6 +175,12 @@ public class EntityTypes {
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "quarry_worker"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, QuarryWorkerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<LumberWorkerEntity> LUMBER_WORKER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "lumber_worker"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, LumberWorkerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 
     public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP);

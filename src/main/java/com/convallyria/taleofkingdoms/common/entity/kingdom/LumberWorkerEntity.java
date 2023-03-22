@@ -8,10 +8,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public class QuarryWorkerEntity extends WorkerEntity {
+public class LumberWorkerEntity extends WorkerEntity {
 
-    public QuarryWorkerEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public LumberWorkerEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_PICKAXE));
+        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_AXE));
     }
 }
