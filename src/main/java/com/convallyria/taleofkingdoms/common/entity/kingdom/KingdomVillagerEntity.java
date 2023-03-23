@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundKingdomGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -39,7 +40,8 @@ public class KingdomVillagerEntity extends TOKEntity {
         if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-        if (instance.getKingdom(player.getUuid()) != null) {
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+        if (guildPlayer.getKingdom() != null) {
             //todo: convert to worker if items are given
             Translations.VILLAGER_ASK_TO_WORK.send(player);
         }

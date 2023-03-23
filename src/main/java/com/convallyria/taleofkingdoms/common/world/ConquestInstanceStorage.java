@@ -16,10 +16,6 @@ public class ConquestInstanceStorage {
     public void addConquest(String worldName, ConquestInstance instance, boolean current) {
         this.conquests.put(worldName, instance);
         if (current) this.currentWorldName = worldName;
-
-        if (instance.isOld()) {
-            instance.setVersion(ConquestInstance.CURRENT_VERSION);
-        }
     }
 
     public void removeConquest(String worldName) {

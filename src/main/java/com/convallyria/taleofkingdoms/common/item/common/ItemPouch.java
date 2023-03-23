@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.item.common;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -32,13 +33,14 @@ public class ItemPouch extends Item {
         final UUID uuid = user.getUuid();
         if (!world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
+        final GuildPlayer guildPlayer = instance.getPlayer(user);
         ItemStack itemStack = user.getStackInHand(hand);
         if (itemStack.hasNbt()) {
             NbtCompound compoundTag = itemStack.getNbt();
             if (compoundTag.contains("coins")) {
                 int coins = compoundTag.getInt("coins");
                 if (coins == maxCoins) {
-                    instance.setCoins(uuid, instance.getCoins(uuid) + coins);
+                    guildPlayer.setCoins(guildPlayer.getCoins() + coins);
                     compoundTag.remove("coins");
                     user.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.MASTER, 1f, 1f);
                     itemStack.setNbt(compoundTag);
@@ -47,24 +49,24 @@ public class ItemPouch extends Item {
             }
         }
 
-        if (instance.getCoins(uuid) >= 100) {
+        if (guildPlayer.getCoins() >= 100) {
             if (!itemStack.hasNbt()) {
                 NbtCompound compoundTag = new NbtCompound();
                 compoundTag.putInt("coins", 100);
-                instance.setCoins(uuid, instance.getCoins(uuid) - 100);
+                guildPlayer.setCoins(guildPlayer.getCoins() - 100);
                 itemStack.setNbt(compoundTag);
                 user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
             } else {
                 NbtCompound compoundTag = itemStack.getNbt();
                 if (!compoundTag.contains("coins")) {
                     compoundTag.putInt("coins", 100);
-                    instance.setCoins(uuid, instance.getCoins(uuid) - 100);
+                    guildPlayer.setCoins(guildPlayer.getCoins() - 100);
                     user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
                 } else {
                     int coins = compoundTag.getInt("coins");
                     if (coins <= (maxCoins - 100)) {
                         compoundTag.putInt("coins", coins + 100);
-                        instance.setCoins(uuid, instance.getCoins(uuid) - 100);
+                        guildPlayer.setCoins(guildPlayer.getCoins() - 100);
                         user.playSound(SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.MASTER, 1f, 1f);
                     }
                 }

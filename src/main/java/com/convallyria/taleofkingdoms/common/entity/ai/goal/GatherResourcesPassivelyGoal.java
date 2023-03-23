@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
@@ -42,17 +43,18 @@ public class GatherResourcesPassivelyGoal extends Goal {
         mob.swingHand(mob.getActiveHand(), true); //todo: this doesn't work and i don't know why
         if (ThreadLocalRandom.current().nextInt(100) > 98) {
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                for (PlayerKingdom kingdom : instance.getKingdoms()) {
-                    if (kingdom.isInKingdom(mob.getBlockPos())) {
-                        final EntityType<? extends ForemanEntity> type = mob instanceof QuarryWorkerEntity ? EntityTypes.QUARRY_FOREMAN : EntityTypes.LUMBER_FOREMAN;
-                        kingdom.getKingdomEntity(mob.world, type).ifPresent(foreman -> {
-                            foreman.getInventory().addStack(new ItemStack(mob instanceof QuarryWorkerEntity ? Items.COBBLESTONE : Items.OAK_LOG, 1));
-                            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                                updateClient(mob, foreman);
-                            }
-                            //todo check server compat
-                        });
-                    }
+                for (GuildPlayer guildPlayer : instance.getGuildPlayers().values()) {
+                    final PlayerKingdom kingdom = guildPlayer.getKingdom();
+                    if (kingdom == null || !kingdom.isInKingdom(mob.getBlockPos())) continue;
+                    final EntityType<? extends ForemanEntity> type = mob instanceof QuarryWorkerEntity ? EntityTypes.QUARRY_FOREMAN : EntityTypes.LUMBER_FOREMAN;
+                    kingdom.getKingdomEntity(mob.world, type).ifPresent(foreman -> {
+                        foreman.getInventory().addStack(new ItemStack(mob instanceof QuarryWorkerEntity ? Items.COBBLESTONE : Items.OAK_LOG, 1));
+                        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+                            updateClient(mob, foreman);
+                        }
+                        //todo check server compat
+                    });
+                    break;
                 }
             });
         }

@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -23,20 +24,19 @@ import java.util.Optional;
 public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandler {
 
     public IncomingToggleSellGuiPacketHandler() {
-        super(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID);
+        super(Packets.TOGGLE_SELL_GUI_PACKET_ID);
     }
 
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         boolean close = attachedData.readBoolean();
         ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (!instance.isInGuild(player)) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
+                    reject(player, "Not in guild.");
                     return;
                 }
 
@@ -49,7 +49,7 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
                 }
 
                 if (entity.isEmpty()) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop entity not present in guild.");
+                    reject(player, "Shop entity not present in guild.");
                     return;
                 }
 

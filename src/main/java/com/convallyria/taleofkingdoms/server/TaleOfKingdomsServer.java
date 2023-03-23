@@ -3,9 +3,9 @@ package com.convallyria.taleofkingdoms.server;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBankerInteractPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuildKingdomPacket;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuyItemPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingHunterPacketHandler;
@@ -13,6 +13,7 @@ import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingInnkeeperPa
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingInstanceSyncPacketHandler;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.DedicatedServerModInitializer;
 
 public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
@@ -24,14 +25,16 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
     }
 
     private void registerPacketHandlers() {
-        registerHandler(new OutgoingInstanceSyncPacketHandler());
-        registerHandler(new IncomingSignContractPacketHandler());
-        registerHandler(new IncomingFixGuildPacketHandler());
-        registerHandler(new IncomingToggleSellGuiPacketHandler());
-        registerHandler(new IncomingBuyItemPacketHandler());
         registerHandler(new IncomingBankerInteractPacketHandler());
+        registerHandler(new IncomingBuildKingdomPacket());
+        registerHandler(new IncomingBuyItemPacketHandler());
+        registerHandler(new IncomingFixGuildPacketHandler());
         registerHandler(new IncomingHunterPacketHandler());
         registerHandler(new IncomingInnkeeperPacketHandler());
+        registerHandler(new IncomingSignContractPacketHandler());
+        registerHandler(new IncomingToggleSellGuiPacketHandler());
+
+        registerHandler(new OutgoingInstanceSyncPacketHandler());
     }
 
     private void registerListeners() {

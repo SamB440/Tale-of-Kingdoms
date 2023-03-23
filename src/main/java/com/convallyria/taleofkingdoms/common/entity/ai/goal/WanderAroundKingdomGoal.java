@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -42,8 +43,11 @@ public class WanderAroundKingdomGoal extends WanderAroundGuildGoal {
                     ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
                     BlockPos blockPos = new BlockPos((int) vec3d.x, (int) vec3d.y, (int) vec3d.z);
                     boolean isValid = false;
-                    for (PlayerKingdom kingdom : instance.getKingdoms()) {
-                        if (kingdom.isInKingdom(blockPos)) isValid = true;
+                    for (GuildPlayer guildPlayer : instance.getGuildPlayers().values()) {
+                        final PlayerKingdom kingdom = guildPlayer.getKingdom();
+                        if (kingdom == null || !kingdom.isInKingdom(blockPos)) continue;
+                        isValid = true;
+                        break;
                     }
 
                     if (!isValid) return false;

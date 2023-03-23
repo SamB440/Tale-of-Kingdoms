@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -22,6 +23,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -71,10 +73,11 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
     protected void build(FlowLayout rootComponent) {
         final FlowLayout inner = rootComponent.childById(FlowLayout.class, "inner");
 
-        final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+        final PlayerKingdom kingdom = guildPlayer.getKingdom();
 
         inner.child(
-            Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins")).color(Color.ofRgb(11111111))
+            Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + guildPlayer.getCoins() + " Gold Coins")).color(Color.ofRgb(11111111))
             .positioning(Positioning.relative(50, 5))
         );
 
@@ -85,16 +88,21 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         inner.child(
             Components.button(Text.literal("Give 64 wood"), c -> {
+                //todo: server packet
                 final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                    final IntegratedServer server = MinecraftClient.getInstance().getServer();
                     final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
                     if (stack != null && playerWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
-                        final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+                        final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
+
                         int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                         serverPlayer.getInventory().removeStack(slot);
                         player.getInventory().removeStack(slot);
                         oakWoodCount.addAndGet(64);
                         entity.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
+                        serverCityBuilder.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
                         update();
                     }
                 });
@@ -103,16 +111,20 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         inner.child(
             Components.button(Text.literal("Give 64 cobblestone"), c -> {
+                //todo: server packet
                 final int playerCobblestoneCount = player.getInventory().count(Items.COBBLESTONE);
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {
                     final ItemStack stack = new ItemStack(Items.COBBLESTONE, 64);
                     if (playerCobblestoneCount >= 64 && cobblestoneCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
                         final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                        final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
+
                         int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                         serverPlayer.getInventory().removeStack(slot);
                         player.getInventory().removeStack(slot);
                         cobblestoneCount.addAndGet(64);
                         entity.getInventory().addStack(stack);
+                        serverCityBuilder.getInventory().addStack(stack);
                         update();
                     }
                 });
@@ -190,6 +202,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
             final String pluralText = hasBuilt ? "Repairing " : "Building ";
 
             final Component button = Components.button(Text.literal(text).append(build.getDisplayName()), c -> {
+                //todo: send server packet
                 final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                 MinecraftClient.getInstance().currentScreen.close();
                 kingdom.addBuilt(build.getKingdomPOI());

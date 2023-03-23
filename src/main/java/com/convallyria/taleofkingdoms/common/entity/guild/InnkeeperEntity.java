@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -35,7 +36,8 @@ public class InnkeeperEntity extends TOKEntity {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
-        if (!instance.hasContract(player.getUuid())) {
+        final GuildPlayer guildPlayer = instance.getPlayer(player.getUuid());
+        if (!guildPlayer.hasSignedContract()) {
             Translations.NEED_CONTRACT.send(player);
             return ActionResult.FAIL;
         }

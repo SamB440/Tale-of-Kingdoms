@@ -23,9 +23,7 @@ import net.minecraft.util.math.Vec3i;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.SERVER)
@@ -53,7 +51,7 @@ public class GameInstanceListener extends Listener {
                         }
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            this.create(api, player, server, conquestFile);
+                            this.create(api, player, server);
                         } else {
                             if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isEmpty()) {
                                 api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
@@ -79,14 +77,11 @@ public class GameInstanceListener extends Listener {
             });
         });
 
-        PlayerLeaveCallback.EVENT.register(player -> {
-            api.executeOnDedicatedServer(() -> {
-                api.getServer().flatMap(server -> api.getConquestInstanceStorage()
-                        .getConquestInstance(server.getLevelName())).ifPresent(conquestInstance -> {
-                    conquestInstance.save(api);
-                });
+        PlayerLeaveCallback.EVENT.register(player -> api.executeOnDedicatedServer(() -> api.getServer().ifPresent(server -> {
+            api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
+                conquestInstance.save(server.getLevelName());
             });
-        });
+        })));
     }
 
     private boolean load(String worldName, TaleOfKingdomsAPI api) {
@@ -106,34 +101,23 @@ public class GameInstanceListener extends Listener {
         }
     }
 
-    private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server, File toSave) {
+    private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server) {
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
         BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 20, 0));
-        ConquestInstance instance = new ConquestInstance(server.getLevelName(), server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
-        try (Writer writer = new FileWriter(toSave)) {
-            Gson gson = api.getMod().getGson();
-            gson.toJson(instance, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ConquestInstance instance = new ConquestInstance(server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
         api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
             BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
             BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
             instance.setStart(start);
             instance.setEnd(end);
-            instance.setBankerCoins(player.getUuid(), 0);
-            instance.setCoins(player.getUuid(), 0);
-            instance.setFarmerLastBread(player.getUuid(), -1);
-            instance.setHasContract(player.getUuid(), false);
-            instance.setWorthiness(player.getUuid(), 0);
             
             TaleOfKingdoms.LOGGER.info("Summoning citizens of the realm...");
             KingdomStartCallback.EVENT.invoker().kingdomStart(player, instance); // Call kingdom start event
             instance.setLoaded(true);
             /*instance.reset(player);
             instance.sync(player);*/
-            instance.save(api);
+            instance.save(server.getLevelName());
         }).exceptionally(error -> {
             error.printStackTrace();
             return null;

@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.server.world;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,7 +15,7 @@ public class ServerConquestInstance {
 
     public static void sync(@NotNull ServerPlayerEntity player, @NotNull ConquestInstance instance) {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        PacketHandler packetHandler = api.getServerHandler(TaleOfKingdoms.INSTANCE_PACKET_ID);
-        packetHandler.handleOutgoingPacket(TaleOfKingdoms.INSTANCE_PACKET_ID, player, instance);
+        PacketHandler packetHandler = api.getServerHandler(Packets.INSTANCE_PACKET_ID);
+        packetHandler.handleOutgoingPacket(Packets.INSTANCE_PACKET_ID, player, instance);
     }
 }

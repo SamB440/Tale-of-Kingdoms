@@ -1,6 +1,9 @@
 package com.convallyria.taleofkingdoms.common.kingdom;
 
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockBox;
@@ -16,11 +19,33 @@ import java.util.Optional;
 
 public class PlayerKingdom {
 
+    public static final Codec<PlayerKingdom> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    BlockPos.CODEC.fieldOf("start").forGetter(PlayerKingdom::getStart),
+                    BlockPos.CODEC.fieldOf("end").forGetter(PlayerKingdom::getEnd),
+                    BlockPos.CODEC.fieldOf("origin").forGetter(PlayerKingdom::getOrigin),
+                    Codec.unboundedMap(new EnumCodec<>(KingdomPOI.class), BlockPos.CODEC).fieldOf("poi").forGetter(PlayerKingdom::getPoi),
+                    new EnumCodec<>(KingdomPOI.class).listOf().fieldOf("built_buildings").forGetter(PlayerKingdom::getBuiltBuildings),
+                    new EnumCodec<>(KingdomTier.class).fieldOf("tier").forGetter(PlayerKingdom::getTier),
+                    Codec.LONG.fieldOf("last_stock_market_update").forGetter(PlayerKingdom::getLastStockMarketUpdate)
+            ).apply(instance, (start, end, origin, poi, builtBuildings, tier, lastStockMarketUpdate) -> {
+                final PlayerKingdom playerKingdom = new PlayerKingdom(origin);
+                playerKingdom.setStart(start);
+                playerKingdom.setEnd(end);
+                poi.forEach(playerKingdom::addPOI);
+                builtBuildings.forEach(playerKingdom::addBuilt);
+                playerKingdom.setTier(tier);
+                playerKingdom.setLastStockMarketUpdate(lastStockMarketUpdate);
+                return playerKingdom;
+            }
+    ));
+
     private BlockPos start, end;
     private final BlockPos origin;
     private final Map<KingdomPOI, BlockPos> poi;
     private final List<KingdomPOI> builtBuildings;
     private KingdomTier tier;
+    private long lastStockMarketUpdate;
 
     public PlayerKingdom(BlockPos origin) {
         this.origin = origin;
@@ -63,6 +88,10 @@ public class PlayerKingdom {
         this.end = end;
     }
 
+    public Map<KingdomPOI, BlockPos> getPoi() {
+        return poi;
+    }
+
     public void addPOI(KingdomPOI poi, BlockPos pos) {
         this.poi.put(poi, pos);
     }
@@ -71,12 +100,24 @@ public class PlayerKingdom {
         return this.poi.get(poi);
     }
 
+    public List<KingdomPOI> getBuiltBuildings() {
+        return builtBuildings;
+    }
+
     public boolean hasBuilt(KingdomPOI poi) {
         return this.builtBuildings.contains(poi);
     }
 
     public void addBuilt(KingdomPOI poi) {
         this.builtBuildings.add(poi);
+    }
+
+    public long getLastStockMarketUpdate() {
+        return lastStockMarketUpdate;
+    }
+
+    public void setLastStockMarketUpdate(long lastStockMarketUpdate) {
+        this.lastStockMarketUpdate = lastStockMarketUpdate;
     }
 
     public boolean isInKingdom(BlockPos pos) {

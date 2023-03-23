@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.common.event.EntityPickupItemCallback;
 import com.convallyria.taleofkingdoms.common.event.ItemMergeCallback;
 import com.convallyria.taleofkingdoms.common.item.ItemHelper;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -52,16 +53,19 @@ public class CoinListener extends Listener {
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 PlayerEntity playerEntity = null;
                 if (entity instanceof PlayerEntity) {
-                    int subtract = (instance.getCoins(entity.getUuid()) / 20);
-                    instance.setCoins(entity.getUuid(), instance.getCoins(entity.getUuid()) - subtract);
+                    final GuildPlayer guildPlayer = instance.getPlayer(entity.getUuid());
+                    int subtract = (guildPlayer.getCoins() / 20);
+                    guildPlayer.setCoins(guildPlayer.getCoins() - subtract);
                     return;
                 }
 
                 if (entity instanceof HunterEntity) {
-                    for (UUID playerUuid : instance.getHunterUUIDs().keySet()) {
-                        final List<UUID> hunterUuids = instance.getHunterUUIDs().get(playerUuid);
+                    for (UUID playerUuid : instance.getGuildPlayers().keySet()) {
+                        final GuildPlayer loopPlayer = instance.getPlayer(playerUuid);
+                        final List<UUID> hunterUuids = loopPlayer.getHunters();
                         hunterUuids.remove(entity.getUuid());
-                        instance.getHunterUUIDs().put(playerUuid, hunterUuids);
+                        loopPlayer.getHunters().clear();
+                        loopPlayer.getHunters().addAll(hunterUuids);
                         TaleOfKingdoms.LOGGER.info("Hunter " + entity.getUuid() + " died and was removed");
                     }
                     return;
@@ -88,7 +92,8 @@ public class CoinListener extends Listener {
                     ItemHelper.dropCoins(entity);
 
                     if (source.getSource() instanceof PlayerEntity) {
-                        instance.addWorthiness(source.getSource().getUuid(), getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world));
+                        final GuildPlayer guildPlayer = instance.getPlayer(source.getSource().getUuid());
+                        guildPlayer.setWorthiness(guildPlayer.getWorthiness() + (getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world)));
                     }
 
                     if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {

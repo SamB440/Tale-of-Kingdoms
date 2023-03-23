@@ -12,6 +12,7 @@ import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -27,6 +28,7 @@ import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -61,27 +63,28 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
         //todo: translatable
         rootComponent.child(
-            Components.label(Text.literal("Foreman Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"))
+            Components.label(Text.literal("Foreman Menu - Total Money: " + instance.getPlayer(player).getCoins() + " Gold Coins"))
                     .color(Color.ofRgb(11111111))
                     .positioning(Positioning.relative(50, 15))
         );
 
-        final int cobbleCount = entity.getInventory().count(Items.COBBLESTONE);
-        final float cobblePercent = cobbleCount * (100f / 1280f);
+        final Item item = entity instanceof QuarryForemanEntity ? Items.COBBLESTONE : Items.OAK_LOG;
+        final int resourceCount = entity.getInventory().count(item);
+        final float resourcePercent = resourceCount * (100f / 1280f);
 
         rootComponent.child(
                 Components.label(Text.literal("Resources"))
                         .positioning(Positioning.relative(50, 40))
         );
 
-        rootComponent.child(this.resourcesBar = (BarWidget) new BarWidget(100, 12, cobblePercent / 100)
+        rootComponent.child(this.resourcesBar = (BarWidget) new BarWidget(100, 12, resourcePercent / 100)
                 .positioning(Positioning.relative(50, 45))
-                .tooltip(Text.literal(cobbleCount + " / 1280")));
+                .tooltip(Text.literal(resourceCount + " / 1280")));
 
         rootComponent.child(
             Components.button(Text.literal("Collect 64"), c -> {
                 //todo: send server packet
-                final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(Items.COBBLESTONE, 64));
+                final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(item, 64));
                 if (slotWithStack == -1) {
                     Translations.FOREMAN_COLLECT_RESOURCES_EMPTY.send(player);
                     return;
@@ -97,13 +100,14 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(
             Components.button(Text.literal("Buy Worker."), c -> {
                 //todo: send server packet
-                final int coins = instance.getCoins(player.getUuid());
+                final GuildPlayer guildPlayer = instance.getPlayer(player);
+                final int coins = guildPlayer.getCoins();
                 if (coins < 1500) return;
 
-                final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+                final PlayerKingdom kingdom = guildPlayer.getKingdom();
                 if (kingdom == null) return;
 
-                instance.setCoins(player.getUuid(), coins - 1500);
+                guildPlayer.setCoins(coins - 1500);
                 EntityType<? extends WorkerEntity> type = entity instanceof QuarryForemanEntity ? EntityTypes.QUARRY_WORKER : EntityTypes.LUMBER_WORKER;
                 BlockPos poi = entity instanceof QuarryForemanEntity ? kingdom.getPOIPos(KingdomPOI.QUARRY_WORKER_SPAWN) : kingdom.getPOIPos(KingdomPOI.LUMBER_WORKER_SPAWN);
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {

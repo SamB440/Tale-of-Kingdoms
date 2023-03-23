@@ -11,6 +11,7 @@ import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -26,6 +27,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -66,7 +68,8 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-            final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+            final GuildPlayer guildPlayer = instance.getPlayer(player);
+            final PlayerKingdom kingdom = guildPlayer.getKingdom();
             if (kingdom != null) {
                 if (!player.world.isClient()) return;
                 openScreen(player, kingdom, instance);
@@ -87,7 +90,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
                 return;
             }
 
-            if (instance.getWorthiness(player.getUuid()) >= 1500) {
+            if (guildPlayer.getWorthiness() >= 1500) {
                 if (player.world.isClient()) Translations.CITYBUILDER_BUILD.send(player);
                 this.followPlayer();
             } else {
@@ -173,6 +176,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.inventory.readNbtList(nbt.getList("Inventory", 10));
+        //TODO: sync server to client
+        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.LIST_TYPE));
     }
 }

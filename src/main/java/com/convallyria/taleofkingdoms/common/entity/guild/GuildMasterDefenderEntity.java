@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.HealPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -75,7 +76,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
         if (api != null) {
             if (api.getConquestInstanceStorage().mostRecentInstance().isPresent()) {
                 ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-                if (instance.isUnderAttack() && !instance.hasRebuilt()) {
+                if (instance.isUnderAttack()) {
                     return false;
                 }
             }
@@ -104,7 +105,8 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
             }
 
             if (instance.getReficuleAttackers().size() == 0) {
-                if (!instance.hasRebuilt()) {
+                final GuildPlayer guildPlayer = instance.getPlayer(player);
+                if (!guildPlayer.hasRebuiltGuild() && guildPlayer.getWorthiness() >= 750 && guildPlayer.getKingdom() == null) {
                     Runnable fixGuild = () -> {
                         PlayerInventory playerInventory = serverPlayerEntity.getInventory();
                         ItemStack stack = null;
@@ -120,7 +122,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                         if (stack != null) {
                             playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
                             instance.rebuild(serverPlayerEntity, api);
-                            instance.setRebuilt(true);
+                            guildPlayer.setHasRebuiltGuild(true);
                             instance.setUnderAttack(false);
                             final Entity entity = serverPlayerEntity.getWorld().getEntityById(this.getId());
                             entity.teleport(entity.getX(), entity.getY() + 100, entity.getZ());

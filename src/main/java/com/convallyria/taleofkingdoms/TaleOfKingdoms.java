@@ -35,8 +35,6 @@ import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructur
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.PlayerKingdomStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.structure.TOKStructures;
-import com.convallyria.taleofkingdoms.common.gson.BlockPosAdapter;
-import com.convallyria.taleofkingdoms.common.gson.ConquestInstanceAdapter;
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.listener.BlockListener;
 import com.convallyria.taleofkingdoms.common.listener.CoinListener;
@@ -45,6 +43,7 @@ import com.convallyria.taleofkingdoms.common.listener.KingdomListener;
 import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
+import com.convallyria.taleofkingdoms.common.serialization.gson.ConquestInstanceAdapter;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.gson.Gson;
@@ -70,7 +69,6 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -83,6 +81,7 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final String MODID = "taleofkingdoms";
     public static final String NAME = "Tale of Kingdoms";
     public static final String VERSION = "1.0.5";
+    public static int DATA_FORMAT_VERSION = 1;
 
     public static final Logger LOGGER = LogManager.getLogger();
 
@@ -90,15 +89,6 @@ public class TaleOfKingdoms implements ModInitializer {
     public static TaleOfKingdomsConfig CONFIG;
 
     public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
-
-    public static final Identifier INSTANCE_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "instance");
-    public static final Identifier SIGN_CONTRACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "sign_contract");
-    public static final Identifier FIX_GUILD_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "fix_guild");
-    public static final Identifier TOGGLE_SELL_GUI_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "open_sell_gui");
-    public static final Identifier BUY_ITEM_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "buy_item");
-    public static final Identifier BANKER_INTERACT_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "banker_interact");
-    public static final Identifier HUNTER_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "hunter");
-    public static final Identifier INNKEEPER_PACKET_ID = new Identifier(TaleOfKingdoms.MODID, "innkeeper");
 
     public static final StructureProcessorType<?> GUILD_PROCESSOR = StructureProcessorType.register("taleofkingdoms:guild", GuildStructureProcessor.CODEC);
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("taleofkingdoms:gateway", GatewayStructureProcessor.CODEC);
@@ -226,7 +216,6 @@ public class TaleOfKingdoms implements ModInitializer {
 
     public Gson getGson() {
         return new GsonBuilder().setPrettyPrinting()
-                .registerTypeAdapter(BlockPos.class, new BlockPosAdapter())
                 .registerTypeAdapter(ConquestInstance.class, new ConquestInstanceAdapter())
                 .create();
     }

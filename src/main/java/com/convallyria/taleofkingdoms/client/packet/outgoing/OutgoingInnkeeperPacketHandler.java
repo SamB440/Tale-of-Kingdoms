@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.client.packet.outgoing;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public final class OutgoingInnkeeperPacketHandler extends ClientPacketHandler {
 
     public OutgoingInnkeeperPacketHandler() {
-        super(TaleOfKingdoms.INNKEEPER_PACKET_ID);
+        super(Packets.INNKEEPER_PACKET_ID);
     }
 
     @Override

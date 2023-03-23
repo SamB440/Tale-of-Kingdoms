@@ -1,5 +1,12 @@
 package com.convallyria.taleofkingdoms.common.kingdom;
 
-public enum KingdomTier {
-    TIER_ONE
+import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
+
+public enum KingdomTier implements EnumCodec.Values {
+    TIER_ONE;
+
+    @Override
+    public String getSerializedName() {
+        return this.name();
+    }
 }
