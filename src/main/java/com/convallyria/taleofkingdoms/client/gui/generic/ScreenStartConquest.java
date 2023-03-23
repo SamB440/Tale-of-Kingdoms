@@ -8,7 +8,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.google.gson.Gson;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -22,9 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Optional;
 
 public class ScreenStartConquest extends ScreenTOK {
@@ -72,13 +69,8 @@ public class ScreenStartConquest extends ScreenTOK {
             if (serverPlayer == null) return;
 
             // Load guild castle schematic
-            ConquestInstance instance = new ConquestInstance(worldName, text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
-            try (Writer writer = new FileWriter(toSave)) {
-                Gson gson = api.getMod().getGson();
-                gson.toJson(instance, writer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ConquestInstance instance = new ConquestInstance(text.getText(), null, null, serverPlayer.getBlockPos().add(0, 1, 0));
+            instance.reset(player);
             api.getConquestInstanceStorage().addConquest(worldName, instance, true);
 
             BlockPos pastePos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 20, 0));
@@ -96,7 +88,9 @@ public class ScreenStartConquest extends ScreenTOK {
                     close();
                     loading = false;
                     instance.setLoaded(true);
-                    instance.setFarmerLastBread(player.getUuid(), -1); // Set to -1 in order to claim on first day
+                    final GuildPlayer guildPlayer = instance.getPlayer(player.getUuid());
+                    guildPlayer.setFarmerLastBread(-1); // Set to -1 in order to claim on first day
+                    instance.save(worldName);
                 });
 
                 KingdomStartCallback.EVENT.invoker().kingdomStart(serverPlayer, instance); // Call kingdom start event

@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.server.commands.debug;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.StringReader;
@@ -50,20 +51,21 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
             ServerPlayerEntity player = context.getSource().getPlayer();
             UUID playerUuid = player.getUuid();
+            final GuildPlayer guildPlayer = instance.getPlayer(playerUuid);
 
             // Pre-requisites for attack
 
             // Requires at least 750 worthiness
-            instance.addWorthiness(playerUuid, 750);
+            guildPlayer.setWorthiness(guildPlayer.getWorthiness() + 750);
             // The guild must not be currently under attack
             instance.setUnderAttack(false);
 
             // The guild must not be rebuilt
-            instance.setRebuilt(false);
+            guildPlayer.setHasRebuiltGuild(false);
 
             instance.attack(player, player.getWorld());
 
-            instance.setWorthiness(playerUuid, instance.getWorthiness(playerUuid) - 750);
+            guildPlayer.setWorthiness(guildPlayer.getWorthiness() - 750);
 
             if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
                 ServerConquestInstance.sync(player, instance);

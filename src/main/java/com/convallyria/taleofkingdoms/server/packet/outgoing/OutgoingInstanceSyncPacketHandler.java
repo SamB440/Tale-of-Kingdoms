@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.server.packet.outgoing;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler {
 
     public OutgoingInstanceSyncPacketHandler() {
-        super(TaleOfKingdoms.INSTANCE_PACKET_ID);
+        super(Packets.INSTANCE_PACKET_ID);
     }
 
     @Override
@@ -28,18 +28,7 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
         if (data != null && data[0] instanceof ConquestInstance instance
                 && player instanceof ServerPlayerEntity) {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-            passedData.writeString(instance.getName());
-            passedData.writeString(instance.getWorld());
-            passedData.writeInt(instance.getBankerCoins(player.getUuid()));
-            passedData.writeInt(instance.getCoins(player.getUuid()));
-            passedData.writeInt(instance.getWorthiness(player.getUuid()));
-            passedData.writeLong(instance.getFarmerLastBread(player.getUuid()));
-            passedData.writeBoolean(instance.hasContract(player.getUuid()));
-            passedData.writeBoolean(instance.isLoaded());
-            passedData.writeBlockPos(instance.getStart());
-            passedData.writeBlockPos(instance.getEnd());
-            passedData.writeBlockPos(instance.getOrigin());
-            instance.getHunterUUIDs().forEach((playerUuid, hunterUuids) -> hunterUuids.forEach(passedData::writeUuid));
+            passedData.encodeAsJson(ConquestInstance.CODEC, instance);
             sendPacket(player, passedData);
         }
     }

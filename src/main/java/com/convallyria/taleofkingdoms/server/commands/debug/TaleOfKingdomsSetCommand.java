@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.server.commands.debug;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
@@ -23,27 +24,29 @@ public class TaleOfKingdomsSetCommand implements Command<ServerCommandSource> {
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
+        final GuildPlayer guildPlayer = instance.getPlayer(playerUuid);
 
-        instance.setCoins(playerUuid, context.getArgument("coins", Integer.class));
+        guildPlayer.setCoins(context.getArgument("coins", Integer.class));
         if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
             ServerConquestInstance.sync(player, instance);
         }
 
-        player.sendMessage(Text.literal("Your new balance is: " + instance.getCoins(playerUuid)), false);
+        player.sendMessage(Text.literal("Your new balance is: " + guildPlayer.getCoins()), false);
         return 1;
     }
 
-    public static int setWorthiness(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int setWorthiness(CommandContext<ServerCommandSource> context) {
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         ServerPlayerEntity player = context.getSource().getPlayer();
         UUID playerUuid = player.getUuid();
+        final GuildPlayer guildPlayer = instance.getPlayer(playerUuid);
 
-        instance.setWorthiness(playerUuid, context.getArgument("worthiness", Integer.class));
+        guildPlayer.setWorthiness(context.getArgument("worthiness", Integer.class));
         if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
             ServerConquestInstance.sync(player, instance);
         }
 
-        player.sendMessage(Text.literal("Your new worthiness is: " + instance.getWorthiness(playerUuid)), false);
+        player.sendMessage(Text.literal("Your new worthiness is: " + guildPlayer.getWorthiness()), false);
         return 1;
     }
 }

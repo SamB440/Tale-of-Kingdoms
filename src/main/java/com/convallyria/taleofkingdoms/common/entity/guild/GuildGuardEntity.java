@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
@@ -77,7 +78,8 @@ public class GuildGuardEntity extends TOKEntity {
                         api.getScheduler().queue(server2 -> {
                             this.targetSelector.remove(goal);
                             if (player.world.isClient()) Translations.GUILDMEMBER_GOOD_FIGHTER.send(player);
-                            instance.addWorthiness(player.getUuid(), 2);
+                            final GuildPlayer guildPlayer = instance.getPlayer(player);
+                            guildPlayer.setWorthiness(guildPlayer.getWorthiness() + 2);
                             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
                         }, 160);
                     }, 80);

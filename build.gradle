@@ -19,6 +19,7 @@ repositories {
     maven { url "https://maven.terraformersmc.com/" }
     maven { url "https://server.bbkr.space/artifactory/libs-release" }
     maven { url "https://jitpack.io" }
+    maven { url "https://ladysnake.jfrog.io/artifactory/mods" }
 }
 
 sourceSets {

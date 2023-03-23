@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -18,7 +19,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends TOKEntity {
@@ -49,15 +49,16 @@ public class FarmerEntity extends TOKEntity {
         if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-        UUID uuid = player.getUuid();
-        long day = player.world.getTimeOfDay() / 24000L;
-        if (instance.getFarmerLastBread(uuid) >= day) {
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+
+        final long day = player.world.getTimeOfDay() / 24000L;
+        if (guildPlayer.getFarmerLastBread() >= day) {
             Translations.FARMER_GOT_BREAD.send(player);
             return ActionResult.FAIL;
         }
 
         // Set the current day and add bread to inventory
-        instance.setFarmerLastBread(uuid, day);
+        guildPlayer.setFarmerLastBread(day);
         Translations.FARMER_TAKE_BREAD.send(player);
 
         int amount = ThreadLocalRandom.current().nextInt(1, 4);

@@ -10,10 +10,10 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class OutgoingHunterPacketHandler extends ClientPacketHandler {
+public final class OutgoingBuildKingdomPacket extends ClientPacketHandler {
 
-    public OutgoingHunterPacketHandler() {
-        super(Packets.HUNTER_PACKET_ID);
+    public OutgoingBuildKingdomPacket() {
+        super(Packets.FIX_GUILD_PACKET_ID);
     }
 
     @Override
@@ -24,7 +24,7 @@ public final class OutgoingHunterPacketHandler extends ClientPacketHandler {
     @Override
     public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeBoolean((Boolean) data[0]); // False if hiring, true if retiring
+        passedData.writeInt((Integer) data[0]);
         sendPacket(player, passedData);
     }
 }

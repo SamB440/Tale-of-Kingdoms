@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBankerInteractPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuildKingdomPacket;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuyItemPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacketHandler;
@@ -61,14 +62,17 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
     }
 
     private void registerPacketHandlers() {
-        registerHandler(new IncomingInstanceSyncPacketHandler());
         registerHandler(new BothSignContractPacketHandler());
-        registerHandler(new OutgoingFixGuildPacketHandler());
-        registerHandler(new OutgoingToggleSellGuiPacketHandler());
-        registerHandler(new OutgoingBuyItemPacketHandler());
+
         registerHandler(new OutgoingBankerInteractPacketHandler());
+        registerHandler(new OutgoingBuildKingdomPacket());
+        registerHandler(new OutgoingBuyItemPacketHandler());
+        registerHandler(new OutgoingFixGuildPacketHandler());
         registerHandler(new OutgoingHunterPacketHandler());
         registerHandler(new OutgoingInnkeeperPacketHandler());
+        registerHandler(new OutgoingToggleSellGuiPacketHandler());
+
+        registerHandler(new IncomingInstanceSyncPacketHandler());
     }
 
     private void registerListeners() {

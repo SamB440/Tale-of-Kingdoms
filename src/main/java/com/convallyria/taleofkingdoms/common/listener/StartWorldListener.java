@@ -19,9 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 
 public class StartWorldListener extends Listener {
 
@@ -39,14 +37,8 @@ public class StartWorldListener extends Listener {
             if (TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().isEmpty()) return;
 
             ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
-            File file = new File(TaleOfKingdoms.getAPI().getDataFolder() + "worlds/" + instance.getWorld() + ".conquestworld");
-            try (Writer writer = new FileWriter(file)) {
-                Gson gson = TaleOfKingdoms.getAPI().getMod().getGson();
-                gson.toJson(instance, writer);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().removeConquest(instance.getWorld());
+            instance.save(worldName);
+            TaleOfKingdoms.getAPI().getConquestInstanceStorage().removeConquest(worldName);
             this.joined = false;
         });
 
@@ -76,14 +68,11 @@ public class StartWorldListener extends Listener {
                             if (TaleOfKingdoms.CONFIG.mainConfig.showStartKingdomGUI)
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                         } else {
-                            if (TaleOfKingdoms.CONFIG.mainConfig.alwaysShowUpdatesGUI || instance.isOld()) {
+                            if (TaleOfKingdoms.CONFIG.mainConfig.alwaysShowUpdatesGUI || instance.didUpgrade()) {
                                 MinecraftClient.getInstance().setScreen(new UpdateScreen());
                             } else if (TaleOfKingdoms.CONFIG.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
-
-                            // Update version if successfully loaded
-                            instance.setVersion(ConquestInstance.CURRENT_VERSION);
 
                             TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
                             api.getConquestInstanceStorage().addConquest(worldName, instance, true);

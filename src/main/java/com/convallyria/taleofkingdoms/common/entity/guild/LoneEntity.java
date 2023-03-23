@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -59,7 +60,8 @@ public class LoneEntity extends TOKEntity {
                 }
 
                 Translations.LONE_THANK.send(player);
-                instance.setWorthiness(player.getUuid(), instance.getWorthiness(player.getUuid()) + loneVillagers.size() * 6);
+                final GuildPlayer guildPlayer = instance.getPlayer(player);
+                guildPlayer.setWorthiness(guildPlayer.getWorthiness() + loneVillagers.size() * 6);
                 player.sendMessage(Text.literal("+" + loneVillagers.size() * 6 + " worthiness"), true);
             } else {
                 Translations.LONE_HELP.send(player);

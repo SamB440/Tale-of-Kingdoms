@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity.shop.widget;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -26,8 +27,8 @@ public interface ShopScreenInterface {
         BlockPos pos = entity.getBlockPos().add(0, 2, 0);
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         if (MinecraftClient.getInstance().getServer() == null) {
-            api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
-                    .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
+            api.getClientHandler(Packets.TOGGLE_SELL_GUI_PACKET_ID)
+                    .handleOutgoingPacket(Packets.TOGGLE_SELL_GUI_PACKET_ID,
                             player, false, entity.getGUIType());
             return;
         }

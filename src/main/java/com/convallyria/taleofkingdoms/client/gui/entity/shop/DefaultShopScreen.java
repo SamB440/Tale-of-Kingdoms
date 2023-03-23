@@ -11,6 +11,7 @@ import com.convallyria.taleofkingdoms.client.utils.ShopBuyUtil;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.google.common.collect.ImmutableList;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
@@ -60,6 +61,8 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
 
     @Override
     protected void build(FlowLayout rootComponent) {
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+
         final FlowLayout inner = rootComponent.childById(FlowLayout.class, "inner");
         inner.childById(ButtonComponent.class, "buy-button").onPress(button -> {
             int count = 1;
@@ -70,7 +73,7 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
         this.selectedItem = shopItems.get(0);
 
         inner.child(this.coinsLabel = (LabelComponent)
-            Components.label(Text.literal("Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"))
+            Components.label(Text.literal("Shop Menu - Total Money: " + guildPlayer.getCoins() + " Gold Coins"))
                 .color(Color.WHITE)
                 .positioning(Positioning.relative(50, 5))
         );
@@ -158,7 +161,7 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        coinsLabel.text(Text.literal("Shop Menu - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"));
+        coinsLabel.text(Text.literal("Shop Menu - Total Money: " + instance.getPlayer(player).getCoins() + " Gold Coins"));
         if (this.selectedItem != null) {
             StringBuilder text = new StringBuilder("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins");
             if (this.selectedItem.getModifier() != 1) {

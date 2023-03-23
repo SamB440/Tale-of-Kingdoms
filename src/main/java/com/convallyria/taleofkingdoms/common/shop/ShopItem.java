@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.shop;
 
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 
@@ -44,7 +45,8 @@ public class ShopItem {
     }
 
     public boolean canBuy(ConquestInstance instance, PlayerEntity player, int count) {
-        return instance.getCoins(player.getUuid()) >= ((getCost() * modifier) * count);
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+        return guildPlayer.getCoins() >= ((getCost() * modifier) * count);
     }
 
     @Override

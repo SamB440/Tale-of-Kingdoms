@@ -5,8 +5,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -17,8 +19,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Optional;
 
 public class InnkeeperScreen extends ScreenTOK {
 
@@ -42,16 +42,18 @@ public class InnkeeperScreen extends ScreenTOK {
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-                Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
-                if (conquestInstance.isEmpty()) return;
-                if (conquestInstance.get().getCoins(player.getUuid()) < 10) {
+                ConquestInstance conquestInstance = api.getConquestInstanceStorage().mostRecentInstance().orElse(null);
+                if (conquestInstance == null) return;
+
+                final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUuid());
+                if (guildPlayer.getCoins() < 10) {
                     return;
                 }
 
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
-                    api.getClientHandler(TaleOfKingdoms.INNKEEPER_PACKET_ID)
-                            .handleOutgoingPacket(TaleOfKingdoms.INNKEEPER_PACKET_ID,
+                    api.getClientHandler(Packets.INNKEEPER_PACKET_ID)
+                            .handleOutgoingPacket(Packets.INNKEEPER_PACKET_ID,
                                     player, true);
                     return;
                 }
@@ -63,7 +65,7 @@ public class InnkeeperScreen extends ScreenTOK {
                     serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
                     serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
                     serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
-                    conquestInstance.get().setCoins(serverPlayerEntity.getUuid(), conquestInstance.get().getCoins(serverPlayerEntity.getUuid()) - 10);
+                    guildPlayer.setCoins(guildPlayer.getCoins() - 10);
                 });
             } else {
                 player.sendMessage(Text.literal("House Keeper: It seems there are no rooms available at this time."), false);
@@ -74,21 +76,23 @@ public class InnkeeperScreen extends ScreenTOK {
             this.close();
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-            Optional<ConquestInstance> conquestInstance = api.getConquestInstanceStorage().mostRecentInstance();
-            if (conquestInstance.isEmpty()) return;
-            if (conquestInstance.get().getCoins(player.getUuid()) < 10) {
+            ConquestInstance conquestInstance = api.getConquestInstanceStorage().mostRecentInstance().orElse(null);
+            if (conquestInstance == null) return;
+
+            final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUuid());
+            if (guildPlayer.getCoins() < 10) {
                 return;
             }
 
             if (server == null) {
-                api.getClientHandler(TaleOfKingdoms.INNKEEPER_PACKET_ID)
-                        .handleOutgoingPacket(TaleOfKingdoms.INNKEEPER_PACKET_ID,
+                api.getClientHandler(Packets.INNKEEPER_PACKET_ID)
+                        .handleOutgoingPacket(Packets.INNKEEPER_PACKET_ID,
                                 player, false);
                 return;
             }
 
             server.getOverworld().setTimeOfDay(13000);
-            conquestInstance.get().setCoins(player.getUuid(), conquestInstance.get().getCoins(player.getUuid()) - 10);
+            guildPlayer.setCoins(guildPlayer.getCoins() - 10);
         }).dimensions(this.width / 2 - 75, this.height / 4 + 75, 150, 20).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Exit"), widget -> {

@@ -4,7 +4,9 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -57,7 +59,8 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
         int x = this.playerInventoryTitleX + 25;
         int y = this.playerInventoryTitleY - 40;
         if (instance.isPresent()) {
-            int coins = instance.get().getCoins(playerInventory.player.getUuid());
+            final GuildPlayer guildPlayer = instance.get().getPlayer(playerInventory.player);
+            int coins = guildPlayer.getCoins();
             this.textRenderer.draw(matrices, Text.literal(coins + " Gold Coins"), x, y, 4210752);
         }
     }
@@ -82,8 +85,8 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     protected void deleteBlock(TaleOfKingdomsAPI api, ShopEntity entity) {
         if (MinecraftClient.getInstance().getServer() == null) {
-            api.getClientHandler(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID)
-                    .handleOutgoingPacket(TaleOfKingdoms.TOGGLE_SELL_GUI_PACKET_ID,
+            api.getClientHandler(Packets.TOGGLE_SELL_GUI_PACKET_ID)
+                    .handleOutgoingPacket(Packets.TOGGLE_SELL_GUI_PACKET_ID,
                             playerInventory.player, true, entity.getGUIType());
             return;
         }

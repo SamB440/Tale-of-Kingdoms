@@ -5,8 +5,10 @@ import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.BaseCityBuil
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -60,14 +62,21 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
 
         rootComponent.child(
             Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.build"), c -> {
-                // todo: Will need to send packet to server and verify
                 // Close current screen, calculate paste position, and add their kingdom
                 MinecraftClient.getInstance().currentScreen.close();
+                if (MinecraftClient.getInstance().getServer() == null) {
+                    TaleOfKingdoms.getAPI().getClientHandler(Packets.BUILD_KINGDOM_PACKET_ID)
+                            .handleOutgoingPacket(Packets.BUILD_KINGDOM_PACKET_ID,
+                                    player, entity.getId());
+                    return;
+                }
+
                 final IntegratedServer server = MinecraftClient.getInstance().getServer();
                 final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
                 BlockPos pos = serverPlayer.getBlockPos().subtract(new Vec3i(0, 25, 85));
                 final PlayerKingdom playerKingdom = new PlayerKingdom(pos);
-                instance.addKingdom(player.getUuid(), playerKingdom);
+                final GuildPlayer guildPlayer = instance.getPlayer(player);
+                guildPlayer.setKingdom(playerKingdom);
 
                 // Paste their kingdom
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, pos).thenAccept(box -> {

@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -11,7 +12,7 @@ import net.minecraft.structure.StructureTemplate;
 
 import java.util.Optional;
 
-public enum KingdomPOI {
+public enum KingdomPOI implements EnumCodec.Values {
     CITY_BUILDER_WELL_POI("CityBuilderWellPOI"),
 
     // Blacksmith / Item Shop house
@@ -107,5 +108,10 @@ public enum KingdomPOI {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String getSerializedName() {
+        return this.name();
     }
 }

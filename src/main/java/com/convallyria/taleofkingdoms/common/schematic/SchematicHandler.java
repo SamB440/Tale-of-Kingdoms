@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.PlayerKingdomStructureProcessor;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -58,7 +59,8 @@ public abstract class SchematicHandler {
             StructurePlacementData structurePlacementData = new StructurePlacementData();
             structurePlacementData.setRotation(rotation);
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                final PlayerKingdom kingdom = instance.getKingdom(player.getUuid());
+                final GuildPlayer guildPlayer = instance.getPlayer(player);
+                final PlayerKingdom kingdom = guildPlayer.getKingdom();
                 if (kingdom == null) return;
                 structurePlacementData.addProcessor(new PlayerKingdomStructureProcessor(kingdom, player));
             });

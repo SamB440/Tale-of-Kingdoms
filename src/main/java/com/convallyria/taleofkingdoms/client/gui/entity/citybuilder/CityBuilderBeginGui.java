@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.confirm.Conf
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
@@ -34,8 +35,9 @@ public class CityBuilderBeginGui extends BaseCityBuilderScreen {
     protected void build(FlowLayout rootComponent) {
         final FlowLayout inner = rootComponent.childById(FlowLayout.class, "inner");
 
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
         inner.child(
-                Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + instance.getCoins(player.getUuid()) + " Gold Coins"))
+                Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + guildPlayer.getCoins() + " Gold Coins"))
                         .positioning(Positioning.relative(50, 5))
         );
 

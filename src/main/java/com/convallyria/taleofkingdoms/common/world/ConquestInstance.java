@@ -4,7 +4,6 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
-import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
@@ -12,8 +11,10 @@ import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
-import com.convallyria.taleofkingdoms.common.world.data.DataConverters;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.google.gson.Gson;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,6 +26,7 @@ import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Uuids;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -34,17 +36,14 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -52,39 +51,45 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConquestInstance {
 
-    public static final String CURRENT_VERSION = TaleOfKingdoms.VERSION;
+    public static final Codec<ConquestInstance> CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                    Codec.STRING.fieldOf("name").forGetter(ConquestInstance::getName),
+                    Codec.BOOL.fieldOf("has_loaded").forGetter(ConquestInstance::isLoaded),
+                    BlockPos.CODEC.fieldOf("start").forGetter(ConquestInstance::getStart),
+                    BlockPos.CODEC.fieldOf("end").forGetter(ConquestInstance::getEnd),
+                    BlockPos.CODEC.fieldOf("origin").forGetter(ConquestInstance::getOrigin),
+                    Codec.BOOL.fieldOf("under_attack").forGetter(ConquestInstance::isUnderAttack),
+                    BlockPos.CODEC.listOf().fieldOf("reficule_attack_locations").forGetter(ConquestInstance::getReficuleAttackLocations),
+                    Uuids.CODEC.listOf().fieldOf("reficule_attackers").forGetter(ConquestInstance::getReficuleAttackers),
+                    Codec.unboundedMap(Uuids.CODEC, GuildPlayer.CODEC).fieldOf("guild_players").forGetter(ConquestInstance::getGuildPlayers)
+            ).apply(instance, (name, hasLoaded, start, end, origin, underAttack, attackLocations, attackers, guildPlayers) -> {
+                ConquestInstance conquestInstance = new ConquestInstance(name, start, end, origin);
+                conquestInstance.setLoaded(hasLoaded);
+                conquestInstance.setUnderAttack(underAttack);
+                conquestInstance.getReficuleAttackLocations().addAll(attackLocations);
+                conquestInstance.getReficuleAttackers().addAll(attackers);
+                conquestInstance.getGuildPlayers().putAll(guildPlayers);
+                return conquestInstance;
+            }
+    ));
 
-    private String version;
-    private final String world;
+
     private final String name;
+    @Deprecated(forRemoval = true)
     private boolean hasLoaded;
     private BlockPos start;
     private BlockPos end;
     private final BlockPos origin;
-    private List<UUID> loneVillagersWithRooms;
     private boolean underAttack;
     private final List<BlockPos> reficuleAttackLocations;
     private final List<UUID> reficuleAttackers;
-    private boolean hasRebuilt;
 
-    private final Map<UUID, Integer> playerCoins;
-    private final Map<UUID, Integer> playerBankerCoins;
-    private final Map<UUID, Long> playerFarmerLastBread;
-    public Map<UUID, Long> lastStockMarketUpdate;
-    private final Map<UUID, Boolean> playerHasContract;
-    private final Map<UUID, Integer> playerWorthiness;
-    private final Map<UUID, PlayerKingdom> playerKingdoms;
-    private Map<UUID, List<UUID>> hunterUUIDs;
+    private final Map<UUID, GuildPlayer> guildPlayers;
 
-    //todo: do we need concurrency?
-    public ConquestInstance(String world, String name, BlockPos start, BlockPos end, BlockPos origin) {
-        Optional<ConquestInstance> instance = Optional.ofNullable(TaleOfKingdoms.getAPI())
-                .map(TaleOfKingdomsAPI::getConquestInstanceStorage)
-                .orElseThrow(() -> new IllegalArgumentException("API not present"))
-                .getConquestInstance(world);
-        if (instance.isPresent() && instance.get().isLoaded()) throw new IllegalArgumentException("World already registered");
-        this.version = CURRENT_VERSION;
-        this.world = world;
+    private transient List<UUID> loneVillagersWithRooms;
+    private transient boolean didUpgrade;
+
+    public ConquestInstance(String name, BlockPos start, BlockPos end, BlockPos origin) {
         this.name = name;
         this.start = start;
         this.end = end;
@@ -92,37 +97,15 @@ public class ConquestInstance {
         this.loneVillagersWithRooms = new ArrayList<>();
         this.reficuleAttackLocations = new ArrayList<>();
         this.reficuleAttackers = new ArrayList<>();
-        this.playerCoins = new ConcurrentHashMap<>();
-        this.playerBankerCoins = new ConcurrentHashMap<>();
-        this.playerFarmerLastBread = new ConcurrentHashMap<>();
-        this.lastStockMarketUpdate = new ConcurrentHashMap<>();
-        this.playerHasContract = new ConcurrentHashMap<>();
-        this.playerWorthiness = new ConcurrentHashMap<>();
-        this.playerKingdoms = new ConcurrentHashMap<>();
-        this.hunterUUIDs = new ConcurrentHashMap<>();
+        this.guildPlayers = new ConcurrentHashMap<>();
     }
 
-    public boolean isOld() {
-        return !Objects.equals(this.version, CURRENT_VERSION);
+    public boolean didUpgrade() {
+        return didUpgrade;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        if (!version.equals(this.version)) {
-            for (DataConverters converter : DataConverters.values()) {
-                if (converter.getConverter().getVersions().contains(this.version)) {
-                    converter.getConverter().convert(this);
-                }
-            }
-        }
-        this.version = version;
-    }
-    
-    public String getWorld() {
-        return world;
+    public void setDidUpgrade(boolean didUpgrade) {
+        this.didUpgrade = didUpgrade;
     }
 
     public String getName() {
@@ -162,7 +145,9 @@ public class ConquestInstance {
     }
 
     public boolean canAttack(UUID uuid) {
-        return getWorthiness(uuid) >= (1500.0F / 2) && !isUnderAttack() && !hasRebuilt;
+        final GuildPlayer guildPlayer = guildPlayers.get(uuid);
+        if (guildPlayer == null) return false;
+        return guildPlayer.getWorthiness() >= (1500.0F / 2) && !isUnderAttack() && !guildPlayer.hasRebuiltGuild();
     }
     
     /**
@@ -171,7 +156,9 @@ public class ConquestInstance {
      * @return If the guild has been attacked
      */
     public boolean hasAttacked(UUID uuid) {
-        return !isUnderAttack() && getWorthiness(uuid) > 750;
+        final GuildPlayer guildPlayer = guildPlayers.get(uuid);
+        if (guildPlayer == null) return false;
+        return !isUnderAttack() && guildPlayer.getWorthiness() > 750 && guildPlayer.hasRebuiltGuild();
     }
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
@@ -224,117 +211,30 @@ public class ConquestInstance {
         return reficuleAttackers;
     }
 
-    /**
-     * @return If the guild has been rebuilt
-     */
-    public boolean hasRebuilt() {
-        return hasRebuilt;
+    public Map<UUID, GuildPlayer> getGuildPlayers() {
+        return guildPlayers;
     }
 
-    public void setRebuilt(boolean hasRebuilt) {
-        this.hasRebuilt = hasRebuilt;
+    public GuildPlayer getPlayer(PlayerEntity player) {
+        return guildPlayers.get(player.getUuid());
     }
 
+    public GuildPlayer getPlayer(UUID uuid) {
+        return guildPlayers.get(uuid);
+    }
 
     public boolean hasPlayer(UUID playerUuid) {
-        return playerCoins.containsKey(playerUuid)
-                && playerBankerCoins.containsKey(playerUuid)
-                && playerFarmerLastBread.containsKey(playerUuid)
-                && playerHasContract.containsKey(playerUuid)
-                && playerWorthiness.containsKey(playerUuid);
-    }
-
-    public int getCoins(UUID uuid) {
-        return playerCoins.getOrDefault(uuid, 0);
-    }
-
-    public int getBankerCoins(UUID uuid) { return playerBankerCoins.getOrDefault(uuid, 0); }
-
-    public void setBankerCoins(UUID uuid, int bankerCoins) { this.playerBankerCoins.put(uuid, bankerCoins); }
-
-    public void setCoins(UUID uuid, int coins) {
-        this.playerCoins.put(uuid, coins);
-    }
-
-    public void addCoins(UUID uuid, int coins) {
-        this.playerCoins.put(uuid, getCoins(uuid) + coins);
-    }
-
-    public long getFarmerLastBread(UUID uuid) {
-        return playerFarmerLastBread.getOrDefault(uuid, 0L);
-    }
-
-    public void setFarmerLastBread(UUID uuid, long day) {
-        this.playerFarmerLastBread.put(uuid, day);
-    }
-
-    public long getLastStockMarketUpdate(UUID uuid) {
-        return lastStockMarketUpdate.getOrDefault(uuid, 0L);
-    }
-
-    public void setLastStockMarketUpdate(UUID uuid, long day) {
-        this.lastStockMarketUpdate.put(uuid, day);
-    }
-
-    public boolean hasContract(UUID uuid) {
-        return playerHasContract.getOrDefault(uuid, false);
-    }
-
-    public void setHasContract(UUID uuid, boolean hasContract) {
-        this.playerHasContract.put(uuid, hasContract);
-    }
-
-    public int getWorthiness(UUID playerUuid) {
-        return playerWorthiness.getOrDefault(playerUuid, 0);
-    }
-
-    public void setWorthiness(UUID playerUuid, int worthiness) {
-        this.playerWorthiness.put(playerUuid, worthiness);
-    }
-
-    public void addWorthiness(UUID playerUuid, int worthiness) {
-        this.playerWorthiness.put(playerUuid, getWorthiness(playerUuid) + worthiness);
-    }
-
-    @Nullable
-    public PlayerKingdom getKingdom(UUID uuid) {
-        return playerKingdoms.getOrDefault(uuid, null);
-    }
-
-    public Collection<PlayerKingdom> getKingdoms() {
-        return playerKingdoms.values();
-    }
-
-    public PlayerKingdom addKingdom(UUID uuid, @NotNull PlayerKingdom kingdom) {
-        if (playerKingdoms.containsKey(uuid)) {
-            throw new IllegalArgumentException("Kingdom already exists for player " + uuid + "!");
-        }
-        return playerKingdoms.put(uuid, kingdom);
-    }
-
-    public Map<UUID, List<UUID>> getHunterUUIDs() {
-        if (hunterUUIDs == null) hunterUUIDs = new ConcurrentHashMap<>();
-        return hunterUUIDs;
-    }
-
-    public void addHunter(UUID playerUuid, HunterEntity hunterEntity) {
-        List<UUID> uuids = hunterUUIDs.getOrDefault(playerUuid, new ArrayList<>());
-        uuids.add(hunterEntity.getUuid());
-        hunterUUIDs.put(playerUuid, uuids);
-    }
-
-    public void removeHunter(UUID playerUuid, UUID hunterUuid) {
-        List<UUID> uuids = hunterUUIDs.getOrDefault(playerUuid, new ArrayList<>());
-        uuids.remove(hunterUuid);
-        hunterUUIDs.put(playerUuid, uuids);
+        return guildPlayers.containsKey(playerUuid);
     }
 
     public void reset(@NotNull PlayerEntity player) {
-        this.setBankerCoins(player.getUuid(), 0);
-        this.setCoins(player.getUuid(), 0);
-        this.setFarmerLastBread(player.getUuid(), 0);
-        this.setHasContract(player.getUuid(), false);
-        this.setWorthiness(player.getUuid(), 0);
+        guildPlayers.put(player.getUuid(), new GuildPlayer());
+    }
+
+    public void addCoins(UUID uuid, int coins) {
+        final GuildPlayer player = getPlayer(uuid);
+        if (player == null) return;
+        player.setCoins(player.getCoins() + coins);
     }
 
     public Optional<GuildMasterEntity> getGuildMaster(World world) {
@@ -410,7 +310,8 @@ public class ConquestInstance {
     }
 
     public boolean isInKingdom(Entity player) {
-        final PlayerKingdom kingdom = getKingdom(player.getUuid());
+        if (!hasPlayer(player.getUuid())) return false;
+        final PlayerKingdom kingdom = guildPlayers.get(player.getUuid()).getKingdom();
         if (kingdom == null) return false;
         BlockPos start = kingdom.getStart();
         BlockPos end = kingdom.getEnd();
@@ -428,7 +329,8 @@ public class ConquestInstance {
     public <T extends Entity> Optional<T> search(PlayerEntity player, World world, EntityType<T> type) {
         if (start == null || end == null) return Optional.empty();
         if (isInKingdom(player)) {
-            final PlayerKingdom kingdom = getKingdom(player.getUuid());
+            if (!hasPlayer(player.getUuid())) return Optional.empty();
+            final PlayerKingdom kingdom = guildPlayers.get(player.getUuid()).getKingdom();
             if (kingdom == null) return Optional.empty();
             return kingdom.getKingdomEntity(world, type);
         } else if (isInGuild(player)) {
@@ -441,8 +343,9 @@ public class ConquestInstance {
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 21, 0)), options);
     }
 
-    public void save(TaleOfKingdomsAPI api) {
-        File file = new File(api.getDataFolder() + "worlds" + File.separator + world + ".conquestworld");
+    public void save(String worldName) {
+        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        File file = new File(api.getDataFolder() + "worlds" + File.separator + worldName + ".conquestworld");
         try (Writer writer = new FileWriter(file)) {
             Gson gson = api.getMod().getGson();
             gson.toJson(this, writer);

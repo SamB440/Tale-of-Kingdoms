@@ -6,6 +6,8 @@ import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,54 +23,52 @@ import java.util.Optional;
 public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
 
     public IncomingBuyItemPacketHandler() {
-        super(TaleOfKingdoms.BUY_ITEM_PACKET_ID);
+        super(Packets.BUY_ITEM_PACKET_ID);
     }
 
     @Override
     public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = identifier.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         String itemName = attachedData.readString(128);
         int count = attachedData.readInt();
         ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
-        context.taskQueue().execute(() -> {
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (!instance.isInGuild(player)) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Not in guild.");
-                    return;
-                }
+        context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            if (!instance.isInGuild(player)) {
+                reject(player, "Not in guild.");
+                return;
+            }
 
-                // Search for either foodshop, itemshop, or blacksmith in the guild
-                Optional<? extends ShopEntity> entity = Optional.empty();
-                switch (type) {
-                    case BLACKSMITH -> entity = instance.search(player, player.world, EntityTypes.BLACKSMITH);
-                    case FOOD -> entity = instance.search(player, player.world, EntityTypes.FOODSHOP);
-                    case ITEM -> entity = instance.search(player, player.world, EntityTypes.ITEM_SHOP);
-                }
+            // Search for either foodshop, itemshop, or blacksmith in the guild
+            Optional<? extends ShopEntity> entity = Optional.empty();
+            switch (type) {
+                case BLACKSMITH -> entity = instance.search(player, player.world, EntityTypes.BLACKSMITH);
+                case FOOD -> entity = instance.search(player, player.world, EntityTypes.FOODSHOP);
+                case ITEM -> entity = instance.search(player, player.world, EntityTypes.ITEM_SHOP);
+            }
 
-                if (entity.isEmpty()) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop entity not present in guild.");
-                    return;
-                }
+            if (entity.isEmpty()) {
+                reject(player, "Shop entity not present in guild.");
+                return;
+            }
 
-                ShopItem shopItem = getShopItem(itemName, entity.get());
-                if (shopItem == null) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Shop item not found.");
-                    return;
-                }
+            ShopItem shopItem = getShopItem(itemName, entity.get());
+            if (shopItem == null) {
+                reject(player, "Shop item not found.");
+                return;
+            }
 
-                int cost = shopItem.getCost() * count;
-                if (instance.getCoins(player.getUuid()) < cost) {
-                    TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": Coins requirement not met.");
-                    return;
-                }
+            final GuildPlayer guildPlayer = instance.getPlayer(player);
+            int cost = shopItem.getCost() * count;
+            if (guildPlayer.getCoins() < cost) {
+                reject(player, "Coins requirement not met.");
+                return;
+            }
 
-                instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
-                // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
-                player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
-                ServerConquestInstance.sync(player, instance);
-            });
-        });
+            guildPlayer.setCoins(guildPlayer.getCoins() - cost);
+            // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
+            player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
+            ServerConquestInstance.sync(player, instance);
+        }));
     }
 
     @Override

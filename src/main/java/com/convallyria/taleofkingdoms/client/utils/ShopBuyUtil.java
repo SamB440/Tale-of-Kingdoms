@@ -3,8 +3,10 @@ package com.convallyria.taleofkingdoms.client.utils;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -23,8 +25,8 @@ public class ShopBuyUtil {
             api.executeOnMain(() -> {
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
-                    api.getClientHandler(TaleOfKingdoms.BUY_ITEM_PACKET_ID)
-                            .handleOutgoingPacket(TaleOfKingdoms.BUY_ITEM_PACKET_ID,
+                    api.getClientHandler(Packets.BUY_ITEM_PACKET_ID)
+                            .handleOutgoingPacket(Packets.BUY_ITEM_PACKET_ID,
                                     player, shopItem.getName(), count, entity.getGUIType());
                     return;
                 }
@@ -42,7 +44,8 @@ public class ShopBuyUtil {
                         inventory.insertStack(slotWithRoom, stack);
                     }
                     int cost = shopItem.getCost() * count;
-                    instance.setCoins(player.getUuid(), instance.getCoins(player.getUuid()) - cost);
+                    final GuildPlayer guildPlayer = instance.getPlayer(player);
+                    guildPlayer.setCoins(guildPlayer.getCoins() - cost);
                 }
             });
         }

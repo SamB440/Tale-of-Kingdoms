@@ -4,9 +4,11 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.StockMarketScreen;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +21,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class StockMarketEntity extends ShopEntity {
@@ -52,16 +53,18 @@ public class StockMarketEntity extends ShopEntity {
         if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-        UUID uuid = player.getUuid();
-        long day = player.world.getTimeOfDay() / 24000L;
-        if (instance.getLastStockMarketUpdate(uuid) < day) {
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+        final PlayerKingdom kingdom = guildPlayer.getKingdom();
+
+        final long day = player.world.getTimeOfDay() / 24000L;
+        if (kingdom != null && kingdom.getLastStockMarketUpdate() < day) {
             // Update all shop item modifiers if a day has passed
             // Wow this stock market is all over the place
             for (ShopItem shopItem : ShopParser.SHOP_ITEMS.get(getGUIType())) {
                 //todo: figure out a better formula
                 shopItem.setModifier(ThreadLocalRandom.current().nextDouble(0.75, 3));
             }
-            instance.setLastStockMarketUpdate(uuid, day);
+            kingdom.setLastStockMarketUpdate(day);
         }
 
         if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
