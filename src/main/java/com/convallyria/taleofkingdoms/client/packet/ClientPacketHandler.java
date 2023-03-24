@@ -20,7 +20,7 @@ public abstract class ClientPacketHandler extends PacketHandler {
     protected void register() {
         ClientPlayNetworking.registerGlobalReceiver(getPacket(), (client, handler, buf, responseSender) -> {
             ClientPacketContext context = new ClientPacketContext(EnvType.CLIENT, client.player, client);
-            handleIncomingPacket(getPacket(), context, buf);
+            handleIncomingPacket(context, buf);
         });
     }
 

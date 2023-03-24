@@ -65,9 +65,8 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 // Close current screen, calculate paste position, and add their kingdom
                 MinecraftClient.getInstance().currentScreen.close();
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdoms.getAPI().getClientHandler(Packets.BUILD_KINGDOM_PACKET_ID)
-                            .handleOutgoingPacket(Packets.BUILD_KINGDOM_PACKET_ID,
-                                    player, entity.getId());
+                    TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.BUILD_KINGDOM)
+                            .handleOutgoingPacket(player, entity.getId());
                     return;
                 }
 
