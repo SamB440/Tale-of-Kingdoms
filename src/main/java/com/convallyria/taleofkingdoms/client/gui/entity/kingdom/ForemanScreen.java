@@ -26,11 +26,13 @@ import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -69,7 +71,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         );
 
         final Item item = entity instanceof QuarryForemanEntity ? Items.COBBLESTONE : Items.OAK_LOG;
-        final int resourceCount = entity.getInventory().count(item);
+        final int resourceCount = entity instanceof QuarryForemanEntity ? entity.getStone() : entity.getWood();
         final float resourcePercent = resourceCount * (100f / 1280f);
 
         rootComponent.child(
@@ -84,14 +86,20 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(
             Components.button(Text.literal("Collect 64"), c -> {
                 //todo: send server packet
-                final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(item, 64));
-                if (slotWithStack == -1) {
-                    Translations.FOREMAN_COLLECT_RESOURCES_EMPTY.send(player);
-                    return;
-                }
+                TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                    final IntegratedServer server = MinecraftClient.getInstance().getServer();
+                    final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+                    final ForemanEntity serverForeman = (ForemanEntity) serverPlayer.getWorld().getEntityById(entity.getId());
+                    final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(item, 64));
+                    if (slotWithStack == -1) {
+                        Translations.FOREMAN_COLLECT_RESOURCES_EMPTY.send(player);
+                        return;
+                    }
 
-                player.getInventory().insertStack(entity.getInventory().removeStack(slotWithStack));
-                update();
+                    final ItemStack itemStack = serverForeman.getInventory().removeStack(slotWithStack);
+                    serverPlayer.getInventory().insertStack(itemStack);
+                    player.getInventory().insertStack(itemStack);
+                });
             })
             .sizing(Sizing.fixed(100), Sizing.fixed(20))
             .positioning(Positioning.relative(50, 65))
@@ -130,10 +138,16 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         );
     }
 
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        update();
+    }
+
     private void update() {
-        final int cobbleCount = entity.getInventory().count(Items.COBBLESTONE);
-        final float cobblePercent = cobbleCount * (100f / 1280f);
-        resourcesBar.setBarProgress(cobblePercent / 100);
-        resourcesBar.tooltip(Text.literal(cobbleCount + " / 1280"));
+        final int resourceCount = entity instanceof QuarryForemanEntity ? entity.getStone() : entity.getWood();
+        final float resourcePercent = resourceCount * (100f / 1280f);
+        resourcesBar.setBarProgress(resourcePercent / 100);
+        resourcesBar.tooltip(Text.literal(resourceCount + " / 1280"));
     }
 }

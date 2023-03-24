@@ -19,6 +19,7 @@ import io.wispforest.owo.ui.core.Component;
 import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -55,8 +56,8 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
     }
 
     private void update() {
-        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
-        AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
+        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getStone());
+        AtomicInteger oakWoodCount = new AtomicInteger(entity.getWood());
         fixWholeKingdomButton.active(cobblestoneCount.get() == 320 && oakWoodCount.get() == 320);
 
         final float oakWoodPercent = oakWoodCount.get() * (100f / 320f);
@@ -81,8 +82,8 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
             .positioning(Positioning.relative(50, 5))
         );
 
-        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getInventory().count(Items.COBBLESTONE));
-        AtomicInteger oakWoodCount = new AtomicInteger(entity.getInventory().count(Items.OAK_LOG));
+        AtomicInteger cobblestoneCount = new AtomicInteger(entity.getStone());
+        AtomicInteger oakWoodCount = new AtomicInteger(entity.getWood());
 
         //root.add(new WLabel(Text.literal("0      160      320")).setHorizontalAlignment(HorizontalAlignment.LEFT), 100, 30, 16, 2);
 
@@ -93,15 +94,13 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {
                     final IntegratedServer server = MinecraftClient.getInstance().getServer();
                     final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
-                    if (stack != null && playerWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
-                        final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
-                        final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
-
+                    final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+                    final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
+                    if (stack != null && playerWoodCount >= 64 && oakWoodCount.get() <= (320 - 64) && serverCityBuilder.getInventory().canInsert(stack)) {
                         int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                         serverPlayer.getInventory().removeStack(slot);
                         player.getInventory().removeStack(slot);
                         oakWoodCount.addAndGet(64);
-                        entity.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
                         serverCityBuilder.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
                         update();
                     }
@@ -115,15 +114,13 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 final int playerCobblestoneCount = player.getInventory().count(Items.COBBLESTONE);
                 TaleOfKingdoms.getAPI().executeOnServer(() -> {
                     final ItemStack stack = new ItemStack(Items.COBBLESTONE, 64);
-                    if (playerCobblestoneCount >= 64 && cobblestoneCount.get() <= (320 - 64) && entity.getInventory().canInsert(stack)) {
-                        final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
-                        final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
-
+                    final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                    final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
+                    if (playerCobblestoneCount >= 64 && cobblestoneCount.get() <= (320 - 64) && serverCityBuilder.getInventory().canInsert(stack)) {
                         int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                         serverPlayer.getInventory().removeStack(slot);
                         player.getInventory().removeStack(slot);
                         cobblestoneCount.addAndGet(64);
-                        entity.getInventory().addStack(stack);
                         serverCityBuilder.getInventory().addStack(stack);
                         update();
                     }
@@ -154,9 +151,10 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         inner.child(
             this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
                 //todo send server packet
-                if (entity.getInventory().count(Items.COBBLESTONE) != 320 || entity.getInventory().count(Items.OAK_LOG) != 320)
+                if (entity.getStone() != 320 || entity.getWood() != 320)
                     return;
                 final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
                 for (BuildCosts buildCost : BuildCosts.values()) {
                     final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
@@ -165,16 +163,13 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                         TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI), buildCost.getSchematicRotation());
                     }
                 }
-                entity.getInventory().clear();
-                update();
+                serverCityBuilder.getInventory().clear();
             })).tooltip(List.of(
                   Text.literal("Repairing the kingdom costs:"),
                   Text.literal(" - 320 oak wood"),
                   Text.literal(" - 320 cobblestone")
             )).positioning(Positioning.relative(80, 70)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
-
-        update();
 
         // Price list
         inner.child(
@@ -204,12 +199,14 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
             final Component button = Components.button(Text.literal(text).append(build.getDisplayName()), c -> {
                 //todo: send server packet
                 final ServerPlayerEntity serverPlayer = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
                 MinecraftClient.getInstance().currentScreen.close();
                 kingdom.addBuilt(build.getKingdomPOI());
                 TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
-                entity.getInventory().removeItem(Items.OAK_LOG, build.getWood());
-                entity.getInventory().removeItem(Items.COBBLESTONE, build.getStone());
+
+                serverCityBuilder.getInventory().removeItem(Items.OAK_LOG, build.getWood());
+                serverCityBuilder.getInventory().removeItem(Items.COBBLESTONE, build.getStone());
             }).active(canAffordBuild)
                     .tooltip(List.of(
                         Text.literal(pluralText).append(build.getDisplayName()).append(Text.literal(" costs:")),
@@ -234,5 +231,11 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 }
             ).positioning(Positioning.relative(50, 85))
         );
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        this.update();
     }
 }
