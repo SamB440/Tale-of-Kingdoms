@@ -10,6 +10,9 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
 import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
+import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.schematic.Schematic;
+import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
@@ -25,8 +28,11 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -107,6 +113,69 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
             }
         });
         return ActionResult.PASS;
+    }
+
+    public void give64wood(PlayerEntity player) {
+        final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
+        TaleOfKingdoms.getAPI().executeOnServerEnvironment((server) -> {
+            final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
+            final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
+            if (stack != null && playerWoodCount >= 64 && getWood() <= (320 - 64) && serverCityBuilder.getInventory().canInsert(stack)) {
+                int slot = serverPlayer.getInventory().getSlotWithStack(stack);
+                serverPlayer.getInventory().removeStack(slot);
+                player.getInventory().removeStack(slot);
+                serverCityBuilder.getInventory().addStack(new ItemStack(Items.OAK_LOG, 64));
+            }
+        });
+    }
+
+    public void give64stone(PlayerEntity player) {
+        final int playerCobblestoneCount = player.getInventory().count(Items.COBBLESTONE);
+        TaleOfKingdoms.getAPI().executeOnServerEnvironment((server) -> {
+            final ItemStack stack = new ItemStack(Items.COBBLESTONE, 64);
+            final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
+            if (playerCobblestoneCount >= 64 && getStone() <= (320 - 64) && serverCityBuilder.getInventory().canInsert(stack)) {
+                int slot = serverPlayer.getInventory().getSlotWithStack(stack);
+                serverPlayer.getInventory().removeStack(slot);
+                player.getInventory().removeStack(slot);
+                serverCityBuilder.getInventory().addStack(stack);
+            }
+        });
+    }
+
+    public void fixKingdom(PlayerEntity player, PlayerKingdom kingdom) {
+        if (this.getStone() != 320 || this.getWood() != 320)
+            return;
+
+        TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
+            final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
+            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
+            for (BuildCosts buildCost : BuildCosts.values()) {
+                final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
+                final Schematic schematic = buildCost.getSchematic();
+                if (kingdom.hasBuilt(kingdomPOI)) {
+                    TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI), buildCost.getSchematicRotation());
+                }
+            }
+            serverCityBuilder.getInventory().clear();
+        });
+    }
+
+    public void build(PlayerEntity player, BuildCosts build, PlayerKingdom kingdom) {
+        TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
+            final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+            final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
+            MinecraftClient.getInstance().currentScreen.close();
+            kingdom.addBuilt(build.getKingdomPOI());
+            TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
+            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
+
+            serverCityBuilder.getInventory().removeItem(Items.OAK_LOG, build.getWood());
+            serverCityBuilder.getInventory().removeItem(Items.COBBLESTONE, build.getStone());
+        });
     }
 
     public void followPlayer() {

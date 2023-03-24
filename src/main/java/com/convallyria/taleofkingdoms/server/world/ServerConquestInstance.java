@@ -15,7 +15,7 @@ public class ServerConquestInstance {
 
     public static void sync(@NotNull ServerPlayerEntity player, @NotNull ConquestInstance instance) {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        PacketHandler packetHandler = api.getServerHandler(Packets.INSTANCE_PACKET_ID);
-        packetHandler.handleOutgoingPacket(Packets.INSTANCE_PACKET_ID, player, instance);
+        PacketHandler packetHandler = api.getServerPacketHandler(Packets.INSTANCE_SYNC);
+        packetHandler.handleOutgoingPacket(player, instance);
     }
 }

@@ -105,6 +105,7 @@ public class GameInstanceListener extends Listener {
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
         BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 20, 0));
         ConquestInstance instance = new ConquestInstance(server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
+        instance.reset(player);
         api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
             BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
@@ -118,6 +119,7 @@ public class GameInstanceListener extends Listener {
             /*instance.reset(player);
             instance.sync(player);*/
             instance.save(server.getLevelName());
+            ServerConquestInstance.sync(player, instance);
         }).exceptionally(error -> {
             error.printStackTrace();
             return null;

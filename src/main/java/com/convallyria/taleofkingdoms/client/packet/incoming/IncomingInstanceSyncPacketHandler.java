@@ -8,28 +8,29 @@ import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler {
 
     public IncomingInstanceSyncPacketHandler() {
-        super(Packets.INSTANCE_PACKET_ID);
+        super(Packets.INSTANCE_SYNC);
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
         final ConquestInstance instance = attachedData.decodeAsJson(ConquestInstance.CODEC);
         context.taskQueue().execute(() -> {
             final PlayerEntity player = context.player();
+            player.sendMessage(Text.literal("Received sync, " + instance));
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().addConquest(player.getUuidAsString(), instance, true);
         });
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
+    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalStateException("Not supported");
     }
 }

@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class PacketHandler {
 
-    private final Identifier packet;
+    protected final Identifier packet;
 
     /**
      * Creates a new packet handler and registers it for incoming handling.
@@ -33,19 +33,17 @@ public abstract class PacketHandler {
 
     /**
      * Handles a packet that is incoming (client receiving from server, or server receiving from client)
-     * @param identifier packet {@link Identifier}
      * @param context the {@link PlayerEntity}
-     * @param attachedData the {@link PacketByteBuf}, which is data sent via {@link #handleOutgoingPacket(Identifier, PlayerEntity, Object...)}
+     * @param attachedData the {@link PacketByteBuf}, which is data sent via {@link #handleOutgoingPacket(PlayerEntity, Object...)}
      */
-    public abstract void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData);
+    public abstract void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData);
 
     /**
      * Handles a packet that is outgoing (client sending to server, or server sending to client)
-     * @param identifier packet {@link Identifier}
      * @param player the player sending it
      * @param data extra data to post with the packet, some packets may require different data
      */
-    public abstract void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data);
+    public abstract void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data);
 
     protected abstract void sendPacket(PlayerEntity player, PacketByteBuf passedData);
 

@@ -21,7 +21,7 @@ public abstract class ServerPacketHandler extends PacketHandler {
     protected void register() {
         ServerPlayNetworking.registerGlobalReceiver(this.getPacket(), (server, player, handler, buf, responseSender) -> {
             ServerPacketContext context = new ServerPacketContext(EnvType.SERVER, player, server);
-            handleIncomingPacket(this.getPacket(), context, buf);
+            handleIncomingPacket(context, buf);
         });
     }
 

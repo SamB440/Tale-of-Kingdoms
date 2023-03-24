@@ -4,9 +4,9 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
-import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,11 +23,11 @@ import java.util.Optional;
 public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandler {
 
     public IncomingToggleSellGuiPacketHandler() {
-        super(Packets.TOGGLE_SELL_GUI_PACKET_ID);
+        super(Packets.TOGGLE_SELL_GUI);
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         boolean close = attachedData.readBoolean();
         ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
@@ -74,7 +73,7 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
+    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

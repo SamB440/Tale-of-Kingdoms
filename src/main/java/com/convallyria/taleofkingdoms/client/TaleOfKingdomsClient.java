@@ -12,7 +12,10 @@ import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyn
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBankerInteractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuildKingdomPacket;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuyItemPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingCityBuilderActionPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingFixGuildPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingForemanBuyWorkerPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingForemanCollectPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
@@ -67,7 +70,10 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         registerHandler(new OutgoingBankerInteractPacketHandler());
         registerHandler(new OutgoingBuildKingdomPacket());
         registerHandler(new OutgoingBuyItemPacketHandler());
+        registerHandler(new OutgoingCityBuilderActionPacketHandler());
         registerHandler(new OutgoingFixGuildPacketHandler());
+        registerHandler(new OutgoingForemanBuyWorkerPacketHandler());
+        registerHandler(new OutgoingForemanCollectPacketHandler());
         registerHandler(new OutgoingHunterPacketHandler());
         registerHandler(new OutgoingInnkeeperPacketHandler());
         registerHandler(new OutgoingToggleSellGuiPacketHandler());

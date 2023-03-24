@@ -5,9 +5,9 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
@@ -25,11 +24,11 @@ import org.jetbrains.annotations.Nullable;
 public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
 
     public IncomingBuildKingdomPacket() {
-        super(Packets.BUILD_KINGDOM_PACKET_ID);
+        super(Packets.BUILD_KINGDOM);
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
 
         context.taskQueue().execute(() -> {
@@ -37,8 +36,8 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 final int entityId = attachedData.readInt();
                 final Entity entity = player.world.getEntityById(entityId);
-                if (!(entity instanceof CityBuilderEntity cityBuilderEntity)) {
-                    reject(player, "Invalid entity ID");
+                if (!(entity instanceof CityBuilderEntity cityBuilderEntity) || player.distanceTo(cityBuilderEntity) > 5) {
+                    reject(player, "Invalid entity ID / Distance");
                     return;
                 }
 
@@ -83,10 +82,8 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
         });
     }
 
-
-
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
+    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
         throw new IllegalArgumentException("Not supported");
     }
 }

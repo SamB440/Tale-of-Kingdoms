@@ -25,9 +25,8 @@ public class ShopBuyUtil {
             api.executeOnMain(() -> {
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
-                    api.getClientHandler(Packets.BUY_ITEM_PACKET_ID)
-                            .handleOutgoingPacket(Packets.BUY_ITEM_PACKET_ID,
-                                    player, shopItem.getName(), count, entity.getGUIType());
+                    api.getClientPacketHandler(Packets.BUY_ITEM)
+                            .handleOutgoingPacket(player, shopItem.getName(), count, entity.getGUIType());
                     return;
                 }
 

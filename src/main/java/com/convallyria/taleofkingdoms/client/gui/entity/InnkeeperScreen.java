@@ -52,9 +52,8 @@ public class InnkeeperScreen extends ScreenTOK {
 
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
-                    api.getClientHandler(Packets.INNKEEPER_PACKET_ID)
-                            .handleOutgoingPacket(Packets.INNKEEPER_PACKET_ID,
-                                    player, true);
+                    api.getClientPacketHandler(Packets.INNKEEPER_HIRE_ROOM)
+                            .handleOutgoingPacket(player, true);
                     return;
                 }
 
@@ -85,9 +84,8 @@ public class InnkeeperScreen extends ScreenTOK {
             }
 
             if (server == null) {
-                api.getClientHandler(Packets.INNKEEPER_PACKET_ID)
-                        .handleOutgoingPacket(Packets.INNKEEPER_PACKET_ID,
-                                player, false);
+                api.getClientPacketHandler(Packets.INNKEEPER_HIRE_ROOM)
+                        .handleOutgoingPacket(player, false);
                 return;
             }
 

@@ -9,10 +9,10 @@ import net.minecraft.network.PacketByteBuf;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class OutgoingToggleSellGuiPacketHandler extends ClientPacketHandler {
+public final class OutgoingForemanCollectPacketHandler extends ClientPacketHandler {
 
-    public OutgoingToggleSellGuiPacketHandler() {
-        super(Packets.TOGGLE_SELL_GUI);
+    public OutgoingForemanCollectPacketHandler() {
+        super(Packets.FOREMAN_BUY_WORKER);
     }
 
     @Override
@@ -23,7 +23,7 @@ public final class OutgoingToggleSellGuiPacketHandler extends ClientPacketHandle
     @Override
     public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeBoolean((Boolean) data[0]);
+        passedData.writeInt((Integer) data[0]);
         sendPacket(player, passedData);
     }
 }

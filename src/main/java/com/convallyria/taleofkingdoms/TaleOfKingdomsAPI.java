@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class TaleOfKingdomsAPI {
 
@@ -49,7 +50,7 @@ public class TaleOfKingdomsAPI {
     }
 
     @Environment(EnvType.SERVER)
-    public ServerPacketHandler getServerHandler(Identifier identifier) {
+    public ServerPacketHandler getServerPacketHandler(Identifier identifier) {
         return serverPacketHandlers.get(identifier);
     }
 
@@ -59,7 +60,7 @@ public class TaleOfKingdomsAPI {
     }
 
     @Environment(EnvType.CLIENT)
-    public ClientPacketHandler getClientHandler(Identifier identifier) {
+    public ClientPacketHandler getClientPacketHandler(Identifier identifier) {
         return clientPacketHandlers.get(identifier);
     }
 
@@ -114,6 +115,14 @@ public class TaleOfKingdomsAPI {
             MinecraftClient.getInstance().getServer().execute(runnable);
         } else {
             TaleOfKingdoms.LOGGER.warn("Cannot execute task because MinecraftServer is null");
+        }
+    }
+
+    public void executeOnServerEnvironment(Consumer<MinecraftServer> runnable) {
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            executeOnServer(() -> runnable.accept(MinecraftClient.getInstance().getServer()));
+        } else {
+            executeOnDedicatedServer(() -> runnable.accept(minecraftServer));
         }
     }
 

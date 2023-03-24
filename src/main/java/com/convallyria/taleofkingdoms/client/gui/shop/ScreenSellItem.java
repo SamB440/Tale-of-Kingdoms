@@ -85,9 +85,8 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     protected void deleteBlock(TaleOfKingdomsAPI api, ShopEntity entity) {
         if (MinecraftClient.getInstance().getServer() == null) {
-            api.getClientHandler(Packets.TOGGLE_SELL_GUI_PACKET_ID)
-                    .handleOutgoingPacket(Packets.TOGGLE_SELL_GUI_PACKET_ID,
-                            playerInventory.player, true, entity.getGUIType());
+            api.getClientPacketHandler(Packets.TOGGLE_SELL_GUI)
+                    .handleOutgoingPacket(playerInventory.player, true, entity.getGUIType());
             return;
         }
 

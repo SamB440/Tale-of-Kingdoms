@@ -74,11 +74,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (!guildPlayer.getHunters().isEmpty()) {
                     Translations.HUNTER_THANK.send(player);
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdoms.getAPI().getClientHandler(Packets.HUNTER_PACKET_ID)
-                                .handleOutgoingPacket(Packets.HUNTER_PACKET_ID,
-                                        player,
-                                        client.getNetworkHandler().getConnection(),
-                                        true);
+                        TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.HIRE_HUNTER)
+                                .handleOutgoingPacket(player, true);
                         this.close();
                         return;
                     }
@@ -117,10 +114,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (guildPlayer.getCoins() < 3000) return;
                 if (stack == null) return;
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    api.getClientHandler(Packets.FIX_GUILD_PACKET_ID)
-                            .handleOutgoingPacket(Packets.FIX_GUILD_PACKET_ID,
-                                    player,
-                                    client.getNetworkHandler().getConnection());
+                    api.getClientPacketHandler(Packets.FIX_GUILD)
+                            .handleOutgoingPacket(player);
                     return;
                 }
 
@@ -177,9 +172,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 guildPlayer.setSignedContract(true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
             } else {
-                TaleOfKingdoms.getAPI().getClientHandler(Packets.SIGN_CONTRACT_PACKET_ID)
-                        .handleOutgoingPacket(Packets.SIGN_CONTRACT_PACKET_ID,
-                                player, true);
+                TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
+                        .handleOutgoingPacket(player, true);
             }
             widget.visible = false;
             widget.active = false;
@@ -199,9 +193,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 guildPlayer.setSignedContract(false);
                 Translations.GUILDMASTER_CONTRACT_CANCEL_AWAIT.send(player);
             } else {
-                TaleOfKingdoms.getAPI().getClientHandler(Packets.SIGN_CONTRACT_PACKET_ID)
-                        .handleOutgoingPacket(Packets.SIGN_CONTRACT_PACKET_ID,
-                                player, false);
+                TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
+                        .handleOutgoingPacket(player, false);
             }
             widget.visible = false;
             widget.active = false;
@@ -222,9 +215,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 Translations.SERVE.send(player);
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    api.getClientHandler(Packets.HUNTER_PACKET_ID)
-                            .handleOutgoingPacket(Packets.HUNTER_PACKET_ID,
-                                    player, false);
+                    api.getClientPacketHandler(Packets.HIRE_HUNTER)
+                            .handleOutgoingPacket(player, false);
                     return;
                 }
 

@@ -57,9 +57,8 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                 if (guildPlayer.getCoins() >= coins) {
                     this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdoms.getAPI().getClientHandler(Packets.BANKER_INTERACT_PACKET_ID)
-                                .handleOutgoingPacket(Packets.BANKER_INTERACT_PACKET_ID,
-                                        player, BankerMethod.DEPOSIT, coins);
+                        TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
+                                .handleOutgoingPacket(player, BankerMethod.DEPOSIT, coins);
                         return;
                     }
                     guildPlayer.setCoins(guildPlayer.getCoins() - coins);
@@ -82,9 +81,8 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                 if (guildPlayer.getBankerCoins() >= coins) {
                     this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdoms.getAPI().getClientHandler(Packets.BANKER_INTERACT_PACKET_ID)
-                                .handleOutgoingPacket(Packets.BANKER_INTERACT_PACKET_ID,
-                                        player, BankerMethod.WITHDRAW, coins);
+                        TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
+                                .handleOutgoingPacket(player, BankerMethod.WITHDRAW, coins);
                         return;
                     }
                     guildPlayer.setBankerCoins(guildPlayer.getBankerCoins() - coins);

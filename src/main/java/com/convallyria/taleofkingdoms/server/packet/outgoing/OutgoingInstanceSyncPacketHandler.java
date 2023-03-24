@@ -8,23 +8,22 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler {
 
     public OutgoingInstanceSyncPacketHandler() {
-        super(Packets.INSTANCE_PACKET_ID);
+        super(Packets.INSTANCE_SYNC);
     }
 
     @Override
-    public void handleIncomingPacket(Identifier identifier, PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
         throw new IllegalStateException("Not supported");
     }
 
     @Override
-    public void handleOutgoingPacket(Identifier identifier, @NotNull PlayerEntity player, @Nullable Object... data) {
+    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
         if (data != null && data[0] instanceof ConquestInstance instance
                 && player instanceof ServerPlayerEntity) {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
