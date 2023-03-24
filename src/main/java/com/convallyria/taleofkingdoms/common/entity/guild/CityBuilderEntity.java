@@ -27,7 +27,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -38,15 +37,21 @@ import org.jetbrains.annotations.Nullable;
 public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
     private static final TrackedData<Boolean> MOVING_TO_LOCATION;
+    private static final TrackedData<Integer> STONE;
+    private static final TrackedData<Integer> WOOD;
 
     static {
         MOVING_TO_LOCATION = DataTracker.registerData(CityBuilderEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        STONE = DataTracker.registerData(CityBuilderEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        WOOD = DataTracker.registerData(CityBuilderEntity.class, TrackedDataHandlerRegistry.INTEGER);
     }
 
     @Override
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(MOVING_TO_LOCATION, false);
+        this.dataTracker.startTracking(STONE, 0);
+        this.dataTracker.startTracking(WOOD, 0);
     }
 
     private final FollowPlayerGoal followPlayerGoal = new FollowPlayerGoal(this, 0.75F, 5, 50);
@@ -56,6 +61,10 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
     public CityBuilderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+        inventory.addListener((changed) -> {
+            this.getDataTracker().set(STONE, changed.count(Items.COBBLESTONE));
+            this.getDataTracker().set(WOOD, changed.count(Items.OAK_LOG));
+        });
     }
 
     @Override
@@ -131,7 +140,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     public boolean canAffordBuild(BuildCosts build) {
-       return inventory.count(Items.COBBLESTONE) >= build.getStone() && inventory.count(Items.OAK_LOG) >= build.getWood();
+       return this.dataTracker.get(STONE) >= build.getStone() && this.dataTracker.get(WOOD) >= build.getWood();
     }
 
     public void requireResources(BuildCosts build, Runnable runnable) {
@@ -167,6 +176,14 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         return inventory;
     }
 
+    public int getStone() {
+        return this.dataTracker.get(STONE);
+    }
+
+    public int getWood() {
+        return this.dataTracker.get(WOOD);
+    }
+
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
@@ -176,7 +193,8 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        //TODO: sync server to client
-        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.LIST_TYPE));
+        this.inventory.readNbtList(nbt.getList("Inventory", 10));
+        this.getDataTracker().set(STONE, inventory.count(Items.COBBLESTONE));
+        this.getDataTracker().set(WOOD, inventory.count(Items.OAK_LOG));
     }
 }

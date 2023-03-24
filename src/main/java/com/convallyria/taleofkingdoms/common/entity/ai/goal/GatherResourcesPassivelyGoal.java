@@ -3,15 +3,9 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.MobEntity;
@@ -49,21 +43,11 @@ public class GatherResourcesPassivelyGoal extends Goal {
                     final EntityType<? extends ForemanEntity> type = mob instanceof QuarryWorkerEntity ? EntityTypes.QUARRY_FOREMAN : EntityTypes.LUMBER_FOREMAN;
                     kingdom.getKingdomEntity(mob.world, type).ifPresent(foreman -> {
                         foreman.getInventory().addStack(new ItemStack(mob instanceof QuarryWorkerEntity ? Items.COBBLESTONE : Items.OAK_LOG, 1));
-                        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-                            updateClient(mob, foreman);
-                        }
                         //todo check server compat
                     });
                     break;
                 }
             });
         }
-    }
-
-    @Environment(EnvType.CLIENT)
-    private void updateClient(MobEntity serverQuarryWorker, ForemanEntity foreman) {
-        final Entity quarryForemanById = MinecraftClient.getInstance().player.world.getEntityById(foreman.getId());
-        if (!(quarryForemanById instanceof QuarryForemanEntity quarryForemanEntity)) return;
-        quarryForemanEntity.getInventory().addStack(new ItemStack(Items.COBBLESTONE, 1));
     }
 }
