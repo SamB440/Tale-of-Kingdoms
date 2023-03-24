@@ -90,7 +90,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                     final IntegratedServer server = MinecraftClient.getInstance().getServer();
                     final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
                     final ForemanEntity serverForeman = (ForemanEntity) serverPlayer.getWorld().getEntityById(entity.getId());
-                    final int slotWithStack = InventoryUtils.getSlotWithStack(entity.getInventory(), new ItemStack(item, 64));
+                    final int slotWithStack = InventoryUtils.getSlotWithStack(serverForeman.getInventory(), new ItemStack(item, 64));
                     if (slotWithStack == -1) {
                         Translations.FOREMAN_COLLECT_RESOURCES_EMPTY.send(player);
                         return;
