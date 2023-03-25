@@ -106,6 +106,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
         this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
         this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
+        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.BANDIT, true));
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {

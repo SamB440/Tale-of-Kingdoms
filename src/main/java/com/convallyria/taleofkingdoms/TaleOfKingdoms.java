@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
 import com.convallyria.taleofkingdoms.common.config.TaleOfKingdomsConfig;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
@@ -147,6 +148,8 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity.createMobAttributes());
 
+        FabricDefaultAttributeRegistry.register(EntityTypes.BANDIT, BanditEntity.createMobAttributes());
+
         // Player's kingdom entities
         FabricDefaultAttributeRegistry.register(EntityTypes.ITEM_SHOP, ItemShopEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.KINGDOM_VILLAGER, KingdomVillagerEntity.createMobAttributes());
@@ -196,6 +199,7 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     public void registerFeatures() {
+        Registry.register(Registries.STRUCTURE_PIECE, new Identifier(MODID, "bandit_camp_piece"), TOKStructures.BANDIT_CAMP);
         Registry.register(Registries.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), TOKStructures.GATEWAY);
         Registry.register(Registries.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
     }

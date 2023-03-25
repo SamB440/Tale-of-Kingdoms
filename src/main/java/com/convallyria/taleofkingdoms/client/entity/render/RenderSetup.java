@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
@@ -50,6 +51,8 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.REFICULE_GUARDIAN, identifier("textures/entity/updated_textures/reficuleguardian.png"));
         register(EntityTypes.REFICULE_MAGE, identifier("textures/entity/updated_textures/reficulemage.png"));
 
+        register(EntityTypes.BANDIT, BanditEntity.SKINS);
+
         // Player's kingdom entities
         register(EntityTypes.ITEM_SHOP, identifier("textures/entity/updated_textures/shopkeeper.png"));
         register(EntityTypes.KINGDOM_VILLAGER,
@@ -73,13 +76,13 @@ public record RenderSetup(TaleOfKingdoms mod) {
         if (type == EntityTypes.REFICULE_MAGE) {
             EntityRendererRegistry.register(type, (context) ->
                     new ReficuleMageEntityRenderer(context,
-                            new PlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false)));
+                            new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false)));
             return;
         }
 
         EntityRendererRegistry.register(type, (context) ->
                 new TOKBipedRender<MobEntity, PlayerEntityModel<MobEntity>>(context,
-                        new PlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
+                        new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
                         0.5F,
                         skins));
     }

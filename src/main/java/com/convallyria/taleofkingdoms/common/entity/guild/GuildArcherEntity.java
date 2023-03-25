@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
+import com.convallyria.taleofkingdoms.common.entity.States;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.CrossbowAttackGoal;
@@ -41,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GuildArcherEntity extends TOKEntity implements CrossbowUser, RangedAttackMob {
+public class GuildArcherEntity extends TOKEntity implements CrossbowUser, RangedAttackMob, States {
 
     private boolean charging;
     private boolean ticked;
@@ -63,6 +64,17 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
     @Override
     public void postShoot() {
         this.despawnCounter = 0;
+    }
+
+    @Override
+    public States.State getState() {
+        if (this.isCharging()) {
+            return States.State.CROSSBOW_CHARGE;
+        } else if (this.isHolding(Items.CROSSBOW)) {
+            return States.State.CROSSBOW_HOLD;
+        } else {
+            return this.isAttacking() ? States.State.ATTACKING : States.State.NEUTRAL;
+        }
     }
 
     @Override
