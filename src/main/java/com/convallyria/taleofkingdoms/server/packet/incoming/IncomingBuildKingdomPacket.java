@@ -30,11 +30,10 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
     @Override
     public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-
+        final int entityId = attachedData.readInt();
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                final int entityId = attachedData.readInt();
                 final Entity entity = player.world.getEntityById(entityId);
                 if (!(entity instanceof CityBuilderEntity cityBuilderEntity) || player.distanceTo(cityBuilderEntity) > 5) {
                     reject(player, "Invalid entity ID / Distance");
@@ -76,8 +75,9 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
                     cityBuilderEntity.refreshPositionAfterTeleport(player.getX(), player.getY(), player.getZ());
                     // Now move to the well location
                     cityBuilderEntity.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
+
+                    ServerConquestInstance.sync(player, instance);
                 });
-                ServerConquestInstance.sync(player, instance);
             });
         });
     }

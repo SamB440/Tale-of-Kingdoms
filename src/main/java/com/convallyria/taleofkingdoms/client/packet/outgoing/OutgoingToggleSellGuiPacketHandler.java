@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.packet.outgoing;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
+import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -24,6 +25,7 @@ public final class OutgoingToggleSellGuiPacketHandler extends ClientPacketHandle
     public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
         PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
         passedData.writeBoolean((Boolean) data[0]);
+        passedData.writeEnumConstant((ShopParser.GUI) data[1]);
         sendPacket(player, passedData);
     }
 }
