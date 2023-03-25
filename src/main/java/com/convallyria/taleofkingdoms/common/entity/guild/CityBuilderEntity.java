@@ -118,17 +118,11 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     public void give64wood(PlayerEntity player) {
-        System.out.println("64 wood");
         final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
         TaleOfKingdoms.getAPI().executeOnServerEnvironment((server) -> {
-            System.out.println("server");
             final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
             final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
             final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
-            System.out.println("playerwoodcount: " + playerWoodCount);
-            System.out.println("wood: " + getWood());
-            System.out.println("stack: " + stack);
-            System.out.println("can insert? " + serverCityBuilder.getInventory().canInsert(stack));
             if (stack != null && playerWoodCount >= 64 && getWood() <= (320 - 64) && serverCityBuilder.getInventory().canInsert(stack)) {
                 int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                 serverPlayer.getInventory().removeStack(slot);
