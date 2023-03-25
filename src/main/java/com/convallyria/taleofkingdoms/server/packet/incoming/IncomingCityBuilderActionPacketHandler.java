@@ -59,7 +59,6 @@ public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHa
                 return;
             }
 
-            System.out.println("action: " + action);
             switch (action) {
                 case GIVE_64_WOOD -> cityBuilderEntity.give64wood(player);
                 case GIVE_64_STONE -> cityBuilderEntity.give64stone(player);

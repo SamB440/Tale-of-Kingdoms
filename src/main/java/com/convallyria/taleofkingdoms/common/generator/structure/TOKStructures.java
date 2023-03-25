@@ -50,7 +50,7 @@ public class TOKStructures {
           registerStructure(structureRegisterable, TOKStructureKeys.REFICULE_VILLAGE, new ReficuleVillageStructure(StructureConfigCreator
                   .create()
                   .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
-                  .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
+                  .terrainAdaptation(StructureTerrainAdaptation.BEARD_BOX)
                   .build(structureRegisterable)));
      }
 

@@ -33,7 +33,7 @@ public class ReficuleVillageGenerator {
 
     public static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
         final Direction direction = Direction.random(random);
-        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);
+        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos, BlockRotation.NONE, 0);
         onePiece.setOrientation(direction);
         structurePiecesHolder.addPiece(onePiece);
 
