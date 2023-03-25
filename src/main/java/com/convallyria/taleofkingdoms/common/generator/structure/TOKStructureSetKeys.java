@@ -7,6 +7,7 @@ import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 
 public class TOKStructureSetKeys {
+    public static final RegistryKey<StructureSet> BANDIT_CAMPS = of("bandit_camps");
     public static final RegistryKey<StructureSet> REFICULE_VILLAGES = of("reficule_villages");
     public static final RegistryKey<StructureSet> GATEWAYS = of("gateways");
 

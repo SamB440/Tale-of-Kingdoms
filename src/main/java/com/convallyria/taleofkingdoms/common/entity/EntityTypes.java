@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.entity.generic.BanditEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.KnightEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
@@ -17,11 +18,11 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberWorkerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.StockMarketEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
@@ -136,6 +137,12 @@ public class EntityTypes {
             Registries.ENTITY_TYPE,
             new Identifier(TaleOfKingdoms.MODID, "reficule_mage"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, ReficuleMageEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<BanditEntity> BANDIT = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "bandit"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, BanditEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 
     // =========================

@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.common.generator.structure;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.generator.BanditCampGenerator;
 import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.biome.TOKBiomeTags;
@@ -22,6 +23,9 @@ public class TOKStructures {
      public static final StructurePieceType GATEWAY = GatewayGenerator.GatewayPiece::new;
      public static final StructureType<?> GATEWAY_TYPE = registerType("gateway", GatewayStructure.CODEC);
 
+     public static final StructurePieceType BANDIT_CAMP = BanditCampGenerator.BanditCampPiece::new;
+     public static final StructureType<?> BANDIT_CAMP_TYPE = registerType("bandit_camp", BanditCampStructure.CODEC);
+
      // This doesn't work. We use json files by default for now.
 //     public static void registerStructureSets(Registerable<StructureSet> structureSetRegisterable) {
 //          RegistryEntryLookup<Structure> registryEntryLookup = structureSetRegisterable.getRegistryLookup(RegistryKeys.STRUCTURE);
@@ -42,6 +46,11 @@ public class TOKStructures {
 //          Registry.register(BuiltinRegistries.STRUCTURE_POOL, new Identifier(TaleOfKingdoms.MODID, "gateway"), pool);
 //          final StructurePool gateway = BuiltinRegistries.STRUCTURE_POOL.get(new Identifier(TaleOfKingdoms.MODID, "gateway"));
 //          System.out.println("e: " + gateway);
+          registerStructure(structureRegisterable, TOKStructureKeys.BANDIT_CAMP, new BanditCampStructure(StructureConfigCreator
+                  .create()
+                  .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
+                  .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
+                  .build(structureRegisterable)));
           registerStructure(structureRegisterable, TOKStructureKeys.GATEWAY, new GatewayStructure(StructureConfigCreator
                   .create()
                   .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
