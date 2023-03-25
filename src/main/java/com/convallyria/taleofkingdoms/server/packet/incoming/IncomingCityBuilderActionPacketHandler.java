@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.packet.action.CityBuilderAction;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHandler {
 
     public IncomingCityBuilderActionPacketHandler() {
-        super(Packets.FOREMAN_COLLECT);
+        super(Packets.CITYBUILDER_ACTION);
     }
 
     @Override
@@ -58,6 +59,7 @@ public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHa
                 return;
             }
 
+            System.out.println("action: " + action);
             switch (action) {
                 case GIVE_64_WOOD -> cityBuilderEntity.give64wood(player);
                 case GIVE_64_STONE -> cityBuilderEntity.give64stone(player);
@@ -68,7 +70,7 @@ public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHa
                         return;
                     }
 
-                    cityBuilderEntity.build(player, buildCosts, kingdom);
+                    cityBuilderEntity.build(player, buildCosts, kingdom).thenAccept((v) -> ServerConquestInstance.sync(player, instance));
                 }
             }
         }));

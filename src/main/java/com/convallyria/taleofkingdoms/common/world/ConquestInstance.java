@@ -64,15 +64,24 @@ public class ConquestInstance {
                     Codec.unboundedMap(Uuids.CODEC, GuildPlayer.CODEC).fieldOf("guild_players").forGetter(ConquestInstance::getGuildPlayers)
             ).apply(instance, (name, hasLoaded, start, end, origin, underAttack, attackLocations, attackers, guildPlayers) -> {
                 ConquestInstance conquestInstance = new ConquestInstance(name, start, end, origin);
-                conquestInstance.setLoaded(hasLoaded);
-                conquestInstance.setUnderAttack(underAttack);
-                conquestInstance.getReficuleAttackLocations().addAll(attackLocations);
-                conquestInstance.getReficuleAttackers().addAll(attackers);
-                conquestInstance.getGuildPlayers().putAll(guildPlayers);
+                conquestInstance.uploadData(start, end, hasLoaded, underAttack, attackLocations, attackers, guildPlayers);
                 return conquestInstance;
             }
     ));
 
+    public void uploadData(ConquestInstance newData) {
+        this.uploadData(newData.start, newData.end, newData.hasLoaded, newData.underAttack, newData.reficuleAttackLocations, newData.reficuleAttackers, newData.guildPlayers);
+    }
+
+    public void uploadData(BlockPos start, BlockPos end, boolean hasLoaded, boolean underAttack, List<BlockPos> attackLocations, List<UUID> attackers, Map<UUID, GuildPlayer> guildPlayers) {
+        this.setStart(start);
+        this.setEnd(end);
+        this.setLoaded(hasLoaded);
+        this.setUnderAttack(underAttack);
+        this.getReficuleAttackLocations().addAll(attackLocations);
+        this.getReficuleAttackers().addAll(attackers);
+        this.getGuildPlayers().putAll(guildPlayers);
+    }
 
     private final String name;
     @Deprecated(forRemoval = true)

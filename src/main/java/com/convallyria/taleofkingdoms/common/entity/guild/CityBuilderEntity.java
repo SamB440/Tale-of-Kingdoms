@@ -40,6 +40,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
 
     private static final TrackedData<Boolean> MOVING_TO_LOCATION;
@@ -116,11 +118,17 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     public void give64wood(PlayerEntity player) {
+        System.out.println("64 wood");
         final int playerWoodCount = InventoryUtils.count(player.getInventory(), ItemTags.LOGS);
         TaleOfKingdoms.getAPI().executeOnServerEnvironment((server) -> {
+            System.out.println("server");
             final ItemStack stack = InventoryUtils.getStack(player.getInventory(), ItemTags.LOGS, 64);
             final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
             final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
+            System.out.println("playerwoodcount: " + playerWoodCount);
+            System.out.println("wood: " + getWood());
+            System.out.println("stack: " + stack);
+            System.out.println("can insert? " + serverCityBuilder.getInventory().canInsert(stack));
             if (stack != null && playerWoodCount >= 64 && getWood() <= (320 - 64) && serverCityBuilder.getInventory().canInsert(stack)) {
                 int slot = serverPlayer.getInventory().getSlotWithStack(stack);
                 serverPlayer.getInventory().removeStack(slot);
@@ -164,18 +172,20 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         });
     }
 
-    public void build(PlayerEntity player, BuildCosts build, PlayerKingdom kingdom) {
+    public CompletableFuture<Void> build(PlayerEntity player, BuildCosts build, PlayerKingdom kingdom) {
+        CompletableFuture<Void> future = new CompletableFuture<>();
         TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
             final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
             final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
-            MinecraftClient.getInstance().currentScreen.close();
             kingdom.addBuilt(build.getKingdomPOI());
             TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
             TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
 
             serverCityBuilder.getInventory().removeItem(Items.OAK_LOG, build.getWood());
             serverCityBuilder.getInventory().removeItem(Items.COBBLESTONE, build.getStone());
+            future.complete(null);
         });
+        return future;
     }
 
     public void followPlayer() {

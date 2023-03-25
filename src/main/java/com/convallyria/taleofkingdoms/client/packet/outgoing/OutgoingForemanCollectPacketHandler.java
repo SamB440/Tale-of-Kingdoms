@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public final class OutgoingForemanCollectPacketHandler extends ClientPacketHandler {
 
     public OutgoingForemanCollectPacketHandler() {
-        super(Packets.FOREMAN_BUY_WORKER);
+        super(Packets.FOREMAN_COLLECT);
     }
 
     @Override

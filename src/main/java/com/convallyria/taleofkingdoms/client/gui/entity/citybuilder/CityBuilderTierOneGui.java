@@ -174,6 +174,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 }
 
                 entity.build(player, build, kingdom);
+                MinecraftClient.getInstance().currentScreen.close();
             }).active(canAffordBuild)
                     .tooltip(List.of(
                         Text.literal(pluralText).append(build.getDisplayName()).append(Text.literal(" costs:")),

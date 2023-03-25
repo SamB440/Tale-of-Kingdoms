@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public final class OutgoingBuildKingdomPacket extends ClientPacketHandler {
 
     public OutgoingBuildKingdomPacket() {
-        super(Packets.FIX_GUILD);
+        super(Packets.BUILD_KINGDOM);
     }
 
     @Override
