@@ -119,7 +119,6 @@ public class GameInstanceListener extends Listener {
             /*instance.reset(player);
             instance.sync(player);*/
             instance.save(server.getLevelName());
-            ServerConquestInstance.sync(player, instance);
         }).exceptionally(error -> {
             error.printStackTrace();
             return null;
