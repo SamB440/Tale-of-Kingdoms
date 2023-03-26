@@ -31,7 +31,7 @@ public class ItemPouch extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         final UUID uuid = user.getUuid();
-        if (!world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
+        if (world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         final GuildPlayer guildPlayer = instance.getPlayer(user);
         ItemStack itemStack = user.getStackInHand(hand);
