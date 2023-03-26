@@ -17,7 +17,7 @@ public final class OutgoingBankerInteractPacketHandler extends ClientPacketHandl
     }
 
     @Override
-    public void handleIncomingPacket( PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
         throw new IllegalArgumentException("Not supported");
     }
 
