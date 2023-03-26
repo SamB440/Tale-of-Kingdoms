@@ -99,7 +99,7 @@ public class EntityTypes {
     );
     public static final EntityType<LoneEntity> LONE = Registry.register(
             Registries.ENTITY_TYPE,
-            new Identifier(TaleOfKingdoms.MODID, "lone"),
+            new Identifier(TaleOfKingdoms.MODID, "lone_villager"),
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, LoneEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
     public static final EntityType<BankerEntity> BANKER = Registry.register(
