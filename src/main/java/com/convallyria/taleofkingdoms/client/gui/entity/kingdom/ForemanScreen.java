@@ -53,7 +53,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
         //todo: translatable
         rootComponent.child(
-            Components.label(Text.literal("Foreman Menu - Total Money: " + instance.getPlayer(player).getCoins() + " Gold Coins"))
+            Components.label(Text.translatable("menu.taleofkingdoms.foreman.total_money", instance.getPlayer(player).getCoins()))
                     .color(Color.ofRgb(11111111))
                     .positioning(Positioning.relative(50, 15))
         );
@@ -63,7 +63,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         final float resourcePercent = resourceCount * (100f / 1280f);
 
         rootComponent.child(
-                Components.label(Text.literal("Resources"))
+                Components.label(Text.translatable("menu.taleofkingdoms.foreman.resources"))
                         .positioning(Positioning.relative(50, 40))
         );
 
@@ -72,7 +72,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                 .tooltip(Text.literal(resourceCount + " / 1280")));
 
         rootComponent.child(
-            Components.button(Text.literal("Collect 64"), c -> {
+            Components.button(Text.translatable("menu.taleofkingdoms.foreman.collect"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.FOREMAN_COLLECT)
                             .handleOutgoingPacket(player, entity.getId());
@@ -86,7 +86,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         );
 
         rootComponent.child(
-            Components.button(Text.literal("Buy Worker."), c -> {
+            Components.button(Text.translatable("menu.taleofkingdoms.foreman.buy_worker"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.FOREMAN_BUY_WORKER)
                             .handleOutgoingPacket(player, entity.getId());
@@ -95,14 +95,14 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
                 entity.buyWorker(player, instance);
             })
-            .tooltip(Text.literal("Buying a worker costs 1500 gold."))
+            .tooltip(Text.translatable("menu.taleofkingdoms.foreman.buy_worker_cost"))
             .sizing(Sizing.fixed(100), Sizing.fixed(20))
             .positioning(Positioning.relative(50, 75))
         );
 
         rootComponent.child(
             Components.button(
-                Text.literal("Cancel."),
+                Text.translatable("menu.taleofkingdoms.generic.cancel"),
                 (ButtonComponent button) -> this.close()
             ).positioning(Positioning.relative(50, 85))
         );

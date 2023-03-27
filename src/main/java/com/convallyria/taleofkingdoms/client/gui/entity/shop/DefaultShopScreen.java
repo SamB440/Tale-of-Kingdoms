@@ -23,6 +23,7 @@ import io.wispforest.owo.ui.core.Positioning;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -73,13 +74,13 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
         this.selectedItem = shopItems.get(0);
 
         inner.child(this.coinsLabel = (LabelComponent)
-            Components.label(Text.literal("Shop Menu - Total Money: " + guildPlayer.getCoins() + " Gold Coins"))
+            Components.label(Text.translatable("menu.taleofkingdoms.shop.total_money", guildPlayer.getCoins()))
                 .color(Color.WHITE)
                 .positioning(Positioning.relative(50, 5))
         );
 
         inner.child(this.selectedItemLabel = (LabelComponent)
-            Components.label(Text.literal("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins"))
+            Components.label(Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getName(), this.selectedItem.getCost()))
                 .color(Color.WHITE)
                 .positioning(Positioning.relative(50, 10))
         );
@@ -161,13 +162,14 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         super.render(stack, mouseX, mouseY, delta);
-        coinsLabel.text(Text.literal("Shop Menu - Total Money: " + instance.getPlayer(player).getCoins() + " Gold Coins"));
+        coinsLabel.text(Text.translatable("menu.taleofkingdoms.shop.total_money", instance.getPlayer(player).getCoins()));
         if (this.selectedItem != null) {
-            StringBuilder text = new StringBuilder("Selected Item Cost: " + this.selectedItem.getName() + " - " + this.selectedItem.getCost() + " Gold Coins");
+            MutableText text = Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getName(), this.selectedItem.getCost());
             if (this.selectedItem.getModifier() != 1) {
-                text.append(" (x ").append(String.format("%.2f", this.selectedItem.getModifier())).append(" modifier)");
+                text.append(Text.literal(" "));
+                text.append(Text.translatable("menu.taleofkingdoms.shop.select_item_cost_modifier", String.format("%.2f", this.selectedItem.getModifier())));
             }
-            this.selectedItemLabel.text(Text.literal(text.toString()));
+            this.selectedItemLabel.text(text);
         }
     }
 

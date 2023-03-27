@@ -72,7 +72,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         final PlayerKingdom kingdom = guildPlayer.getKingdom();
 
         inner.child(
-            Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + guildPlayer.getCoins() + " Gold Coins")).color(Color.ofRgb(11111111))
+            Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.total_money", "Tier 1", guildPlayer.getCoins())).color(Color.ofRgb(11111111))
             .positioning(Positioning.relative(50, 5))
         );
 
@@ -82,7 +82,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         //root.add(new WLabel(Text.literal("0      160      320")).setHorizontalAlignment(HorizontalAlignment.LEFT), 100, 30, 16, 2);
 
         inner.child(
-            Components.button(Text.literal("Give 64 wood"), c -> {
+            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.give_wood"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
                             .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.GIVE_64_WOOD);
@@ -94,7 +94,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         );
 
         inner.child(
-            Components.button(Text.literal("Give 64 cobblestone"), c -> {
+            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.give_cobblestone"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
                             .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.GIVE_64_STONE);
@@ -106,7 +106,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         );
 
         inner.child(
-            Components.label(Text.literal("Wood Amount"))
+            Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.wood_amount"))
                     .positioning(Positioning.relative(76, 40))
         );
 
@@ -116,7 +116,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 .tooltip(Text.literal(oakWoodCount.get() + " / 320")));
 
         inner.child(
-                Components.label(Text.literal("Stone Amount"))
+                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.stone_amount"))
                         .positioning(Positioning.relative(76, 53))
         );
 
@@ -126,7 +126,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 .tooltip(Text.literal(cobblestoneCount.get() + " / 320")));
 
         inner.child(
-            this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> {
+            this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.fix_kingdom"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
                             .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.FIX_KINGDOM);
@@ -143,7 +143,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         // Price list
         inner.child(
-            Components.button(Text.literal("Price List"), c -> {
+            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.price_list"), c -> {
                 MinecraftClient.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance));
             }).positioning(Positioning.relative(80, 80)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
@@ -192,7 +192,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
         inner.child(
             Components.button(
-                Text.literal("Exit"),
+                Text.translatable("menu.taleofkingdoms.generic.exit"),
                 (ButtonComponent button) -> {
                     this.close();
                     Translations.CITYBUILDER_GUI_CLOSE.send(player);

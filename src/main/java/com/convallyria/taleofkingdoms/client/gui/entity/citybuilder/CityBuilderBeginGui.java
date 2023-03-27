@@ -37,7 +37,7 @@ public class CityBuilderBeginGui extends BaseCityBuilderScreen {
 
         final GuildPlayer guildPlayer = instance.getPlayer(player);
         inner.child(
-                Components.label(Text.literal("Build Menu Tier 1 - Total Money: " + guildPlayer.getCoins() + " Gold Coins"))
+                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.total_money", "Tier 1", guildPlayer.getCoins()))
                         .positioning(Positioning.relative(50, 5))
         );
 
@@ -51,7 +51,7 @@ public class CityBuilderBeginGui extends BaseCityBuilderScreen {
 
         inner.child(
                 Components.button(
-                    Text.literal("Exit"),
+                    Text.translatable("menu.taleofkingdoms.generic.exit"),
                     (ButtonComponent button) -> this.close()
                 )
                 .positioning(Positioning.relative(50, 85))

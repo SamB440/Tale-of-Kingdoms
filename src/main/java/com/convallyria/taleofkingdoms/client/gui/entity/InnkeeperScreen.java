@@ -37,7 +37,7 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Rest in a room."), widget -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.innkeeper.rest"), widget -> {
             this.close();
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
@@ -67,11 +67,11 @@ public class InnkeeperScreen extends ScreenTOK {
                     guildPlayer.setCoins(guildPlayer.getCoins() - 10);
                 });
             } else {
-                player.sendMessage(Text.literal("House Keeper: It seems there are no rooms available at this time."), false);
+                player.sendMessage(Text.translatable("menu.taleofkingdoms.innkeeper.no_rooms"));
             }
         }).dimensions(this.width / 2 - 75, this.height / 4 + 50, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Wait for night time."), widget -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.innkeeper.wait"), widget -> {
             this.close();
             MinecraftServer server = MinecraftClient.getInstance().getServer();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -93,7 +93,7 @@ public class InnkeeperScreen extends ScreenTOK {
             guildPlayer.setCoins(guildPlayer.getCoins() - 10);
         }).dimensions(this.width / 2 - 75, this.height / 4 + 75, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Exit"), widget -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.generic.exit"), widget -> {
             this.close();
         }).dimensions(this.width / 2 - 75, this.height / 4 + 100, 150, 20).build());
     }

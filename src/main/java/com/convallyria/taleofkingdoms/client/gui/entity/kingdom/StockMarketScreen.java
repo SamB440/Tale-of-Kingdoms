@@ -43,7 +43,7 @@ public class StockMarketScreen extends DefaultShopScreen {
             final BarWidget component = (BarWidget) new BarWidget(100, 10, balancedCost)
                     .positioning(Positioning.relative(24 + 35, widget.getY()))
                     .tooltip(List.of(
-                            Text.literal("Stock Market Value"),
+                            Text.translatable("menu.taleofkingdoms.stock_market.stock_value"),
                             Text.literal("x" + String.format("%.2f", shopItem.getModifier()))
                     ));
             component.visible = component.active = pageNumber == 0;
