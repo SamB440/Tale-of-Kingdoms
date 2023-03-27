@@ -97,7 +97,7 @@ public class ScreenStartConquest extends ScreenTOK {
             }));
         }).dimensions(this.width / 2 - 100, this.height / 2 + 15, 200, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.startconquest.delay").formatted(Formatting.RED), (b) -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.startconquest.delay").formatted(Formatting.RED), (b) -> {
             this.close();
         }).dimensions(this.width / 2 - 50, this.height / 2 + 50, 100, 20).build());
 
@@ -120,7 +120,7 @@ public class ScreenStartConquest extends ScreenTOK {
             currentHeight = currentHeight + 10;
         }
         drawCenteredTextWithShadow(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, Text.translatable("menu.startconquest.exit"), this.width / 2, currentHeight + 65, 0xFFFFFF);
+        drawCenteredTextWithShadow(stack, this.textRenderer, Text.translatable("menu.taleofkingdoms.startconquest.exit"), this.width / 2, currentHeight + 65, 0xFFFFFF);
         this.text.render(stack, par1, par2, par3);
         super.render(stack, par1, par2, par3);
     }
@@ -142,7 +142,7 @@ public class ScreenStartConquest extends ScreenTOK {
         Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
         if (instance.isEmpty()) {
             Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
-            player.sendMessage(Text.translatable("menu.startconquest.closed", keyName.getString()), false);
+            player.sendMessage(Text.translatable("menu.taleofkingdoms.startconquest.closed", keyName.getString()), false);
         }
     }
 }
