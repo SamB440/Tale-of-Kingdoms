@@ -9,7 +9,7 @@
                                  region-height="256" texture-width="400" texture-height="256"/>
 
                         <button id="buy-button">
-                            <text>Buy</text>
+                            <text translate="true">menu.taleofkingdoms.shop.buy</text>
                             <tooltip-text>Use Left Shift to buy 16x.</tooltip-text>
                             <positioning type="relative">87,40</positioning>
                             <sizing>
@@ -19,7 +19,7 @@
                         </button>
 
                         <button id="sell-button">
-                            <text>Sell</text>
+                            <text translate="true">menu.taleofkingdoms.shop.sell</text>
                             <positioning type="relative">87,50</positioning>
                             <sizing>
                                 <horizontal method="fixed">55</horizontal>
@@ -28,7 +28,7 @@
                         </button>
 
                         <button id="exit-button">
-                            <text>Exit</text>
+                            <text translate="true">menu.taleofkingdoms.generic.exit</text>
                             <positioning type="relative">87,60</positioning>
                             <sizing>
                                 <horizontal method="fixed">55</horizontal>

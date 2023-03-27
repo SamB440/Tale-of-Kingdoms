@@ -46,7 +46,7 @@ public class CityBuilderPriceListGui extends BaseCityBuilderScreen {
 
         rootComponent.child(
             Components.button(
-                Text.literal("Back."),
+                Text.translatable("menu.taleofkingdoms.generic.back"),
                 (ButtonComponent button) -> {
                     this.close();
                     MinecraftClient.getInstance().setScreen(new CityBuilderTierOneGui(player, entity, instance));

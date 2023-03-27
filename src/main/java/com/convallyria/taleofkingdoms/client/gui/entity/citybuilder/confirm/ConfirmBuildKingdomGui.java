@@ -50,12 +50,12 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
 
         //todo: translatable
         rootComponent.child(
-                Components.label(Text.literal("Are you sure you want to build here?"))
+                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.build_confirm"))
                         .positioning(Positioning.relative(50, 45))
         );
 
         rootComponent.child(
-                Components.label(Text.literal("WARNING: When building it will destroy the area around it to make space."))
+                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy"))
                         .color(Color.RED)
                         .positioning(Positioning.relative(50, 50))
         );
@@ -101,7 +101,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
 
         rootComponent.child(
             Components.button(
-                Text.literal("Cancel."),
+                Text.translatable("menu.taleofkingdoms.generic.cancel"),
                 (ButtonComponent button) -> this.close()
             )
             .positioning(Positioning.relative(50, 75))

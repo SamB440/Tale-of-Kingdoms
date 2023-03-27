@@ -27,7 +27,7 @@
 <!--                        </scroll>-->
 
                         <button id="exit-button">
-                            <text>Exit</text>
+                            <text translate="true">menu.taleofkingdoms.generic.exit</text>
                             <positioning type="relative">50,85</positioning>
                             <sizing>
                                 <horizontal method="fixed">55</horizontal>

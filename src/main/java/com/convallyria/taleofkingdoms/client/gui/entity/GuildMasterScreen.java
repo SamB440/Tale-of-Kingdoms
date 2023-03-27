@@ -26,6 +26,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -48,7 +49,7 @@ public class GuildMasterScreen extends ScreenTOK {
     private ButtonWidget hireHuntersButton;
 
     public GuildMasterScreen(PlayerEntity player, GuildMasterEntity entity, ConquestInstance instance) {
-        super("taleofkingdoms.menu.guildmaster.name");
+        super("menu.taleofkingdoms.guild_master.name");
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -68,7 +69,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         this.makeHireHuntersButton();
 
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Retire Hunter"), widget -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.guild_master.retire_hunter"), widget -> {
             if (guildPlayer.getHunters().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
@@ -108,8 +109,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
         PlayerInventory clientPlayerInventory = player.getInventory();
         ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS, 64);
-        String fixText = "Fix the guild";
-        final ButtonWidget fixWidget = this.addDrawableChild(ButtonWidget.builder(Text.literal(fixText), widget -> {
+        final ButtonWidget fixWidget = this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.guild_master.fix_guild"), widget -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.executeOnMain(() -> {
                 if (instance.isUnderAttack() || guildPlayer.getCoins() < 3000) return;
@@ -138,7 +138,7 @@ public class GuildMasterScreen extends ScreenTOK {
             );
         }
 
-        this.addDrawableChild(ButtonWidget.builder(Text.literal("Exit"), widget -> {
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.generic.exit"), widget -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);
             this.close();
         }).dimensions(this.width / 2 - 75, this.height / 2 + 46, 150, 20).build());
@@ -212,13 +212,13 @@ public class GuildMasterScreen extends ScreenTOK {
 
     private void makeHireHuntersButton() {
         final UUID playerUuid = player.getUuid();
-        String hunterText = guildPlayer.getCoins() >= 1500 ? "Hire Hunters " + Formatting.GREEN + "(1500 gold)" : "Hire Hunters " + Formatting.RED + "(1500 gold)";
+        MutableText hunterText = guildPlayer.getCoins() >= 1500 ? Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter", Formatting.GREEN) : Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter", Formatting.RED);
         if (this.hireHuntersButton != null) {
-            this.hireHuntersButton.setMessage(Text.literal(hunterText));
+            this.hireHuntersButton.setMessage(hunterText);
             return;
         }
 
-        this.hireHuntersButton = this.addDrawableChild(ButtonWidget.builder(Text.literal(hunterText), widget -> {
+        this.hireHuntersButton = this.addDrawableChild(ButtonWidget.builder(hunterText, widget -> {
             if (guildPlayer.getCoins() >= 1500) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 Translations.SERVE.send(player);
