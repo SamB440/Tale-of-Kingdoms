@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -60,7 +61,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                hunterEntity.kill();
+                TaleOfKingdoms.getAPI().executeOnDedicatedServer(() -> hunterEntity.remove(Entity.RemovalReason.DISCARDED));
                 guildPlayer.getHunters().remove(hunterEntity.getUuid());
                 guildPlayer.setCoins(guildPlayer.getCoins() + 750);
                 ServerConquestInstance.sync(player, instance);

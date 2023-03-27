@@ -18,6 +18,7 @@ import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -88,7 +89,7 @@ public class GuildMasterScreen extends ScreenTOK {
                             guildPlayer.getHunters().remove(uuid);
                             TaleOfKingdoms.LOGGER.info("Removed hunter by uuid " + uuid + " that no longer exists.");
                         } else {
-                            TaleOfKingdoms.getAPI().executeOnServer(hunter::kill);
+                            TaleOfKingdoms.getAPI().executeOnServer(() -> hunter.remove(Entity.RemovalReason.DISCARDED));
                             guildPlayer.getHunters().remove(hunter.getUuid());
                             guildPlayer.setCoins(guildPlayer.getCoins() + 750);
                             return;
@@ -108,10 +109,10 @@ public class GuildMasterScreen extends ScreenTOK {
         PlayerInventory clientPlayerInventory = player.getInventory();
         ItemStack stack = InventoryUtils.getStack(clientPlayerInventory, ItemTags.LOGS, 64);
         String fixText = "Fix the guild";
-        this.addDrawableChild(ButtonWidget.builder(Text.literal(fixText), widget -> {
+        final ButtonWidget fixWidget = this.addDrawableChild(ButtonWidget.builder(Text.literal(fixText), widget -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.executeOnMain(() -> {
-                if (guildPlayer.getCoins() < 3000) return;
+                if (instance.isUnderAttack() || guildPlayer.getCoins() < 3000) return;
                 if (stack == null) return;
                 if (MinecraftClient.getInstance().getServer() == null) {
                     api.getClientPacketHandler(Packets.FIX_GUILD)
@@ -129,6 +130,13 @@ public class GuildMasterScreen extends ScreenTOK {
             });
             this.close();
         }).dimensions(this.width / 2 - 75, this.height / 2 + 23, 150, 20).build());
+        fixWidget.active = !instance.isUnderAttack();
+        if (instance.isUnderAttack()) {
+            fixWidget.tooltip(List.of(
+                    Text.literal("The Guild is under attack!"),
+                    Text.literal("You must kill all reficules and speak to the Guild Master Defender."))
+            );
+        }
 
         this.addDrawableChild(ButtonWidget.builder(Text.literal("Exit"), widget -> {
             Translations.GUILDMASTER_GOODHUNTING.send(player);

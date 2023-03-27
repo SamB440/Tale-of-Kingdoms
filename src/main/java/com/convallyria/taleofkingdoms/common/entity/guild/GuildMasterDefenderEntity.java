@@ -126,7 +126,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             instance.setUnderAttack(false);
                             final Entity entity = serverPlayerEntity.getWorld().getEntityById(this.getId());
                             entity.teleport(entity.getX(), entity.getY() + 100, entity.getZ());
-                            entity.kill();
+                            entity.remove(RemovalReason.DISCARDED);
                             Translations.GUILDMASTER_THANK_YOU.send(player);
                         } else {
                             Translations.GUILDMASTER_REBUILD.send(player);
