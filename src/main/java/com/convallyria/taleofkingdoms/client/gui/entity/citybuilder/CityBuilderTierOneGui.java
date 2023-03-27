@@ -126,7 +126,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 .tooltip(Text.literal(cobblestoneCount.get() + " / 320")));
 
         inner.child(
-            this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> TaleOfKingdoms.getAPI().executeOnServer(() -> {
+            this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.literal("Fix whole kingdom"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
                     TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
                             .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.FIX_KINGDOM);
@@ -134,7 +134,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
                 }
 
                 entity.fixKingdom(player, kingdom);
-            })).tooltip(List.of(
+            }).tooltip(List.of(
                   Text.literal("Repairing the kingdom costs:"),
                   Text.literal(" - 320 oak wood"),
                   Text.literal(" - 320 cobblestone")
