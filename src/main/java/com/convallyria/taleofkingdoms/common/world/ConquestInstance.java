@@ -153,8 +153,9 @@ public class ConquestInstance {
         return new Box(start, end).getCenter();
     }
 
-    public boolean canAttack(UUID uuid) {
-        final GuildPlayer guildPlayer = guildPlayers.get(uuid);
+    public boolean canAttack(PlayerEntity player) {
+        if (player.world.getRegistryKey() != World.OVERWORLD) return false;
+        final GuildPlayer guildPlayer = guildPlayers.get(player.getUuid());
         if (guildPlayer == null) return false;
         return guildPlayer.getWorthiness() >= (1500.0F / 2) && !isUnderAttack() && !guildPlayer.hasRebuiltGuild();
     }
@@ -171,7 +172,7 @@ public class ConquestInstance {
     }
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
-        if (canAttack(player.getUuid())) {
+        if (canAttack(player)) {
             TaleOfKingdoms.LOGGER.info("Initiating guild attack for player " + player.getName());
             EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.getBlockPos());
             this.underAttack = true;
