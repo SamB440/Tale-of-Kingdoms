@@ -3,9 +3,9 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.gui.entity.GuildMasterScreen;
+import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -13,6 +13,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -69,6 +70,11 @@ public class GuildMasterEntity extends TOKEntity {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean damage(DamageSource damageSource, float f) {
+        return !this.getType().equals(EntityTypes.GUILDMASTER);
     }
 
     @Override
