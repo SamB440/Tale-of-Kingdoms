@@ -17,15 +17,15 @@ public class MainConfig implements ConfigData {
 
 	@ConfigEntry.Gui.Tooltip
 	@Comment("Percent chance that a gateway can spawn in a selected chunk")
-	public int gateWaySpawnRate = 80;
+	public int gateWaySpawnRate = 30;
 
 	@ConfigEntry.Gui.Tooltip
 	@Comment("Percent chance that a reficule village can spawn in a selected chunk")
-	public int reficuleVillageSpawnRate = 60;
+	public int reficuleVillageSpawnRate = 20;
 
 	@ConfigEntry.Gui.Tooltip
 	@Comment("Percent chance that a bandit camp can spawn in a selected chunk")
-	public int banditCampSpawnRate = 80;
+	public int banditCampSpawnRate = 40;
 
 	@ConfigEntry.Gui.Tooltip
 	@Comment("Whether to always show the updates GUI when joining a world")
