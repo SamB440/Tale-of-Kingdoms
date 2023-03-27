@@ -134,6 +134,7 @@ public class BanditEntity extends TOKEntity implements CrossbowUser, RangedAttac
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.KNIGHT, true));
         this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
         this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
+        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, true));
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> livingEntity instanceof Monster && !(livingEntity instanceof BanditEntity)));
         this.goalSelector.add(2, new WanderAroundGoal(this, 0.6D));
         applyEntityAI();
