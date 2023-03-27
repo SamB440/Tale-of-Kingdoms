@@ -34,6 +34,11 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
         String playerContext = getPacket().toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         context.taskQueue().execute(() -> api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            if (instance.isUnderAttack()) {
+                reject(player, "Guild is under attack");
+                return;
+            }
+
             PlayerInventory playerInventory = player.getInventory();
             ItemStack stack = InventoryUtils.getStack(playerInventory, ItemTags.LOGS, 64);
             if (stack == null) {
