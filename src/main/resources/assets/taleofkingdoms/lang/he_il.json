@@ -1,7 +1,7 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "קונפיגורצית סיפור ממלכות",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "הראה ממשק משתמש להפעלת גרפיקה של התחלת ממלכה",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "הראה ממשק משתמש להפעלת גרפיקה של המשך כיבוש",
+    "text.autoconfig.taleofkingdoms.title": "קונפיגורציות 'סיפור של ממלכות'",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "הראה ממשק גרפי להתחלת ממלכה",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "הראה ממשק גרפי להמשיך את הכיבוש",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "שיעור הופעת שער",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "שיעור הופעת כפר נבלים",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
