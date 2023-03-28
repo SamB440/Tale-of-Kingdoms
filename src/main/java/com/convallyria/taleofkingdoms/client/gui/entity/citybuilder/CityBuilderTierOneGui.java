@@ -50,6 +50,8 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
     }
 
     private void update() {
+        final GuildPlayer guildPlayer = instance.getPlayer(player);
+        final PlayerKingdom kingdom = guildPlayer.getKingdom();
         AtomicInteger cobblestoneCount = new AtomicInteger(entity.getStone());
         AtomicInteger oakWoodCount = new AtomicInteger(entity.getWood());
         fixWholeKingdomButton.active(cobblestoneCount.get() == 320 && oakWoodCount.get() == 320);
@@ -61,7 +63,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         stoneBar.setBarProgress(cobblestonePercent / 100);
         stoneBar.tooltip(Text.literal(cobblestoneCount.get() + " / 320"));
 
-        buildButtons.forEach((build, button) -> button.active(entity.canAffordBuild(build)));
+        buildButtons.forEach((build, button) -> button.active(entity.canAffordBuild(kingdom, build)));
     }
 
     @Override
@@ -148,6 +150,13 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
             }).positioning(Positioning.relative(80, 80)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
 
+        inner.child(
+            Components.button(Text.literal("Tier 2"), c -> {})
+                .active(false)
+                .positioning(Positioning.relative(80, 90)).sizing(Sizing.fixed(100), Sizing.fixed(20))
+                .tooltip(List.of(Text.literal("Thank you for downloading the mod"), Text.literal("Tier 2 is currently Work-In-Progress")))
+        );
+
         // Actually starts at 70, first has addition of +20
         int currentY = 15;
         int currentX = 10;
@@ -162,7 +171,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
 
             //todo: small houses / large houses require special changes
             final boolean hasBuilt = kingdom.hasBuilt(build.getKingdomPOI());
-            final boolean canAffordBuild = entity.canAffordBuild(build);
+            final boolean canAffordBuild = entity.canAffordBuild(kingdom, build);
             final String text = hasBuilt ? "Fix " : "Build ";
             final String pluralText = hasBuilt ? "Repairing " : "Building ";
 
