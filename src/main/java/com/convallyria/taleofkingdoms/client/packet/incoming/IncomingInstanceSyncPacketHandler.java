@@ -23,7 +23,7 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
         final ConquestInstance instance = attachedData.decodeAsJson(ConquestInstance.CODEC);
         context.taskQueue().execute(() -> {
             final PlayerEntity player = context.player();
-            player.sendMessage(Text.literal("Received sync, " + instance));
+            if (TaleOfKingdoms.CONFIG.mainConfig.developerMode) player.sendMessage(Text.literal("Received sync, " + instance));
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             final ConquestInstance existing = api.getConquestInstanceStorage().getConquestInstance(player.getUuidAsString()).orElse(null);
             if (existing != null) {
