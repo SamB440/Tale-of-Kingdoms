@@ -212,16 +212,8 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         }
     }
 
-    public boolean canAffordBuild(BuildCosts build) {
-       return this.dataTracker.get(STONE) >= build.getStone() && this.dataTracker.get(WOOD) >= build.getWood();
-    }
-
-    public void requireResources(BuildCosts build, Runnable runnable) {
-        if (canAffordBuild(build)) {
-            inventory.removeItem(Items.OAK_LOG, build.getWood());
-            inventory.removeItem(Items.COBBLESTONE, build.getStone());
-            runnable.run();
-        }
+    public boolean canAffordBuild(@Nullable PlayerKingdom kingdom, BuildCosts build) {
+       return build.getTier().isLowerThanOrEqual(kingdom == null ? null : kingdom.getTier()) && this.dataTracker.get(STONE) >= build.getStone() && this.dataTracker.get(WOOD) >= build.getWood();
     }
 
     @Override
