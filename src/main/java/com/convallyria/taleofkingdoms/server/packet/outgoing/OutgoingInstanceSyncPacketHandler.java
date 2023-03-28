@@ -11,6 +11,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler {
 
     public OutgoingInstanceSyncPacketHandler() {
@@ -27,7 +29,14 @@ public final class OutgoingInstanceSyncPacketHandler extends ServerPacketHandler
         if (data != null && data[0] instanceof ConquestInstance instance
                 && player instanceof ServerPlayerEntity) {
             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-            passedData.encodeAsJson(ConquestInstance.CODEC, instance);
+            // Copy the instance but only make it reference the current player. We don't want to leak data (or waste bandwidth).
+            ConquestInstance copy = new ConquestInstance(instance.getName(), instance.getStart(), instance.getEnd(), instance.getOrigin());
+            copy.uploadData(instance);
+            for (UUID uuid : copy.getGuildPlayers().keySet()) {
+                if (uuid.equals(player.getUuid())) continue;
+                copy.getGuildPlayers().remove(uuid);
+            }
+            passedData.encodeAsJson(ConquestInstance.CODEC, copy);
             sendPacket(player, passedData);
         }
     }
