@@ -30,4 +30,6 @@ public class MainConfig implements ConfigData {
 	@ConfigEntry.Gui.Tooltip
 	@Comment("Whether to always show the updates GUI when joining a world")
 	public boolean alwaysShowUpdatesGUI = false;
+
+	public boolean developerMode = false;
 }
