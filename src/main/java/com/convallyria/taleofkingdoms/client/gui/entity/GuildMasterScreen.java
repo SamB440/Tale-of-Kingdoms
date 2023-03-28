@@ -211,8 +211,7 @@ public class GuildMasterScreen extends ScreenTOK {
     }
 
     private void makeHireHuntersButton() {
-        final UUID playerUuid = player.getUuid();
-        MutableText hunterText = guildPlayer.getCoins() >= 1500 ? Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter", Formatting.GREEN.asString()) : Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter", Formatting.RED.asString());
+        MutableText hunterText = Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter", guildPlayer.getCoins() >= 1500 ? Formatting.GREEN : Formatting.RED);
         if (this.hireHuntersButton != null) {
             this.hireHuntersButton.setMessage(hunterText);
             return;
