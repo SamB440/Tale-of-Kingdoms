@@ -52,11 +52,11 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
                 }
 
                 final Vec3d centre = instance.getCentre();
-                boolean isWithin = player.getBlockPos().isWithinDistance(new Vec3i((int) centre.getX(), (int) centre.getY(), (int) centre.getZ()), 3000);
-//                if (!isWithin) {
-//                    reject(player, "Too close to guild");
-//                    return;
-//                }
+                boolean isWithin = player.getBlockPos().isWithinDistance(new Vec3i((int) centre.getX(), (int) centre.getY(), (int) centre.getZ()), 1000);
+                if (isWithin) {
+                    reject(player, "Too close to guild");
+                    return;
+                }
 
                 BlockPos pos = player.getBlockPos().subtract(new Vec3i(0, 25, 85));
                 final PlayerKingdom playerKingdom = new PlayerKingdom(pos);
