@@ -84,11 +84,12 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+        final boolean client = player.world.isClient();
         TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             final GuildPlayer guildPlayer = instance.getPlayer(player);
             final PlayerKingdom kingdom = guildPlayer.getKingdom();
             if (kingdom != null) {
-                if (!player.world.isClient()) return;
+                if (!client) return;
                 openScreen(player, kingdom, instance);
                 return;
             }
@@ -96,22 +97,22 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
             if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
                 BlockPos current = this.getBlockPos();
                 int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
-                if (distance < (2000)) {
-                    Translations.CITYBUILDER_DISTANCE.send(player, distance, 2000);
+                if (distance < (1000)) {
+                    if (!client) Translations.CITYBUILDER_DISTANCE.send(player, distance, 1000);
                     return;
                 }
 
-                if (player.world.isClient()) {
+                if (client) {
                     openScreen(player, null, instance);
                 }
                 return;
             }
 
             if (guildPlayer.getWorthiness() >= 1500) {
-                if (player.world.isClient()) Translations.CITYBUILDER_BUILD.send(player);
+                if (client) Translations.CITYBUILDER_BUILD.send(player);
                 this.followPlayer();
             } else {
-                if (player.world.isClient()) Translations.CITYBUILDER_MESSAGE.send(player);
+                if (client) Translations.CITYBUILDER_MESSAGE.send(player);
             }
         });
         return ActionResult.PASS;
