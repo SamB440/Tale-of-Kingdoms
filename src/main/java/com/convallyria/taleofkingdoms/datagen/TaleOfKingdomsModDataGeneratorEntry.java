@@ -1,10 +1,12 @@
 package com.convallyria.taleofkingdoms.datagen;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.datagen.loottables.TOKLootTableProviders;
 import com.convallyria.taleofkingdoms.datagen.worldgen.TaleOfKingdomsModWorldGenBootstrap;
 import com.convallyria.taleofkingdoms.datagen.worldgen.TaleOfKingdomsModWorldGenProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.data.server.loottable.LootTableProvider;
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
 
@@ -19,6 +21,7 @@ public class TaleOfKingdomsModDataGeneratorEntry implements DataGeneratorEntrypo
 //
 //        };
 
+        pack.addProvider((FabricDataGenerator.Pack.Factory<LootTableProvider>) TOKLootTableProviders::createVanillaProvider);
         pack.addProvider(TaleOfKingdomsModWorldGenProvider::new);
     }
 
