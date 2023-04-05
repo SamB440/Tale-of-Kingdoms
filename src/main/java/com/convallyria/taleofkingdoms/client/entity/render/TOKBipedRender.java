@@ -36,10 +36,11 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> 
 
     @Override
     public Identifier getTexture(MobEntity entity) {
-        if (defaultSkin.get(entity.getUuid()) == null) {
+        final Identifier identifier = defaultSkin.get(entity.getUuid());
+        if (identifier == null) {
             Random random = ThreadLocalRandom.current();
             defaultSkin.put(entity.getUuid(), skins.get(random.nextInt(skins.size())));
         }
-        return defaultSkin.get(entity.getUuid());
+        return identifier;
     }
 }
