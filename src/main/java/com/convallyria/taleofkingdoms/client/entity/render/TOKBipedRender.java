@@ -39,7 +39,9 @@ public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> 
         final Identifier identifier = defaultSkin.get(entity.getUuid());
         if (identifier == null) {
             Random random = ThreadLocalRandom.current();
-            return defaultSkin.put(entity.getUuid(), skins.get(random.nextInt(skins.size())));
+            final Identifier skinIdentifier = skins.get(random.nextInt(skins.size()));
+            defaultSkin.put(entity.getUuid(), skinIdentifier);
+            return skinIdentifier;
         }
         return identifier;
     }
