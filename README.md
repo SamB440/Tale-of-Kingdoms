@@ -1,5 +1,3 @@
-## Current development branch is [feature/tier_one](https://github.com/SamB440/Tale-of-Kingdoms/tree/feature/tier_one)
-<br/>
 <div align="center">
   <a href="https://github.com/SamB440/tale-of-kingdoms">
     <img src="https://github.com/SamB440/Tale-of-Kingdoms/blob/master/src/main/resources/assets/taleofkingdoms/logo.png?raw=true" alt="Logo" width="80" height="80">
