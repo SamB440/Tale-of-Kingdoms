@@ -27,7 +27,7 @@ public class BankerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
         this.openScreen(player, instance);
         return ActionResult.PASS;

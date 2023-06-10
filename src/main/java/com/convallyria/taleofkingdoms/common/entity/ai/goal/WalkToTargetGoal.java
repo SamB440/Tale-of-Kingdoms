@@ -11,7 +11,7 @@ public class WalkToTargetGoal extends MoveToTargetPosGoal {
     private final BlockPos pos;
 
     public WalkToTargetGoal(PathAwareEntity entity, double speed, BlockPos pos) {
-        super(entity, speed, 100, entity.world.getHeight());
+        super(entity, speed, 100, entity.getWorld().getHeight());
         this.entity = entity;
         this.pos = pos;
     }

@@ -3,17 +3,17 @@ package com.convallyria.taleofkingdoms.common.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.util.math.MatrixStack;
 
 public interface InventoryDrawCallback {
 
     Event<InventoryDrawCallback> EVENT = EventFactory.createArrayBacked(InventoryDrawCallback.class,
-            (listeners) -> (screen, matrices, textRenderer) -> {
+            (listeners) -> (screen, context, textRenderer) -> {
                 for (InventoryDrawCallback listener : listeners) {
-                    listener.render(screen, matrices, textRenderer);
+                    listener.render(screen, context, textRenderer);
                 }
             });
 
-    void render(InventoryScreen screen, MatrixStack matrices, TextRenderer textRenderer);
+    void render(InventoryScreen screen, DrawContext context, TextRenderer textRenderer);
 }

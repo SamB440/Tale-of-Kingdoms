@@ -37,7 +37,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
             }
 
             // Search for banker
-            Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
+            Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.GUILDMASTER);
             if (entity.isEmpty()) {
                 reject(player, "Guildmaster entity not present in guild.");
                 return;
@@ -54,7 +54,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                HunterEntity hunterEntity = (HunterEntity) player.getWorld().getEntity(guildPlayer.getHunters().get(0));
+                HunterEntity hunterEntity = (HunterEntity) player.getServerWorld().getEntity(guildPlayer.getHunters().get(0));
                 //TODO we need to match client logic here
                 if (hunterEntity == null) {
                     reject(player, "Hunter entity returned null.");

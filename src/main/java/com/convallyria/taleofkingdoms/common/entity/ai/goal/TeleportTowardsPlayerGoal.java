@@ -29,7 +29,7 @@ public class TeleportTowardsPlayerGoal extends ActiveTargetGoal<PlayerEntity> {
     @Override
     public boolean canStart() {
         this.lastTick++;
-        this.targetPlayer = this.entity.world.getClosestPlayer(this.predicate, this.entity);
+        this.targetPlayer = this.entity.getWorld().getClosestPlayer(this.predicate, this.entity);
         return this.targetPlayer != null && lastTick > 100;
     }
 
@@ -46,10 +46,10 @@ public class TeleportTowardsPlayerGoal extends ActiveTargetGoal<PlayerEntity> {
                     if (spawnFire == 1) {
                         for (BlockPos blockPos : BlockUtils.getNearbyBlocksUnder(this.mob.getBlockPos(), 1)) {
                             BlockPos up = blockPos.add(0, 1, 0);
-                            if (!this.mob.world.getBlockState(up).isAir()) {
+                            if (!this.mob.getWorld().getBlockState(up).isAir()) {
                                 continue;
                             }
-                            this.mob.world.setBlockState(up, Blocks.FIRE.getDefaultState());
+                            this.mob.getWorld().setBlockState(up, Blocks.FIRE.getDefaultState());
                         }
                     }
                 }

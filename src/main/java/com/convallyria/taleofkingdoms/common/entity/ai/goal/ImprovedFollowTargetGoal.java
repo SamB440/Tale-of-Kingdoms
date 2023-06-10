@@ -52,7 +52,7 @@ public class ImprovedFollowTargetGoal<T extends LivingEntity> extends TrackTarge
     protected void findClosestTarget() {
         if (this.entityType != EntityType.PLAYER) {
             Box box = this.getSearchBox(this.getFollowRange());
-            List<T> entities = this.mob.world.getEntitiesByType(entityType, box, entity -> {
+            List<T> entities = this.mob.getWorld().getEntitiesByType(entityType, box, entity -> {
                 if (checkVisibility) return mob.canSee(entity);
                 return true;
             });
@@ -69,7 +69,7 @@ public class ImprovedFollowTargetGoal<T extends LivingEntity> extends TrackTarge
             }
             this.targetEntity = current;
         } else {
-            this.targetEntity = this.mob.world.getClosestPlayer(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(), this.getFollowRange(), true);
+            this.targetEntity = this.mob.getWorld().getClosestPlayer(this.mob.getX(), this.mob.getEyeY(), this.mob.getZ(), this.getFollowRange(), true);
         }
     }
 

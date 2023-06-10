@@ -136,7 +136,7 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
     @Override
     public void tickMovement() {
         super.tickMovement();
-        if (this.world.isClient && this.isInvisible()) {
+        if (this.getWorld().isClient && this.isInvisible()) {
             --this.field_7296;
             if (this.field_7296 < 0) {
                 this.field_7296 = 0;
@@ -156,16 +156,16 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
                 float f = -6.0F;
 
                 int k;
-                for(k = 0; k < 4; ++k) {
+                for (k = 0; k < 4; ++k) {
                     this.field_7297[0][k] = this.field_7297[1][k];
                     this.field_7297[1][k] = new Vec3d((double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D, Math.max(0, this.random.nextInt(6) - 4), (double)(-6.0F + (float)this.random.nextInt(13)) * 0.5D);
                 }
 
-                for(k = 0; k < 16; ++k) {
-                    this.world.addParticle(ParticleTypes.CLOUD, this.getParticleX(0.5D), this.getRandomBodyY(), this.offsetZ(0.5D), 0.0D, 0.0D, 0.0D);
+                for (k = 0; k < 16; ++k) {
+                    this.getWorld().addParticle(ParticleTypes.CLOUD, this.getParticleX(0.5D), this.getRandomBodyY(), this.offsetZ(0.5D), 0.0D, 0.0D, 0.0D);
                 }
 
-                this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, this.getSoundCategory(), 1.0F, 1.0F, false);
+                this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, this.getSoundCategory(), 1.0F, 1.0F, false);
             }
         }
     }
@@ -200,9 +200,9 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
         double e = livingEntity.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = livingEntity.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
-        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
+        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.world.spawnEntity(persistentProjectileEntity);
+        this.getWorld().spawnEntity(persistentProjectileEntity);
     }
 
     @Environment(EnvType.CLIENT)

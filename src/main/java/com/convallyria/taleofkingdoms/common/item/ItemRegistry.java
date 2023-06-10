@@ -10,6 +10,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
@@ -19,14 +22,18 @@ import java.util.Map;
 public class ItemRegistry extends Listener {
 
     public static final Map<TOKItem, Item> ITEMS = new HashMap<>();
-    public static final ItemGroup TOK_ITEM_GROUP = FabricItemGroup
-            .builder(new Identifier(TaleOfKingdoms.MODID, "general"))
-            .icon(() -> new ItemStack(ITEMS.get(TOKItem.COIN)))
-            .entries((context, entries) -> {
-                entries.add(ITEMS.get(TOKItem.COIN));
-                entries.add(ITEMS.get(TOKItem.POUCH));
-            })
-            .build();
+    public static final RegistryKey<ItemGroup> TOK_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(TaleOfKingdoms.MODID, "general"));
+
+    static {
+        Registry.register(Registries.ITEM_GROUP, TOK_ITEM_GROUP, FabricItemGroup.builder()
+                .icon(() -> new ItemStack(ITEMS.get(TOKItem.COIN)))
+                .displayName(Text.translatable("taleofkingdoms.group.general"))
+                .entries((context, entries) -> {
+                    entries.add(ITEMS.get(TOKItem.COIN));
+                    entries.add(ITEMS.get(TOKItem.POUCH));
+                })
+               .build()); // build() no longer registers by itself
+    }
 
     public enum TOKItem {
         COIN("coin"),

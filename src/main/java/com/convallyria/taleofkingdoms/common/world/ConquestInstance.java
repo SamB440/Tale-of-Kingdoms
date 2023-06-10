@@ -154,7 +154,7 @@ public class ConquestInstance {
     }
 
     public boolean canAttack(PlayerEntity player) {
-        if (player.world.getRegistryKey() != World.OVERWORLD) return false;
+        if (player.getWorld().getRegistryKey() != World.OVERWORLD) return false;
         final GuildPlayer guildPlayer = guildPlayers.get(player.getUuid());
         if (guildPlayer == null) return false;
         return guildPlayer.getWorthiness() >= (1500.0F / 2) && !isUnderAttack() && !guildPlayer.hasRebuiltGuild();

@@ -86,7 +86,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
 
                     // Make city builder stop following player and move to well POI
                     TaleOfKingdoms.getAPI().executeOnServer(() -> {
-                        final CityBuilderEntity cityBuilderServer = (CityBuilderEntity) serverPlayer.world.getEntityById(entity.getId());
+                        final CityBuilderEntity cityBuilderServer = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
                         cityBuilderServer.stopFollowingPlayer();
                         // Teleport to the player first, should avoid getting stuck in ground
                         cityBuilderServer.refreshPositionAfterTeleport(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());

@@ -20,10 +20,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StartWorldListener extends Listener {
 
     private String worldName;
+    private final List<Runnable> postJoin = new ArrayList<>();
     private boolean joined;
 
     @Nullable
@@ -42,42 +45,43 @@ public class StartWorldListener extends Listener {
             this.joined = false;
         });
 
-        WorldSessionStartCallback.EVENT.register(worldName -> this.worldName = worldName);
-
-        RecipesUpdatedCallback.EVENT.register(() -> {
-            PlayerEntity entity = MinecraftClient.getInstance().player;
-            if (entity == null) return;
-            if (!MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) return;
-            // Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
-            if (joined) return;
-            this.joined = true;
-
+        WorldSessionStartCallback.EVENT.register(worldName -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             if (api == null) return;
+
+            this.worldName = worldName;
+
             boolean loaded = load(worldName, api);
+
             File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
+
+            // Already exists
             if (loaded) {
-                // Already exists
                 Gson gson = api.getMod().getGson();
                 // Load from json into class
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
-                    api.executeOnMain(() -> {
+                    Runnable runnable = () -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            if (TaleOfKingdoms.CONFIG.mainConfig.showStartKingdomGUI)
+                            if (TaleOfKingdoms.CONFIG.mainConfig.showStartKingdomGUI) {
+                                PlayerEntity entity = MinecraftClient.getInstance().player;
+                                if (entity == null) return;
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
+                            }
                         } else {
                             if (TaleOfKingdoms.CONFIG.mainConfig.alwaysShowUpdatesGUI || instance.didUpgrade()) {
                                 MinecraftClient.getInstance().setScreen(new UpdateScreen());
                             } else if (TaleOfKingdoms.CONFIG.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
-
-                            TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
-                            api.getConquestInstanceStorage().addConquest(worldName, instance, true);
                         }
-                    });
+                    };
+
+                    TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
+                    api.getConquestInstanceStorage().addConquest(worldName, instance, true);
+
+                    postJoin.add(() -> api.executeOnMain(runnable));
                 } catch (JsonSyntaxException | JsonIOException | IOException e) {
                     e.printStackTrace();
                 }
@@ -85,7 +89,31 @@ public class StartWorldListener extends Listener {
             }
 
             // New world creation
-            api.executeOnMain(() -> MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity)));
+            postJoin.add(() -> api.executeOnMain(() -> {
+                PlayerEntity entity = MinecraftClient.getInstance().player;
+                if (entity == null) return;
+                MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
+            }));
+        });
+
+        RecipesUpdatedCallback.EVENT.register(() -> {
+            if (!MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) {
+                postJoin.clear();
+                return;
+            }
+
+            // Check player is loaded, then check if it's them or not, and whether they've already been registered. If all conditions met, add to joined list.
+            if (joined) {
+                postJoin.clear();
+                return;
+            }
+            this.joined = true;
+
+            for (Runnable runnable : postJoin) {
+                runnable.run();
+            }
+
+            postJoin.clear();
         });
     }
 

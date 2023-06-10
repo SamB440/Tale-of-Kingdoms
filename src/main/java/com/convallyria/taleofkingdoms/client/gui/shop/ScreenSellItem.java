@@ -10,9 +10,9 @@ import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
@@ -35,25 +35,24 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
-        drawTexture(matrices, x, y, 0, 0, backgroundWidth, backgroundHeight);
+        context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
-        super.render(matrices, mouseX, mouseY, delta);
-        drawMouseoverTooltip(matrices, mouseX, mouseY);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        renderBackground(context);
+        super.render(context, mouseX, mouseY, delta);
+        drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    public void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-        this.textRenderer.draw(matrices, Text.literal("Total Money:"), (float)this.playerInventoryTitleX + 20, (float)this.playerInventoryTitleY - 50, 4210752);
+    public void drawForeground(DrawContext context, int mouseX, int mouseY) {
+        context.drawText(textRenderer, Text.literal("Total Money:"), this.playerInventoryTitleX + 20, this.playerInventoryTitleY - 50, 4210752, true);
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
         int x = this.playerInventoryTitleX + 25;
@@ -61,7 +60,7 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
         if (instance.isPresent()) {
             final GuildPlayer guildPlayer = instance.get().getPlayer(playerInventory.player);
             int coins = guildPlayer.getCoins();
-            this.textRenderer.draw(matrices, Text.literal(coins + " Gold Coins"), x, y, 4210752);
+            context.drawText(textRenderer, Text.literal(coins + " Gold Coins"), x, y, 4210752, true);
         }
     }
 
@@ -75,7 +74,7 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     public void close() {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-            World world = playerInventory.player.world;
+            World world = playerInventory.player.getWorld();
             for (EntityType<? extends ShopEntity> shopEntity : EntityTypes.SHOP_ENTITIES) {
                 instance.search(playerInventory.player, world, shopEntity).ifPresent(entity -> deleteBlock(api, entity));
             }

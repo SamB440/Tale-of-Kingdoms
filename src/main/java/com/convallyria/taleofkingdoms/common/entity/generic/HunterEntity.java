@@ -77,10 +77,10 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
         if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.IRON_SWORD) {
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.BOW));
             this.updateAttackType();
-            if (player.world.isClient()) Translations.HUNTER_BOW.send(player);
+            if (player.getWorld().isClient()) Translations.HUNTER_BOW.send(player);
         } else {
             this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
-            if (player.world.isClient()) Translations.HUNTER_SWORD.send(player);
+            if (player.getWorld().isClient()) Translations.HUNTER_SWORD.send(player);
             this.updateAttackType();
         }
         return ActionResult.PASS;
@@ -99,9 +99,9 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double f = target.getZ() - this.getZ();
         double g = MathHelper.sqrt((float) (d * d + f * f)); // TODO
-        persistentProjectileEntity.setVelocity(d, e + g * 0.20000000298023224D, f, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
+        persistentProjectileEntity.setVelocity(d, e + g * 0.20000000298023224D, f, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.world.spawnEntity(persistentProjectileEntity);
+        this.getWorld().spawnEntity(persistentProjectileEntity);
     }
 
     protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
@@ -109,13 +109,13 @@ public class HunterEntity extends TOKEntity implements RangedAttackMob {
     }
 
     public void updateAttackType() {
-        if (this.world != null) {
+        if (this.getWorld() != null) {
             this.goalSelector.remove(this.meleeAttackGoal);
             this.goalSelector.remove(this.bowAttackGoal);
             ItemStack itemStack = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
             if (itemStack.getItem() == Items.BOW) {
                 int i = 20;
-                if (this.world.getDifficulty() != Difficulty.HARD) {
+                if (this.getWorld().getDifficulty() != Difficulty.HARD) {
                     i = 40;
                 }
 

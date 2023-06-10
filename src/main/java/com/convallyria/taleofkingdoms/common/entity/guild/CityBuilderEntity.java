@@ -84,7 +84,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
-        final boolean client = player.world.isClient();
+        final boolean client = player.getWorld().isClient();
         TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             final GuildPlayer guildPlayer = instance.getPlayer(player);
             final PlayerKingdom kingdom = guildPlayer.getKingdom();

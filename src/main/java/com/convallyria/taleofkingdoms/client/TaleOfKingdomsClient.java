@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.client.entity.render.RenderSetup;
 import com.convallyria.taleofkingdoms.client.gui.RenderListener;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
 import com.convallyria.taleofkingdoms.client.gui.shop.ScreenSellItem;
+import com.convallyria.taleofkingdoms.client.listener.ClientGameInstanceListener;
 import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
@@ -19,7 +20,6 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingForemanColl
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
-import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
 import com.convallyria.taleofkingdoms.common.listener.StartWorldListener;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -81,16 +81,13 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         registerHandler(new IncomingInstanceSyncPacketHandler());
     }
 
-    private void registerListeners() {
-        new GameInstanceListener();
-    }
-
     protected void registerHandler(ClientPacketHandler clientPacketHandler) {
         TaleOfKingdoms.getAPI().registerClientHandler(clientPacketHandler);
     }
 
     private void registerEvents() {
         TaleOfKingdoms.LOGGER.info("Registering client events...");
+        new ClientGameInstanceListener();
         new RenderListener();
         this.startWorldListener = new StartWorldListener();
     }

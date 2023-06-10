@@ -40,7 +40,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
             }
 
             // Search for innkeeper
-            Optional<InnkeeperEntity> entity = instance.getGuildEntity(player.world, EntityTypes.INNKEEPER);
+            Optional<InnkeeperEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.INNKEEPER);
             if (entity.isEmpty()) {
                 reject(player, "Innkeeper entity not present in guild.");
                 return;

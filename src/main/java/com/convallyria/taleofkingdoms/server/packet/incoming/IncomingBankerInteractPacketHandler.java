@@ -37,7 +37,7 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
             }
 
             // Search for banker
-            Optional<BankerEntity> entity = instance.getGuildEntity(player.world, EntityTypes.BANKER);
+            Optional<BankerEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.BANKER);
             if (entity.isEmpty()) {
                 reject(player, "Banker entity not present in guild.");
                 return;

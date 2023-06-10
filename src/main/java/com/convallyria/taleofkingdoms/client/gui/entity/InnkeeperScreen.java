@@ -10,8 +10,8 @@ import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -99,10 +99,10 @@ public class InnkeeperScreen extends ScreenTOK {
     }
 
     @Override
-    public void render(MatrixStack stack, int par1, int par2, float par3) {
-        super.render(stack, par1, par2, par3);
-        drawCenteredTextWithShadow(stack, this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
+    public void render(DrawContext context, int par1, int par2, float par3) {
+        super.render(context, par1, par2, par3);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
     }
 
     @Override

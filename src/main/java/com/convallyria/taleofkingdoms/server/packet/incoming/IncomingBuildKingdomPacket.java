@@ -34,7 +34,7 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                final Entity entity = player.world.getEntityById(entityId);
+                final Entity entity = player.getWorld().getEntityById(entityId);
                 if (!(entity instanceof CityBuilderEntity cityBuilderEntity) || player.distanceTo(cityBuilderEntity) > 5) {
                     reject(player, "Invalid entity ID / Distance");
                     return;

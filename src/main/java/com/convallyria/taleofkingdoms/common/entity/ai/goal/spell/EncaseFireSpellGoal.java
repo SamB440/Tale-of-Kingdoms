@@ -51,9 +51,9 @@ public class EncaseFireSpellGoal extends CastSpellGoal {
         spellCaster.swingHand(Hand.OFF_HAND);
         LivingEntity target = spellCaster.getTarget();
         for (BlockPos blockPos : BlockUtils.getNearbyBlocks(target.getBlockPos(), 1)) {
-            target.world.setBlockState(blockPos, Blocks.NETHERRACK.getDefaultState());
+            target.getWorld().setBlockState(blockPos, Blocks.NETHERRACK.getDefaultState());
         }
-        target.world.setBlockState(target.getBlockPos(), Blocks.FIRE.getDefaultState());
+        target.getWorld().setBlockState(target.getBlockPos(), Blocks.FIRE.getDefaultState());
         spellCaster.getTarget().addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200));
     }
 

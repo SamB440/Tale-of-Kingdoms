@@ -20,8 +20,8 @@ import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Positioning;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -160,8 +160,8 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     protected void changePage(int newPage) {}
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        super.render(stack, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         coinsLabel.text(Text.translatable("menu.taleofkingdoms.shop.total_money", instance.getPlayer(player).getCoins()));
         if (this.selectedItem != null) {
             MutableText text = Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getName(), this.selectedItem.getCost());

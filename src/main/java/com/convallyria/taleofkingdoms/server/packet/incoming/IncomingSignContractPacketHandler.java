@@ -26,7 +26,7 @@ public final class IncomingSignContractPacketHandler extends ServerPacketHandler
         boolean sign = attachedData.readBoolean();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             PlayerEntity player = context.player();
-            Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.world, EntityTypes.GUILDMASTER);
+            Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.GUILDMASTER);
             if (entity.isEmpty()) {
                 TaleOfKingdoms.LOGGER.info("Rejected " + getPacket().toString() + ": GuildMaster entity returned null.");
                 return;

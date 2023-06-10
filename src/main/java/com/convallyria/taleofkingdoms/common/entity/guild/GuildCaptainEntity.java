@@ -35,7 +35,7 @@ public class GuildCaptainEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
         return ActionResult.PASS;
     }
 

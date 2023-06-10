@@ -37,14 +37,14 @@ public class LoneEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
         TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             BlockPos startPos = instance.getStart();
             BlockPos endPos = instance.getEnd();
             Vec3d start = new Vec3d(startPos.getX(), startPos.getY(), startPos.getZ());
             Vec3d end = new Vec3d(endPos.getX(), endPos.getY(), endPos.getZ());
             Box region = new Box(start, end);
-            List<LoneVillagerEntity> loneVillagers = player.world.getEntitiesByType(EntityTypes.LONEVILLAGER, region, predicate -> {
+            List<LoneVillagerEntity> loneVillagers = player.getWorld().getEntitiesByType(EntityTypes.LONEVILLAGER, region, predicate -> {
                 return instance.isInGuild(predicate.getBlockPos())
                         && !instance.getLoneVillagersWithRooms().contains(predicate.getUuid());
             });

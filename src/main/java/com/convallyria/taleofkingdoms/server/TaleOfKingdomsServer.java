@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.server;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.common.listener.GameInstanceListener;
+import com.convallyria.taleofkingdoms.server.listener.ServerGameInstanceListener;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBankerInteractPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuildKingdomPacket;
@@ -44,7 +44,7 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
     }
 
     private void registerListeners() {
-        new GameInstanceListener();
+        new ServerGameInstanceListener();
     }
 
     protected void registerHandler(ServerPacketHandler serverPacketHandler) {

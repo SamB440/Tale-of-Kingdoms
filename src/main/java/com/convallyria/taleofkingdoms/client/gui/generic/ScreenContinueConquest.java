@@ -3,8 +3,8 @@ package com.convallyria.taleofkingdoms.client.gui.generic;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class ScreenContinueConquest extends ScreenTOK {
@@ -30,14 +30,14 @@ public class ScreenContinueConquest extends ScreenTOK {
     }
 
     @Override
-    public void render(MatrixStack stack, int par1, int par2, float par3) {
-        this.renderBackground(stack);
-        drawCenteredTextWithShadow(stack, this.textRenderer, MinecraftClient.getInstance().player.getName().getString()
+    public void render(DrawContext context, int par1, int par2, float par3) {
+        this.renderBackground(context);
+        context.drawCenteredTextWithShadow(this.textRenderer, MinecraftClient.getInstance().player.getName().getString()
                 + ", your conquest, "
                 + instance.getName() + ", has come far.", this.width / 2, this.height / 2 + 40, 0xFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, "Now you seek to venture further, and continue your journey.", this.width / 2, this.height / 2 + 50, 0xFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, "Safe travels, and go forth!", this.width / 2, this.height / 2 + 60, 0xFFFFFF);
-        super.render(stack, par1, par2, par3);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Now you seek to venture further, and continue your journey.", this.width / 2, this.height / 2 + 50, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Safe travels, and go forth!", this.width / 2, this.height / 2 + 60, 0xFFFFFF);
+        super.render(context, par1, par2, par3);
     }
 
     @Override

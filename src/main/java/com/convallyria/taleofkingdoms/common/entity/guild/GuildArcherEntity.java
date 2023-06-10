@@ -126,7 +126,7 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
         //TODO
         Translations.GUILDMEMBER_START.send(player);
         return ActionResult.PASS;
@@ -140,9 +140,9 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
-        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.world.getDifficulty().getId() * 4));
+        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.world.spawnEntity(persistentProjectileEntity);
+        this.getWorld().spawnEntity(persistentProjectileEntity);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.convallyria.taleofkingdoms.common.item;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.item.common.ItemCoin;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
@@ -25,16 +24,16 @@ public class ItemHelper {
      * Drops coins for an entity if it is hostile.
      * This **no longer** uses the same randomness used in the old TOK mod.
      * @see ItemCoin
-     * @param entityLiving entity to drop coins for
+     * @param entity entity to drop coins for
      */
-    public static void dropCoins(LivingEntity entityLiving) {
-        if (isHostileEntity(entityLiving)) {
-            Consumer<MinecraftServer> dropCoins = server -> dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entityLiving);
+    public static void dropCoins(Entity entity) {
+        if (isHostileEntity(entity)) {
+            Consumer<MinecraftServer> dropCoins = server -> dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entity);
             TaleOfKingdoms.getAPI().getScheduler().repeatN(dropCoins, 25, 0, 1);
         }
     }
 
-    private static void dropItem(Item item, int meta, LivingEntity livingBase) {
+    private static void dropItem(Item item, int meta, Entity livingBase) {
         livingBase.dropItem(item, meta);
     }
 }

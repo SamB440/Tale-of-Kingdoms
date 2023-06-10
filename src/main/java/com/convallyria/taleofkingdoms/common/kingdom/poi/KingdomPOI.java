@@ -22,7 +22,7 @@ public enum KingdomPOI implements EnumCodec.Values {
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
             if (!hasEntity(kingdom, player, EntityTypes.BLACKSMITH)) {
-                EntityUtils.spawnEntity(EntityTypes.BLACKSMITH, player, info.pos);
+                EntityUtils.spawnEntity(EntityTypes.BLACKSMITH, player, info.pos());
             }
         }
     },
@@ -31,7 +31,7 @@ public enum KingdomPOI implements EnumCodec.Values {
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
             if (!hasEntity(kingdom, player, EntityTypes.ITEM_SHOP)) {
-                EntityUtils.spawnEntity(EntityTypes.ITEM_SHOP, player, info.pos);
+                EntityUtils.spawnEntity(EntityTypes.ITEM_SHOP, player, info.pos());
             }
         }
     },
@@ -46,7 +46,7 @@ public enum KingdomPOI implements EnumCodec.Values {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            EntityUtils.spawnEntity(EntityTypes.KINGDOM_VILLAGER, player, info.pos);
+            EntityUtils.spawnEntity(EntityTypes.KINGDOM_VILLAGER, player, info.pos());
         }
     },
     STOCK_MARKET_ENTITY("StockMarketEntity") {
@@ -54,7 +54,7 @@ public enum KingdomPOI implements EnumCodec.Values {
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
             if (!hasEntity(kingdom, player, EntityTypes.STOCK_MARKET)) {
-                EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos);
+                EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos());
             }
         }
     },
@@ -64,7 +64,7 @@ public enum KingdomPOI implements EnumCodec.Values {
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
             if (!hasEntity(kingdom, player, EntityTypes.QUARRY_FOREMAN)) {
-                EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos);
+                EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos());
             }
         }
     },
@@ -74,7 +74,7 @@ public enum KingdomPOI implements EnumCodec.Values {
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
             if (!hasEntity(kingdom, player, EntityTypes.LUMBER_FOREMAN)) {
-                EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos);
+                EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos());
             }
         }
     },
@@ -89,12 +89,12 @@ public enum KingdomPOI implements EnumCodec.Values {
     }
 
     public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
-        kingdom.addPOI(this, info.pos);
-        TaleOfKingdoms.LOGGER.info("Found '" + poiName + "' POI @ " + info.pos);
+        kingdom.addPOI(this, info.pos());
+        TaleOfKingdoms.LOGGER.info("Found '" + poiName + "' POI @ " + info.pos());
     }
 
     public boolean hasEntity(PlayerKingdom kingdom, ServerPlayerEntity player, EntityType<? extends TOKEntity> entity) {
-        return kingdom.getKingdomEntity(player.world, entity).isPresent();
+        return kingdom.getKingdomEntity(player.getWorld(), entity).isPresent();
     }
 
     public String getPoiName() {

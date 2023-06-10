@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -46,7 +47,7 @@ public class CoinListener extends Listener {
      * When an entity dies this event is called.
      * If the entity is a player then the player's coins are subtracted by the amount of their current coins divided by 20 and the method returns.
      * If the cause of death was a player then the {@link LivingEntity} drops their coins
-     * and the player gets worthiness added equal to the {@link CoinListener#getMobWorthiness(LivingEntity)} times (*) the {@link CoinListener#getDifficultyWorthinessMultiplier(World)}
+     * and the player gets worthiness added equal to the {@link CoinListener#getMobWorthiness(Entity)} times (*) the {@link CoinListener#getDifficultyWorthinessMultiplier(World)}
      */
     private void dropCoinsOnDeath() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
@@ -93,11 +94,11 @@ public class CoinListener extends Listener {
 
                     if (source.getSource() instanceof PlayerEntity) {
                         final GuildPlayer guildPlayer = instance.getPlayer(source.getSource().getUuid());
-                        guildPlayer.setWorthiness(guildPlayer.getWorthiness() + (getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().world)));
+                        guildPlayer.setWorthiness(guildPlayer.getWorthiness() + (getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().getWorld())));
                     }
 
                     if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                        instance.attack(serverPlayerEntity, serverPlayerEntity.getWorld());
+                        instance.attack(serverPlayerEntity, serverPlayerEntity.getServerWorld());
                         if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER)
                             ServerConquestInstance.sync(serverPlayerEntity, instance);
                     }
@@ -158,7 +159,7 @@ public class CoinListener extends Listener {
      * @param mob the {@link LivingEntity} killed
      * @return the mob's worthiness if and only if the entry exists, else 1
      */
-    public int getMobWorthiness(LivingEntity mob) {
+    public int getMobWorthiness(Entity mob) {
         String mobType = mob.getType().getName().getString();
 
         if(worthinessJson.has(mobType)) {

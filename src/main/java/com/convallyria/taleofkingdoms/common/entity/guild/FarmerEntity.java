@@ -41,7 +41,7 @@ public class FarmerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.world.isClient) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || player.getWorld().isClient) return ActionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -51,7 +51,7 @@ public class FarmerEntity extends TOKEntity {
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         final GuildPlayer guildPlayer = instance.getPlayer(player);
 
-        final long day = player.world.getTimeOfDay() / 24000L;
+        final long day = player.getWorld().getTimeOfDay() / 24000L;
         if (guildPlayer.getFarmerLastBread() >= day) {
             Translations.FARMER_GOT_BREAD.send(player);
             return ActionResult.FAIL;

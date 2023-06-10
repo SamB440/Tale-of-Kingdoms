@@ -22,7 +22,7 @@ public class HealPlayerGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        List<PlayerEntity> list = this.mob.world.getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(this.maxDistance), PlayerEntity::isAlive);
+        List<PlayerEntity> list = this.mob.getWorld().getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(this.maxDistance), PlayerEntity::isAlive);
         if (!list.isEmpty()) {
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.isInvisible()) {

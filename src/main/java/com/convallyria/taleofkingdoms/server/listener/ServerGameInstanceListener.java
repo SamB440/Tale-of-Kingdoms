@@ -1,4 +1,4 @@
-package com.convallyria.taleofkingdoms.common.listener;
+package com.convallyria.taleofkingdoms.server.listener;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.event.PlayerJoinCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerJoinWorldCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerLeaveCallback;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
+import com.convallyria.taleofkingdoms.common.listener.Listener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
@@ -27,9 +28,9 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.SERVER)
-public class GameInstanceListener extends Listener {
+public class ServerGameInstanceListener extends Listener {
 
-    public GameInstanceListener() {
+    public ServerGameInstanceListener() {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         GameInstanceCallback.EVENT.register(api::setServer);
 
@@ -72,6 +73,7 @@ public class GameInstanceListener extends Listener {
                     if (!instance.hasPlayer(player.getUuid())) {
                         instance.reset(player);
                     }
+
                     ServerConquestInstance.sync(player, instance);
                 }
             });

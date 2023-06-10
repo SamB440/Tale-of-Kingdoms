@@ -41,7 +41,7 @@ public class GatherResourcesPassivelyGoal extends Goal {
                     final PlayerKingdom kingdom = guildPlayer.getKingdom();
                     if (kingdom == null || !kingdom.isInKingdom(mob.getBlockPos())) continue;
                     final EntityType<? extends ForemanEntity> type = mob instanceof QuarryWorkerEntity ? EntityTypes.QUARRY_FOREMAN : EntityTypes.LUMBER_FOREMAN;
-                    kingdom.getKingdomEntity(mob.world, type).ifPresent(foreman -> {
+                    kingdom.getKingdomEntity(mob.getWorld(), type).ifPresent(foreman -> {
                         foreman.getInventory().addStack(new ItemStack(mob instanceof QuarryWorkerEntity ? Items.COBBLESTONE : Items.OAK_LOG, 1));
                         //todo check server compat
                     });

@@ -45,7 +45,7 @@ public class FollowPlayerGoal extends Goal {
             if (!movementVaried.isMovementEnabled()) return false;
         }
 
-        List<PlayerEntity> list = this.mob.world.getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(this.maxDistance), this.targetPredicate);
+        List<PlayerEntity> list = this.mob.getWorld().getEntitiesByClass(PlayerEntity.class, this.mob.getBoundingBox().expand(this.maxDistance), this.targetPredicate);
         if (!list.isEmpty()) {
             for (PlayerEntity playerEntity : list) {
                 if (!playerEntity.isInvisible()) {

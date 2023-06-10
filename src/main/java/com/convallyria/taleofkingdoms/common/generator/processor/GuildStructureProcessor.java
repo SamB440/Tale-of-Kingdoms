@@ -42,23 +42,23 @@ public class GuildStructureProcessor extends StructureProcessor {
     @Override
     public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlacementData data) {
         ServerWorldAccess serverWorldAccess = (ServerWorldAccess) world;
-        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
-        if (currentBlockInfo.state.getBlock() instanceof StructureBlock) {
-            String metadata = currentBlockInfo.nbt.getString("metadata");
+        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos(), Blocks.AIR.getDefaultState(), new NbtCompound());
+        if (currentBlockInfo.state().getBlock() instanceof StructureBlock) {
+            String metadata = currentBlockInfo.nbt().getString("metadata");
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             if (api == null) return currentBlockInfo;
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
-            TaleOfKingdoms.LOGGER.debug(currentBlockInfo.pos);
+            TaleOfKingdoms.LOGGER.debug(currentBlockInfo.pos());
             if (instance.isEmpty()) return currentBlockInfo;
 
             if (metadata.equalsIgnoreCase("Gateway")) {
-                if (!instance.get().isLoaded()) instance.get().getReficuleAttackLocations().add(currentBlockInfo.pos);
+                if (!instance.get().isLoaded()) instance.get().getReficuleAttackLocations().add(currentBlockInfo.pos());
                 return air;
             }
 
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
-            Vec3d spawnPos = currentBlockInfo.pos.toCenterPos();
+            Vec3d spawnPos = currentBlockInfo.pos().toCenterPos();
             try {
                 //TODO: replace with registry lookup
                 EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);

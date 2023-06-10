@@ -22,7 +22,7 @@ public class EntitySpawnEvent {
     }
 
     @Inject(method = "addPlayer", at = @At("HEAD"))
-    protected void onAddPlayer(ServerPlayerEntity player, CallbackInfo ci) {
+    private void onAddPlayer(ServerPlayerEntity player, CallbackInfo ci) {
         PlayerJoinWorldCallback.EVENT.invoker().onJoin(player);
     }
 }

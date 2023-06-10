@@ -3,8 +3,9 @@ package com.convallyria.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
+import org.jetbrains.annotations.NotNull;
 
 public interface EntityDeathCallback {
 
@@ -15,5 +16,5 @@ public interface EntityDeathCallback {
                 }
             });
 
-    void death(DamageSource source, LivingEntity entity);
+    void death(DamageSource source, @NotNull Entity entity);
 }

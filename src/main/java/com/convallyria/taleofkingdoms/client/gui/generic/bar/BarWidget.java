@@ -1,9 +1,8 @@
 package com.convallyria.taleofkingdoms.client.gui.generic.bar;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class BarWidget extends ButtonWidget {
@@ -43,31 +42,31 @@ public class BarWidget extends ButtonWidget {
         }
     }
 
-    public void drawBar(MatrixStack stack) {
+    public void drawBar(DrawContext context) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.border) {
-            DrawableHelper.fill(stack, this.getX(),
+            context.fill(this.getX(),
                     this.getY(),
                     this.getX() + this.width,
                     this.getY() + this.height,
                     this.borderColor);
         }
 
-        DrawableHelper.fill(stack,this.getX() + 1,
+        context.fill(this.getX() + 1,
                 this.getY() + 1,
                 this.getX() + 1 + this.width - 2,
                 this.getY() + 1 + this.height - 2,
                 -16777216);
-        DrawableHelper.fill(stack,this.getX() + 1,
+        context.fill(this.getX() + 1,
                 this.getY() + 1,
                 this.getX() + 1 + (int)(this.barProgress * (this.width - 2)),
                 this.getY() + 1 + this.height - 2, this.colour.getColour());
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.renderButton(matrices, mouseX, mouseY, delta);
-        drawBar(matrices);
+    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderButton(context, mouseX, mouseY, delta);
+        drawBar(context);
     }
 
     @Override

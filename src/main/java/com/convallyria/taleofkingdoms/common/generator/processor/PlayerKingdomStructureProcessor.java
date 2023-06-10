@@ -37,9 +37,9 @@ public class PlayerKingdomStructureProcessor extends StructureProcessor {
     @Nullable
     @Override
     public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlacementData data) {
-        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos, Blocks.AIR.getDefaultState(), new NbtCompound());
-        if (currentBlockInfo.state.getBlock() instanceof StructureBlock) {
-            String metadata = currentBlockInfo.nbt.getString("metadata");
+        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos(), Blocks.AIR.getDefaultState(), new NbtCompound());
+        if (currentBlockInfo.state().getBlock() instanceof StructureBlock) {
+            String metadata = currentBlockInfo.nbt().getString("metadata");
             KingdomPOI.getFrom(metadata).ifPresent(poi -> poi.compute(kingdom, player, currentBlockInfo));
             return air;
         }

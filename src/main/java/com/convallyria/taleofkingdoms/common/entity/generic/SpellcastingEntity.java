@@ -65,7 +65,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
     }
 
     public boolean isSpellcasting() {
-        if (this.world.isClient) {
+        if (this.getWorld().isClient) {
             return this.dataTracker.get(SPELL) > 0;
         } else {
             return this.spellTicks > 0;
@@ -78,7 +78,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
     }
 
     protected SpellcastingEntity.Spell getSpell() {
-        return !this.world.isClient ? this.spell : SpellcastingEntity.Spell.byId(this.dataTracker.get(SPELL));
+        return !this.getWorld().isClient ? this.spell : SpellcastingEntity.Spell.byId(this.dataTracker.get(SPELL));
     }
 
     protected void mobTick() {
@@ -91,7 +91,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
     public void tick() {
         super.tick();
-        if (this.world.isClient && this.isSpellcasting()) {
+        if (this.getWorld().isClient && this.isSpellcasting()) {
             SpellcastingEntity.Spell spell = this.getSpell();
             double d = spell.particleVelocity[0];
             double e = spell.particleVelocity[1];
@@ -99,8 +99,8 @@ public abstract class SpellcastingEntity extends HostileEntity {
             float g = this.bodyYaw * 0.017453292F + MathHelper.cos((float)this.age * 0.6662F) * 0.25F;
             float h = MathHelper.cos(g);
             float i = MathHelper.sin(g);
-            this.world.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)h * 0.6D, this.getY() + 1.8D, this.getZ() + (double)i * 0.6D, d, e, f);
-            this.world.addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)h * 0.6D, this.getY() + 1.8D, this.getZ() - (double)i * 0.6D, d, e, f);
+            this.getWorld().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)h * 0.6D, this.getY() + 1.8D, this.getZ() + (double)i * 0.6D, d, e, f);
+            this.getWorld().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)h * 0.6D, this.getY() + 1.8D, this.getZ() - (double)i * 0.6D, d, e, f);
         }
 
     }

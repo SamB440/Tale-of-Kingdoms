@@ -16,8 +16,8 @@ import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -148,14 +148,14 @@ public class GuildMasterScreen extends ScreenTOK {
     }
 
     @Override
-    public void render(MatrixStack stack, int par1, int par2, float par3) {
-        super.render(stack, par1, par2, par3);
+    public void render(DrawContext context, int par1, int par2, float par3) {
+        super.render(context, par1, par2, par3);
         String order = Translations.GUILDMASTER_GUILD_ORDER.getFormatted() + guildPlayer.getCoins() + " " + Translations.GOLD_COINS.getFormatted();
         String path = Translations.GUILDMASTER_PATH.getFormatted();
-        drawCenteredTextWithShadow(stack, this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, "Repairing the guild costs 64 logs and 3000 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
-        this.worthness.drawBar(stack);
+        context.drawCenteredTextWithShadow(this.textRenderer, order, this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, path, this.width / 2 , this.height / 2 + 70, 0XFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, "Repairing the guild costs 64 logs and 3000 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
+        this.worthness.drawBar(context);
     }
 
     @Override

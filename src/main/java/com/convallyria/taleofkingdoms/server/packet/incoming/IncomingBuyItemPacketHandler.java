@@ -40,9 +40,9 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
             // Search for either foodshop, itemshop, or blacksmith in the guild
             Optional<? extends ShopEntity> entity = Optional.empty();
             switch (type) {
-                case BLACKSMITH -> entity = instance.search(player, player.world, EntityTypes.BLACKSMITH);
-                case FOOD -> entity = instance.search(player, player.world, EntityTypes.FOODSHOP);
-                case ITEM -> entity = instance.search(player, player.world, EntityTypes.ITEM_SHOP);
+                case BLACKSMITH -> entity = instance.search(player, player.getWorld(), EntityTypes.BLACKSMITH);
+                case FOOD -> entity = instance.search(player, player.getWorld(), EntityTypes.FOODSHOP);
+                case ITEM -> entity = instance.search(player, player.getWorld(), EntityTypes.ITEM_SHOP);
             }
 
             if (entity.isEmpty()) {

@@ -56,7 +56,7 @@ public class StockMarketEntity extends ShopEntity {
         final GuildPlayer guildPlayer = instance.getPlayer(player);
         final PlayerKingdom kingdom = guildPlayer.getKingdom();
 
-        final long day = player.world.getTimeOfDay() / 24000L;
+        final long day = player.getWorld().getTimeOfDay() / 24000L;
         if (kingdom != null && kingdom.getLastStockMarketUpdate() < day) {
             // Update all shop item modifiers if a day has passed
             // Wow this stock market is all over the place
@@ -67,7 +67,7 @@ public class StockMarketEntity extends ShopEntity {
             kingdom.setLastStockMarketUpdate(day);
         }
 
-        if (hand == Hand.OFF_HAND || !player.world.isClient()) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
         this.openScreen(player, instance);
         return ActionResult.PASS;
     }

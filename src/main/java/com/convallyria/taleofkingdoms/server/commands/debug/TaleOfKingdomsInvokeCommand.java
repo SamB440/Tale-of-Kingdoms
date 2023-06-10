@@ -63,7 +63,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             // The guild must not be rebuilt
             guildPlayer.setHasRebuiltGuild(false);
 
-            instance.attack(player, player.getWorld());
+            instance.attack(player, player.getServerWorld());
 
             guildPlayer.setWorthiness(guildPlayer.getWorthiness() - 750);
 

@@ -13,7 +13,7 @@ public class EntityUtils {
 
     @Nullable
     public static <T extends MobEntity> T spawnEntity(EntityType<T> type, ServerPlayerEntity serverPlayer, BlockPos pos) {
-        return spawnEntity(type, serverPlayer.getWorld(), pos);
+        return spawnEntity(type, serverPlayer.getServerWorld(), pos);
     }
 
     @Nullable

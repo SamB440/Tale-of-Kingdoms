@@ -33,7 +33,7 @@ public class KingdomVillagerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.world.isClient) return ActionResult.FAIL;
+        if (hand == Hand.OFF_HAND || player.getWorld().isClient) return ActionResult.FAIL;
 
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         if (api == null) return ActionResult.FAIL;

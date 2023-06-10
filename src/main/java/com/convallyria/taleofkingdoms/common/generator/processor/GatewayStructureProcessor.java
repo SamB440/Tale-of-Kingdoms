@@ -35,8 +35,8 @@ public class GatewayStructureProcessor extends StructureProcessor {
     public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlacementData data) {
         ServerWorldAccess serverWorldAccess = (ServerWorldAccess) world;
         BlockPos newPos = pos.subtract(new Vec3i(6, 0, 6));
-        if (currentBlockInfo.state.getBlock() instanceof StructureBlock) {
-            String metadata = currentBlockInfo.nbt.getString("metadata");
+        if (currentBlockInfo.state().getBlock() instanceof StructureBlock) {
+            String metadata = currentBlockInfo.nbt().getString("metadata");
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             if (api == null) return currentBlockInfo;
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();

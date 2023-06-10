@@ -10,9 +10,9 @@ import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -20,6 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class ScreenStartConquest extends ScreenTOK {
     private final PlayerEntity player;
     private boolean loading;
 
-    public ScreenStartConquest(String worldName, File toSave, PlayerEntity player) {
+    public ScreenStartConquest(@NotNull String worldName, File toSave, PlayerEntity player) {
         super("menu.taleofkingdoms.startconquest.name");
         this.worldName = worldName;
         this.toSave = toSave;
@@ -110,19 +111,19 @@ public class ScreenStartConquest extends ScreenTOK {
     }
 
     @Override
-    public void render(MatrixStack stack, int par1, int par2, float par3) {
-        this.renderBackground(stack);
+    public void render(DrawContext context, int par1, int par2, float par3) {
+        this.renderBackground(context);
         String text = Translations.DARKNESS.getFormatted();
         int currentHeight = this.height / 2 - 110;
         for (String toRender : text.split("\n")) {
             //todo change colour? 11111111 is nice
-            drawCenteredTextWithShadow(stack, this.textRenderer, toRender, this.width / 2, currentHeight, 0xFFFFFF);
+            context.drawCenteredTextWithShadow(this.textRenderer, toRender, this.width / 2, currentHeight, 0xFFFFFF);
             currentHeight = currentHeight + 10;
         }
-        drawCenteredTextWithShadow(stack, this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
-        drawCenteredTextWithShadow(stack, this.textRenderer, Text.translatable("menu.taleofkingdoms.startconquest.exit"), this.width / 2, currentHeight + 65, 0xFFFFFF);
-        this.text.render(stack, par1, par2, par3);
-        super.render(stack, par1, par2, par3);
+        context.drawCenteredTextWithShadow(this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("menu.taleofkingdoms.startconquest.exit"), this.width / 2, currentHeight + 65, 0xFFFFFF);
+        this.text.render(context, par1, par2, par3);
+        super.render(context, par1, par2, par3);
     }
 
     @Override

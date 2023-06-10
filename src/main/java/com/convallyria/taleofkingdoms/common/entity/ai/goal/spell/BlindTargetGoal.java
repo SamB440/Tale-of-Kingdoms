@@ -27,7 +27,7 @@ public class BlindTargetGoal extends CastSpellGoal {
         } else if (spellCaster.getTarget().getId() == this.targetId) {
             return false;
         } else {
-            return spellCaster.world.getLocalDifficulty(spellCaster.getBlockPos()).isHarderThan((float) Difficulty.NORMAL.ordinal());
+            return spellCaster.getWorld().getLocalDifficulty(spellCaster.getBlockPos()).isHarderThan((float) Difficulty.NORMAL.ordinal());
         }
     }
 
