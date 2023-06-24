@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.listener;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.owo.update.UpdateScreen;
@@ -14,6 +15,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -61,13 +63,17 @@ public class StartWorldListener extends Listener {
                 // Load from json into class
                 try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                     ConquestInstance instance = gson.fromJson(reader, ConquestInstance.class);
-                    Runnable runnable = () -> {
+                    Runnable runnable = () -> api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
+                            PlayerEntity entity = MinecraftClient.getInstance().player;
+                            if (entity == null) return;
+
                             if (TaleOfKingdoms.CONFIG.mainConfig.showStartKingdomGUI) {
-                                PlayerEntity entity = MinecraftClient.getInstance().player;
-                                if (entity == null) return;
                                 MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
+                            } else {
+                                Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
+                                entity.sendMessage(Text.translatable("menu.taleofkingdoms.startconquest.closed", keyName.getString()), false);
                             }
                         } else {
                             if (TaleOfKingdoms.CONFIG.mainConfig.alwaysShowUpdatesGUI || instance.didUpgrade()) {
@@ -75,11 +81,18 @@ public class StartWorldListener extends Listener {
                             } else if (TaleOfKingdoms.CONFIG.mainConfig.showContinueConquestGUI) {
                                 MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
-                        }
-                    };
 
-                    TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
-                    api.getConquestInstanceStorage().addConquest(worldName, instance, true);
+                            if (api.getConquestInstanceStorage().getConquestInstance(worldName).isEmpty()) {
+                                TaleOfKingdoms.LOGGER.info("Adding world: " + worldName);
+                                api.getConquestInstanceStorage().addConquest(worldName, instance, true);
+                            }
+                        }
+                    });
+
+                    if (instance != null) {
+                        TaleOfKingdoms.LOGGER.info("Adding early existing world: " + worldName);
+                        api.getConquestInstanceStorage().addConquest(worldName, instance, true);
+                    }
 
                     postJoin.add(() -> api.executeOnMain(runnable));
                 } catch (JsonSyntaxException | JsonIOException | IOException e) {

@@ -87,8 +87,8 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
 
     private void registerEvents() {
         TaleOfKingdoms.LOGGER.info("Registering client events...");
+        this.startWorldListener = new StartWorldListener();
         new ClientGameInstanceListener();
         new RenderListener();
-        this.startWorldListener = new StartWorldListener();
     }
 }
