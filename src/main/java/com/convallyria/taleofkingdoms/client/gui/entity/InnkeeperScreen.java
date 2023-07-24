@@ -61,6 +61,7 @@ public class InnkeeperScreen extends ScreenTOK {
                     server.getOverworld().setTimeOfDay(1000);
                     ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity == null) return;
+                    serverPlayerEntity.teleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
                     serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
                     serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
                     serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));

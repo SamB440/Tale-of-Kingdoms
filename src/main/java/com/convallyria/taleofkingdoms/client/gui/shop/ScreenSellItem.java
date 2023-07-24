@@ -52,7 +52,7 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     @Override
     public void drawForeground(DrawContext context, int mouseX, int mouseY) {
-        context.drawText(textRenderer, Text.literal("Total Money:"), this.playerInventoryTitleX + 20, this.playerInventoryTitleY - 50, 4210752, true);
+        context.drawText(textRenderer, Text.literal("Total Money:"), this.playerInventoryTitleX + 20, this.playerInventoryTitleY - 50, 4210752, false);
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
         int x = this.playerInventoryTitleX + 25;
@@ -60,7 +60,7 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
         if (instance.isPresent()) {
             final GuildPlayer guildPlayer = instance.get().getPlayer(playerInventory.player);
             int coins = guildPlayer.getCoins();
-            context.drawText(textRenderer, Text.literal(coins + " Gold Coins"), x, y, 4210752, true);
+            context.drawText(textRenderer, Text.literal(coins + " Gold Coins"), x, y, 4210752, false);
         }
     }
 
