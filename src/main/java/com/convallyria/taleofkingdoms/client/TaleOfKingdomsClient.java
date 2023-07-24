@@ -56,8 +56,16 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (START_CONQUEST_KEYBIND.wasPressed()) {
                 String worldName = startWorldListener.getWorldName();
-                if (worldName == null) return;
-                if (api.getConquestInstanceStorage().getConquestInstance(worldName).isPresent()) return;
+                if (worldName == null) {
+                    TaleOfKingdoms.LOGGER.info("World name was null");
+                    return;
+                }
+
+                if (api.getConquestInstanceStorage().getConquestInstance(worldName).isPresent()) {
+                    TaleOfKingdoms.LOGGER.info("World already loaded");
+                    return;
+                }
+
                 File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
                 client.setScreen(new ScreenStartConquest(worldName, file, client.player));
             }

@@ -11,7 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class WorldSessionStartEvent {
 
     @Inject(method = "createSession", at = @At("HEAD"))
-    private void onStop(String directoryName, CallbackInfoReturnable<LevelStorage.Session> cir) {
+    private void createSession(String directoryName, CallbackInfoReturnable<LevelStorage.Session> cir) {
+        WorldSessionStartCallback.EVENT.invoker().start(directoryName);
+    }
+
+    @Inject(method = "createSessionWithoutSymlinkCheck", at = @At("HEAD"))
+    private void createSessionWithoutSymlinkCheck(String directoryName, CallbackInfoReturnable<LevelStorage.Session> cir) {
         WorldSessionStartCallback.EVENT.invoker().start(directoryName);
     }
 }
