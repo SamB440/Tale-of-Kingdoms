@@ -283,6 +283,48 @@
       "name": "Raw Salmon",
       "cost": 30,
       "sell": 25
+    },
+
+    {
+      "item": "COOKED_PORKCHOP",
+      "cost": 26,
+      "sell": 15
+    },
+
+    {
+      "item": "COOKED_RABBIT",
+      "cost": 8,
+      "sell": 6
+    },
+
+    {
+      "item": "COOKED_SALMON",
+      "cost": 23,
+      "sell": 11
+    },
+
+    {
+      "item": "COOKED_COD",
+      "cost": 23,
+      "sell": 12
+    },
+
+    {
+      "item": "COOKED_CHICKEN",
+      "cost": 20,
+      "sell": 10
+    },
+
+    {
+      "item": "COOKED_MUTTON",
+      "cost": 32,
+      "sell": 14
+    },
+
+    {
+      "item": "COOKED_BEEF",
+      "cost": 40,
+      "sell": 20
     }
   ],
 
@@ -563,26 +605,9 @@
       "sell": 10
     },
     {
-      "item": "Cooked_Porkchop",
-      "sell": 15
-    },
-    {
       "item": "Enchanted_Golden_Apple",
       "sell": 1950
     },
-    {
-      "item": "Cooked_Cod",
-      "sell": 15
-    },
-    {
-      "item": "Cooked_Salmon",
-      "sell": 15
-    },
-    {
-      "item": "Cooked_Beef",
-      "sell": 20
-    },
-
     {
       "item": "Rotten_Flesh",
       "sell": 1
@@ -599,11 +624,6 @@
       "item": "Glowstone_Dust",
       "sell": 15
     },
-    {
-      "item": "Cooked_Chicken",
-      "sell": 10
-    },
-
     {
       "item": "Detector_Rail",
       "sell": 85
@@ -766,41 +786,6 @@
     {
       "item": "Wheat_Seeds",
       "sell": 2
-    },
-    {
-      "item": "COOKED_PORKCHOP",
-      "cost": 6,
-      "sell": 4
-    },
-    {
-      "item": "COOKED_RABBIT",
-      "cost": 8,
-      "sell": 6
-    },
-    {
-      "item": "COOKED_SALMON",
-      "cost": 6,
-      "sell": 4
-    },
-    {
-      "item": "COOKED_COD",
-      "cost": 8,
-      "sell": 6
-    },
-    {
-      "item": "COOKED_CHICKEN",
-      "cost": 6,
-      "sell": 4
-    },
-    {
-      "item": "COOKED_MUTTON",
-      "cost": 7,
-      "sell": 5
-    },
-    {
-      "item": "COOKED_BEEF",
-      "cost": 15,
-      "sell": 8
     }
   ],
 
