@@ -21,6 +21,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         final PlayerKingdom kingdom = guildPlayer.getKingdom();
 
         inner.child(
-            Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.total_money", "Tier 1", guildPlayer.getCoins())).color(Color.ofRgb(11111111))
+            Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.total_money", "Tier 1", guildPlayer.getCoins())).color(Color.ofDye(DyeColor.GRAY))
             .positioning(Positioning.relative(50, 5))
         );
 

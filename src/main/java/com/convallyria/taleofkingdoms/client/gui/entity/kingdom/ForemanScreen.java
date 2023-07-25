@@ -24,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.text.Text;
+import net.minecraft.util.DyeColor;
 import org.jetbrains.annotations.NotNull;
 
 public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
@@ -51,10 +52,9 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
 
-        //todo: translatable
         rootComponent.child(
             Components.label(Text.translatable("menu.taleofkingdoms.foreman.total_money", instance.getPlayer(player).getCoins()))
-                    .color(Color.ofRgb(11111111))
+                    .color(Color.ofDye(DyeColor.GRAY))
                     .positioning(Positioning.relative(50, 15))
         );
 
