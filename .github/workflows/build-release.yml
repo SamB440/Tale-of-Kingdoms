@@ -48,7 +48,6 @@ jobs:
         with:
           modrinth-id: AEWkDOWi
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          modrinth-featured: false
 
           curseforge-id: 413354
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
