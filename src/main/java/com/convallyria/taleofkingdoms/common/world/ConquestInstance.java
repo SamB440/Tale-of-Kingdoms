@@ -61,25 +61,27 @@ public class ConquestInstance {
                     Codec.BOOL.fieldOf("under_attack").forGetter(ConquestInstance::isUnderAttack),
                     BlockPos.CODEC.listOf().fieldOf("reficule_attack_locations").forGetter(ConquestInstance::getReficuleAttackLocations),
                     Uuids.CODEC.listOf().fieldOf("reficule_attackers").forGetter(ConquestInstance::getReficuleAttackers),
+                    Uuids.CODEC.listOf().optionalFieldOf("lone_villagers_with_rooms").forGetter(ci -> Optional.of(ci.getLoneVillagersWithRooms())),
                     Codec.unboundedMap(Uuids.CODEC, GuildPlayer.CODEC).fieldOf("guild_players").forGetter(ConquestInstance::getGuildPlayers)
-            ).apply(instance, (name, hasLoaded, start, end, origin, underAttack, attackLocations, attackers, guildPlayers) -> {
+            ).apply(instance, (name, hasLoaded, start, end, origin, underAttack, attackLocations, attackers, lVWR, guildPlayers) -> {
                 ConquestInstance conquestInstance = new ConquestInstance(name, start, end, origin);
-                conquestInstance.uploadData(start, end, hasLoaded, underAttack, attackLocations, attackers, guildPlayers);
+                conquestInstance.uploadData(start, end, hasLoaded, underAttack, attackLocations, attackers, lVWR.orElse(new ArrayList<>()), guildPlayers);
                 return conquestInstance;
             }
     ));
 
     public void uploadData(ConquestInstance newData) {
-        this.uploadData(newData.start, newData.end, newData.hasLoaded, newData.underAttack, newData.reficuleAttackLocations, newData.reficuleAttackers, newData.guildPlayers);
+        this.uploadData(newData.start, newData.end, newData.hasLoaded, newData.underAttack, newData.reficuleAttackLocations, newData.reficuleAttackers, newData.loneVillagersWithRooms, newData.guildPlayers);
     }
 
-    public void uploadData(BlockPos start, BlockPos end, boolean hasLoaded, boolean underAttack, List<BlockPos> attackLocations, List<UUID> attackers, Map<UUID, GuildPlayer> guildPlayers) {
+    public void uploadData(BlockPos start, BlockPos end, boolean hasLoaded, boolean underAttack, List<BlockPos> attackLocations, List<UUID> attackers, List<UUID> loneVillagersWithRooms, Map<UUID, GuildPlayer> guildPlayers) {
         this.setStart(start);
         this.setEnd(end);
         this.setLoaded(hasLoaded);
         this.setUnderAttack(underAttack);
         this.getReficuleAttackLocations().addAll(attackLocations);
         this.getReficuleAttackers().addAll(attackers);
+        this.getLoneVillagersWithRooms().addAll(loneVillagersWithRooms);
         this.getGuildPlayers().putAll(guildPlayers);
     }
 
@@ -92,10 +94,10 @@ public class ConquestInstance {
     private boolean underAttack;
     private final List<BlockPos> reficuleAttackLocations;
     private final List<UUID> reficuleAttackers;
+    private List<UUID> loneVillagersWithRooms;
 
     private final Map<UUID, GuildPlayer> guildPlayers;
 
-    private transient List<UUID> loneVillagersWithRooms;
     private transient boolean didUpgrade;
 
     public ConquestInstance(String name, BlockPos start, BlockPos end, BlockPos origin) {
