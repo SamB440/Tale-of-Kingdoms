@@ -97,8 +97,8 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
             if (this.getDataTracker().get(MOVING_TO_LOCATION)) {
                 BlockPos current = this.getBlockPos();
                 int distance = (int) instance.getCentre().distanceTo(new Vec3d(current.getX(), current.getY(), current.getZ()));
-                if (distance < (1000)) {
-                    if (!client) Translations.CITYBUILDER_DISTANCE.send(player, distance, 1000);
+                if (distance < 500) {
+                    if (!client) Translations.CITYBUILDER_DISTANCE.send(player, distance, 500);
                     return;
                 }
 
