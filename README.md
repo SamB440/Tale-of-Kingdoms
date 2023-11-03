@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W4KMMB4)
+
 <div align="center">
   <a href="https://github.com/SamB440/tale-of-kingdoms">
     <img src="https://github.com/SamB440/Tale-of-Kingdoms/blob/master/src/main/resources/assets/taleofkingdoms/logo.png?raw=true" alt="Logo" width="80" height="80">
