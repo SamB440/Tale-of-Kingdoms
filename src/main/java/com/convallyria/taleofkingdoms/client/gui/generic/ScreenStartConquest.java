@@ -111,8 +111,8 @@ public class ScreenStartConquest extends ScreenTOK {
     }
 
     @Override
-    public void render(DrawContext context, int par1, int par2, float par3) {
-        this.renderBackground(context);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.renderBackground(context, mouseX, mouseY, delta);
         String text = Translations.DARKNESS.getFormatted();
         int currentHeight = this.height / 2 - 110;
         for (String toRender : text.split("\n")) {
@@ -122,8 +122,8 @@ public class ScreenStartConquest extends ScreenTOK {
         }
         context.drawCenteredTextWithShadow(this.textRenderer, Translations.HERO.getFormatted(), this.width / 2, currentHeight + 10, 0xFFFFFF);
         context.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("menu.taleofkingdoms.startconquest.exit"), this.width / 2, currentHeight + 65, 0xFFFFFF);
-        this.text.render(context, par1, par2, par3);
-        super.render(context, par1, par2, par3);
+        this.text.render(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
     }
 
     @Override

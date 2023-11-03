@@ -119,7 +119,7 @@ public class BowAttackGoal<T extends TOKEntity & RangedAttackMob> extends Goal {
                     int i = this.actor.getItemUseTime();
                     if (i >= 20) {
                         this.actor.clearActiveItem();
-                        this.actor.attack(livingEntity, BowItem.getPullProgress(i));
+                        this.actor.shootAt(livingEntity, BowItem.getPullProgress(i));
                         this.coolDown = this.attackInterval;
                     }
                 }

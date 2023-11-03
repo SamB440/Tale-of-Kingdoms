@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.common.event.PlayerJoinCallback;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
+import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,7 +53,7 @@ public class PlayerLogin {
 	}
 
 	@Inject(method = "onPlayerConnect", at = @At("HEAD"))
-	private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
+	private void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData clientData, CallbackInfo ci) {
 		PlayerJoinCallback.EVENT.invoker().onJoin(connection, player);
 	}
 

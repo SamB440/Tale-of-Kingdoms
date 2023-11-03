@@ -114,7 +114,7 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
                     this.stage = Stage.READY_TO_ATTACK;
                 }
             } else if (this.stage == Stage.READY_TO_ATTACK && bl) {
-                this.actor.attack(livingEntity, 1.0F);
+                this.actor.shootAt(livingEntity, 1.0F);
                 ItemStack itemStack2 = this.actor.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.CROSSBOW));
                 CrossbowItem.setCharged(itemStack2, false);
                 this.stage = Stage.UNCHARGED;

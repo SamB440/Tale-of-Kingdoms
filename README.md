@@ -64,7 +64,7 @@ Tale of Kingdoms builds on JDK 17 and uses Gradle to manage dependencies.
 
 You just need Java 17. If you don't have it:
 
-Latest from https://adoptopenjdk.net / https://adoptium.net, or;
+Latest from https://adoptium.net, or;
 ```sh
 sudo apt install adoptopenjdk-17-hotspot
 ```
@@ -169,7 +169,7 @@ Contributions are what make the open source community such an amazing place to b
 
 ## License
 
-Distributed under the GNU GPL v3 License. See [LICENSE](LICENSE.md) for more information.
+Distributed under the GNU GPL v3 License. See [LICENSE](LICENSE) for more information.
 
 ## Authors
 
@@ -203,7 +203,7 @@ Q: Will you be adding more to the mod?
 A: Yes, we will be adding more to the mod.
 
 Q: Where can I donate? 
-A: Currently you cannot donate simply because I have not set anything up. However, in the future you will be able to.
+A: Thanks for the consideration. You can donate at my ko-fi page: https://ko-fi.com/samb440
 
 Q: What versions will it be for? 
 A: As only a few people are working on it, only 1.16+ and Fabric will be supported.
