@@ -147,7 +147,7 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         // Price list
         inner.child(
             Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.price_list"), c -> {
-                MinecraftClient.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance));
+                MinecraftClient.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance, kingdom));
             }).positioning(Positioning.relative(80, 80)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
 
@@ -164,6 +164,8 @@ public class CityBuilderTierOneGui extends BaseCityBuilderScreen {
         final int maxPerRow = 7;
         int currentRow = 0;
         for (BuildCosts build : BuildCosts.values()) {
+            if (!kingdom.getTier().isHigherThanOrEqual(build.getTier())) continue;
+
             if (currentRow >= maxPerRow) {
                 currentRow = 0;
                 currentY = 15;
