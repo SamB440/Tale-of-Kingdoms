@@ -1,8 +1,6 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockBox;
@@ -18,15 +16,10 @@ public final class CommonSchematicHandler extends SchematicHandler {
     public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, BlockRotation rotation, SchematicOptions... options) {
         CompletableFuture<BlockBox> cf = new CompletableFuture<>();
 
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-            // WorldEdit requires actions to be done on the dedicated server thread.
-            TaleOfKingdoms.getAPI().getServer().ifPresent(minecraftServer -> {
-                minecraftServer.execute(() -> pasteSchematic(schematic, player, position, rotation, cf, options));
-            });
-        } else {
-            // WorldEdit requires actions to be done on the client server thread.
-            TaleOfKingdoms.getAPI().executeOnServer(() -> pasteSchematic(schematic, player, position, rotation, cf, options));
-        }
+        // If on:
+        // Dedicated Server --> WorldEdit requires actions to be done on the dedicated server thread.
+        // Client --> WorldEdit requires actions to be done on the client server thread.
+        TaleOfKingdomsServer.getAPI().executeOnServerEnvironment(server -> pasteSchematic(schematic, player, position, rotation, cf, options));
         return cf;
     }
 }

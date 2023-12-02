@@ -1,7 +1,6 @@
 package com.convallyria.taleofkingdoms.client;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.entity.render.RenderSetup;
 import com.convallyria.taleofkingdoms.client.gui.RenderListener;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
@@ -36,6 +35,7 @@ import java.io.File;
 @Environment(EnvType.CLIENT)
 public class TaleOfKingdomsClient implements ClientModInitializer {
 
+    private static TaleOfKingdomsClientAPI api;
     private StartWorldListener startWorldListener;
 
     public static final KeyBinding START_CONQUEST_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -45,9 +45,13 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
             "category.taleofkingdoms.keys" // The translation key of the keybinding's category.
     ));
 
+    public static TaleOfKingdomsClientAPI getAPI() {
+        return api;
+    }
+
     @Override
     public void onInitializeClient() {
-        TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        TaleOfKingdoms.setAPI(api = new TaleOfKingdomsClientAPI(TaleOfKingdoms.getInstance()));
         new RenderSetup(api.getMod());
         registerPacketHandlers();
         registerEvents();
@@ -90,7 +94,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
     }
 
     protected void registerHandler(ClientPacketHandler clientPacketHandler) {
-        TaleOfKingdoms.getAPI().registerClientHandler(clientPacketHandler);
+        api.registerClientHandler(clientPacketHandler);
     }
 
     private void registerEvents() {

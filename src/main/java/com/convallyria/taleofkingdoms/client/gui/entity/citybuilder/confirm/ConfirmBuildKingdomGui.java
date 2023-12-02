@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.confirm;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.BaseCityBuilderScreen;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
@@ -65,7 +66,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 // Close current screen, calculate paste position, and add their kingdom
                 MinecraftClient.getInstance().currentScreen.close();
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.BUILD_KINGDOM)
+                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.BUILD_KINGDOM)
                             .handleOutgoingPacket(player, entity.getId());
                     return;
                 }
@@ -85,7 +86,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                     playerKingdom.setEnd(end);
 
                     // Make city builder stop following player and move to well POI
-                    TaleOfKingdoms.getAPI().executeOnServer(() -> {
+                    TaleOfKingdoms.getAPI().executeOnServerEnvironment((s) -> {
                         final CityBuilderEntity cityBuilderServer = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
                         cityBuilderServer.stopFollowingPlayer();
                         // Teleport to the player first, should avoid getting stuck in ground

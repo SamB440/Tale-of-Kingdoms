@@ -2,6 +2,8 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarColour;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.ScreenBar;
@@ -76,7 +78,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (!guildPlayer.getHunters().isEmpty()) {
                     Translations.HUNTER_THANK.send(player);
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.HIRE_HUNTER)
+                        TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.HIRE_HUNTER)
                                 .handleOutgoingPacket(player, true);
                         this.close();
                         return;
@@ -90,7 +92,7 @@ public class GuildMasterScreen extends ScreenTOK {
                             guildPlayer.getHunters().remove(uuid);
                             TaleOfKingdoms.LOGGER.info("Removed hunter by uuid " + uuid + " that no longer exists.");
                         } else {
-                            TaleOfKingdoms.getAPI().executeOnServer(() -> hunter.remove(Entity.RemovalReason.DISCARDED));
+                            TaleOfKingdoms.getAPI().executeOnServerEnvironment((s) -> hunter.remove(Entity.RemovalReason.DISCARDED));
                             guildPlayer.getHunters().remove(hunter.getUuid());
                             guildPlayer.setCoins(guildPlayer.getCoins() + 750);
                             return;
@@ -115,7 +117,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (instance.isUnderAttack() || guildPlayer.getCoins() < 3000) return;
                 if (stack == null) return;
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    api.getClientPacketHandler(Packets.FIX_GUILD)
+                    ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.FIX_GUILD)
                             .handleOutgoingPacket(player);
                     return;
                 }
@@ -180,7 +182,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 guildPlayer.setSignedContract(true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
             } else {
-                TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
+                TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
                         .handleOutgoingPacket(player, true);
             }
             widget.visible = false;
@@ -201,7 +203,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 guildPlayer.setSignedContract(false);
                 Translations.GUILDMASTER_CONTRACT_CANCEL_AWAIT.send(player);
             } else {
-                TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
+                TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
                         .handleOutgoingPacket(player, false);
             }
             widget.visible = false;
@@ -222,13 +224,13 @@ public class GuildMasterScreen extends ScreenTOK {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 Translations.SERVE.send(player);
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    api.getClientPacketHandler(Packets.HIRE_HUNTER)
+                    ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.HIRE_HUNTER)
                             .handleOutgoingPacket(player, false);
                     return;
                 }
 
-                api.executeOnServer(() -> {
-                    ServerWorld serverWorld = MinecraftClient.getInstance().getServer().getOverworld();
+                api.executeOnServerEnvironment((server) -> {
+                    ServerWorld serverWorld = server.getOverworld();
                     BlockPos blockPos = entity.getBlockPos();
                     HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, serverWorld, blockPos);
                     guildPlayer.getHunters().add(hunterEntity.getUuid());

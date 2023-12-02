@@ -8,8 +8,11 @@ import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -19,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@Environment(EnvType.SERVER)
 public final class IncomingHunterPacketHandler extends ServerPacketHandler {
 
     public IncomingHunterPacketHandler() {
@@ -61,7 +65,7 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                TaleOfKingdoms.getAPI().executeOnDedicatedServer(() -> hunterEntity.remove(Entity.RemovalReason.DISCARDED));
+                TaleOfKingdomsServer.getAPI().executeOnDedicatedServer(() -> hunterEntity.remove(Entity.RemovalReason.DISCARDED));
                 guildPlayer.getHunters().remove(hunterEntity.getUuid());
                 guildPlayer.setCoins(guildPlayer.getCoins() + 750);
                 ServerConquestInstance.sync(player, instance);

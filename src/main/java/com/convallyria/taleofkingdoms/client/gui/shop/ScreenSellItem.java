@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.shop;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
@@ -84,7 +85,7 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     protected void deleteBlock(TaleOfKingdomsAPI api, ShopEntity entity) {
         if (MinecraftClient.getInstance().getServer() == null) {
-            api.getClientPacketHandler(Packets.TOGGLE_SELL_GUI)
+            ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.TOGGLE_SELL_GUI)
                     .handleOutgoingPacket(playerInventory.player, true, entity.getGUIType());
             return;
         }

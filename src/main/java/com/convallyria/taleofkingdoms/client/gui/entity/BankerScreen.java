@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
@@ -57,7 +58,7 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                 if (guildPlayer.getCoins() >= coins) {
                     this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
+                        TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
                                 .handleOutgoingPacket(player, BankerMethod.DEPOSIT, coins);
                         return;
                     }
@@ -81,7 +82,7 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                 if (guildPlayer.getBankerCoins() >= coins) {
                     this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
+                        TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
                                 .handleOutgoingPacket(player, BankerMethod.WITHDRAW, coins);
                         return;
                     }

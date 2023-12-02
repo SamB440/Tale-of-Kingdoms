@@ -10,6 +10,8 @@ import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
 import com.convallyria.taleofkingdoms.common.listener.Listener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServerAPI;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -31,41 +33,37 @@ import java.util.concurrent.CompletableFuture;
 public class ServerGameInstanceListener extends Listener {
 
     public ServerGameInstanceListener() {
-        final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+        final TaleOfKingdomsServerAPI api = TaleOfKingdomsServer.getAPI();
         GameInstanceCallback.EVENT.register(api::setServer);
 
-        PlayerJoinCallback.EVENT.register((no, player) -> {
-            if (!api.executeOnDedicatedServer(() -> {
-                MinecraftDedicatedServer server = api.getServer().get();
-                boolean loaded = load(server.getLevelName(), api);
-                File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ".conquestworld");
-                if (loaded) {
-                    // Already exists
-                    Gson gson = api.getMod().getGson();
-                    try {
-                        // Load from json into class
-                        ConquestInstance instance = null;
-                        try (BufferedReader reader = new BufferedReader(new FileReader(conquestFile))) {
-                            instance = gson.fromJson(reader, ConquestInstance.class);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        // Check if file exists, but values don't. Game probably crashed?
-                        if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            this.create(api, player, server);
-                        } else {
-                            if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isEmpty()) {
-                                api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
-                            }
-                        }
-                    } catch (JsonSyntaxException | JsonIOException e) {
+        PlayerJoinCallback.EVENT.register((no, player) -> api.executeOnDedicatedServer(() -> {
+            MinecraftDedicatedServer server = api.getServer();
+            boolean loaded = load(server.getLevelName(), api);
+            File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ".conquestworld");
+            if (loaded) {
+                // Already exists
+                Gson gson = api.getMod().getGson();
+                try {
+                    // Load from json into class
+                    ConquestInstance instance = null;
+                    try (BufferedReader reader = new BufferedReader(new FileReader(conquestFile))) {
+                        instance = gson.fromJson(reader, ConquestInstance.class);
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    // Check if file exists, but values don't. Game probably crashed?
+                    if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
+                        this.create(api, player, server);
+                    } else {
+                        if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isEmpty()) {
+                            api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+                        }
+                    }
+                } catch (JsonSyntaxException | JsonIOException e) {
+                    e.printStackTrace();
                 }
-            })) {
-                TaleOfKingdoms.LOGGER.error("Dedicated server not present!");
             }
-        });
+        }));
 
         PlayerJoinWorldCallback.EVENT.register(player -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
@@ -79,11 +77,12 @@ public class ServerGameInstanceListener extends Listener {
             });
         });
 
-        PlayerLeaveCallback.EVENT.register(player -> api.executeOnDedicatedServer(() -> api.getServer().ifPresent(server -> {
+        PlayerLeaveCallback.EVENT.register(player -> api.executeOnDedicatedServer(() -> {
+            final MinecraftDedicatedServer server = api.getServer();
             api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
                 conquestInstance.save(server.getLevelName());
             });
-        })));
+        }));
     }
 
     private boolean load(String worldName, TaleOfKingdomsAPI api) {

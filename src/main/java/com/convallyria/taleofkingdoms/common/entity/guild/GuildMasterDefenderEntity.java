@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTarget
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServerAPI;
 import net.fabricmc.api.EnvType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -99,8 +100,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                         this.givenSword = true;
                     }
                 };
-                if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) api.executeOnDedicatedServer(giveItem);
-                else api.executeOnMain(giveItem);
+                api.executeOnMain(giveItem);
                 return ActionResult.SUCCESS;
             }
 
@@ -132,7 +132,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             Translations.GUILDMASTER_REBUILD.send(player);
                         }
                     };
-                    if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) api.executeOnDedicatedServer(fixGuild);
+                    if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) ((TaleOfKingdomsServerAPI) api).executeOnDedicatedServer(fixGuild);
                     else if (serverPlayerEntity.getServer() == null || !serverPlayerEntity.getServer().isDedicated()) api.executeOnMain(fixGuild);
                     return ActionResult.SUCCESS;
                 }

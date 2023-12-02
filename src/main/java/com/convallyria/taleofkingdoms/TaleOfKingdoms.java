@@ -86,6 +86,8 @@ public class TaleOfKingdoms implements ModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger();
 
+    // Woo! Static!
+    private static TaleOfKingdoms instance;
     private static TaleOfKingdomsAPI api;
     public static TaleOfKingdomsConfig CONFIG;
 
@@ -115,16 +117,26 @@ public class TaleOfKingdoms implements ModInitializer {
         SELL_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, FabricBlockEntityTypeBuilder.create(SellBlockEntity::new, SELL_BLOCK).build(null));
     }
 
+    public static void setAPI(TaleOfKingdomsAPI api) {
+        if (TaleOfKingdoms.api != null) {
+            throw new IllegalArgumentException("API already set!");
+        }
+        TaleOfKingdoms.api = api;
+    }
+
+    public static TaleOfKingdoms getInstance() {
+        return instance;
+    }
+
     @Override
     public void onInitialize() {
+        instance = this;
         ItemRegistry.init();
 
         File file = new File(this.getDataFolder() + "worlds");
         if (!file.exists()) file.mkdirs();
         registerEvents();
         registerCommands();
-        TaleOfKingdoms.api = new TaleOfKingdomsAPI(this);
-
         registerFeatures();
 
         FabricDefaultAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity.createMobAttributes());

@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServerAPI;
 import net.fabricmc.api.EnvType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -73,7 +74,7 @@ public class FarmerEntity extends TOKEntity {
                 }
             });
         } else {
-            api.executeOnDedicatedServer(() -> player.getInventory().insertStack(new ItemStack(Items.BREAD, amount)));
+            ((TaleOfKingdomsServerAPI) api).executeOnDedicatedServer(() -> player.getInventory().insertStack(new ItemStack(Items.BREAD, amount)));
         }
         return ActionResult.PASS;
     }

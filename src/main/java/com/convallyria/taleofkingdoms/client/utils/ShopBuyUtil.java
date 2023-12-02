@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.client.utils;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
@@ -21,7 +21,7 @@ public class ShopBuyUtil {
 
     public static void buyItem(ConquestInstance instance, PlayerEntity player, ShopItem shopItem, int count, ShopEntity entity) {
         if (shopItem.canBuy(instance, player, count)) {
-            final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
+            final TaleOfKingdomsClientAPI api = TaleOfKingdomsClient.getAPI();
             api.executeOnMain(() -> {
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {

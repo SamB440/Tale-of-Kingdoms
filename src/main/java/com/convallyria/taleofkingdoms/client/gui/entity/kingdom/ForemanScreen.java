@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.kingdom;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarWidget;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
@@ -74,7 +74,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(
             Components.button(Text.translatable("menu.taleofkingdoms.foreman.collect"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.FOREMAN_COLLECT)
+                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.FOREMAN_COLLECT)
                             .handleOutgoingPacket(player, entity.getId());
                     return;
                 }
@@ -88,7 +88,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(
             Components.button(Text.translatable("menu.taleofkingdoms.foreman.buy_worker"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdoms.getAPI().getClientPacketHandler(Packets.FOREMAN_BUY_WORKER)
+                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.FOREMAN_BUY_WORKER)
                             .handleOutgoingPacket(player, entity.getId());
                     return;
                 }

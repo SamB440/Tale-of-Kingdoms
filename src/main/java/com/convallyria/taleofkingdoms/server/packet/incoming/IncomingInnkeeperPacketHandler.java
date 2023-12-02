@@ -7,8 +7,11 @@ import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
+@Environment(EnvType.SERVER)
 public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
 
     public IncomingInnkeeperPacketHandler() {
@@ -67,8 +71,8 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                     return;
                 }
 
-                TaleOfKingdoms.getAPI().executeOnDedicatedServer(() -> {
-                   MinecraftServer server = player.getServer();
+                TaleOfKingdomsServer.getAPI().executeOnDedicatedServer(() -> {
+                    MinecraftServer server = player.getServer();
                     server.getOverworld().setTimeOfDay(1000);
                     player.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
@@ -77,7 +81,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                 return;
             }
 
-            TaleOfKingdoms.getAPI().getServer().ifPresent(server -> server.getOverworld().setTimeOfDay(13000));
+            TaleOfKingdomsServer.getAPI().getServer().getOverworld().setTimeOfDay(13000);
             ServerConquestInstance.sync(player, instance);
         }));
     }

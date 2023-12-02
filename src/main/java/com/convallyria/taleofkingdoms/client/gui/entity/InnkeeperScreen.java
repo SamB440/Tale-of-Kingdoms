@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
@@ -52,12 +53,12 @@ public class InnkeeperScreen extends ScreenTOK {
 
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
-                    api.getClientPacketHandler(Packets.INNKEEPER_HIRE_ROOM)
+                    ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.INNKEEPER_HIRE_ROOM)
                             .handleOutgoingPacket(player, true);
                     return;
                 }
 
-                api.executeOnServer(() -> {
+                api.executeOnServerEnvironment((s) -> {
                     server.getOverworld().setTimeOfDay(1000);
                     ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity == null) return;
@@ -85,7 +86,7 @@ public class InnkeeperScreen extends ScreenTOK {
             }
 
             if (server == null) {
-                api.getClientPacketHandler(Packets.INNKEEPER_HIRE_ROOM)
+                ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.INNKEEPER_HIRE_ROOM)
                         .handleOutgoingPacket(player, false);
                 return;
             }

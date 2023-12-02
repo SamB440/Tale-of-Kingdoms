@@ -1,40 +1,27 @@
 package com.convallyria.taleofkingdoms;
 
-import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.scheduler.Scheduler;
 import com.convallyria.taleofkingdoms.common.schematic.CommonSchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstanceStorage;
 import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-public class TaleOfKingdomsAPI {
+public abstract class TaleOfKingdomsAPI {
 
     private final TaleOfKingdoms mod;
     private final ConquestInstanceStorage cis;
     private final Map<Class<? extends IManager>, IManager> managers = new HashMap<>();
-    @Environment(EnvType.SERVER)
-    private MinecraftDedicatedServer minecraftServer;
-    @Environment(EnvType.SERVER)
-    private final Map<Identifier, ServerPacketHandler> serverPacketHandlers = new ConcurrentHashMap<>();
-    @Environment(EnvType.CLIENT)
-    private final Map<Identifier, ClientPacketHandler> clientPacketHandlers = new ConcurrentHashMap<>();
+
     private final Scheduler scheduler;
 
     public TaleOfKingdomsAPI(TaleOfKingdoms mod) {
@@ -47,26 +34,6 @@ public class TaleOfKingdomsAPI {
 
     public EnvType getEnvironment() {
         return FabricLoader.getInstance().getEnvironmentType();
-    }
-
-    @Environment(EnvType.SERVER)
-    public ServerPacketHandler getServerPacketHandler(Identifier identifier) {
-        return serverPacketHandlers.get(identifier);
-    }
-
-    @Environment(EnvType.SERVER)
-    public void registerServerHandler(ServerPacketHandler serverPacketHandler) {
-        serverPacketHandlers.put(serverPacketHandler.getPacket(), serverPacketHandler);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public ClientPacketHandler getClientPacketHandler(Identifier identifier) {
-        return clientPacketHandlers.get(identifier);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void registerClientHandler(ClientPacketHandler clientPacketHandler) {
-        clientPacketHandlers.put(clientPacketHandler.getPacket(), clientPacketHandler);
     }
 
     @NotNull
@@ -103,56 +70,17 @@ public class TaleOfKingdomsAPI {
         return managers.values();
     }
 
-    @Environment(EnvType.CLIENT)
-    public void executeOnMain(Runnable runnable) {
-        MinecraftClient.getInstance().execute(runnable);
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void executeOnServer(Runnable runnable) {
-        MinecraftServer server = MinecraftClient.getInstance().getServer();
-        if (server != null) {
-            MinecraftClient.getInstance().getServer().execute(runnable);
-        } else {
-            TaleOfKingdoms.LOGGER.warn("Cannot execute task because MinecraftServer is null");
-        }
-    }
-
-    public void executeOnServerEnvironment(Consumer<MinecraftServer> runnable) {
-        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            executeOnServer(() -> runnable.accept(MinecraftClient.getInstance().getServer()));
-        } else {
-            executeOnDedicatedServer(() -> runnable.accept(minecraftServer));
-        }
-    }
+    /**
+     * Executes the specified consumer on the correct server environment (either a dedicated server or integrated)
+     * @param runnable the consumer to execute, containing the server used
+     */
+    public abstract void executeOnServerEnvironment(Consumer<MinecraftServer> runnable);
 
     /**
-     * Executes a task on the dedicated server.
-     * @param runnable task to run
-     * @return true if {@link MinecraftDedicatedServer} was present, false if not
+     * Executes the specified runnable on the main thread of the current environment.
+     * @param runnable the runnable to execute
      */
-    @Environment(EnvType.SERVER)
-    public boolean executeOnDedicatedServer(Runnable runnable) {
-        if (minecraftServer != null) {
-            minecraftServer.execute(runnable);
-            return true;
-        }
-        return false;
-    }
-
-    @Environment(EnvType.SERVER)
-    public Optional<MinecraftDedicatedServer> getServer() {
-        return Optional.ofNullable(minecraftServer);
-    }
-
-    @Environment(EnvType.SERVER)
-    public void setServer(MinecraftDedicatedServer minecraftServer) {
-        if (this.minecraftServer != null) {
-            throw new IllegalStateException("Server already registered");
-        }
-
-        this.minecraftServer = minecraftServer;
-    }
+    public abstract void executeOnMain(Runnable runnable);
 
     @NotNull
     public SchematicHandler getSchematicHandler() {
