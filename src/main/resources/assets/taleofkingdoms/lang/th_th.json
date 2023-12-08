@@ -4,7 +4,7 @@
     "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "แสดงเมนูดำเนินการผจญภัยต่อ",
     "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "อัตราการเกิดประตูมิติ",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "อัตราการเกิดเรฟิคุล",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.banditCampSpawnRate": "\"อัตราการเกิดค่ายโจร\"",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.banditCampSpawnRate": "\"อัตราการเกิดค่ายโจร\".",
     "text.autoconfig.taleofkingdoms.option.mainConfig.alwaysShowUpdatesGUI": "\"แสดงการอัปเดต GUI เสมอ\"",
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "เริ่มการผจญภัย",
