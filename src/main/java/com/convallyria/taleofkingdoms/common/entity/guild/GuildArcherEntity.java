@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
-import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.States;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;

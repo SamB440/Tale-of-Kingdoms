@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.server.commands.debug;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;

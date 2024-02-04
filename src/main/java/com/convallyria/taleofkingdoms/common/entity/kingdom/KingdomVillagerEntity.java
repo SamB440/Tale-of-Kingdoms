@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.client.translation.Translations;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundKingdomGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;

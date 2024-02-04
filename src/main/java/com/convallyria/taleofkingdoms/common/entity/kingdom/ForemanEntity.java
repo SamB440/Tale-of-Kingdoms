@@ -2,19 +2,17 @@ package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.ForemanScreen;
-import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -74,15 +72,9 @@ public abstract class ForemanEntity extends TOKEntity implements InventoryOwner 
         if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
-        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
-        this.openScreen(player, instance);
+        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+        TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.FOREMAN, this.getId());
         return ActionResult.PASS;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public void openScreen(PlayerEntity player, ConquestInstance instance) {
-        Translations.FOREMAN_NEED_RESOURCES.send(player);
-        MinecraftClient.getInstance().setScreen(new ForemanScreen(player, this, instance));
     }
 
     public void buyWorker(PlayerEntity player, ConquestInstance instance) {

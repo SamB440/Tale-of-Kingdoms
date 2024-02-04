@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.block.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
-import com.convallyria.taleofkingdoms.client.gui.shop.inventory.ImplementedInventory;
+import com.convallyria.taleofkingdoms.common.shop.SellScreenHandler;
+import com.convallyria.taleofkingdoms.common.shop.inventory.ImplementedInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

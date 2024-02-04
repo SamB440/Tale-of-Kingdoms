@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.server;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,6 +32,11 @@ public class TaleOfKingdomsServerAPI extends TaleOfKingdomsAPI {
     @Override
     public void executeOnMain(Runnable runnable) {
         executeOnDedicatedServer(runnable);
+    }
+
+    @Override
+    public PacketHandler getPacketHandler(Identifier packet) {
+        return getServerPacketHandler(packet);
     }
 
     /**

@@ -1,12 +1,9 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.BankerScreen;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -27,20 +24,15 @@ public class BankerEntity extends TOKEntity {
 
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
-        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
-        this.openScreen(player, instance);
+        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+        TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.BANKER, this.getId());
         return ActionResult.PASS;
     }
 
-    @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ConquestInstance instance) {
-        BankerScreen screen = new BankerScreen(player, this, instance);
-        MinecraftClient.getInstance().setScreen(screen);
-    }
-
     @Override
-    public boolean isStationary() { return true; }
+    public boolean isStationary() {
+        return true;
+    }
 
     @Override
     public boolean isPushable() {

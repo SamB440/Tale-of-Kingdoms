@@ -1,9 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.CityBuilderBeginGui;
-import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.CityBuilderTierOneGui;
-import com.convallyria.taleofkingdoms.client.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
@@ -11,13 +8,13 @@ import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -89,7 +86,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
             final GuildPlayer guildPlayer = instance.getPlayer(player);
             final PlayerKingdom kingdom = guildPlayer.getKingdom();
             if (kingdom != null) {
-                if (!client) return;
+                if (client) return;
                 openScreen(player, kingdom, instance);
                 return;
             }
@@ -102,7 +99,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
                     return;
                 }
 
-                if (client) {
+                if (!client) {
                     openScreen(player, null, instance);
                 }
                 return;
@@ -201,15 +198,14 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         this.goalSelector.remove(this.currentBlockTarget);
     }
 
-    @Environment(EnvType.CLIENT)
     private void openScreen(PlayerEntity player, @Nullable PlayerKingdom kingdom, ConquestInstance instance) {
         if (kingdom == null) {
-            MinecraftClient.getInstance().setScreen(new CityBuilderBeginGui(player, this, instance));
+            TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_BEGIN);
             return;
         }
 
         if (kingdom.getTier() == KingdomTier.TIER_ONE) {
-            MinecraftClient.getInstance().setScreen(new CityBuilderTierOneGui(player, this, instance));
+            TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_TIER_ONE);
         }
     }
 

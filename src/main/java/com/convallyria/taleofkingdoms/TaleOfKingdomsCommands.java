@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms;
 
-import com.convallyria.taleofkingdoms.client.commands.TaleOfKingdomsCommand;
+import com.convallyria.taleofkingdoms.server.commands.TaleOfKingdomsCommand;
 import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsAddCommand;
 import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsDebugCommand;
 import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsGetCommand;

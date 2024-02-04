@@ -15,6 +15,7 @@ import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingInnkeeperPa
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingInstanceSyncPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.DedicatedServerModInitializer;
 
@@ -47,6 +48,7 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
         registerHandler(new IncomingToggleSellGuiPacketHandler());
 
         registerHandler(new OutgoingInstanceSyncPacketHandler());
+        registerHandler(new OutgoingOpenScreenPacketHandler());
     }
 
     private void registerListeners() {

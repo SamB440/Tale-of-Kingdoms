@@ -2,13 +2,11 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.client.gui.entity.GuildMasterScreen;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -24,6 +22,7 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 public class GuildMasterEntity extends TOKEntity {
+
     public GuildMasterEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -47,17 +46,13 @@ public class GuildMasterEntity extends TOKEntity {
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
         if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
 
-        if (player instanceof ServerPlayerEntity) return ActionResult.FAIL;
-        if (api.getEnvironment() == EnvType.CLIENT) this.openScreen(player, instance);
+        if (player instanceof ServerPlayerEntity) {
+            api.getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.GUILD_MASTER, this.getId());
+            return ActionResult.FAIL;
+        }
+
         return ActionResult.PASS;
-    }
-
-    @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ConquestInstance instance) {
-        GuildMasterScreen screen = new GuildMasterScreen(player, this, instance);
-        MinecraftClient.getInstance().setScreen(screen);
     }
 
     @Override

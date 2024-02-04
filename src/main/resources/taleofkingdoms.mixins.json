@@ -19,10 +19,7 @@
   "client": [
     "WorldClose",
     "WorldDeleteEvent",
-    "WorldSessionStartEvent",
-    "client.InventoryDrawEvent",
-    "client.RecipesUpdatedEvent",
-    "structure.StructureBlockRenderMixin"
+    "WorldSessionStartEvent"
   ],
   "server": [
     "server.GameInstanceEvent"

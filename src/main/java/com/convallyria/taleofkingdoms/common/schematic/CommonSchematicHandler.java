@@ -1,6 +1,6 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
-import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockBox;
@@ -19,7 +19,7 @@ public final class CommonSchematicHandler extends SchematicHandler {
         // If on:
         // Dedicated Server --> WorldEdit requires actions to be done on the dedicated server thread.
         // Client --> WorldEdit requires actions to be done on the client server thread.
-        TaleOfKingdomsServer.getAPI().executeOnServerEnvironment(server -> pasteSchematic(schematic, player, position, rotation, cf, options));
+        TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> pasteSchematic(schematic, player, position, rotation, cf, options));
         return cf;
     }
 }

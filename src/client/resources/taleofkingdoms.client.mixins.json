@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.convallyria.taleofkingdoms.client.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "InventoryDrawEvent",
+    "RecipesUpdatedEvent",
+    "structure.StructureBlockRenderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -42,7 +42,7 @@
       "com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer"
     ],
     "modmenu": [
-      "com.convallyria.taleofkingdoms.common.config.TaleOfKingdomsModMenu"
+      "com.convallyria.taleofkingdoms.client.config.TaleOfKingdomsModMenu"
     ]
   },
   "mixins": [

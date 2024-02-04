@@ -1,15 +1,12 @@
 package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.ItemShopScreen;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
+import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
-import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import com.google.common.collect.ImmutableList;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -40,21 +37,12 @@ public class ItemShopEntity extends ShopEntity {
         this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
     }
 
-    @Environment(EnvType.CLIENT)
     @Override
     protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !player.getWorld().isClient()) return ActionResult.FAIL;
-        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
-        this.openScreen(player, instance);
+        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+        TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.ITEM_SHOP, this.getId());
         return ActionResult.PASS;
     }
-
-    @Environment(EnvType.CLIENT)
-    private void openScreen(PlayerEntity player, ConquestInstance instance) {
-        ItemShopScreen screen = new ItemShopScreen(player, this, instance);
-        MinecraftClient.getInstance().setScreen(screen);
-    }
-
     @Override
     public boolean isStationary() {
         return true;

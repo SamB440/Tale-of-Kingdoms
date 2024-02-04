@@ -1,6 +1,5 @@
 package com.convallyria.taleofkingdoms;
 
-import com.convallyria.taleofkingdoms.client.gui.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.block.SellBlock;
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
 import com.convallyria.taleofkingdoms.common.config.TaleOfKingdomsConfig;
@@ -45,6 +44,7 @@ import com.convallyria.taleofkingdoms.common.listener.MobDeathListener;
 import com.convallyria.taleofkingdoms.common.listener.MobSpawnListener;
 import com.convallyria.taleofkingdoms.common.listener.SleepListener;
 import com.convallyria.taleofkingdoms.common.serialization.gson.ConquestInstanceAdapter;
+import com.convallyria.taleofkingdoms.common.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.google.gson.Gson;

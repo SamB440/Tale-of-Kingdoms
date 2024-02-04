@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.scheduler.Scheduler;
 import com.convallyria.taleofkingdoms.common.schematic.CommonSchematicHandler;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicHandler;
@@ -9,6 +10,7 @@ import com.convallyria.taleofkingdoms.managers.SoundManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -81,6 +83,8 @@ public abstract class TaleOfKingdomsAPI {
      * @param runnable the runnable to execute
      */
     public abstract void executeOnMain(Runnable runnable);
+
+    public abstract PacketHandler getPacketHandler(Identifier packet);
 
     @NotNull
     public SchematicHandler getSchematicHandler() {
