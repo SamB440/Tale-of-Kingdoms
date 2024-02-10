@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
  * An enum of schematics, with file paths, that are available to paste.
  */
 public enum Schematic {
-    GUILD_CASTLE(new Identifier(TaleOfKingdoms.MODID, "guild/guild")),
+    GUILD_CASTLE(new Identifier(TaleOfKingdoms.MODID, "guild/guildnew")),
     TIER_1_KINGDOM(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/tier_one")),
     TIER_1_BLACKSMITH_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/blacksmith/tier_one_house_blacksmith")),
     TIER_1_STOCK_MARKET("player_kingdom/stock_market/tier_one_stock_market"),
