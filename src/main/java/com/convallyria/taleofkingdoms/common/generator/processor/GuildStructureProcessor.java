@@ -11,10 +11,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.ServerWorldAccess;
@@ -59,28 +61,27 @@ public class GuildStructureProcessor extends StructureProcessor {
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
             Vec3d spawnPos = currentBlockInfo.pos().toCenterPos();
-            try {
-                //TODO: replace with registry lookup
-                EntityType type = (EntityType<?>) EntityTypes.class.getField(metadata.toUpperCase(TaleOfKingdoms.DEFAULT_LOCALE)).get(EntityTypes.class);
-                if (type == null) return air;
-                if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
-                        && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER || type == EntityTypes.GUILDVILLAGER)) {
-                    return air;
+            final EntityType type = Registries.ENTITY_TYPE.getOrEmpty(new Identifier(TaleOfKingdoms.MODID, metadata)).orElse(null);
+            if (type == null) {
+                TaleOfKingdoms.LOGGER.error("Unable to find entity " + metadata);
+                return air;
+            }
+
+            if (options.contains(SchematicOptions.IGNORE_DEFENDERS)
+                    && (type == EntityTypes.GUILDGUARD || type == EntityTypes.GUILDARCHER || type == EntityTypes.GUILDVILLAGER)) {
+                return air;
+            }
+
+            if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER && type != EntityTypes.GUILDVILLAGER) {
+                Optional guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
+                if (type == EntityTypes.GUILDMASTER) {
+                    guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
                 }
 
-                if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER && type != EntityTypes.GUILDVILLAGER) {
-                    Optional guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
-                    if (type == EntityTypes.GUILDMASTER) {
-                        guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
-                    }
-
-                    if (guildEntity.isEmpty()) {
-                        EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
-                    }
-                } else EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
-            } catch (ReflectiveOperationException e) {
-                e.printStackTrace();
-            }
+                if (guildEntity.isEmpty()) {
+                    EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
+                }
+            } else EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
             return air;
         }
         return currentBlockInfo;
