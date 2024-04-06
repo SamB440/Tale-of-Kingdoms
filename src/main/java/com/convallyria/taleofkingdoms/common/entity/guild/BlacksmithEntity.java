@@ -3,10 +3,8 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -19,11 +17,6 @@ public class BlacksmithEntity extends ShopEntity {
 
     public BlacksmithEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    @Override
-    public ImmutableList<ShopItem> getShopItems() {
-        return ImmutableList.copyOf(ShopParser.SHOP_ITEMS.get(ShopParser.GUI.BLACKSMITH));
     }
 
     @Override

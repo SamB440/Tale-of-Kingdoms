@@ -21,12 +21,17 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.BlockShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.HumanFarmerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberWorkerEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.ArcherHireableEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.WardenEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.WarriorHireableEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.LumberForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.LumberWorkerEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.StockMarketEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
@@ -47,6 +52,7 @@ import com.convallyria.taleofkingdoms.common.serialization.gson.ConquestInstance
 import com.convallyria.taleofkingdoms.common.shop.SellScreenHandler;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
@@ -75,13 +81,13 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 public class TaleOfKingdoms implements ModInitializer {
 
     public static final String MODID = "taleofkingdoms";
-    public static final String NAME = "Tale of Kingdoms";
-    public static final String VERSION = "1.0.5";
+
     public static int DATA_FORMAT_VERSION = 1;
 
     public static final Logger LOGGER = LogManager.getLogger();
@@ -135,6 +141,29 @@ public class TaleOfKingdoms implements ModInitializer {
 
         File file = new File(this.getDataFolder() + "worlds");
         if (!file.exists()) file.mkdirs();
+
+        File legacy = new File(this.getLegacyDataFolder() + "worlds");
+        if (legacy.exists()) {
+            LOGGER.warn("Copying legacy worlds folder to new folder...");
+            boolean success = true;
+            for (File oldWorld : legacy.listFiles()) {
+                if (oldWorld.getName().endsWith(".conquestworld")) {
+                    LOGGER.warn("Copying {}...", oldWorld.getName());
+                    try {
+                        Files.move(oldWorld, new File(file + File.separator + oldWorld.getName().replace(".conquestworld", ConquestInstance.FILE_TYPE)));
+                    } catch (IOException e) {
+                        LOGGER.error("Error copying old world {}", oldWorld.getName(), e);
+                        success = false;
+                    }
+                }
+            }
+
+            if (success) {
+                legacy.delete();
+                new File(this.getLegacyDataFolder()).delete();
+            }
+        }
+
         registerEvents();
         registerCommands();
         registerFeatures();
@@ -170,10 +199,15 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.LUMBER_FOREMAN, LumberForemanEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.QUARRY_WORKER, QuarryWorkerEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.LUMBER_WORKER, LumberWorkerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.WARDEN, WardenEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.WARRIOR, WarriorHireableEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.ARCHER, ArcherHireableEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.BLOCK_SHOP, BlockShopEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.HUMAN_FARMER, HumanFarmerEntity.createVillagerAttributes());
 
         // Load shop items
         new ShopParser().createShopItems();
-        ShopParser.SHOP_ITEMS.values().forEach(shopItems -> shopItems.forEach(shopItem -> LOGGER.info("Loaded item value " + shopItem.toString())));
+        ShopParser.SHOP_ITEMS.values().forEach(shopItems -> shopItems.forEach(shopItem -> LOGGER.info("Loaded item value {}", shopItem.toString())));
         CONFIG = AutoConfig.register(TaleOfKingdomsConfig.class, PartitioningSerializer.wrap(Toml4jConfigSerializer::new)).getConfig();
     }
 
@@ -183,7 +217,12 @@ public class TaleOfKingdoms implements ModInitializer {
      * @return data folder name
      */
     @NotNull
-    public String getDataFolder() { //TODO do we use config folder instead?
+    public String getDataFolder() {
+        return new File(".").getAbsolutePath() + File.separator + "config" + File.separator + TaleOfKingdoms.MODID + File.separator;
+    }
+
+    @Deprecated
+    public String getLegacyDataFolder() {
         return new File(".").getAbsolutePath() + File.separator + "mods" + File.separator + TaleOfKingdoms.MODID + File.separator;
     }
 
@@ -218,7 +257,7 @@ public class TaleOfKingdoms implements ModInitializer {
 
     public static Text parse(StringReader stringReader) throws CommandSyntaxException {
         try {
-            Text text = Text.Serializer.fromJson(stringReader);
+            Text text = Text.Serialization.fromJson(stringReader.getString());
             if (text == null) {
                 throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.createWithContext(stringReader, "empty");
             } else {

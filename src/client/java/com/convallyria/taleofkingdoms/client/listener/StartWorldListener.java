@@ -6,7 +6,7 @@ import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenContinueConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
 import com.convallyria.taleofkingdoms.client.gui.generic.owo.update.UpdateScreen;
-import com.convallyria.taleofkingdoms.common.event.RecipesUpdatedCallback;
+import com.convallyria.taleofkingdoms.common.event.GameJoinCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldSessionStartCallback;
 import com.convallyria.taleofkingdoms.common.event.WorldStopCallback;
 import com.convallyria.taleofkingdoms.common.listener.Listener;
@@ -56,10 +56,9 @@ public class StartWorldListener extends Listener {
             if (api == null) return;
 
             this.worldName = worldName;
-
             boolean loaded = load(worldName, api);
 
-            File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
+            File file = new File(api.getDataFolder() + "worlds/" + worldName + ConquestInstance.FILE_TYPE);
 
             // Already exists
             if (loaded) {
@@ -98,7 +97,7 @@ public class StartWorldListener extends Listener {
                         api.getConquestInstanceStorage().addConquest(worldName, instance, true);
                     }
 
-                    postJoin.add(() -> api.executeOnMain(runnable));
+                    postJoin.add(runnable);
                 } catch (JsonSyntaxException | JsonIOException | IOException e) {
                     e.printStackTrace();
                 }
@@ -113,7 +112,7 @@ public class StartWorldListener extends Listener {
             }));
         });
 
-        RecipesUpdatedCallback.EVENT.register(() -> {
+        GameJoinCallback.EVENT.register(() -> {
             if (!MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) {
                 postJoin.clear();
                 return;
@@ -135,7 +134,7 @@ public class StartWorldListener extends Listener {
     }
 
     private boolean load(String worldName, TaleOfKingdomsAPI api) {
-        File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
+        File file = new File(api.getDataFolder() + "worlds/" + worldName + ConquestInstance.FILE_TYPE);
         // Check if this world has been loaded or not
         if (!file.exists()) {
             try {

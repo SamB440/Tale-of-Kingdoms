@@ -72,7 +72,7 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
                     // Make city builder stop following player and move to well POI
                     cityBuilderEntity.stopFollowingPlayer();
                     // Teleport to the player first, should avoid getting stuck in ground
-                    cityBuilderEntity.refreshPositionAfterTeleport(player.getX(), player.getY(), player.getZ());
+                    cityBuilderEntity.requestTeleport(player.getX(), player.getY(), player.getZ());
                     // Now move to the well location
                     cityBuilderEntity.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
 

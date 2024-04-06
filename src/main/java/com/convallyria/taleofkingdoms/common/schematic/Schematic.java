@@ -9,10 +9,19 @@ import net.minecraft.util.Identifier;
 public enum Schematic {
     GUILD_CASTLE(new Identifier(TaleOfKingdoms.MODID, "guild/guildnew")),
     TIER_1_KINGDOM(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/tier_one")),
+    TIER_2_KINGDOM(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/tier_two")),
     TIER_1_BLACKSMITH_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/blacksmith/tier_one_house_blacksmith")),
     TIER_1_STOCK_MARKET("player_kingdom/stock_market/tier_one_stock_market"),
-    LARGE_HOUSE("player_kingdom/large_house/tier_one_large_house"),
-    SMALL_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/small_house/tier_one_small_house"));
+    TIER_1_LARGE_HOUSE("player_kingdom/large_house/tier_one_large_house"),
+    TIER_1_SMALL_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/small_house/tier_one_small_house")),
+
+    TIER_2_SMALL_HOUSE_VARIANT_ONE("player_kingdom/small_house/tier_two_small_house_variant_one"),
+    TIER_2_SMALL_HOUSE_VARIANT_TWO("player_kingdom/small_house/tier_two_small_house_variant_two"),
+    TIER_2_LARGE_HOUSE("player_kingdom/large_house/tier_two_large_house"),
+    TIER_2_BARRACKS("player_kingdom/barracks/tier_two_barracks"),
+    TIER_2_BAKE_HOUSE("player_kingdom/bake_house/tier_two_bake_house"),
+    TIER_2_BUILDER_HOUSE("player_kingdom/builder_house/tier_two_builder_house"),
+    TIER_2_BLOCK_SHOP("player_kingdom/block_shop/tier_two_block_shop");
     //GUILD_CASTLE_OLD(new Identifier(TaleOfKingdoms.MODID, "/assets/schematics/GuildCastle.schematic"));
 
     private final Identifier path;

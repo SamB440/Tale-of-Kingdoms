@@ -3,8 +3,9 @@ package com.convallyria.taleofkingdoms.client.gui.entity.kingdom;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarWidget;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
@@ -38,6 +39,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         this.player = player;
         this.entity = entity;
         this.instance = instance;
+        Translations.FOREMAN_NEED_RESOURCES.send(player);
     }
 
     @Override

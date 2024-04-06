@@ -13,12 +13,11 @@ public class Schemas {
     private Schemas() {}
 
     private static DataFixer create() {
-        TaleOfKingdoms.LOGGER.info("Loading data fixer version %d", CURRENT_VERSION);
+        TaleOfKingdoms.LOGGER.info("Loading data fixer version {}", CURRENT_VERSION);
         DataFixerBuilder dataFixerBuilder = new DataFixerBuilder(CURRENT_VERSION);
         build(dataFixerBuilder);
 
-        boolean asyncOptimized = false;
-        TaleOfKingdoms.LOGGER.info("Building %s datafixer", asyncOptimized ? "optimized" : "unoptimized");
+        TaleOfKingdoms.LOGGER.info("Building datafixer");
 
         // Let's copy LazyDFU and use DataFixerBuilder#buildUnoptimized.
         return dataFixerBuilder.buildUnoptimized();

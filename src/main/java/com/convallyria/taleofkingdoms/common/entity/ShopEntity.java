@@ -14,7 +14,9 @@ public abstract class ShopEntity extends TOKEntity {
         super(entityType, world);
     }
 
-    public abstract ImmutableList<ShopItem> getShopItems();
+    public ImmutableList<ShopItem> getShopItems() {
+        return ImmutableList.copyOf(ShopParser.SHOP_ITEMS.get(getGUIType()));
+    }
 
     public abstract ShopParser.GUI getGUIType();
 }

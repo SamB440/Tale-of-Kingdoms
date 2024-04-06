@@ -69,6 +69,16 @@ public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHa
                         return;
                     }
 
+                    if (cityBuilderEntity.getWood() < buildCosts.getWood() || cityBuilderEntity.getStone() < buildCosts.getStone()) {
+                        reject(player, "Not enough resources");
+                        return;
+                    }
+
+                    if (kingdom.getTier() != buildCosts.getTier()) {
+                        reject(player, "Invalid build for tier");
+                        return;
+                    }
+
                     cityBuilderEntity.build(player, buildCosts, kingdom).thenAccept((v) -> ServerConquestInstance.sync(player, instance));
                 }
             }

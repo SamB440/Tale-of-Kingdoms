@@ -4,10 +4,10 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WalkToTargetGoal;
-import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
+import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
@@ -28,6 +28,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -152,11 +153,14 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
             final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
             final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
-            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, kingdom.getOrigin());
+            final Schematic kingdomSchematic = kingdom.getTier().getSchematic();
+            BlockPos newOrigin = kingdom.getOrigin().subtract(kingdom.getTier().getOffset());
+            TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(kingdomSchematic, serverPlayer, newOrigin);
             for (BuildCosts buildCost : BuildCosts.values()) {
+                if (kingdom.getTier() != buildCost.getTier()) continue;
                 final KingdomPOI kingdomPOI = buildCost.getKingdomPOI();
                 final Schematic schematic = buildCost.getSchematic();
-                if (kingdom.hasBuilt(kingdomPOI)) {
+                if (kingdom.hasBuilt(buildCost)) {
                     TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(schematic, serverPlayer, kingdom.getPOIPos(kingdomPOI), buildCost.getSchematicRotation());
                 }
             }
@@ -169,8 +173,8 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
         TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
             final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
             final CityBuilderEntity serverCityBuilder = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(this.getId());
-            kingdom.addBuilt(build.getKingdomPOI());
-            TaleOfKingdoms.LOGGER.info("Placing " + build + "...");
+            kingdom.addBuilt(build);
+            TaleOfKingdoms.LOGGER.info("Placing {}...", build);
             TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(build.getSchematic(), serverPlayer, kingdom.getPOIPos(build.getKingdomPOI()), build.getSchematicRotation());
 
             serverCityBuilder.getInventory().removeItem(Items.OAK_LOG, build.getWood());
@@ -191,6 +195,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     public void setTarget(BlockPos pos) {
+        if (this.currentBlockTarget != null) this.goalSelector.remove(this.currentBlockTarget);
         this.goalSelector.add(3, this.currentBlockTarget = new WalkToTargetGoal(this, 0.75F, pos));
     }
 
@@ -199,14 +204,13 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     private void openScreen(PlayerEntity player, @Nullable PlayerKingdom kingdom, ConquestInstance instance) {
+        final PacketHandler open = TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN);
         if (kingdom == null) {
-            TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_BEGIN);
+            open.handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_BEGIN, this.getId());
             return;
         }
 
-        if (kingdom.getTier() == KingdomTier.TIER_ONE) {
-            TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_TIER_ONE);
-        }
+        open.handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_TIER, this.getId());
     }
 
     public boolean canAffordBuild(@Nullable PlayerKingdom kingdom, BuildCosts build) {
@@ -255,7 +259,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.inventory.readNbtList(nbt.getList("Inventory", 10));
+        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE));
         this.getDataTracker().set(STONE, inventory.count(Items.COBBLESTONE));
         this.getDataTracker().set(WOOD, inventory.count(Items.OAK_LOG));
     }

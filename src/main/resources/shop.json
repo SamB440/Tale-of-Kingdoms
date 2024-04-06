@@ -240,47 +240,40 @@
 
     {
       "item": "Beef",
-      "name": "Raw Beef",
       "cost": 35,
       "sell": 15
     },
 
     {
       "item": "Chicken",
-      "name": "Raw Chicken",
       "cost": 25,
       "sell": 5
     },
 
     {
       "item": "Cod",
-      "name": "Raw Cod",
       "cost": 30,
       "sell": 25
     },
 
     {
       "item": "Mutton",
-      "name": "Raw Mutton",
       "cost": 35
     },
 
     {
       "item": "Porkchop",
-      "name": "Raw Porkchop",
       "cost": 35,
       "sell": 10
     },
 
     {
       "item": "Rabbit",
-      "name": "Raw Rabbit",
       "cost": 25
     },
 
     {
       "item": "Salmon",
-      "name": "Raw Salmon",
       "cost": 30,
       "sell": 25
     },
@@ -328,6 +321,39 @@
     }
   ],
 
+  "block": [
+    {
+      "item": "stone",
+      "cost": 2,
+      "sell": 1
+    },
+    {
+      "item": "oak_log",
+      "cost": 4,
+      "sell": 3
+    },
+    {
+      "item": "lapis_block",
+      "cost": 278,
+      "sell": 120
+    },
+    {
+      "item": "gold_ore",
+      "cost": 180,
+      "sell": 80
+    },
+    {
+      "item": "gold_block",
+      "cost": 2430,
+      "sell": 1020
+    },
+    {
+      "item": "tnt",
+      "cost": 1440,
+      "sell": 300
+    }
+  ],
+
   "sell": [
     {
       "item": "Iron_Hoe",
@@ -343,7 +369,6 @@
     },
     {
       "item": "Crossbow",
-      "name": "Crossbow",
       "sell": 325
     },
     {
@@ -634,67 +659,54 @@
     },
     {
       "item": "Music_Disc_13",
-      "name": "13 Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Cat",
-      "name": "Cat Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Blocks",
-      "name": "Blocks Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Chirp",
-      "name": "Chirp Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Far",
-      "name": "Far Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Mall",
-      "name": "Mall Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Mellohi",
-      "name": "Mellohi Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Stal",
-      "name": "Stal Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Strad",
-      "name": "Strad Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Ward",
-      "name": "Ward Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_11",
-      "name": "11 Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_Wait",
-      "name": "Wait Disc",
       "sell": 4000
     },
     {
       "item": "Music_Disc_PigStep",
-      "name": "Music Disc",
       "sell": 4000
     },
     {
@@ -750,7 +762,6 @@
 
     {
       "item": "Repeater",
-      "name": "Redstone Repeater",
       "sell": 25
     },
     {
@@ -776,7 +787,6 @@
     },
     {
       "item": "Clay",
-      "name": "Clay Block",
       "sell": 20
     },
     {

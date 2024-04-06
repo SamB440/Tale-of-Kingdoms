@@ -28,7 +28,8 @@ public class ShopParser {
         FOOD,
         SELL,
         ITEM,
-        STOCK_MARKET
+        STOCK_MARKET,
+        BLOCK
     }
 
     private JsonObject shopJson;
@@ -58,8 +59,7 @@ public class ShopParser {
                         sell = shopItem.get("sell").getAsInt();
                     }
 
-                    final String name = getName(shopItem);
-                    addToShopItems(jsonElement.getKey(), new ShopItem(name, item, cost, sell));
+                    addToShopItems(jsonElement.getKey(), new ShopItem(item, cost, sell));
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
@@ -96,19 +96,6 @@ public class ShopParser {
 
     private Item getItem(String name) throws ReflectiveOperationException {
         return Registries.ITEM.get(new Identifier(name.toLowerCase(TaleOfKingdoms.DEFAULT_LOCALE)));
-    }
-
-    private String getName(JsonObject jsonObject) {
-        if (jsonObject.has("name")) {
-            return jsonObject.get("name").getAsString();
-        } else {
-            String itemName = jsonObject.get("item").getAsString().replaceAll("_", " ");
-                        /*if (itemName.contains("{") && itemName.contains("}")) {
-                            String placeholder
-
-                        }*/
-            return itemName;
-        }
     }
 
     // Make recursive function to look for {} and split by ","

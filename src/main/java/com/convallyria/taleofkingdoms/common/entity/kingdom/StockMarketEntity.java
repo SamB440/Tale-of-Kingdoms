@@ -10,7 +10,6 @@ import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.mob.PathAwareEntity;
@@ -25,11 +24,6 @@ public class StockMarketEntity extends ShopEntity {
 
     public StockMarketEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
-    }
-
-    @Override
-    public ImmutableList<ShopItem> getShopItems() {
-        return ImmutableList.copyOf(ShopParser.SHOP_ITEMS.get(ShopParser.GUI.STOCK_MARKET));
     }
 
     @Override

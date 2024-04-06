@@ -13,6 +13,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -26,7 +27,7 @@ public class ShopBuyUtil {
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
                     api.getClientPacketHandler(Packets.BUY_ITEM)
-                            .handleOutgoingPacket(player, shopItem.getName(), count, entity.getGUIType());
+                            .handleOutgoingPacket(player, Registries.ITEM.getId(shopItem.getItem().asItem()).toString(), count, entity.getGUIType());
                     return;
                 }
 

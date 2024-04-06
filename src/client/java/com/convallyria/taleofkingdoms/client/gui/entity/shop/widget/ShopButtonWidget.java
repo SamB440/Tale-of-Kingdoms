@@ -34,7 +34,7 @@ public class ShopButtonWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         Identifier identifier = new Identifier(TaleOfKingdoms.MODID,"textures/gui/gui.png");
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -50,11 +50,11 @@ public class ShopButtonWidget extends ButtonWidget {
         context.drawTexture(identifier, this.x() + width / 2, this.y(), 200 - width / 2, 46 + k * 20, width / 2, height);
         super.mouseDragged(mouseX, mouseY, 0, delta, delta); // Don't know what deltaX and deltaY are.
         if (!enabled) {
-            context.drawCenteredTextWithShadow(textRenderer, shopItem.getName(), (this.x() + width / 2) - 20, this.y() + (height - 8) / 2, 0xffffcc00);
+            context.drawCenteredTextWithShadow(textRenderer, shopItem.getItem().getName(), (this.x() + width / 2) - 20, this.y() + (height - 8) / 2, 0xffffcc00);
         } else if (!flag) {
-            context.drawCenteredTextWithShadow(textRenderer, shopItem.getName(), (this.x() + width / 2) - 20, this.y() + (height - 8) / 2, 0xffffff);
+            context.drawCenteredTextWithShadow(textRenderer, shopItem.getItem().getName(), (this.x() + width / 2) - 20, this.y() + (height - 8) / 2, 0xffffff);
         } else {
-            context.drawCenteredTextWithShadow(textRenderer, shopItem.getName(), (this.x() + width / 2) - 20, this.y() + (height - 8) / 2, 0x00cc00);
+            context.drawCenteredTextWithShadow(textRenderer, shopItem.getItem().getName(), (this.x() + width / 2) - 20, this.y() + (height - 8) / 2, 0x00cc00);
         }
     }
 }

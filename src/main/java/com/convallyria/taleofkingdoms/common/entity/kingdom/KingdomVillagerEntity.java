@@ -2,9 +2,9 @@ package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundKingdomGoal;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.entity.EntityType;
@@ -14,13 +14,38 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class KingdomVillagerEntity extends TOKEntity {
+
+    private static final List<Identifier> VALID_SKINS = List.of(
+            // So much for 50/50 gender distribution.
+            identifier("textures/entity/updated_textures/woman1.png"),
+            identifier("textures/entity/updated_textures/woman2.png"),
+            identifier("textures/entity/updated_textures/manone.png"),
+            identifier("textures/entity/updated_textures/mantwo.png"),
+            identifier("textures/entity/updated_textures/manthree.png"),
+            identifier("textures/entity/updated_textures/manfour.png"),
+            identifier("textures/entity/updated_textures/manfive.png"),
+            identifier("textures/entity/updated_textures/mansix.png")
+    );
+
+    private final Identifier skin;
 
     public KingdomVillagerEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
+        this.skin = VALID_SKINS.get(ThreadLocalRandom.current().nextInt(VALID_SKINS.size()));
+    }
+
+    @Override
+    public Optional<Identifier> getSkin() {
+        return Optional.of(skin);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.client.entity.render;
 
+import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
@@ -7,42 +8,22 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
-
 @Environment(EnvType.CLIENT)
-public class TOKBipedRender<T extends MobEntity, M extends BipedEntityModel<T>> extends BipedEntityRenderer<MobEntity, PlayerEntityModel<MobEntity>> {
+public class TOKBipedRender<T extends TOKEntity, M extends BipedEntityModel<T>> extends BipedEntityRenderer<TOKEntity, PlayerEntityModel<TOKEntity>> {
 
-    private final List<Identifier> skins;
-    private final Map<UUID, Identifier> defaultSkin;
+    private final Identifier defaultSkin;
 
-    public TOKBipedRender(EntityRendererFactory.Context context, PlayerEntityModel<MobEntity> modelBipedIn,
-                          float shadowSize, Identifier... skins) {
+    public TOKBipedRender(EntityRendererFactory.Context context, PlayerEntityModel<TOKEntity> modelBipedIn,
+                          float shadowSize, Identifier defaultSkin) {
         super(context, modelBipedIn, shadowSize);
-        this.skins = new ArrayList<>();
-        this.defaultSkin = new ConcurrentHashMap<>();
-        Collections.addAll(this.skins, skins);
+        this.defaultSkin = defaultSkin;
         this.addFeature(new HeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()));
     }
 
     @Override
-    public Identifier getTexture(MobEntity entity) {
-        final Identifier identifier = defaultSkin.get(entity.getUuid());
-        if (identifier == null) {
-            Random random = ThreadLocalRandom.current();
-            final Identifier skinIdentifier = skins.get(random.nextInt(skins.size()));
-            defaultSkin.put(entity.getUuid(), skinIdentifier);
-            return skinIdentifier;
-        }
-        return identifier;
+    public Identifier getTexture(TOKEntity entity) {
+        return entity.getSkin().orElse(defaultSkin);
     }
 }

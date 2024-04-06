@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.common.entity;
 
+import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.GoalSelector;
@@ -8,13 +9,26 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TOKEntity extends PathAwareEntity {
+import java.util.Optional;
+
+public abstract class TOKEntity extends PathAwareEntity implements MultiSkinned {
 
     protected TOKEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
+    }
+
+    protected static Identifier identifier(String path) {
+        return new Identifier(TaleOfKingdoms.MODID, path);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.tickHandSwing();
     }
 
     /**
@@ -84,6 +98,11 @@ public abstract class TOKEntity extends PathAwareEntity {
 
     @Override
     public void checkDespawn() { }
+
+    @Override
+    public Optional<Identifier> getSkin() {
+        return Optional.empty();
+    }
 
     public GoalSelector getGoalSelector() {
         return this.goalSelector;

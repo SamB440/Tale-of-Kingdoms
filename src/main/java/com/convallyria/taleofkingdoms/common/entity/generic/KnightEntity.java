@@ -19,6 +19,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+/**
+ * Shouldn't exist, as it's actually WarriorHireableEntity, but I'm keeping it as an "easter egg".
+ */
 public class KnightEntity extends TOKEntity {
 
     public KnightEntity(EntityType<? extends PathAwareEntity> entityType, World world) {

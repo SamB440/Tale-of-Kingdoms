@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;

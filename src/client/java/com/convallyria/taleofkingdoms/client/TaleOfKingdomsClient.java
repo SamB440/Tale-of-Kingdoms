@@ -21,6 +21,7 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacke
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
 import com.convallyria.taleofkingdoms.client.listener.StartWorldListener;
+import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -72,7 +73,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
                     return;
                 }
 
-                File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
+                File file = new File(api.getDataFolder() + "worlds/" + worldName + ConquestInstance.FILE_TYPE);
                 client.setScreen(new ScreenStartConquest(worldName, file, client.player));
             }
         });

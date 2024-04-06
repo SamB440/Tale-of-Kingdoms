@@ -35,20 +35,37 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GuildArcherEntity extends TOKEntity implements CrossbowUser, RangedAttackMob, States {
 
+    private static final List<Identifier> VALID_SKINS = List.of(
+            /*identifier("textures/entity/guildarcher/guildarcherone.png"),*/
+            identifier("textures/entity/guildarcher/guildarchertwo.png"),
+            identifier("textures/entity/guildarcher/guildarcherthree.png")
+    );
+
     private boolean charging;
     private boolean ticked;
 
+    private final Identifier skin;
+
     public GuildArcherEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+        this.skin = VALID_SKINS.get(ThreadLocalRandom.current().nextInt(VALID_SKINS.size()));
+    }
+
+    @Override
+    public Optional<Identifier> getSkin() {
+        return Optional.of(skin);
     }
 
     @Environment(EnvType.CLIENT)
@@ -140,7 +157,7 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
-        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
+        persistentProjectileEntity.setVelocity(d, e + h * 0.2f, g, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
         this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
         this.getWorld().spawnEntity(persistentProjectileEntity);
     }
