@@ -23,19 +23,8 @@ public class GuildPlayer {
                     PlayerKingdom.CODEC.optionalFieldOf("kingdom").forGetter(guildPlayer -> Optional.ofNullable(guildPlayer.getKingdom())),
                     Uuids.CODEC.listOf().fieldOf("hunters").forGetter(GuildPlayer::getHunters),
                     Codec.BOOL.fieldOf("has_rebuilt_guild").forGetter(GuildPlayer::hasRebuiltGuild)
-            ).apply(instance, (signedContract, coins, bankerCoins, worthiness, farmerLastBread, kingdom, hunters, hasRebuiltGuild) -> {
-                final GuildPlayer guildPlayer = new GuildPlayer();
-                guildPlayer.setSignedContract(signedContract);
-                guildPlayer.setCoins(coins);
-                guildPlayer.setBankerCoins(bankerCoins);
-                guildPlayer.setWorthiness(worthiness);
-                guildPlayer.setFarmerLastBread(farmerLastBread);
-                guildPlayer.setKingdom(kingdom.orElse(null));
-                guildPlayer.getHunters().addAll(hunters);
-                guildPlayer.setHasRebuiltGuild(hasRebuiltGuild);
-                return guildPlayer;
-            }
-    ));
+            ).apply(instance, GuildPlayer::new)
+    );
 
     private boolean signedContract;
     private int coins;
@@ -49,6 +38,17 @@ public class GuildPlayer {
     public GuildPlayer() {
         this.hunters = new ArrayList<>();
         this.farmerLastBread = -1;
+    }
+
+    private GuildPlayer(boolean signedContract, int coins, int bankerCoins, int worthiness, long farmerLastBread, Optional<PlayerKingdom> kingdom, List<UUID> hunters, boolean hasRebuiltGuild) {
+        this.signedContract = signedContract;
+        this.coins = coins;
+        this.bankerCoins = bankerCoins;
+        this.worthiness = worthiness;
+        this.farmerLastBread = farmerLastBread;
+        this.kingdom = kingdom.orElse(null);
+        this.hunters = hunters;
+        this.hasRebuiltGuild = hasRebuiltGuild;
     }
 
     public boolean hasSignedContract() {
@@ -80,6 +80,7 @@ public class GuildPlayer {
     }
 
     public void setWorthiness(int worthiness) {
+        if (!hasSignedContract()) return;
         this.worthiness = worthiness;
     }
 
