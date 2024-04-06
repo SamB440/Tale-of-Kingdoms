@@ -67,7 +67,7 @@ public class CoinListener extends Listener {
                         hunterUuids.remove(entity.getUuid());
                         loopPlayer.getHunters().clear();
                         loopPlayer.getHunters().addAll(hunterUuids);
-                        TaleOfKingdoms.LOGGER.info("Hunter " + entity.getUuid() + " died and was removed");
+                        TaleOfKingdoms.LOGGER.info("Hunter {} died and was removed", entity.getUuid());
                     }
                     return;
                 }
@@ -112,7 +112,7 @@ public class CoinListener extends Listener {
             if (equalsCoin(item)) {
                 TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
-                    instance.addCoins(player.getUuid(), random.nextInt(10));
+                    instance.addCoins(player.getUuid(), random.nextInt(5));
                     if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
                         ServerConquestInstance.sync((ServerPlayerEntity) player, instance);
                     }
@@ -137,11 +137,11 @@ public class CoinListener extends Listener {
         File configDirectory = new File("config/" + TaleOfKingdoms.MODID);
         File externalFile = new File(configDirectory, internalFile.getName());
 
-        if(configDirectory.mkdir() || configDirectory.exists()) {
+        if (configDirectory.mkdir() || configDirectory.exists()) {
             InputStream fileSrc = Thread.currentThread().getContextClassLoader().getResourceAsStream(internalFile.getPath());
 
             try {
-                if(externalFile.createNewFile()) {
+                if (externalFile.createNewFile()) {
                     Files.copy(fileSrc, externalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 }
 
