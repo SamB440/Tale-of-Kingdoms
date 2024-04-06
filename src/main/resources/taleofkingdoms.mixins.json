@@ -8,7 +8,6 @@
     "common.EntityDeathEvent",
     "common.EntityPickupItemEvent",
     "common.EntitySpawnEvent",
-    "common.InventoryInsertEvent",
     "common.ItemMergeEvent",
     "common.PlayerDeathEvent",
     "common.PlayerLeave",

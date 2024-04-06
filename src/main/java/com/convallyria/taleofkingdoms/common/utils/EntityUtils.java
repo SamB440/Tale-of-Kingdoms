@@ -23,7 +23,7 @@ public class EntityUtils {
         entity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
         entity.initialize(serverWorldAccess, serverWorldAccess.getLocalDifficulty(pos), SpawnReason.COMMAND, null, null);
         serverWorldAccess.spawnEntityAndPassengers(entity);
-        TaleOfKingdoms.LOGGER.debug("Spawned entity " + entity.getEntityName() + " " + entity + " " + entity.getX() + "," + entity.getY() + "," + entity.getZ());
+        TaleOfKingdoms.LOGGER.debug("Spawned entity " + entity.getType().getUntranslatedName() + " " + entity + " " + entity.getX() + "," + entity.getY() + "," + entity.getZ());
         return entity;
     }
 }

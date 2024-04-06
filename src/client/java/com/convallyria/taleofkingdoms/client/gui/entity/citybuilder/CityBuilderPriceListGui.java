@@ -53,7 +53,7 @@ public class CityBuilderPriceListGui extends BaseCityBuilderScreen {
                 Text.translatable("menu.taleofkingdoms.generic.back"),
                 (ButtonComponent button) -> {
                     this.close();
-                    MinecraftClient.getInstance().setScreen(new CityBuilderTierOneGui(player, entity, instance));
+                    MinecraftClient.getInstance().setScreen(new CityBuilderTierGui(player, entity, instance));
                 }
             )
             .positioning(Positioning.relative(50, 85))

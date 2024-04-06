@@ -13,6 +13,7 @@ import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +78,7 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
 
     private ShopItem getShopItem(String name, ShopEntity entity) {
         for (ShopItem shopItem : entity.getShopItems()) {
-            if (shopItem.getName().equals(name)) return shopItem;
+            if (Registries.ITEM.getId(shopItem.getItem().asItem()).toString().equals(name)) return shopItem;
         }
         return null; // Nothing found :(
     }

@@ -1,6 +1,5 @@
 package com.convallyria.taleofkingdoms.common.entity.generic;
 
-import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.States;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
@@ -43,26 +42,30 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class BanditEntity extends TOKEntity implements CrossbowUser, RangedAttackMob, States, Monster {
 
-    public static final Identifier[] SKINS = new Identifier[]{
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/archer_tok.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/bandit_ruiner.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/brigand_chief_2.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/custom_adventurer_norska_warrior_1.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/custom_adventurer_stealthy_thief.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/custom_outlaw_merry_man_1.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/custom_outlaw_merry_man_2.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/custom_outlaw_merry_man_3.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_bandit_hood_1.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_brigand.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_champion_bandit.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_enemy_archer.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_enemy_leader.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_pillager_1.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_ruined_bandit.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/bandit/tok_ruined_leader.png")
-    };
+    public static final List<Identifier> VALID_SKINS = List.of(
+            identifier("textures/entity/bandit/archer_tok.png"),
+            identifier("textures/entity/bandit/bandit_ruiner.png"),
+            identifier("textures/entity/bandit/brigand_chief_2.png"),
+            identifier("textures/entity/bandit/custom_adventurer_norska_warrior_1.png"),
+            identifier("textures/entity/bandit/custom_adventurer_stealthy_thief.png"),
+            identifier("textures/entity/bandit/custom_outlaw_merry_man_1.png"),
+            identifier("textures/entity/bandit/custom_outlaw_merry_man_2.png"),
+            identifier("textures/entity/bandit/custom_outlaw_merry_man_3.png"),
+            identifier("textures/entity/bandit/tok_bandit_hood_1.png"),
+            identifier("textures/entity/bandit/tok_brigand.png"),
+            identifier("textures/entity/bandit/tok_champion_bandit.png"),
+            identifier("textures/entity/bandit/tok_enemy_archer.png"),
+            identifier("textures/entity/bandit/tok_enemy_leader.png"),
+            identifier("textures/entity/bandit/tok_pillager_1.png"),
+            identifier("textures/entity/bandit/tok_ruined_bandit.png"),
+            identifier("textures/entity/bandit/tok_ruined_leader.png")
+    );
 
     private final BowAttackGoal<BanditEntity> bowAttackGoal = new BowAttackGoal<>(this, 0.6D, 20, 16.0F);
     private final CrossbowAttackGoal<BanditEntity> crossbowAttackGoal = new CrossbowAttackGoal<>(this, 0.6D, 12.0F);
@@ -96,8 +99,16 @@ public class BanditEntity extends TOKEntity implements CrossbowUser, RangedAttac
         this.despawnCounter = 0;
     }
 
+    private final Identifier skin;
+
     public BanditEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
+        this.skin = VALID_SKINS.get(ThreadLocalRandom.current().nextInt(VALID_SKINS.size()));
+    }
+
+    @Override
+    public Optional<Identifier> getSkin() {
+        return Optional.of(skin);
     }
 
     @Nullable
@@ -132,9 +143,11 @@ public class BanditEntity extends TOKEntity implements CrossbowUser, RangedAttac
         this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true));
         this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
         this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.KNIGHT, true));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
-        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, true));
+        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.WARRIOR, true));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.ARCHER, true));
+        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
+        this.targetSelector.add(7, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
+        this.targetSelector.add(8, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, true));
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, MobEntity.class, 100, true, true, livingEntity -> livingEntity instanceof Monster && !(livingEntity instanceof BanditEntity)));
         this.goalSelector.add(2, new WanderAroundGoal(this, 0.6D));
         applyEntityAI();

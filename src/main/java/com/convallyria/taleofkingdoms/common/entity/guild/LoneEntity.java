@@ -56,7 +56,7 @@ public class LoneEntity extends TOKEntity {
                     loneVillager.setMovementEnabled(false);
                     Random random = ThreadLocalRandom.current();
                     BlockPos sleepLocation = sleepLocations.get(random.nextInt(sleepLocations.size()));
-                    loneVillager.refreshPositionAfterTeleport(sleepLocation.getX() + 0.5, sleepLocation.getY(), sleepLocation.getZ() + 0.5);
+                    loneVillager.requestTeleport(sleepLocation.getX() + 0.5, sleepLocation.getY(), sleepLocation.getZ() + 0.5);
                 }
 
                 Translations.LONE_THANK.send(player);

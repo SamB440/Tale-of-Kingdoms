@@ -1,15 +1,14 @@
 package com.convallyria.taleofkingdoms.client.gui.entity.shop;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.PageTurnWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.ShopButtonWidget;
 import com.convallyria.taleofkingdoms.client.gui.entity.shop.widget.ShopScreenInterface;
 import com.convallyria.taleofkingdoms.client.gui.shop.Shop;
 import com.convallyria.taleofkingdoms.client.gui.shop.ShopPage;
-import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.client.utils.ShopBuyUtil;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.google.common.collect.ImmutableList;
@@ -21,9 +20,11 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Positioning;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -74,13 +75,13 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
 
         inner.child(this.coinsLabel = (LabelComponent)
             Components.label(Text.translatable("menu.taleofkingdoms.shop.total_money", guildPlayer.getCoins()))
-                .color(Color.WHITE)
+                .color(Color.ofDye(DyeColor.GRAY))
                 .positioning(Positioning.relative(50, 5))
         );
 
         inner.child(this.selectedItemLabel = (LabelComponent)
-            Components.label(Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getName(), this.selectedItem.getCost()))
-                .color(Color.WHITE)
+            Components.label(Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getItem().getName().getString(), this.selectedItem.getCost()))
+                .color(Color.ofDye(DyeColor.GRAY))
                 .positioning(Positioning.relative(50, 10))
         );
 
@@ -96,14 +97,14 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     protected void buildShopPages(FlowLayout inner) {
         //todo: dynamically generate page turn widgets per-page? how?
         // Unsure how we can get custom widgets to work with owo dynamic ui
-        inner.child(new PageTurnWidget(false, button -> {
+        inner.child(new PageTurnWidget(0, 0, false, button -> {
             shop.previousPage();
             this.changePage(shop.getCurrentPage());
         }, true)
                 .positioning(Positioning.relative(3, 18)))
                 .id("page-left");
 
-        inner.child(new PageTurnWidget(true, button -> {
+        inner.child(new PageTurnWidget(0, 0, true, button -> {
             shop.nextPage();
             this.changePage(shop.getCurrentPage());
         }, true)
@@ -163,7 +164,7 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
         super.render(context, mouseX, mouseY, delta);
         coinsLabel.text(Text.translatable("menu.taleofkingdoms.shop.total_money", instance.getPlayer(player).getCoins()));
         if (this.selectedItem != null) {
-            MutableText text = Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getName(), this.selectedItem.getCost());
+            MutableText text = Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getItem().getName().getString(), this.selectedItem.getCost());
             if (this.selectedItem.getModifier() != 1) {
                 text.append(Text.literal(" "));
                 text.append(Text.translatable("menu.taleofkingdoms.shop.select_item_cost_modifier", String.format("%.2f", this.selectedItem.getModifier())));

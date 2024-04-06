@@ -103,11 +103,13 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
             return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
         }));
         this.targetSelector.add(2, (new ActiveTargetGoal<>(this, PlayerEntity.class, true)).setMaxTimeWithoutVisibility(300));
-        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, false));
-        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
-        this.targetSelector.add(7, new ImprovedFollowTargetGoal<>(this, EntityTypes.BANDIT, true));
+        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.WARRIOR, true));
+        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.ARCHER, true));
+        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, false));
+        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, false));
+        this.targetSelector.add(7, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, false));
+        this.targetSelector.add(8, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, false));
+        this.targetSelector.add(9, new ImprovedFollowTargetGoal<>(this, EntityTypes.BANDIT, true));
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {

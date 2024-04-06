@@ -18,12 +18,17 @@ import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.InnkeeperEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.LoneEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.BlockShopEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.HumanFarmerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ItemShopEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.KingdomVillagerEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.LumberWorkerEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.ArcherHireableEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.WardenEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.WarriorHireableEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.LumberForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.LumberWorkerEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryForemanEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.StockMarketEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
@@ -190,5 +195,35 @@ public class EntityTypes {
             FabricEntityTypeBuilder.create(SpawnGroup.MISC, LumberWorkerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
     );
 
-    public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP);
+    public static final EntityType<WardenEntity> WARDEN = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "warden"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, WardenEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<WarriorHireableEntity> WARRIOR = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "warrior_mercenary"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, WarriorHireableEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<ArcherHireableEntity> ARCHER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "archer_mercenary"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, ArcherHireableEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<BlockShopEntity> BLOCK_SHOP = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "block_shop"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, BlockShopEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final EntityType<HumanFarmerEntity> HUMAN_FARMER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(TaleOfKingdoms.MODID, "human_farmer"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MISC, HumanFarmerEntity::new).dimensions(HUMAN_ENTITY_DIMENSIONS).build()
+    );
+
+    public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP, EntityTypes.BLOCK_SHOP, EntityTypes.STOCK_MARKET);
 }

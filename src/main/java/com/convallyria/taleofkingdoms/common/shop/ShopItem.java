@@ -6,22 +6,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 
 public class ShopItem {
-    private final String name;
+
     private final Item item;
     private final int cost;
     private final int sell;
     private double modifier;
 
-    public ShopItem(String name, Item item, int cost, int sell) {
-        this.name = name;
+    public ShopItem(Item item, int cost, int sell) {
         this.item = item;
         this.cost = cost;
         this.sell = sell;
         this.modifier = 1;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Item getItem() {
@@ -52,8 +47,7 @@ public class ShopItem {
     @Override
     public String toString() {
         return "ShopItem{" +
-                "name='" + name + '\'' +
-                ", item=" + item +
+                "item=" + item +
                 ", cost=" + cost +
                 ", sell=" + sell +
                 ", modifier=" + modifier +

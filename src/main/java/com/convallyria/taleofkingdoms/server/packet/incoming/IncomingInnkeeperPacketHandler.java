@@ -74,7 +74,7 @@ public final class IncomingInnkeeperPacketHandler extends ServerPacketHandler {
                 TaleOfKingdomsServer.getAPI().executeOnDedicatedServer(() -> {
                     MinecraftServer server = player.getServer();
                     server.getOverworld().setTimeOfDay(1000);
-                    player.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                    player.requestTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
                 });

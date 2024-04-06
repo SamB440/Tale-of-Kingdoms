@@ -15,17 +15,41 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
 
+    private static final List<Identifier> VALID_SKINS = List.of(
+            identifier("textures/entity/updated_textures/lostvillagerone.png"),
+            identifier("textures/entity/updated_textures/lostvillagertwo.png"),
+            identifier("textures/entity/updated_textures/lostvillagerthree.png"),
+            identifier("textures/entity/updated_textures/lostvillagerfour.png"),
+            identifier("textures/entity/updated_textures/lostvillagerfive.png"),
+            identifier("textures/entity/updated_textures/lostvillagersix.png"),
+            identifier("textures/entity/updated_textures/lostvillagerseven.png"),
+            identifier("textures/entity/updated_textures/manone.png"),
+            identifier("textures/entity/updated_textures/mantwo.png"),
+            identifier("textures/entity/updated_textures/manfive.png")
+    );
+
     private boolean movementEnabled;
+
+    private final Identifier skin;
 
     public LoneVillagerEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
+        this.skin = VALID_SKINS.get(ThreadLocalRandom.current().nextInt(VALID_SKINS.size()));
+    }
+
+    @Override
+    public Optional<Identifier> getSkin() {
+        return Optional.of(skin);
     }
 
     public boolean isMovementEnabled() {

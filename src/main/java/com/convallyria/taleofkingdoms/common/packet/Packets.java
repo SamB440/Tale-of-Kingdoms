@@ -15,6 +15,7 @@ public class Packets {
     public static final Identifier HIRE_HUNTER = register("hire_hunter");
     public static final Identifier INNKEEPER_HIRE_ROOM = register("innkeeper_hire_room");
     public static final Identifier BUILD_KINGDOM = register("build_kingdom");
+    public static final Identifier UPGRADE_KINGDOM = register("upgrade_kingdom");
     public static final Identifier FOREMAN_BUY_WORKER = register("foreman_buy_worker");
     public static final Identifier FOREMAN_COLLECT = register("foreman_collect");
     public static final Identifier CITYBUILDER_ACTION = register("citybuilder_action");

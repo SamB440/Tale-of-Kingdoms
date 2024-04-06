@@ -4,16 +4,45 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
+import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructureTemplate;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
 public enum KingdomPOI implements EnumCodec.Values {
-    CITY_BUILDER_WELL_POI("CityBuilderWellPOI"),
+    CITY_BUILDER_WELL_POI("CityBuilderWellPOI") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            BlockPos pos = info.pos();
+            if (kingdom.hasBuilt(BuildCosts.BUILDER_HOUSE)) {
+                final BlockPos poiPos = kingdom.getPOIPos(KingdomPOI.CITY_BUILDER_HOUSE_POI);
+                if (poiPos != null) {
+                    pos = poiPos;
+                }
+            }
+
+            BlockPos finalPos = pos;
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.CITYBUILDER).ifPresent(entity -> {
+                entity.requestTeleport(finalPos.getX(), finalPos.getY(), finalPos.getZ());
+                entity.setTarget(finalPos);
+                TaleOfKingdoms.LOGGER.info("Teleported city builder to " + finalPos);
+            });
+        }
+    },
+
+    CITY_BUILDER_HOUSE_POI("CityBuilderHousePOI") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.CITYBUILDER).ifPresent(entity -> entity.setTarget(info.pos()));
+        }
+    },
 
     // Blacksmith / Item Shop house
     TIER_ONE_HOUSE_BLACKSMITH("TierOneHouseBlacksmith"),
@@ -21,18 +50,18 @@ public enum KingdomPOI implements EnumCodec.Values {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            if (!hasEntity(kingdom, player, EntityTypes.BLACKSMITH)) {
-                EntityUtils.spawnEntity(EntityTypes.BLACKSMITH, player, info.pos());
-            }
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.BLACKSMITH).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.BLACKSMITH, player, info.pos()));
         }
     },
     TIER_ONE_ITEM_SHOP("TierOneItemShop") {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            if (!hasEntity(kingdom, player, EntityTypes.ITEM_SHOP)) {
-                EntityUtils.spawnEntity(EntityTypes.ITEM_SHOP, player, info.pos());
-            }
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.ITEM_SHOP).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.ITEM_SHOP, player, info.pos()));
         }
     },
 
@@ -41,6 +70,14 @@ public enum KingdomPOI implements EnumCodec.Values {
     TIER_ONE_SMALL_HOUSE_1("TierOneSmallHouse1"),
     TIER_ONE_SMALL_HOUSE_2("TierOneSmallHouse2"),
     TIER_ONE_LARGE_HOUSE("TierOneLargeHouse"),
+
+    TIER_TWO_SMALL_HOUSE_VARIANT_ONE("TierTwoSmallHouseVariantOne"),
+    TIER_TWO_SMALL_HOUSE_VARIANT_TWO("TierTwoSmallHouseVariantTwo"),
+    TIER_TWO_LARGE_HOUSE("TierTwoLargeHouse"),
+    TIER_TWO_BARRACKS("TierTwoBarracks"),
+    TIER_TWO_BAKE_HOUSE("TierTwoBakeHouse"),
+    TIER_TWO_BUILDER_HOUSE("TierTwoBuilderHouse"),
+    TIER_TWO_BLOCK_SHOP("TierTwoBlockShop"),
 
     KINGDOM_VILLAGER("KingdomVillager") {
         @Override
@@ -53,9 +90,9 @@ public enum KingdomPOI implements EnumCodec.Values {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            if (!hasEntity(kingdom, player, EntityTypes.STOCK_MARKET)) {
-                EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos());
-            }
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.STOCK_MARKET).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.STOCK_MARKET, player, info.pos()));
         }
     },
 
@@ -63,9 +100,9 @@ public enum KingdomPOI implements EnumCodec.Values {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            if (!hasEntity(kingdom, player, EntityTypes.QUARRY_FOREMAN)) {
-                EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos());
-            }
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.QUARRY_FOREMAN).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.QUARRY_FOREMAN, player, info.pos()));
         }
     },
 
@@ -73,14 +110,44 @@ public enum KingdomPOI implements EnumCodec.Values {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
             super.compute(kingdom, player, info);
-            if (!hasEntity(kingdom, player, EntityTypes.LUMBER_FOREMAN)) {
-                EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos());
-            }
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.LUMBER_FOREMAN).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.LUMBER_FOREMAN, player, info.pos()));
         }
     },
 
     QUARRY_WORKER_SPAWN("QuarryWorker"),
-    LUMBER_WORKER_SPAWN("lumberworker");
+    LUMBER_WORKER_SPAWN("lumberworker"),
+
+    WARDEN("Warden") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.WARDEN).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.WARDEN, player, info.pos()));
+        }
+    },
+
+    FOODSHOP("FoodShop") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.FOODSHOP).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.FOODSHOP, player, info.pos()));
+        }
+    },
+
+    BLOCKSHOP("BlockShop") {
+        @Override
+        public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
+            super.compute(kingdom, player, info);
+            kingdom.getKingdomEntity(player.getWorld(), EntityTypes.BLOCK_SHOP).ifPresentOrElse(entity -> {
+                entity.requestTeleport(info.pos().getX(), info.pos().getY(), info.pos().getZ());
+            }, () -> EntityUtils.spawnEntity(EntityTypes.BLOCK_SHOP, player, info.pos()));
+        }
+    };
 
     private final String poiName;
 

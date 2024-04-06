@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerWorld.class)
 public class EntitySpawnEvent {
 
-    @Inject(method = "spawnEntity", at = @At(value = "INVOKE"), cancellable = true)
+    @Inject(method = "spawnEntity", at = @At(value = "HEAD"), cancellable = true)
     public void onSpawn(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if (!EntitySpawnCallback.EVENT.invoker().spawn(entity)) {
             cir.setReturnValue(false);

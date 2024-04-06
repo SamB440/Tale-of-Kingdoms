@@ -3,7 +3,7 @@ package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
-import com.convallyria.taleofkingdoms.common.entity.kingdom.QuarryWorkerEntity;
+import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryWorkerEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.minecraft.entity.EntityType;
@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.Hand;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -34,8 +35,8 @@ public class GatherResourcesPassivelyGoal extends Goal {
 
     @Override
     public void tick() {
-        mob.swingHand(mob.getActiveHand(), true); //todo: this doesn't work and i don't know why
         if (ThreadLocalRandom.current().nextInt(100) > 98) {
+            mob.swingHand(Hand.MAIN_HAND);
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 for (GuildPlayer guildPlayer : instance.getGuildPlayers().values()) {
                     final PlayerKingdom kingdom = guildPlayer.getKingdom();

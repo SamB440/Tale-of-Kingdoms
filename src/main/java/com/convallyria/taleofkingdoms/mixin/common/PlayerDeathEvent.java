@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public class PlayerDeathEvent {
 
-    @Inject(method = "incrementStat(Lnet/minecraft/util/Identifier;)V", at = @At(value = "INVOKE"))
+    @Inject(method = "incrementStat(Lnet/minecraft/util/Identifier;)V", at = @At(value = "HEAD"))
     private void death(Identifier stat, CallbackInfo ci) {
         if (stat.equals(Stats.DEATHS)) {
             EntityDeathCallback.EVENT.invoker().death(null, ((PlayerEntity) (Object) this));

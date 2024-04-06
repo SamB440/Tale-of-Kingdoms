@@ -152,7 +152,7 @@ public class ConquestInstance {
     }
 
     public Vec3d getCentre() {
-        return new Box(start, end).getCenter();
+        return Box.enclosing(start, end).getCenter();
     }
 
     public boolean canAttack(PlayerEntity player) {
@@ -251,13 +251,13 @@ public class ConquestInstance {
 
     public Optional<GuildMasterEntity> getGuildMaster(World world) {
         if (start == null || end == null) return Optional.empty();
-        Box box = new Box(getStart(), getEnd());
+        Box box = Box.enclosing(getStart(), getEnd());
         return world.getEntitiesByType(EntityTypes.GUILDMASTER, box, guildMaster -> !guildMaster.isFireImmune()).stream().findFirst();
     }
 
     public <T extends Entity> Optional<T> getGuildEntity(World world, EntityType<T> type) {
         if (start == null || end == null) return Optional.empty();
-        Box box = new Box(getStart(), getEnd());
+        Box box = Box.enclosing(getStart(), getEnd());
         return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();
     }
 
@@ -355,9 +355,11 @@ public class ConquestInstance {
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, serverPlayerEntity, getOrigin().subtract(new Vec3i(0, 21, 0)), options);
     }
 
+    public static final String FILE_TYPE = ".cqworld";
+
     public void save(String worldName) {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        File file = new File(api.getDataFolder() + "worlds" + File.separator + worldName + ".conquestworld");
+        File file = new File(api.getDataFolder() + "worlds" + File.separator + worldName + FILE_TYPE);
         try (Writer writer = new FileWriter(file)) {
             Gson gson = api.getMod().getGson();
             gson.toJson(this, writer);

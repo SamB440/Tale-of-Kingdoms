@@ -39,7 +39,7 @@ public class ServerGameInstanceListener extends Listener {
         PlayerJoinCallback.EVENT.register((no, player) -> api.executeOnDedicatedServer(() -> {
             MinecraftDedicatedServer server = api.getServer();
             boolean loaded = load(server.getLevelName(), api);
-            File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ".conquestworld");
+            File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ConquestInstance.FILE_TYPE);
             if (loaded) {
                 // Already exists
                 Gson gson = api.getMod().getGson();
@@ -86,7 +86,7 @@ public class ServerGameInstanceListener extends Listener {
     }
 
     private boolean load(String worldName, TaleOfKingdomsAPI api) {
-        File file = new File(api.getDataFolder() + "worlds/" + worldName + ".conquestworld");
+        File file = new File(api.getDataFolder() + "worlds/" + worldName + ConquestInstance.FILE_TYPE);
         // Check if this world has been loaded or not
         if (!file.exists()) {
             try {

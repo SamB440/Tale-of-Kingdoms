@@ -1,5 +1,6 @@
 package com.convallyria.taleofkingdoms.common.kingdom;
 
+import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
 import com.mojang.serialization.Codec;
@@ -25,7 +26,7 @@ public class PlayerKingdom {
                     BlockPos.CODEC.fieldOf("end").forGetter(PlayerKingdom::getEnd),
                     BlockPos.CODEC.fieldOf("origin").forGetter(PlayerKingdom::getOrigin),
                     Codec.unboundedMap(new EnumCodec<>(KingdomPOI.class), BlockPos.CODEC).fieldOf("poi").forGetter(PlayerKingdom::getPoi),
-                    new EnumCodec<>(KingdomPOI.class).listOf().fieldOf("built_buildings").forGetter(PlayerKingdom::getBuiltBuildings),
+                    new EnumCodec<>(BuildCosts.class).listOf().fieldOf("built_buildings").forGetter(PlayerKingdom::getBuiltBuildings),
                     new EnumCodec<>(KingdomTier.class).fieldOf("tier").forGetter(PlayerKingdom::getTier),
                     Codec.LONG.fieldOf("last_stock_market_update").forGetter(PlayerKingdom::getLastStockMarketUpdate)
             ).apply(instance, (start, end, origin, poi, builtBuildings, tier, lastStockMarketUpdate) -> {
@@ -43,7 +44,7 @@ public class PlayerKingdom {
     private BlockPos start, end;
     private final BlockPos origin;
     private final Map<KingdomPOI, BlockPos> poi;
-    private final List<KingdomPOI> builtBuildings;
+    private final List<BuildCosts> builtBuildings;
     private KingdomTier tier;
     private long lastStockMarketUpdate;
 
@@ -56,7 +57,7 @@ public class PlayerKingdom {
 
     public <T extends Entity> Optional<T> getKingdomEntity(World world, EntityType<T> type) {
         if (start == null || end == null) return Optional.empty();
-        Box box = new Box(start, end);
+        Box box = Box.enclosing(start, end);
         return world.getEntitiesByType(type, box, entity -> true).stream().findFirst();
     }
 
@@ -100,15 +101,15 @@ public class PlayerKingdom {
         return this.poi.get(poi);
     }
 
-    public List<KingdomPOI> getBuiltBuildings() {
+    public List<BuildCosts> getBuiltBuildings() {
         return builtBuildings;
     }
 
-    public boolean hasBuilt(KingdomPOI poi) {
+    public boolean hasBuilt(BuildCosts poi) {
         return this.builtBuildings.contains(poi);
     }
 
-    public void addBuilt(KingdomPOI poi) {
+    public void addBuilt(BuildCosts poi) {
         this.builtBuildings.add(poi);
     }
 

@@ -19,10 +19,12 @@ public final class OutgoingOpenScreenPacketHandler extends ServerPacketHandler {
         BANKER,
         FOOD_SHOP,
         ITEM_SHOP,
+        BLOCK_SHOP,
         CITY_BUILDER_BEGIN,
-        CITY_BUILDER_TIER_ONE,
+        CITY_BUILDER_TIER,
         STOCK_MARKET,
-        FOREMAN
+        FOREMAN,
+        WARDEN
     }
 
     public OutgoingOpenScreenPacketHandler() {

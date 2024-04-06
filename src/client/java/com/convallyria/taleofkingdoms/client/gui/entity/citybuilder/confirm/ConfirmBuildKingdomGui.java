@@ -49,7 +49,6 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 .horizontalAlignment(HorizontalAlignment.CENTER)
                 .verticalAlignment(VerticalAlignment.CENTER);
 
-        //todo: translatable
         rootComponent.child(
                 Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.build_confirm"))
                         .positioning(Positioning.relative(50, 45))
@@ -59,6 +58,12 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy"))
                         .color(Color.RED)
                         .positioning(Positioning.relative(50, 50))
+        );
+
+        rootComponent.child(
+                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy_items"))
+                        .color(Color.RED)
+                        .positioning(Positioning.relative(50, 55))
         );
 
         rootComponent.child(
@@ -90,7 +95,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                         final CityBuilderEntity cityBuilderServer = (CityBuilderEntity) serverPlayer.getWorld().getEntityById(entity.getId());
                         cityBuilderServer.stopFollowingPlayer();
                         // Teleport to the player first, should avoid getting stuck in ground
-                        cityBuilderServer.refreshPositionAfterTeleport(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
+                        cityBuilderServer.requestTeleport(serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ());
                         // Now move to the well location
                         cityBuilderServer.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
                     });

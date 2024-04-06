@@ -1,9 +1,12 @@
 package com.convallyria.taleofkingdoms.common.block;
 
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
+import com.mojang.serialization.MapCodec;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -17,8 +20,15 @@ import net.minecraft.world.World;
 
 public class SellBlock extends BlockWithEntity {
 
+    public static final MapCodec<? extends BlockWithEntity> CODEC = MapCodec.unit(() -> new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
+
     public SellBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     @Override

@@ -1,5 +1,5 @@
 name: Bug report
-description: Report issues with plugin incompatbility or other behavior related issues.
+description: Report issues with mod incompatibility or other behavior related issues.
 labels: [ "bug" ]
 body:
   - type: textarea
@@ -42,7 +42,7 @@ body:
       label: Relevent logs and/or screenshots/videos
       description: |
         Paste any relevant logs - please use code blocks (```) to format console output, logs, and code, as
-        it's very hard to read otherwise. You can also use https://pastebin.com to make our life easier.
+        it's very hard to read otherwise. You can also use https://pastes.dev or similar to make our life easier.
     validations:
       required: false
 
