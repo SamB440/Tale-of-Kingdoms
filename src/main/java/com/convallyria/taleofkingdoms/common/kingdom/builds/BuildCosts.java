@@ -8,9 +8,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 
 public enum BuildCosts implements EnumCodec.Values {
-    SMALL_HOUSE_1(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_SMALL_HOUSE, BlockRotation.CLOCKWISE_180, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
-    SMALL_HOUSE_2(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_SMALL_HOUSE, KingdomPOI.TIER_ONE_SMALL_HOUSE_2, 192, 128),
-    LARGE_HOUSE(Text.translatable("menu.taleofkingdoms.citybuilder.large_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_LARGE_HOUSE, KingdomPOI.TIER_ONE_LARGE_HOUSE, 192, 320),
+    SMALL_HOUSE_1(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_SMALL_HOUSE_VARIANT_ONE, BlockRotation.COUNTERCLOCKWISE_90, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
+    SMALL_HOUSE_2(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_SMALL_HOUSE_VARIANT_TWO, BlockRotation.CLOCKWISE_180, KingdomPOI.TIER_ONE_SMALL_HOUSE_2, 192, 128),
+    LARGE_HOUSE(Text.translatable("menu.taleofkingdoms.citybuilder.large_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_LARGE_HOUSE, BlockRotation.COUNTERCLOCKWISE_90, KingdomPOI.TIER_ONE_LARGE_HOUSE, 192, 320),
     ITEM_SHOP(Text.translatable("menu.taleofkingdoms.citybuilder.item_shop"), KingdomTier.TIER_ONE, Schematic.TIER_1_BLACKSMITH_HOUSE, KingdomPOI.TIER_ONE_HOUSE_BLACKSMITH, 256, 256),
     STOCK_MARKET(Text.translatable("menu.taleofkingdoms.citybuilder.stock_market"), KingdomTier.TIER_ONE, Schematic.TIER_1_STOCK_MARKET, KingdomPOI.TIER_ONE_STOCK_MARKET, 192, 192),
     TIER_2_SMALL_HOUSE_1(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_TWO, Schematic.TIER_2_SMALL_HOUSE_VARIANT_ONE, KingdomPOI.TIER_TWO_SMALL_HOUSE_VARIANT_ONE, 192, 128),
