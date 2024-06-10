@@ -95,7 +95,7 @@ public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
                     kingdom.setStart(start);
                     kingdom.setEnd(end);
                 });
-                player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MASTER, 0.1f, 1f);
+                player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MUSIC, 0.1f, 1f);
             })
             .positioning(Positioning.relative(50, 67))
         );
