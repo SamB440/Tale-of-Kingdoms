@@ -12,8 +12,10 @@ public enum Schematic {
     TIER_2_KINGDOM(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/tier_two")),
     TIER_1_BLACKSMITH_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/blacksmith/tier_one_house_blacksmith")),
     TIER_1_STOCK_MARKET("player_kingdom/stock_market/tier_one_stock_market"),
-    TIER_1_LARGE_HOUSE("player_kingdom/large_house/tier_one_large_house"),
+    TIER_1_LARGE_HOUSE("player_kingdom/large_house/tier_one_large_house_new"),
     TIER_1_SMALL_HOUSE(new Identifier(TaleOfKingdoms.MODID, "player_kingdom/small_house/tier_one_small_house")),
+    TIER_1_SMALL_HOUSE_VARIANT_ONE("player_kingdom/small_house/tier_one_small_house_one_new"),
+    TIER_1_SMALL_HOUSE_VARIANT_TWO("player_kingdom/small_house/tier_one_small_house_two_new"),
 
     TIER_2_SMALL_HOUSE_VARIANT_ONE("player_kingdom/small_house/tier_two_small_house_variant_one"),
     TIER_2_SMALL_HOUSE_VARIANT_TWO("player_kingdom/small_house/tier_two_small_house_variant_two"),
