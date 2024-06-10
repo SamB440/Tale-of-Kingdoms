@@ -46,7 +46,8 @@ public class WardenEntity extends TOKEntity {
             ServerPlayerEntity serverPlayerEntity = player instanceof ServerPlayerEntity ? (ServerPlayerEntity) player
                     : server.getPlayerManager().getPlayer(player.getUuid());
             if (serverPlayerEntity == null) return;
-            EntityUtils.spawnEntity(type, serverPlayerEntity, this.getBlockPos());
+            final WardenHireable wardenHireable = EntityUtils.spawnEntity(type, serverPlayerEntity, this.getBlockPos());
+            wardenHireable.toggleFollowGoal(player);
         });
     }
 
