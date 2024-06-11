@@ -47,7 +47,7 @@ public class GuildPlayer {
         this.worthiness = worthiness;
         this.farmerLastBread = farmerLastBread;
         this.kingdom = kingdom.orElse(null);
-        this.hunters = hunters;
+        this.hunters = new ArrayList<>(hunters);
         this.hasRebuiltGuild = hasRebuiltGuild;
     }
 
