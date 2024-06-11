@@ -65,8 +65,6 @@ public class CoinListener extends Listener {
                         final GuildPlayer loopPlayer = instance.getPlayer(playerUuid);
                         final List<UUID> hunterUuids = loopPlayer.getHunters();
                         hunterUuids.remove(entity.getUuid());
-                        loopPlayer.getHunters().clear();
-                        loopPlayer.getHunters().addAll(hunterUuids);
                         TaleOfKingdoms.LOGGER.info("Hunter {} died and was removed", entity.getUuid());
                     }
                     return;
