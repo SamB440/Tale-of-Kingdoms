@@ -43,6 +43,7 @@ public class KnightEntity extends TOKEntity {
 
     public static DefaultAttributeContainer.Builder createMobAttributes() {
         return TOKEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 35.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D);
     }
