@@ -15,7 +15,7 @@ public class TaleOfKingdomsDebugCommand implements Command<ServerCommandSource> 
         Entity entity = context.getSource().getEntity();
         if (entity != null) {
             String message = "{\"text\":\"List of debug commands: invoke, set\"}";
-            entity.sendMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message)), entity, 0));
+            entity.sendMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message), entity.getRegistryManager()), entity, 0));
             return 1;
         }
         return 0;

@@ -2,22 +2,30 @@ package com.convallyria.taleofkingdoms.datagen.loottables;
 
 import com.convallyria.taleofkingdoms.common.item.ItemRegistry;
 import com.convallyria.taleofkingdoms.common.loot.TOKLootTables;
-import net.minecraft.data.server.loottable.LootTableGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetCountLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.loot.provider.number.UniformLootNumberProvider;
-import net.minecraft.util.Identifier;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryWrapper;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-public class TOKChestLootTableGenerator implements LootTableGenerator {
+public class TOKChestLootTableGenerator extends SimpleFabricLootTableProvider {
+
+	public TOKChestLootTableGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup) {
+		super(output, registryLookup, LootContextTypes.BLOCK);
+	}
 
 	@Override
-	public void accept(BiConsumer<Identifier, LootTable.Builder> exporter) {
+	public void accept(BiConsumer<RegistryKey<LootTable>, LootTable.Builder> exporter) {
 		exporter.accept(TOKLootTables.SMALL_BANDIT_CAMP, LootTable.builder().pool(
 				LootPool.builder()
 						.bonusRolls(ConstantLootNumberProvider.create(0))

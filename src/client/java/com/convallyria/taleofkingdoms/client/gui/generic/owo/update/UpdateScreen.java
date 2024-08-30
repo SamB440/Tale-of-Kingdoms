@@ -23,7 +23,7 @@ import java.util.List;
 public class UpdateScreen extends BaseUIModelScreen<FlowLayout> {
 
     public UpdateScreen() {
-        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "update_ui_model")));
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "update_ui_model")));
     }
 
     @Override

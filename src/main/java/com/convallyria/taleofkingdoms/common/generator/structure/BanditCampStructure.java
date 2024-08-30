@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.generator.structure;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.BanditCampGenerator;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class BanditCampStructure extends Structure {
 
-    public static final Codec<BanditCampStructure> CODEC = createCodec(BanditCampStructure::new);
+    public static final MapCodec<BanditCampStructure> CODEC = createCodec(BanditCampStructure::new);
 
     public BanditCampStructure(Config config) {
         super(config);

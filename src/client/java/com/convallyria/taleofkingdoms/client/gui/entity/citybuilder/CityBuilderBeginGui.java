@@ -17,14 +17,14 @@ import net.minecraft.util.Identifier;
 
 public class CityBuilderBeginGui extends BaseCityBuilderScreen {
 
-    private static final Identifier BACKGROUND = new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png");
+    private static final Identifier BACKGROUND = Identifier.of(TaleOfKingdoms.MODID, "textures/gui/menu.png");
 
     private final PlayerEntity player;
     private final CityBuilderEntity entity;
     private final ConquestInstance instance;
 
     public CityBuilderBeginGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
-        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_begin_model")));
+        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_begin_model")));
         Translations.CITYBUILDER_GUI_OPEN.send(player);
         this.player = player;
         this.entity = entity;

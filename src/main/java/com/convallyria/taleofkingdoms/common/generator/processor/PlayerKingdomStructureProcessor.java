@@ -3,7 +3,7 @@ package com.convallyria.taleofkingdoms.common.generator.processor;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerKingdomStructureProcessor extends StructureProcessor {
 
     public static final PlayerKingdomStructureProcessor INSTANCE = new PlayerKingdomStructureProcessor();
-    public static final Codec<PlayerKingdomStructureProcessor> CODEC = Codec.unit(() -> INSTANCE);
+    public static final MapCodec<PlayerKingdomStructureProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     private final PlayerKingdom kingdom;
     private final ServerPlayerEntity player;

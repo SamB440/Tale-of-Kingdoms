@@ -104,7 +104,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                 return ActionResult.SUCCESS;
             }
 
-            if (instance.getReficuleAttackers().size() == 0) {
+            if (instance.getReficuleAttackers().isEmpty()) {
                 final GuildPlayer guildPlayer = instance.getPlayer(player);
                 if (!guildPlayer.hasRebuiltGuild() && guildPlayer.getWorthiness() >= 750 && guildPlayer.getKingdom() == null) {
                     Runnable fixGuild = () -> {
@@ -125,7 +125,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             guildPlayer.setHasRebuiltGuild(true);
                             instance.setUnderAttack(false);
                             final Entity entity = serverPlayerEntity.getWorld().getEntityById(this.getId());
-                            entity.teleport(entity.getX(), entity.getY() + 100, entity.getZ());
+                            entity.requestTeleport(entity.getX(), entity.getY() + 100, entity.getZ());
                             entity.remove(RemovalReason.DISCARDED);
                             Translations.GUILDMASTER_THANK_YOU.send(player);
                         } else {

@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.generator.structure;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class GatewayStructure extends Structure {
 
-    public static final Codec<GatewayStructure> CODEC = createCodec(GatewayStructure::new);
+    public static final MapCodec<GatewayStructure> CODEC = createCodec(GatewayStructure::new);
 
     public GatewayStructure(Config config) {
         super(config);

@@ -95,7 +95,7 @@ public class ShopParser {
     }
 
     private Item getItem(String name) throws ReflectiveOperationException {
-        return Registries.ITEM.get(new Identifier(name.toLowerCase(TaleOfKingdoms.DEFAULT_LOCALE)));
+        return Registries.ITEM.get(Identifier.of(name.toLowerCase(TaleOfKingdoms.DEFAULT_LOCALE)));
     }
 
     // Make recursive function to look for {} and split by ","

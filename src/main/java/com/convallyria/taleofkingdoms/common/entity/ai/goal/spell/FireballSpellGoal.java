@@ -50,7 +50,7 @@ public class FireballSpellGoal extends CastSpellGoal {
         double x = spellCaster.getX();
         double y = spellCaster.getEyeY();
         double z = spellCaster.getZ();
-        FireballEntity fireballEntity = new FireballEntity(spellCaster.getWorld(), spellCaster, x, y, z, 1);
+        FireballEntity fireballEntity = new FireballEntity(spellCaster.getWorld(), spellCaster, new Vec3d(x, y, z), 1);
         fireballEntity.updatePosition(spellCaster.getX() + vec3d.x * 4.0D, spellCaster.getBodyY(0.5D) + 0.5D, fireballEntity.getZ() + vec3d.z * 4.0D);
         double d = target.getX() - spellCaster.getX();
         double e = target.getBodyY(0.3333333333333333D) - fireballEntity.getY();

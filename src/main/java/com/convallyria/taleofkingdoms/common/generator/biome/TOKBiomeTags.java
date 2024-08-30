@@ -14,6 +14,6 @@ public class TOKBiomeTags {
     private TOKBiomeTags() {}
 
     private static TagKey<Biome> of(String id) {
-        return TagKey.of(RegistryKeys.BIOME, new Identifier(TaleOfKingdoms.MODID, id));
+        return TagKey.of(RegistryKeys.BIOME, Identifier.of(TaleOfKingdoms.MODID, id));
     }
 }

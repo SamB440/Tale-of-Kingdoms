@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.BuildKingdomPacket;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
@@ -36,7 +37,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
     private final ConquestInstance instance;
 
     public ConfirmBuildKingdomGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
-        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_confirm_build_kingdom_model")));
+        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_confirm_build_kingdom_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -71,8 +72,8 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 // Close current screen, calculate paste position, and add their kingdom
                 MinecraftClient.getInstance().currentScreen.close();
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.BUILD_KINGDOM)
-                            .handleOutgoingPacket(player, entity.getId());
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.BUILD_KINGDOM)
+                            .sendPacket(player, new BuildKingdomPacket(entity.getId()));
                     return;
                 }
 
@@ -100,7 +101,7 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                         cityBuilderServer.setTarget(playerKingdom.getPOIPos(KingdomPOI.CITY_BUILDER_WELL_POI));
                     });
                 });
-                player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MUSIC, 0.1f, 1f);
+                player.playSoundToPlayer(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MUSIC, 0.1f, 1f);
             })
             .positioning(Positioning.relative(50, 67))
         );

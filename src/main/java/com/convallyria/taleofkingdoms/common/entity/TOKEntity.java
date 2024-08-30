@@ -22,7 +22,7 @@ public abstract class TOKEntity extends PathAwareEntity implements MultiSkinned 
     }
 
     protected static Identifier identifier(String path) {
-        return new Identifier(TaleOfKingdoms.MODID, path);
+        return Identifier.of(TaleOfKingdoms.MODID, path);
     }
 
     @Override

@@ -2,26 +2,22 @@ package com.convallyria.taleofkingdoms.client.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
+import com.convallyria.taleofkingdoms.common.packet.s2c.InstanceSyncPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler {
+public final class IncomingInstanceSyncPacketHandler extends InClientPacketHandler<InstanceSyncPacket> {
 
     public IncomingInstanceSyncPacketHandler() {
-        super(Packets.INSTANCE_SYNC);
+        super(Packets.INSTANCE_SYNC, InstanceSyncPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
-        final ConquestInstance instance = attachedData.decodeAsJson(ConquestInstance.CODEC);
+    public void handleIncomingPacket(PacketContext context, InstanceSyncPacket sync) {
+        final ConquestInstance instance = sync.instance();
         context.taskQueue().execute(() -> {
             MinecraftClient client = (MinecraftClient) context.taskQueue();
             if (TaleOfKingdoms.CONFIG.mainConfig.developerMode) {
@@ -39,10 +35,5 @@ public final class IncomingInstanceSyncPacketHandler extends ClientPacketHandler
                 api.getConquestInstanceStorage().addConquest(id, instance, true);
             }
         });
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalStateException("Not supported");
     }
 }

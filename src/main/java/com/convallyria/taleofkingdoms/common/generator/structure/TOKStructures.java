@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.common.generator.biome.TOKBiomeTags;
 import com.convallyria.taleofkingdoms.common.generator.util.StructureConfigCreator;
 import com.convallyria.taleofkingdoms.mixin.StructureTypeAccessor;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.structure.StructurePieceType;
@@ -41,10 +42,10 @@ public class TOKStructures {
           // Ignore this here for now, was just messing around with manually adding template pools for jigsaw structures.
 //          final Function<StructurePool.Projection, SinglePoolElement> single = SinglePoolElement.ofSingle("taleofkingdoms:gateway");
 //          final List<Pair<Function<StructurePool.Projection, ? extends StructurePoolElement>, Integer>> of = List.of(Pair.of(single, 1));
-//          StructurePool pool = new StructurePool(new Identifier(TaleOfKingdoms.MODID, "gateway"), new Identifier("empty"), of, StructurePool.Projection.RIGID);
+//          StructurePool pool = new StructurePool(Identifier.of(TaleOfKingdoms.MODID, "gateway"), Identifier.of("empty"), of, StructurePool.Projection.RIGID);
 //          System.out.println("c: " + pool.getElementCount());
-//          Registry.register(BuiltinRegistries.STRUCTURE_POOL, new Identifier(TaleOfKingdoms.MODID, "gateway"), pool);
-//          final StructurePool gateway = BuiltinRegistries.STRUCTURE_POOL.get(new Identifier(TaleOfKingdoms.MODID, "gateway"));
+//          Registry.register(BuiltinRegistries.STRUCTURE_POOL, Identifier.of(TaleOfKingdoms.MODID, "gateway"), pool);
+//          final StructurePool gateway = BuiltinRegistries.STRUCTURE_POOL.get(Identifier.of(TaleOfKingdoms.MODID, "gateway"));
 //          System.out.println("e: " + gateway);
           registerStructure(structureRegisterable, TOKStructureKeys.BANDIT_CAMP, new BanditCampStructure(StructureConfigCreator
                   .create()
@@ -63,7 +64,7 @@ public class TOKStructures {
                   .build(structureRegisterable)));
      }
 
-     private static StructureType<? extends Structure> registerType(String name, Codec<? extends Structure> structure) {
+     private static StructureType<? extends Structure> registerType(String name, MapCodec<? extends Structure> structure) {
           return StructureTypeAccessor.callRegister(TaleOfKingdoms.MODID + ":" + name, structure);
      }
 

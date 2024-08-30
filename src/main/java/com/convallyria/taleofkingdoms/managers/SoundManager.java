@@ -22,8 +22,8 @@ public class SoundManager implements IManager {
     }
 
     private void addSound(TOKSound sound) {
-        Identifier identifier = new Identifier(TaleOfKingdoms.MODID, sound.getPath());
-        TaleOfKingdoms.LOGGER.info("Loading sound: " + sound.getPath());
+        Identifier identifier = Identifier.of(TaleOfKingdoms.MODID, sound.getPath());
+        TaleOfKingdoms.LOGGER.info("Loading sound: {}", sound.getPath());
         events.put(sound, SoundEvent.of(identifier));
     }
 
@@ -38,7 +38,7 @@ public class SoundManager implements IManager {
 
     private void register() {
         events.forEach((name, event) -> {
-            Identifier identifier = new Identifier(TaleOfKingdoms.MODID, name.getPath());
+            Identifier identifier = Identifier.of(TaleOfKingdoms.MODID, name.getPath());
             Registry.register(Registries.SOUND_EVENT, identifier, event);
         });
     }

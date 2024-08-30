@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BanditCampGenerator {
 
-    private static final Identifier SMALL_BANDIT_CAMP = new Identifier(TaleOfKingdoms.MODID, "bandit_camp/small_bandit_camp");
+    private static final Identifier SMALL_BANDIT_CAMP = Identifier.of(TaleOfKingdoms.MODID, "bandit_camp/small_bandit_camp");
 
     public static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
         final Direction direction = Direction.random(random);

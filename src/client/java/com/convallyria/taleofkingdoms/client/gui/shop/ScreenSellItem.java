@@ -2,10 +2,10 @@ package com.convallyria.taleofkingdoms.client.gui.shop;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ToggleSellGuiPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public class ScreenSellItem extends HandledScreen<ScreenHandler> {
     //A path to the gui texture. In this example we use the texture from the dispenser
-    private static final Identifier TEXTURE = new Identifier(TaleOfKingdoms.MODID, "textures/gui/guisell.png");
+    private static final Identifier TEXTURE = Identifier.of(TaleOfKingdoms.MODID, "textures/gui/guisell.png");
 
     private final PlayerInventory playerInventory;
 
@@ -85,8 +85,8 @@ public class ScreenSellItem extends HandledScreen<ScreenHandler> {
 
     protected void deleteBlock(TaleOfKingdomsAPI api, ShopEntity entity) {
         if (MinecraftClient.getInstance().getServer() == null) {
-            ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.TOGGLE_SELL_GUI)
-                    .handleOutgoingPacket(playerInventory.player, true, entity.getGUIType());
+            api.getClientPacket(Packets.TOGGLE_SELL_GUI)
+                    .sendPacket(playerInventory.player, new ToggleSellGuiPacket(true, entity.getGUIType()));
             return;
         }
 

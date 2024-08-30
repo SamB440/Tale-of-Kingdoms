@@ -4,34 +4,30 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.BuyItemPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
+public final class IncomingBuyItemPacketHandler extends InServerPacketHandler<BuyItemPacket> {
 
     public IncomingBuyItemPacketHandler() {
-        super(Packets.BUY_ITEM);
+        super(Packets.BUY_ITEM, BuyItemPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, BuyItemPacket packet) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String itemName = attachedData.readString(128);
-        int count = attachedData.readInt();
-        ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
+        String itemName = packet.itemName();
+        int count = packet.count();
+        ShopParser.GUI type = packet.type();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             if (!instance.isInGuild(player)) {
                 reject(player, "Not in guild.");
@@ -69,11 +65,6 @@ public final class IncomingBuyItemPacketHandler extends ServerPacketHandler {
             player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
             ServerConquestInstance.sync(player, instance);
         }));
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 
     private ShopItem getShopItem(String name, ShopEntity entity) {

@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
+import com.convallyria.taleofkingdoms.common.packet.c2s.BankerInteractPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
@@ -29,7 +30,7 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
     private LabelComponent totalMoney, totalMoneyBank;
 
     public BankerScreen(PlayerEntity player, BankerEntity entity, ConquestInstance instance) {
-        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "banker_ui_model")));
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "banker_ui_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -58,8 +59,8 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                 if (guildPlayer.getCoins() >= coins) {
                     this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
-                                .handleOutgoingPacket(player, BankerMethod.DEPOSIT, coins);
+                        TaleOfKingdomsClient.getAPI().getClientPacket(Packets.BANKER_INTERACT)
+                                .sendPacket(player, new BankerInteractPacket(BankerMethod.DEPOSIT, coins));
                         return;
                     }
                     guildPlayer.setCoins(guildPlayer.getCoins() - coins);
@@ -82,8 +83,8 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                 if (guildPlayer.getBankerCoins() >= coins) {
                     this.close();
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.BANKER_INTERACT)
-                                .handleOutgoingPacket(player, BankerMethod.WITHDRAW, coins);
+                        TaleOfKingdomsClient.getAPI().getClientPacket(Packets.BANKER_INTERACT)
+                                .sendPacket(player, new BankerInteractPacket(BankerMethod.WITHDRAW, coins));
                         return;
                     }
                     guildPlayer.setBankerCoins(guildPlayer.getBankerCoins() - coins);

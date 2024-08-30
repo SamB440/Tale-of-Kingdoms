@@ -6,7 +6,7 @@ import com.convallyria.taleofkingdoms.client.gui.RenderListener;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenStartConquest;
 import com.convallyria.taleofkingdoms.client.gui.shop.ScreenSellItem;
 import com.convallyria.taleofkingdoms.client.listener.ClientGameInstanceListener;
-import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
+import com.convallyria.taleofkingdoms.client.listener.StartWorldListener;
 import com.convallyria.taleofkingdoms.client.packet.both.BothSignContractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingInstanceSyncPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingOpenScreenPacketHandler;
@@ -20,7 +20,7 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingForemanColl
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
-import com.convallyria.taleofkingdoms.client.listener.StartWorldListener;
+import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.fabricmc.api.ClientModInitializer;
@@ -96,11 +96,11 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         registerHandler(new IncomingInstanceSyncPacketHandler());
         registerHandler(new IncomingOpenScreenPacketHandler());
 
-        api.registerIntegratedHandler(new OutgoingOpenScreenPacketHandler());
+        api.registerPacketHandler(EnvType.SERVER, new OutgoingOpenScreenPacketHandler());
     }
 
-    protected void registerHandler(ClientPacketHandler clientPacketHandler) {
-        api.registerClientHandler(clientPacketHandler);
+    protected void registerHandler(PacketHandler<?> clientPacketHandler) {
+        api.registerPacketHandler(EnvType.CLIENT, clientPacketHandler);
     }
 
     private void registerEvents() {

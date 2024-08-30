@@ -1,11 +1,8 @@
 plugins {
     id 'groovy'
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.7-SNAPSHOT'
     id 'maven-publish'
 }
-
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -121,7 +118,7 @@ tasks {
         duplicatesStrategy = DuplicatesStrategy.WARN
         from file('src/main/generated')
         from("LICENSE") {
-            rename { "${it}_${project.archivesBaseName}"}
+            rename { "${it}_${project.base.archivesName.get()}"}
         }
         dependsOn 'runDatagen'
     }
@@ -146,8 +143,7 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:all'
     options.deprecation = true
 
-    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    it.options.release = 17
+    it.options.release = 21
 }
 
 java {
@@ -155,19 +151,25 @@ java {
     // if it is present.
     // If you remove this line, sources will not be generated.
     withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 // configure the maven publication
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.archives_base_name
             from components.java
         }
     }
 
-    // select the repositories you want to publish to
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
     }
 }

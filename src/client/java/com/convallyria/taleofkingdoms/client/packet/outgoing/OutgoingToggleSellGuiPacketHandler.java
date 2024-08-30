@@ -1,31 +1,12 @@
 package com.convallyria.taleofkingdoms.client.packet.outgoing;
 
-import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import com.convallyria.taleofkingdoms.common.shop.ShopParser;
-import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ToggleSellGuiPacket;
 
-public final class OutgoingToggleSellGuiPacketHandler extends ClientPacketHandler {
+public final class OutgoingToggleSellGuiPacketHandler extends OutClientPacketHandler<ToggleSellGuiPacket> {
 
     public OutgoingToggleSellGuiPacketHandler() {
-        super(Packets.TOGGLE_SELL_GUI);
+        super(Packets.TOGGLE_SELL_GUI, ToggleSellGuiPacket.CODEC);
     }
 
-    @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
-        throw new IllegalArgumentException("Not supported");
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeBoolean((Boolean) data[0]);
-        passedData.writeEnumConstant((ShopParser.GUI) data[1]);
-        sendPacket(player, passedData);
-    }
 }

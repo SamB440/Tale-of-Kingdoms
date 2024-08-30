@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.TeleportTowardsPlayerGoal;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -20,6 +21,9 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.RangedWeaponItem;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
@@ -30,7 +34,9 @@ public class ReficuleGuardianEntity extends TOKEntity implements Monster, Telepo
     public ReficuleGuardianEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
         ItemStack bow = new ItemStack(Items.BOW);
-        bow.addEnchantment(Enchantments.POWER, 1); // Want them to look fancy :)
+        DynamicRegistryManager dynamicRegistryManager = world.getRegistryManager();
+        RegistryEntry<Enchantment> enchant = dynamicRegistryManager.get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.POWER).orElseThrow();
+        bow.addEnchantment(enchant, 1); // Want them to look fancy :)
         this.setStackInHand(Hand.MAIN_HAND, bow);
     }
 
@@ -85,8 +91,9 @@ public class ReficuleGuardianEntity extends TOKEntity implements Monster, Telepo
 
     @Override
     public void shootAt(LivingEntity target, float pullProgress) {
-        ItemStack itemStack = this.getProjectileType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
+        final ItemStack shotFrom = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
+        ItemStack itemStack = this.getProjectileType(shotFrom);
+        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress, shotFrom);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - this.getZ();
@@ -96,8 +103,8 @@ public class ReficuleGuardianEntity extends TOKEntity implements Monster, Telepo
         this.getWorld().spawnEntity(persistentProjectileEntity);
     }
 
-    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
-        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
+    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier, ItemStack shotFrom) {
+        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier, shotFrom.isEmpty() ? null : shotFrom);
     }
 
     @Override

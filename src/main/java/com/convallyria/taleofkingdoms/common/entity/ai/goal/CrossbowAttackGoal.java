@@ -1,5 +1,7 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ChargedProjectilesComponent;
 import net.minecraft.entity.CrossbowUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;
@@ -14,10 +16,11 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 import java.util.EnumSet;
 
+// 1:1 copy of Minecraft source, except T extends MobEntity
 public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & CrossbowUser> extends Goal {
     public static final UniformIntProvider COOLDOWN_RANGE = TimeHelper.betweenSeconds(1, 2);
     private final T actor;
-    private Stage stage;
+    private Stage stage = Stage.UNCHARGED;
     private final double speed;
     private final float squaredRange;
     private int seeingTargetTicker;
@@ -25,13 +28,13 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
     private int cooldown;
 
     public CrossbowAttackGoal(T actor, double speed, float range) {
-        this.stage = CrossbowAttackGoal.Stage.UNCHARGED;
         this.actor = actor;
         this.speed = speed;
         this.squaredRange = range * range;
-        this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
 
+    @Override
     public boolean canStart() {
         return this.hasAliveTarget() && this.isEntityHoldingCrossbow();
     }
@@ -40,6 +43,7 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
         return this.actor.isHolding(Items.CROSSBOW);
     }
 
+    @Override
     public boolean shouldContinue() {
         return this.hasAliveTarget() && (this.canStart() || !this.actor.getNavigation().isIdle()) && this.isEntityHoldingCrossbow();
     }
@@ -48,6 +52,7 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
         return this.actor.getTarget() != null && this.actor.getTarget().isAlive();
     }
 
+    @Override
     public void stop() {
         super.stop();
         this.actor.setAttacking(false);
@@ -56,10 +61,16 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
         if (this.actor.isUsingItem()) {
             this.actor.clearActiveItem();
             this.actor.setCharging(false);
-            CrossbowItem.setCharged(this.actor.getActiveItem(), false);
+            this.actor.getActiveItem().set(DataComponentTypes.CHARGED_PROJECTILES, ChargedProjectilesComponent.DEFAULT);
         }
     }
 
+    @Override
+    public boolean shouldRunEveryTick() {
+        return true;
+    }
+
+    @Override
     public void tick() {
         LivingEntity livingEntity = this.actor.getTarget();
         if (livingEntity != null) {
@@ -80,7 +91,7 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
             if (bl3) {
                 --this.cooldown;
                 if (this.cooldown <= 0) {
-                    this.actor.getNavigation().startMovingTo(livingEntity, this.isUncharged() ? this.speed : this.speed * 0.5D);
+                    this.actor.getNavigation().startMovingTo(livingEntity, this.isUncharged() ? this.speed : this.speed * 0.5);
                     this.cooldown = COOLDOWN_RANGE.get(this.actor.getRandom());
                 }
             } else {
@@ -102,7 +113,7 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
 
                 int i = this.actor.getItemUseTime();
                 ItemStack itemStack = this.actor.getActiveItem();
-                if (i >= CrossbowItem.getPullTime(itemStack)) {
+                if (i >= CrossbowItem.getPullTime(itemStack, this.actor)) {
                     this.actor.stopUsingItem();
                     this.stage = Stage.CHARGED;
                     this.chargedTicksLeft = 20 + this.actor.getRandom().nextInt(20);
@@ -115,25 +126,19 @@ public class CrossbowAttackGoal<T extends MobEntity & RangedAttackMob & Crossbow
                 }
             } else if (this.stage == Stage.READY_TO_ATTACK && bl) {
                 this.actor.shootAt(livingEntity, 1.0F);
-                ItemStack itemStack2 = this.actor.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this.actor, Items.CROSSBOW));
-                CrossbowItem.setCharged(itemStack2, false);
                 this.stage = Stage.UNCHARGED;
             }
-
         }
     }
 
     private boolean isUncharged() {
-        return this.stage == CrossbowAttackGoal.Stage.UNCHARGED;
+        return this.stage == Stage.UNCHARGED;
     }
 
-    enum Stage {
+    static enum Stage {
         UNCHARGED,
         CHARGING,
         CHARGED,
         READY_TO_ATTACK;
-
-        Stage() {
-        }
     }
 }

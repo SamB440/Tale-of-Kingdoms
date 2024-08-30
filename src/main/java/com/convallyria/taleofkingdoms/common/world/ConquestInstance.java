@@ -2,7 +2,6 @@ package com.convallyria.taleofkingdoms.common.world;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
-import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
@@ -10,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructur
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.google.gson.Gson;
@@ -175,12 +175,12 @@ public class ConquestInstance {
 
     public void attack(PlayerEntity player, ServerWorldAccess world) {
         if (canAttack(player)) {
-            TaleOfKingdoms.LOGGER.info("Initiating guild attack for player " + player.getName());
+            TaleOfKingdoms.LOGGER.info("Initiating guild attack for player {}", player.getName());
             EntityUtils.spawnEntity(EntityTypes.GUILDMASTER_DEFENDER, world, player.getBlockPos());
             this.underAttack = true;
             Translations.GUILDMASTER_HELP.send(player);
 
-            Identifier gateway = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
+            Identifier gateway = Identifier.of(TaleOfKingdoms.MODID, "gateway/gateway");
             world.toServerWorld().getStructureTemplateManager().getTemplate(gateway).ifPresent(structure -> {
                 for (BlockPos reficuleAttackLocation : reficuleAttackLocations) {
                     StructurePlacementData structurePlacementData = new StructurePlacementData();

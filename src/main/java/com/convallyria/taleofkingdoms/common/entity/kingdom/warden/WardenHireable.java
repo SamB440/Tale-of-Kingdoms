@@ -83,9 +83,9 @@ public abstract class WardenHireable extends TOKEntity {
     public abstract Text getGuardText();
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(TOTAL_EXPERIENCE, internalTotalExperience);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(TOTAL_EXPERIENCE, internalTotalExperience);
     }
 
     @Override

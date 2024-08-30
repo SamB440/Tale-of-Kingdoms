@@ -43,7 +43,7 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     private LabelComponent coinsLabel, selectedItemLabel;
 
     public DefaultShopScreen(PlayerEntity player, ShopEntity entity, ConquestInstance instance) {
-        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "shop_ui_model")));
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "shop_ui_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;

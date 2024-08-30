@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.block;
 
 import com.convallyria.taleofkingdoms.common.block.entity.SellBlockEntity;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +19,7 @@ import net.minecraft.world.World;
 
 public class SellBlock extends BlockWithEntity {
 
-    public static final MapCodec<? extends BlockWithEntity> CODEC = MapCodec.unit(() -> new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
+    public static final MapCodec<? extends BlockWithEntity> CODEC = MapCodec.unit(() -> new SellBlock(AbstractBlock.Settings.copy(Blocks.CHEST)));
 
     public SellBlock(Settings settings) {
         super(settings);
@@ -41,8 +40,9 @@ public class SellBlock extends BlockWithEntity {
         return BlockRenderType.INVISIBLE;
     }
 
+
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
             //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity casted to
             //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
@@ -55,7 +55,6 @@ public class SellBlock extends BlockWithEntity {
         }
         return ActionResult.SUCCESS;
     }
-
 
     //This method will drop all items onto the ground when the block is broken
     @Override

@@ -7,6 +7,9 @@ import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarColour;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.ScreenBar;
+import com.convallyria.taleofkingdoms.common.packet.both.SignContractPacket;
+import com.convallyria.taleofkingdoms.common.packet.c2s.FixGuildPacket;
+import com.convallyria.taleofkingdoms.common.packet.c2s.HireHunterPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
@@ -78,8 +81,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (!guildPlayer.getHunters().isEmpty()) {
                     Translations.HUNTER_THANK.send(player);
                     if (MinecraftClient.getInstance().getServer() == null) {
-                        TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.HIRE_HUNTER)
-                                .handleOutgoingPacket(player, true);
+                        TaleOfKingdomsClient.getAPI().getClientPacket(Packets.HIRE_HUNTER)
+                                .sendPacket(player, new HireHunterPacket(true));
                         this.close();
                         return;
                     }
@@ -117,8 +120,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 if (instance.isUnderAttack() || guildPlayer.getCoins() < 3000) return;
                 if (stack == null) return;
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.FIX_GUILD)
-                            .handleOutgoingPacket(player);
+                    ((TaleOfKingdomsClientAPI) api).getClientPacket(Packets.FIX_GUILD)
+                            .sendPacket(player, new FixGuildPacket());
                     return;
                 }
 
@@ -182,8 +185,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 guildPlayer.setSignedContract(true);
                 Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
             } else {
-                TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
-                        .handleOutgoingPacket(player, true);
+                TaleOfKingdomsClient.getAPI().getClientPacket(Packets.SIGN_CONTRACT)
+                        .sendPacket(player, new SignContractPacket(true));
             }
             widget.visible = false;
             widget.active = false;
@@ -203,8 +206,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 guildPlayer.setSignedContract(false);
                 Translations.GUILDMASTER_CONTRACT_CANCEL_AWAIT.send(player);
             } else {
-                TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.SIGN_CONTRACT)
-                        .handleOutgoingPacket(player, false);
+                TaleOfKingdomsClient.getAPI().getClientPacket(Packets.SIGN_CONTRACT)
+                        .sendPacket(player, new SignContractPacket(false));
             }
             widget.visible = false;
             widget.active = false;
@@ -213,7 +216,7 @@ public class GuildMasterScreen extends ScreenTOK {
     }
 
     private void makeHireHuntersButton() {
-        MutableText hunterText = Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter", guildPlayer.getCoins() >= 1500 ? Formatting.GREEN : Formatting.RED);
+        MutableText hunterText = Text.translatable("menu.taleofkingdoms.guild_master.hire_hunter").formatted(guildPlayer.getCoins() >= 1500 ? Formatting.GREEN : Formatting.RED);
         if (this.hireHuntersButton != null) {
             this.hireHuntersButton.setMessage(hunterText);
             return;
@@ -224,8 +227,8 @@ public class GuildMasterScreen extends ScreenTOK {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 Translations.SERVE.send(player);
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    ((TaleOfKingdomsClientAPI) api).getClientPacketHandler(Packets.HIRE_HUNTER)
-                            .handleOutgoingPacket(player, false);
+                    api.getClientPacket(Packets.HIRE_HUNTER)
+                            .sendPacket(player, new HireHunterPacket(false));
                     return;
                 }
 

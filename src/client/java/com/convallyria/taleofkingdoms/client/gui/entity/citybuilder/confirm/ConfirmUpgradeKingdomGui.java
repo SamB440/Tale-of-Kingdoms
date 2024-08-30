@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.UpgradeKingdomPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
 import io.wispforest.owo.ui.component.ButtonComponent;
@@ -34,7 +35,7 @@ public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
     private final ConquestInstance instance;
 
     public ConfirmUpgradeKingdomGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
-        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_confirm_upgrade_kingdom_model")));
+        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_confirm_upgrade_kingdom_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -69,8 +70,8 @@ public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
                 // Close current screen, calculate paste position, and upgrade their kingdom
                 MinecraftClient.getInstance().currentScreen.close();
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.UPGRADE_KINGDOM)
-                            .handleOutgoingPacket(player, entity.getId());
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.UPGRADE_KINGDOM)
+                            .sendPacket(player, new UpgradeKingdomPacket(entity.getId()));
                     return;
                 }
 
@@ -95,7 +96,7 @@ public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
                     kingdom.setStart(start);
                     kingdom.setEnd(end);
                 });
-                player.playSound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MUSIC, 0.1f, 1f);
+                player.playSoundToPlayer(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MUSIC, 0.1f, 1f);
             })
             .positioning(Positioning.relative(50, 67))
         );

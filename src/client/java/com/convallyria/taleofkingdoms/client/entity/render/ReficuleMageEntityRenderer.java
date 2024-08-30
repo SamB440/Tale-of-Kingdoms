@@ -18,7 +18,7 @@ import net.minecraft.util.math.Vec3d;
 @Environment(EnvType.CLIENT)
 public class ReficuleMageEntityRenderer<T extends ReficuleMageEntity> extends MobEntityRenderer<T, PlayerEntityModel<T>> {
 
-    private static final Identifier TEXTURE = new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png");
+    private static final Identifier TEXTURE = Identifier.of(TaleOfKingdoms.MODID, "textures/entity/updated_textures/reficulemage.png");
 
     public ReficuleMageEntityRenderer(EntityRendererFactory.Context context, PlayerEntityModel<T> modelBipedIn) {
         super(context, modelBipedIn, 0.5f);

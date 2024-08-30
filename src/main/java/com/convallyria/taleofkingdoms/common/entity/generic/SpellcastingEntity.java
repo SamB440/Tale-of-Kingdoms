@@ -9,6 +9,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.MathHelper;
@@ -40,19 +41,22 @@ public abstract class SpellcastingEntity extends HostileEntity {
     @Override
     public void checkDespawn() { }
 
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(SPELL, (byte)0);
+    @Override
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(SPELL, (byte)0);
     }
 
-    public void readCustomDataFromTag(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
-        this.spellTicks = tag.getInt("SpellTicks");
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.spellTicks = nbt.getInt("SpellTicks");
     }
 
-    public void writeCustomDataToTag(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
-        tag.putInt("SpellTicks", this.spellTicks);
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("SpellTicks", this.spellTicks);
     }
 
     @Environment(EnvType.CLIENT)
@@ -81,6 +85,7 @@ public abstract class SpellcastingEntity extends HostileEntity {
         return !this.getWorld().isClient ? this.spell : SpellcastingEntity.Spell.byId(this.dataTracker.get(SPELL));
     }
 
+    @Override
     protected void mobTick() {
         super.mobTick();
         if (this.spellTicks > 0) {
@@ -89,18 +94,39 @@ public abstract class SpellcastingEntity extends HostileEntity {
 
     }
 
+    @Override
     public void tick() {
         super.tick();
         if (this.getWorld().isClient && this.isSpellcasting()) {
-            SpellcastingEntity.Spell spell = this.getSpell();
-            double d = spell.particleVelocity[0];
-            double e = spell.particleVelocity[1];
-            double f = spell.particleVelocity[2];
-            float g = this.bodyYaw * 0.017453292F + MathHelper.cos((float)this.age * 0.6662F) * 0.25F;
-            float h = MathHelper.cos(g);
-            float i = MathHelper.sin(g);
-            this.getWorld().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() + (double)h * 0.6D, this.getY() + 1.8D, this.getZ() + (double)i * 0.6D, d, e, f);
-            this.getWorld().addParticle(ParticleTypes.ENTITY_EFFECT, this.getX() - (double)h * 0.6D, this.getY() + 1.8D, this.getZ() - (double)i * 0.6D, d, e, f);
+            Spell spell = this.getSpell();
+            float f = (float) spell.particleVelocity[0];
+            float g = (float) spell.particleVelocity[1];
+            float h = (float) spell.particleVelocity[2];
+            float i = this.bodyYaw * (float) (Math.PI / 180.0) + MathHelper.cos((float)this.age * 0.6662F) * 0.25F;
+            float j = MathHelper.cos(i);
+            float k = MathHelper.sin(i);
+            double d = 0.6 * (double)this.getScale();
+            double e = 1.8 * (double)this.getScale();
+            this.getWorld()
+                    .addParticle(
+                            EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, f, g, h),
+                            this.getX() + (double)j * d,
+                            this.getY() + e,
+                            this.getZ() + (double)k * d,
+                            0.0,
+                            0.0,
+                            0.0
+                    );
+            this.getWorld()
+                    .addParticle(
+                            EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, f, g, h),
+                            this.getX() - (double)j * d,
+                            this.getY() + e,
+                            this.getZ() - (double)k * d,
+                            0.0,
+                            0.0,
+                            0.0
+                    );
         }
 
     }

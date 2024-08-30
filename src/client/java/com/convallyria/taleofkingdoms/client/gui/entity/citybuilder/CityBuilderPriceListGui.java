@@ -25,7 +25,7 @@ public class CityBuilderPriceListGui extends BaseCityBuilderScreen {
     private final PlayerKingdom kingdom;
 
     public CityBuilderPriceListGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance, PlayerKingdom kingdom) {
-        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_price_list_model")));
+        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_price_list_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;

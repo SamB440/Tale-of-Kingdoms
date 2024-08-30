@@ -6,35 +6,27 @@ import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.action.CityBuilderAction;
+import com.convallyria.taleofkingdoms.common.packet.c2s.CityBuilderActionPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHandler {
+import java.util.Optional;
+
+public final class IncomingCityBuilderActionPacketHandler extends InServerPacketHandler<CityBuilderActionPacket> {
 
     public IncomingCityBuilderActionPacketHandler() {
-        super(Packets.CITYBUILDER_ACTION);
+        super(Packets.CITYBUILDER_ACTION, CityBuilderActionPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        int entityId = attachedData.readInt();
-        CityBuilderAction action = attachedData.readEnumConstant(CityBuilderAction.class);
-        BuildCosts buildCosts;
-        if (action == CityBuilderAction.BUILD && attachedData.isReadable()) {
-            buildCosts = attachedData.readEnumConstant(BuildCosts.class);
-        } else {
-            buildCosts = null;
-        }
-
+    public void handleIncomingPacket(PacketContext context, CityBuilderActionPacket packet) {
+        final ServerPlayerEntity player = (ServerPlayerEntity) context.player();
+        final int entityId = packet.entityId();
+        final CityBuilderAction action = packet.action();
+        final Optional<BuildCosts> buildCosts = packet.costs();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             final Entity entityById = player.getWorld().getEntityById(entityId);
             if (!(entityById instanceof CityBuilderEntity cityBuilderEntity) || entityById.distanceTo(player) > 5) {
@@ -64,29 +56,24 @@ public final class IncomingCityBuilderActionPacketHandler extends ServerPacketHa
                 case GIVE_64_STONE -> cityBuilderEntity.give64stone(player);
                 case FIX_KINGDOM -> cityBuilderEntity.fixKingdom(player, kingdom);
                 case BUILD -> {
-                    if (buildCosts == null) {
+                    if (buildCosts.isEmpty()) {
                         reject(player, "Invalid build cost");
                         return;
                     }
 
-                    if (cityBuilderEntity.getWood() < buildCosts.getWood() || cityBuilderEntity.getStone() < buildCosts.getStone()) {
+                    if (cityBuilderEntity.getWood() < buildCosts.get().getWood() || cityBuilderEntity.getStone() < buildCosts.get().getStone()) {
                         reject(player, "Not enough resources");
                         return;
                     }
 
-                    if (kingdom.getTier() != buildCosts.getTier()) {
+                    if (kingdom.getTier() != buildCosts.get().getTier()) {
                         reject(player, "Invalid build for tier");
                         return;
                     }
 
-                    cityBuilderEntity.build(player, buildCosts, kingdom).thenAccept((v) -> ServerConquestInstance.sync(player, instance));
+                    cityBuilderEntity.build(player, buildCosts.get(), kingdom).thenAccept((v) -> ServerConquestInstance.sync(player, instance));
                 }
             }
         }));
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 }

@@ -6,31 +6,27 @@ import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.BuildKingdomPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
+public final class IncomingBuildKingdomPacket extends InServerPacketHandler<BuildKingdomPacket> {
 
     public IncomingBuildKingdomPacket() {
-        super(Packets.BUILD_KINGDOM);
+        super(Packets.BUILD_KINGDOM, BuildKingdomPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, BuildKingdomPacket packet) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        final int entityId = attachedData.readInt();
+        final int entityId = packet.entityId();
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
@@ -80,10 +76,5 @@ public final class IncomingBuildKingdomPacket extends ServerPacketHandler {
                 });
             });
         });
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 }

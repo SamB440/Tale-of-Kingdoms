@@ -23,12 +23,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class ReficuleVillageGenerator {
 
-    private static final Identifier ONE = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_one");
-    private static final Identifier THREE = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_three");
-    private static final Identifier FOUR = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_four");
-    private static final Identifier MIDDLE = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle");
-    private static final Identifier MIDDLE_TWO = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
-    private static final Identifier TOWER = new Identifier(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
+    private static final Identifier ONE = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_one");
+    private static final Identifier THREE = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_three");
+    private static final Identifier FOUR = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_four");
+    private static final Identifier MIDDLE = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle");
+    private static final Identifier MIDDLE_TWO = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
+    private static final Identifier TOWER = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
 
     public static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
         ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);

@@ -3,33 +3,29 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.FixGuildPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
+public final class IncomingFixGuildPacketHandler extends InServerPacketHandler<FixGuildPacket> {
 
     private long lastRebuild;
 
     public IncomingFixGuildPacketHandler() {
-        super(Packets.FIX_GUILD);
+        super(Packets.FIX_GUILD, FixGuildPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, FixGuildPacket packet) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         String playerContext = getPacket().toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -68,10 +64,5 @@ public final class IncomingFixGuildPacketHandler extends ServerPacketHandler {
             ServerConquestInstance.sync(player, instance);
             this.lastRebuild = System.currentTimeMillis();
         }));
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 }

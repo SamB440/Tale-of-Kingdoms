@@ -22,7 +22,7 @@ import java.util.Map;
 public class ItemRegistry extends Listener {
 
     public static final Map<TOKItem, Item> ITEMS = new HashMap<>();
-    public static final RegistryKey<ItemGroup> TOK_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, new Identifier(TaleOfKingdoms.MODID, "general"));
+    public static final RegistryKey<ItemGroup> TOK_ITEM_GROUP = RegistryKey.of(RegistryKeys.ITEM_GROUP, Identifier.of(TaleOfKingdoms.MODID, "general"));
 
     static {
         Registry.register(Registries.ITEM_GROUP, TOK_ITEM_GROUP, FabricItemGroup.builder()
@@ -65,8 +65,8 @@ public class ItemRegistry extends Listener {
         TaleOfKingdoms.LOGGER.info("Loading items...");
         int index = 1;
         for (TOKItem item : ITEMS.keySet()) {
-            TaleOfKingdoms.LOGGER.info("[" + index + "/" + ITEMS.values().size() + "] Loading item: " + item.getRegistryName());
-            Registry.register(Registries.ITEM, new Identifier(TaleOfKingdoms.MODID, item.getRegistryName()), ITEMS.get(item));
+            TaleOfKingdoms.LOGGER.info("[{}/{}] Loading item: {}", index, ITEMS.values().size(), item.getRegistryName());
+            Registry.register(Registries.ITEM, Identifier.of(TaleOfKingdoms.MODID, item.getRegistryName()), ITEMS.get(item));
             index++;
         }
     }

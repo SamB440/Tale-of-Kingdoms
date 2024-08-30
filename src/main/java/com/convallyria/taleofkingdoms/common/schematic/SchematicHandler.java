@@ -9,6 +9,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.JigsawReplacementStructureProcessor;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockBox;
@@ -52,24 +53,23 @@ public abstract class SchematicHandler {
     }
 
     protected void pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, BlockRotation rotation, CompletableFuture<BlockBox> cf, SchematicOptions... options) {
-        TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: " + schematic.toString());
-        player.getServerWorld().getStructureTemplateManager().getTemplate(schematic.getPath()).ifPresent(structure -> {
-            final boolean old = SharedConstants.isDevelopment;
-            SharedConstants.isDevelopment = true; // We want to crash if something went wrong
-            StructurePlacementData structurePlacementData = new StructurePlacementData();
-            structurePlacementData.setRotation(rotation);
-            TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                final GuildPlayer guildPlayer = instance.getPlayer(player);
-                final PlayerKingdom kingdom = guildPlayer.getKingdom();
-                if (kingdom == null) return;
-                structurePlacementData.addProcessor(new PlayerKingdomStructureProcessor(kingdom, player));
-            });
-            structurePlacementData.addProcessor(new GuildStructureProcessor(options));
-            structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
-            structure.place(player.getServerWorld(), position, position, structurePlacementData, Random.create(), Block.NOTIFY_ALL);
-            BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
-            cf.complete(box);
-            SharedConstants.isDevelopment = old; // Put it back to what it was.
+        TaleOfKingdoms.LOGGER.info("Loading schematic, please wait: {}", schematic.toString());
+        final StructureTemplate structure = player.getServerWorld().getStructureTemplateManager().getTemplate(schematic.getPath()).orElseThrow();
+        final boolean old = SharedConstants.isDevelopment;
+        SharedConstants.isDevelopment = true; // We want to crash if something went wrong
+        StructurePlacementData structurePlacementData = new StructurePlacementData();
+        structurePlacementData.setRotation(rotation);
+        TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            final GuildPlayer guildPlayer = instance.getPlayer(player);
+            final PlayerKingdom kingdom = guildPlayer.getKingdom();
+            if (kingdom == null) return;
+            structurePlacementData.addProcessor(new PlayerKingdomStructureProcessor(kingdom, player));
         });
+        structurePlacementData.addProcessor(new GuildStructureProcessor(options));
+        structurePlacementData.addProcessor(JigsawReplacementStructureProcessor.INSTANCE);
+        structure.place(player.getServerWorld(), position, position, structurePlacementData, Random.create(), Block.NOTIFY_ALL);
+        BlockBox box = structure.calculateBoundingBox(structurePlacementData, position);
+        cf.complete(box);
+        SharedConstants.isDevelopment = old; // Put it back to what it was.
     }
 }

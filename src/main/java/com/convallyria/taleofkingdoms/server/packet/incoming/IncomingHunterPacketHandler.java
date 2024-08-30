@@ -5,34 +5,30 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.HireHunterPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 @Environment(EnvType.SERVER)
-public final class IncomingHunterPacketHandler extends ServerPacketHandler {
+public final class IncomingHunterPacketHandler extends InServerPacketHandler<HireHunterPacket> {
 
     public IncomingHunterPacketHandler() {
-        super(Packets.HIRE_HUNTER);
+        super(Packets.HIRE_HUNTER, HireHunterPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, HireHunterPacket packet) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        boolean retire = attachedData.readBoolean();
+        boolean retire = packet.retire();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             final GuildPlayer guildPlayer = instance.getPlayer(player);
             if (!instance.isInGuild(player)) {
@@ -82,10 +78,5 @@ public final class IncomingHunterPacketHandler extends ServerPacketHandler {
             guildPlayer.setCoins(guildPlayer.getCoins() - 1500);
             ServerConquestInstance.sync(player, instance);
         }));
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 }

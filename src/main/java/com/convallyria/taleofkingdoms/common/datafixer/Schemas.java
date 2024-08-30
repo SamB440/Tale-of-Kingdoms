@@ -18,9 +18,7 @@ public class Schemas {
         build(dataFixerBuilder);
 
         TaleOfKingdoms.LOGGER.info("Building datafixer");
-
-        // Let's copy LazyDFU and use DataFixerBuilder#buildUnoptimized.
-        return dataFixerBuilder.buildUnoptimized();
+        return dataFixerBuilder.build().fixer();
     }
 
     private static void build(DataFixerBuilder builder) {
