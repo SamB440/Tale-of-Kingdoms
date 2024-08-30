@@ -1,0 +1,72 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
+    <components>
+        <flow-layout direction="horizontal">
+            <children>
+                <flow-layout id="inner" direction="horizontal">
+                    <children>
+                        <label id="total-money">
+                            <text translate="true">menu.taleofkingdoms.warden.total_money</text>
+                            <color>white</color>
+                            <positioning type="relative">50,15</positioning>
+                        </label>
+
+                        <button id="recruit-knight-button">
+                            <text translate="true">menu.taleofkingdoms.warden.recruit.knight</text>
+                            <tooltip-text translate="true">menu.taleofkingdoms.warden.buy_cost</tooltip-text>
+                            <positioning type="relative">50,45</positioning>
+                            <sizing>
+                                <horizontal method="fixed">200</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="recruit-archer-button">
+                            <text translate="true">menu.taleofkingdoms.warden.recruit.archer</text>
+                            <tooltip-text translate="true">menu.taleofkingdoms.warden.buy_cost</tooltip-text>
+                            <positioning type="relative">50,54</positioning>
+                            <sizing>
+                                <horizontal method="fixed">200</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="recall-defenders-button">
+                            <text translate="true">menu.taleofkingdoms.warden.recall</text>
+                            <positioning type="relative">50,63</positioning>
+                            <sizing>
+                                <horizontal method="fixed">200</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="exit-button">
+                            <text translate="true">menu.taleofkingdoms.generic.exit</text>
+                            <positioning type="relative">50,72</positioning>
+                            <sizing>
+                                <horizontal method="fixed">200</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+                    </children>
+
+                    <sizing>
+                        <horizontal method="fixed">400</horizontal>
+                        <vertical method="fixed">256</vertical>
+                    </sizing>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <sizing>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>
