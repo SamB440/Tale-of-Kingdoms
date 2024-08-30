@@ -20,9 +20,11 @@ import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingForemanColl
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingHunterPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingInnkeeperPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingToggleSellGuiPacketHandler;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,6 +33,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -58,6 +61,7 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         new RenderSetup(api.getMod());
         registerPacketHandlers();
         registerEvents();
+        registerTasks();
         HandledScreens.register(TaleOfKingdoms.SELL_SCREEN_HANDLER, ScreenSellItem::new);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -108,5 +112,21 @@ public class TaleOfKingdomsClient implements ClientModInitializer {
         this.startWorldListener = new StartWorldListener();
         new ClientGameInstanceListener();
         new RenderListener();
+    }
+
+    private void registerTasks() {
+        api.getScheduler().repeating(server -> {
+            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+                instance.getGuildPlayers().forEach((id, guildPlayer) -> {
+                    final PlayerKingdom kingdom = guildPlayer.getKingdom();
+                    if (kingdom == null) return;
+                    kingdom.tryTaxCollection(guildPlayer);
+                    final ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
+                    if (player != null) {
+                        ServerConquestInstance.sync(player, instance);
+                    }
+                });
+            });
+        }, 20, 1000);
     }
 }
