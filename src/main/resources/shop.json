@@ -338,6 +338,31 @@
       "sell": 120
     },
     {
+      "item": "gravel",
+      "cost": 4,
+      "sell": 2
+    },
+    {
+      "item": "sand",
+      "cost": 3,
+      "sell": 1
+    },
+    {
+      "item": "bricks",
+      "cost": 12,
+      "sell": 6
+    },
+    {
+      "item": "iron_ore",
+      "cost": 140,
+      "sell": 40
+    },
+    {
+      "item": "coal_ore",
+      "cost": 100,
+      "sell": 20
+    },
+    {
       "item": "gold_ore",
       "cost": 180,
       "sell": 80
@@ -351,6 +376,16 @@
       "item": "tnt",
       "cost": 1440,
       "sell": 300
+    },
+    {
+      "item": "bookshelf",
+      "cost": 126,
+      "sell": 50
+    },
+    {
+      "item": "chiseled_bookshelf",
+      "cost": 90,
+      "sell": 14
     }
   ],
 
