@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.server;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.server.listener.ServerGameInstanceListener;
 import com.convallyria.taleofkingdoms.server.packet.both.BothSignContractPacketHandler;
@@ -19,6 +20,7 @@ import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenP
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
 
@@ -33,6 +35,7 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
         TaleOfKingdoms.setAPI(api = new TaleOfKingdomsServerAPI(TaleOfKingdoms.getInstance()));
         this.registerPacketHandlers();
         this.registerListeners();
+        this.registerTasks();
     }
 
     private void registerPacketHandlers() {
@@ -62,11 +65,25 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
     }
 
     private void registerTasks() {
+//        api.getScheduler().repeating(server -> {
+//            api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+//                server.getPlayerManager().getPlayerList().forEach(player -> {
+//                    ServerConquestInstance.sync(player, instance);
+//                    TaleOfKingdoms.LOGGER.info("Synced player data");
+//                });
+//            });
+//        }, 20, 1000);
+
         api.getScheduler().repeating(server -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                server.getPlayerManager().getPlayerList().forEach(player -> {
-                    ServerConquestInstance.sync(player, instance);
-                    TaleOfKingdoms.LOGGER.info("Synced player data");
+                instance.getGuildPlayers().forEach((id, guildPlayer) -> {
+                    final PlayerKingdom kingdom = guildPlayer.getKingdom();
+                    if (kingdom == null) return;
+                    kingdom.tryTaxCollection(guildPlayer);
+                    final ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
+                    if (player != null) {
+                        ServerConquestInstance.sync(player, instance);
+                    }
                 });
             });
         }, 20, 1000);

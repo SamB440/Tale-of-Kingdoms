@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.kingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
+import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.entity.Entity;
@@ -28,8 +29,9 @@ public class PlayerKingdom {
                     Codec.unboundedMap(new EnumCodec<>(KingdomPOI.class), BlockPos.CODEC).fieldOf("poi").forGetter(PlayerKingdom::getPoi),
                     new EnumCodec<>(BuildCosts.class).listOf().fieldOf("built_buildings").forGetter(PlayerKingdom::getBuiltBuildings),
                     new EnumCodec<>(KingdomTier.class).fieldOf("tier").forGetter(PlayerKingdom::getTier),
-                    Codec.LONG.fieldOf("last_stock_market_update").forGetter(PlayerKingdom::getLastStockMarketUpdate)
-            ).apply(instance, (start, end, origin, poi, builtBuildings, tier, lastStockMarketUpdate) -> {
+                    Codec.LONG.fieldOf("last_stock_market_update").forGetter(PlayerKingdom::getLastStockMarketUpdate),
+                    Codec.LONG.fieldOf("last_tax_collection").forGetter(PlayerKingdom::getLastTaxCollection)
+            ).apply(instance, (start, end, origin, poi, builtBuildings, tier, lastStockMarketUpdate, lastTaxCollection) -> {
                 final PlayerKingdom playerKingdom = new PlayerKingdom(origin);
                 playerKingdom.setStart(start);
                 playerKingdom.setEnd(end);
@@ -37,6 +39,7 @@ public class PlayerKingdom {
                 builtBuildings.forEach(playerKingdom::addBuilt);
                 playerKingdom.setTier(tier);
                 playerKingdom.setLastStockMarketUpdate(lastStockMarketUpdate);
+                playerKingdom.lastTaxCollection = lastTaxCollection;
                 return playerKingdom;
             }
     ));
@@ -46,7 +49,7 @@ public class PlayerKingdom {
     private final Map<KingdomPOI, BlockPos> poi;
     private final List<BuildCosts> builtBuildings;
     private KingdomTier tier;
-    private long lastStockMarketUpdate;
+    private long lastStockMarketUpdate, lastTaxCollection;
 
     public PlayerKingdom(BlockPos origin) {
         this.origin = origin;
@@ -119,6 +122,43 @@ public class PlayerKingdom {
 
     public void setLastStockMarketUpdate(long lastStockMarketUpdate) {
         this.lastStockMarketUpdate = lastStockMarketUpdate;
+    }
+
+    public long getLastTaxCollection() {
+        return lastTaxCollection;
+    }
+
+    public int tryTaxCollection(GuildPlayer benefitter) {
+        final long currentTime = System.currentTimeMillis();
+        final long timeSince = currentTime - lastTaxCollection;
+        // If less than an hour, don't tax
+        if (timeSince < 3600000) return 0;
+
+        int totalGold = 0;
+        for (BuildCosts builtBuilding : builtBuildings) {
+            if (builtBuilding == BuildCosts.SMALL_HOUSE_1 || builtBuilding == BuildCosts.SMALL_HOUSE_2) {
+                totalGold += 50;
+                continue;
+            }
+
+            if (builtBuilding == BuildCosts.LARGE_HOUSE) {
+                totalGold += 125;
+                continue;
+            }
+
+            if (builtBuilding == BuildCosts.TIER_2_SMALL_HOUSE_1 || builtBuilding == BuildCosts.TIER_2_SMALL_HOUSE_2) {
+                totalGold += 175;
+                continue;
+            }
+
+            if (builtBuilding == BuildCosts.TIER_2_LARGE_HOUSE) {
+                totalGold += 250;
+            }
+        }
+
+        benefitter.setCoins(benefitter.getCoins() + totalGold);
+        this.lastTaxCollection = currentTime;
+        return totalGold;
     }
 
     public boolean isInKingdom(BlockPos pos) {
