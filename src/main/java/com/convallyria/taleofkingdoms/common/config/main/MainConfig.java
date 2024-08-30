@@ -31,5 +31,9 @@ public class MainConfig implements ConfigData {
 	@Comment("Whether to always show the updates GUI when joining a world")
 	public boolean alwaysShowUpdatesGUI = false;
 
+	@ConfigEntry.Gui.Tooltip
+	@Comment("Tweaks some game elements to make the mod feel more like the original version (TODO)")
+	public boolean originalFeel = false;
+
 	public boolean developerMode = false;
 }
