@@ -18,7 +18,7 @@ public class InventoryDrawEvent {
     @Shadow
     protected TextRenderer textRenderer;
 
-    @Inject(method = "render", at = @At("HEAD"))
+    @Inject(method = "render", at = @At("TAIL"))
     private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (MinecraftClient.getInstance().currentScreen instanceof InventoryScreen) {
             InventoryDrawCallback.EVENT.invoker().render((InventoryScreen) MinecraftClient.getInstance().currentScreen, context, textRenderer);
