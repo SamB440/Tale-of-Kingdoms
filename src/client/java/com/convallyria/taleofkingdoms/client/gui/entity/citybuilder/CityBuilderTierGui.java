@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.action.CityBuilderAction;
+import com.convallyria.taleofkingdoms.common.packet.c2s.CityBuilderActionPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
@@ -32,11 +33,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CityBuilderTierGui extends BaseCityBuilderScreen {
 
-    private static final Identifier BACKGROUND = new Identifier(TaleOfKingdoms.MODID, "textures/gui/menu.png");
+    private static final Identifier BACKGROUND = Identifier.of(TaleOfKingdoms.MODID, "textures/gui/menu.png");
 
     private final PlayerEntity player;
     private final CityBuilderEntity entity;
@@ -49,7 +51,7 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
     private final Map<BuildCosts, ButtonComponent> buildButtons = new HashMap<>(BuildCosts.values().length);
 
     public CityBuilderTierGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
-        super(DataSource.asset(new Identifier(TaleOfKingdoms.MODID, "citybuilder_tier_model")));
+        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_tier_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -98,8 +100,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         inner.child(
             Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.give_wood"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
-                            .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.GIVE_64_WOOD);
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
+                            .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.GIVE_64_WOOD, Optional.empty()));
                     return;
                 }
 
@@ -110,8 +112,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         inner.child(
             Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.give_cobblestone"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
-                            .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.GIVE_64_STONE);
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
+                            .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.GIVE_64_STONE, Optional.empty()));
                     return;
                 }
 
@@ -142,8 +144,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         inner.child(
             this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.fix_kingdom"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
-                            .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.FIX_KINGDOM);
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
+                            .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.FIX_KINGDOM, Optional.empty()));
                     return;
                 }
 
@@ -198,8 +200,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
 
             final Component button = Components.button(text.append(build.getDisplayName()), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.CITYBUILDER_ACTION)
-                            .handleOutgoingPacket(player, entity.getId(), CityBuilderAction.BUILD, build);
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
+                            .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.BUILD, Optional.of(build)));
                     return;
                 }
 

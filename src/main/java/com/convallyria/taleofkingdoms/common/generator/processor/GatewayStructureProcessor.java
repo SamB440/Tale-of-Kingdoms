@@ -5,7 +5,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.structure.StructurePlacementData;
@@ -23,9 +23,7 @@ import java.util.Optional;
 public class GatewayStructureProcessor extends StructureProcessor {
 
     public static final GatewayStructureProcessor INSTANCE = new GatewayStructureProcessor();
-    public static final Codec<GatewayStructureProcessor> CODEC = Codec.unit(() -> {
-        return INSTANCE;
-    });
+    public static final MapCodec<GatewayStructureProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     public GatewayStructureProcessor() { }
 

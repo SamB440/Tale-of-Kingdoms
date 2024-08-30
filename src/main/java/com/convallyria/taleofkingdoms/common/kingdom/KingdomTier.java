@@ -1,12 +1,11 @@
 package com.convallyria.taleofkingdoms.common.kingdom;
 
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3i;
 import org.jetbrains.annotations.Nullable;
 
-public enum KingdomTier implements EnumCodec.Values {
+public enum KingdomTier {
     TIER_ONE(Text.translatable("menu.taleofkingdoms.generic.tier_one"), Schematic.TIER_1_KINGDOM, Vec3i.ZERO),
     TIER_TWO(Text.translatable("menu.taleofkingdoms.generic.tier_two"), Schematic.TIER_2_KINGDOM, new Vec3i(16, 0, 49));
 
@@ -40,10 +39,5 @@ public enum KingdomTier implements EnumCodec.Values {
     public boolean isHigherThanOrEqual(@Nullable KingdomTier tier) {
         if (tier == null) return false;
         return this.ordinal() >= tier.ordinal();
-    }
-
-    @Override
-    public String getSerializedName() {
-        return this.name();
     }
 }

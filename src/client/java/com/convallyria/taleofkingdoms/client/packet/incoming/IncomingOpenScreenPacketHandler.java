@@ -13,7 +13,6 @@ import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.ItemShopScreen;
 import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.StockMarketScreen;
 import com.convallyria.taleofkingdoms.client.gui.entity.kingdom.WardenScreen;
 import com.convallyria.taleofkingdoms.client.gui.entity.shop.FoodShopScreen;
-import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.BlacksmithEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
@@ -27,29 +26,25 @@ import com.convallyria.taleofkingdoms.common.entity.kingdom.StockMarketEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.warden.WardenEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
+import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public final class IncomingOpenScreenPacketHandler extends ClientPacketHandler {
+public final class IncomingOpenScreenPacketHandler extends InClientPacketHandler<OpenScreenPacket> {
 
     public IncomingOpenScreenPacketHandler() {
-        super(Packets.OPEN_CLIENT_SCREEN);
+        super(Packets.OPEN_CLIENT_SCREEN, OpenScreenPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
-        final OutgoingOpenScreenPacketHandler.ScreenTypes type = attachedData.readEnumConstant(OutgoingOpenScreenPacketHandler.ScreenTypes.class);
-        final int entityId = attachedData.readInt();
+    public void handleIncomingPacket(PacketContext context, OpenScreenPacket openScreen) {
+        final OpenScreenPacket.ScreenTypes type = openScreen.type();
+        final int entityId = openScreen.entityId();
         context.taskQueue().execute(() -> {
             MinecraftClient client = (MinecraftClient) context.taskQueue();
             if (TaleOfKingdoms.CONFIG.mainConfig.developerMode) {
@@ -62,7 +57,7 @@ public final class IncomingOpenScreenPacketHandler extends ClientPacketHandler {
 
             final Entity entityById = client.world.getEntityById(entityId);
             if (entityById == null) {
-                TaleOfKingdoms.LOGGER.warn("Desync! " + entityId + " was not found.");
+                TaleOfKingdoms.LOGGER.warn("Desync! {} was not found.", entityId);
                 return;
             }
 
@@ -89,10 +84,5 @@ public final class IncomingOpenScreenPacketHandler extends ClientPacketHandler {
 
             client.setScreen(screen);
         });
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalStateException("Not supported");
     }
 }

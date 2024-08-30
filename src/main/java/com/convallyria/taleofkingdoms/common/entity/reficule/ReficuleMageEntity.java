@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.spell.GiveInvisibili
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
@@ -32,8 +33,10 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Box;
@@ -121,12 +124,15 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5D);
     }
 
+    @Nullable
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
         ItemStack wand = new ItemStack(Items.STICK);
-        wand.addEnchantment(Enchantments.MENDING, 1); // Want them to look fancy :)
+        DynamicRegistryManager dynamicRegistryManager = world.getRegistryManager();
+        RegistryEntry<Enchantment> enchant = dynamicRegistryManager.get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.MENDING).orElseThrow();
+        wand.addEnchantment(enchant, 1); // Want them to look fancy :)
         this.equipStack(EquipmentSlot.OFFHAND, wand);
-        return super.initialize(world, difficulty, spawnReason, entityData, entityTag);
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
     @Environment(EnvType.CLIENT)
@@ -196,8 +202,9 @@ public class ReficuleMageEntity extends SpellcastingEntity implements Monster, T
 
     @Override
     public void shootAt(LivingEntity livingEntity, float f) {
-        ItemStack itemStack = this.getProjectileType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity persistentProjectileEntity = ProjectileUtil.createArrowProjectile(this, itemStack, f);
+        final ItemStack shotFrom = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
+        ItemStack itemStack = this.getProjectileType(shotFrom);
+        PersistentProjectileEntity persistentProjectileEntity = ProjectileUtil.createArrowProjectile(this, itemStack, f, shotFrom);
         double d = livingEntity.getX() - this.getX();
         double e = livingEntity.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = livingEntity.getZ() - this.getZ();

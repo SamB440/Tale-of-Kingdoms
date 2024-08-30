@@ -1,29 +1,12 @@
 package com.convallyria.taleofkingdoms.client.packet.outgoing;
 
-import com.convallyria.taleofkingdoms.client.packet.ClientPacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import io.netty.buffer.Unpooled;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.convallyria.taleofkingdoms.common.packet.c2s.HireHunterPacket;
 
-public final class OutgoingHunterPacketHandler extends ClientPacketHandler {
+public final class OutgoingHunterPacketHandler extends OutClientPacketHandler<HireHunterPacket> {
 
     public OutgoingHunterPacketHandler() {
-        super(Packets.HIRE_HUNTER);
+        super(Packets.HIRE_HUNTER, HireHunterPacket.CODEC);
     }
 
-    @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
-        throw new IllegalArgumentException("Not supported");
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        passedData.writeBoolean((Boolean) data[0]); // False if hiring, true if retiring
-        sendPacket(player, passedData);
-    }
 }

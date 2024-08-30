@@ -5,8 +5,8 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -48,7 +48,7 @@ public class GuildMasterEntity extends TOKEntity {
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
 
         if (player instanceof ServerPlayerEntity) {
-            api.getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.GUILD_MASTER, this.getId());
+            api.getServerPacket(Packets.OPEN_CLIENT_SCREEN).sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.GUILD_MASTER, this.getId()));
             return ActionResult.FAIL;
         }
 

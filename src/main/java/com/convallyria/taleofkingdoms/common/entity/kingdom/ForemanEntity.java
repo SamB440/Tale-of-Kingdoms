@@ -9,12 +9,12 @@ import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.WorkerEntity
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -46,10 +46,10 @@ public abstract class ForemanEntity extends TOKEntity implements InventoryOwner 
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(STONE, 0);
-        this.dataTracker.startTracking(WOOD, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(STONE, 0);
+        builder.add(WOOD, 0);
     }
 
     private final SimpleInventory inventory = new SimpleInventory(20);
@@ -74,7 +74,7 @@ public abstract class ForemanEntity extends TOKEntity implements InventoryOwner 
         if (api == null) return ActionResult.FAIL;
         if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
         if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
-        TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN).handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.FOREMAN, this.getId());
+        TaleOfKingdoms.getAPI().getServerPacket(Packets.OPEN_CLIENT_SCREEN).sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.FOREMAN, this.getId()));
         return ActionResult.PASS;
     }
 
@@ -135,13 +135,13 @@ public abstract class ForemanEntity extends TOKEntity implements InventoryOwner 
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.put("Inventory", this.inventory.toNbtList());
+        nbt.put("Inventory", this.inventory.toNbtList(this.getRegistryManager()));
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE));
+        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE), this.getRegistryManager());
         this.getDataTracker().set(STONE, inventory.count(Items.COBBLESTONE));
         this.getDataTracker().set(WOOD, inventory.count(Items.OAK_LOG));
     }

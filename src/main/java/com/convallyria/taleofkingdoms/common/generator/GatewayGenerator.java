@@ -24,8 +24,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class GatewayGenerator {
 
-    private static final Identifier GATEWAY = new Identifier(TaleOfKingdoms.MODID, "gateway/gateway");
-    private static final Identifier BARS = new Identifier(TaleOfKingdoms.MODID, "gateway/bars");
+    private static final Identifier GATEWAY = Identifier.of(TaleOfKingdoms.MODID, "gateway/gateway");
+    private static final Identifier BARS = Identifier.of(TaleOfKingdoms.MODID, "gateway/bars");
 
     public static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
         final Direction direction = Direction.random(random);

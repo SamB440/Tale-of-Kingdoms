@@ -9,7 +9,6 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -28,9 +27,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class HumanFarmerEntity extends VillagerEntity implements MultiSkinned {
 
     private static final List<Identifier> VALID_SKINS = List.of(
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/tok_farmer.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"),
-            new Identifier(TaleOfKingdoms.MODID, "textures/entity/updated_textures/tok_farmer_3.png")
+            Identifier.of(TaleOfKingdoms.MODID, "textures/entity/updated_textures/tok_farmer.png"),
+            Identifier.of(TaleOfKingdoms.MODID, "textures/entity/updated_textures/innkeeper.png"),
+            Identifier.of(TaleOfKingdoms.MODID, "textures/entity/updated_textures/tok_farmer_3.png")
     );
 
     private final Identifier skin;
@@ -44,8 +43,8 @@ public class HumanFarmerEntity extends VillagerEntity implements MultiSkinned {
 
     @Nullable
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-        EntityData data = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        EntityData data = super.initialize(world, difficulty, spawnReason, entityData);
         this.setVillagerData(this.getVillagerData().withProfession(VillagerProfession.FARMER));
         this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.WOODEN_HOE));
         return data;

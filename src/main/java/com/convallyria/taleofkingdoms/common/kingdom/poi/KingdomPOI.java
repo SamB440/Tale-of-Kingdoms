@@ -5,7 +5,6 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
-import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,7 +13,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
-public enum KingdomPOI implements EnumCodec.Values {
+public enum KingdomPOI {
     CITY_BUILDER_WELL_POI("CityBuilderWellPOI") {
         @Override
         public void compute(PlayerKingdom kingdom, ServerPlayerEntity player, StructureTemplate.StructureBlockInfo info) {
@@ -31,7 +30,7 @@ public enum KingdomPOI implements EnumCodec.Values {
             kingdom.getKingdomEntity(player.getWorld(), EntityTypes.CITYBUILDER).ifPresent(entity -> {
                 entity.requestTeleport(finalPos.getX(), finalPos.getY(), finalPos.getZ());
                 entity.setTarget(finalPos);
-                TaleOfKingdoms.LOGGER.info("Teleported city builder to " + finalPos);
+                TaleOfKingdoms.LOGGER.info("Teleported city builder to {}", finalPos);
             });
         }
     },
@@ -175,10 +174,5 @@ public enum KingdomPOI implements EnumCodec.Values {
             }
         }
         return Optional.empty();
-    }
-
-    @Override
-    public String getSerializedName() {
-        return this.name();
     }
 }

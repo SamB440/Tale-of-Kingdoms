@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.BuyItemPacket;
 import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
@@ -26,8 +27,8 @@ public class ShopBuyUtil {
             api.executeOnMain(() -> {
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
                 if (server == null) {
-                    api.getClientPacketHandler(Packets.BUY_ITEM)
-                            .handleOutgoingPacket(player, Registries.ITEM.getId(shopItem.getItem().asItem()).toString(), count, entity.getGUIType());
+                    api.getClientPacket(Packets.BUY_ITEM)
+                            .sendPacket(player, new BuyItemPacket(Registries.ITEM.getId(shopItem.getItem().asItem()).toString(), count, entity.getGUIType()));
                     return;
                 }
 

@@ -6,7 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.StructureBlock;
 import net.minecraft.entity.EntityType;
@@ -30,9 +30,7 @@ import java.util.Optional;
 public class GuildStructureProcessor extends StructureProcessor {
 
     public static final GuildStructureProcessor INSTANCE = new GuildStructureProcessor();
-    public static final Codec<GuildStructureProcessor> CODEC = Codec.unit(() -> {
-        return INSTANCE;
-    });
+    public static final MapCodec<GuildStructureProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
 
     private final List<SchematicOptions> options;
 
@@ -61,9 +59,9 @@ public class GuildStructureProcessor extends StructureProcessor {
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
             Vec3d spawnPos = currentBlockInfo.pos().toCenterPos();
-            final EntityType type = Registries.ENTITY_TYPE.getOrEmpty(new Identifier(TaleOfKingdoms.MODID, metadata)).orElse(null);
+            final EntityType type = Registries.ENTITY_TYPE.getOrEmpty(Identifier.of(TaleOfKingdoms.MODID, metadata)).orElse(null);
             if (type == null) {
-                TaleOfKingdoms.LOGGER.error("Unable to find entity " + metadata);
+                TaleOfKingdoms.LOGGER.error("Unable to find entity {}", metadata);
                 return air;
             }
 

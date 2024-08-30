@@ -12,6 +12,6 @@ public class TOKStructureKeys {
     public static final RegistryKey<Structure> REFICULE_VILLAGE = of("reficule_village");
 
     private static RegistryKey<Structure> of(String id) {
-        return RegistryKey.of(RegistryKeys.STRUCTURE, new Identifier(TaleOfKingdoms.MODID, id));
+        return RegistryKey.of(RegistryKeys.STRUCTURE, Identifier.of(TaleOfKingdoms.MODID, id));
     }
 }

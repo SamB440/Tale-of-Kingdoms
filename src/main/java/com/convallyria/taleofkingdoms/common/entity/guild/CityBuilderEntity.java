@@ -9,12 +9,12 @@ import com.convallyria.taleofkingdoms.common.kingdom.builds.BuildCosts;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.InventoryOwner;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -53,11 +53,11 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(MOVING_TO_LOCATION, false);
-        this.dataTracker.startTracking(STONE, 0);
-        this.dataTracker.startTracking(WOOD, 0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(MOVING_TO_LOCATION, false);
+        builder.add(STONE, 0);
+        builder.add(WOOD, 0);
     }
 
     private final FollowPlayerGoal followPlayerGoal = new FollowPlayerGoal(this, 0.75F, 5, 50);
@@ -204,13 +204,13 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     }
 
     private void openScreen(PlayerEntity player, @Nullable PlayerKingdom kingdom, ConquestInstance instance) {
-        final PacketHandler open = TaleOfKingdoms.getAPI().getPacketHandler(Packets.OPEN_CLIENT_SCREEN);
+        final PacketHandler<OpenScreenPacket> open = TaleOfKingdoms.getAPI().getServerPacket(Packets.OPEN_CLIENT_SCREEN);
         if (kingdom == null) {
-            open.handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_BEGIN, this.getId());
+            open.sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.CITY_BUILDER_BEGIN, this.getId()));
             return;
         }
 
-        open.handleOutgoingPacket(player, OutgoingOpenScreenPacketHandler.ScreenTypes.CITY_BUILDER_TIER, this.getId());
+        open.sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.CITY_BUILDER_TIER, this.getId()));
     }
 
     public boolean canAffordBuild(@Nullable PlayerKingdom kingdom, BuildCosts build) {
@@ -253,13 +253,13 @@ public class CityBuilderEntity extends TOKEntity implements InventoryOwner {
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.put("Inventory", this.inventory.toNbtList());
+        nbt.put("Inventory", this.inventory.toNbtList(this.getRegistryManager()));
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE));
+        this.inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE), this.getRegistryManager());
         this.getDataTracker().set(STONE, inventory.count(Items.COBBLESTONE));
         this.getDataTracker().set(WOOD, inventory.count(Items.OAK_LOG));
     }

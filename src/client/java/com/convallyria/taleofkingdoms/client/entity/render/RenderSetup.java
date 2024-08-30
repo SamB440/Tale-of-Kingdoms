@@ -75,6 +75,6 @@ public record RenderSetup(TaleOfKingdoms mod) {
     }
     
     public static Identifier identifier(String path) {
-        return new Identifier(TaleOfKingdoms.MODID, path);
+        return Identifier.of(TaleOfKingdoms.MODID, path);
     }
 }

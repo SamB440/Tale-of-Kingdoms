@@ -5,32 +5,28 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ShopEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ToggleSellGuiPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandler {
+public final class IncomingToggleSellGuiPacketHandler extends InServerPacketHandler<ToggleSellGuiPacket> {
 
     public IncomingToggleSellGuiPacketHandler() {
-        super(Packets.TOGGLE_SELL_GUI);
+        super(Packets.TOGGLE_SELL_GUI, ToggleSellGuiPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, ToggleSellGuiPacket packet) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        boolean close = attachedData.readBoolean();
-        ShopParser.GUI type = attachedData.readEnumConstant(ShopParser.GUI.class);
+        boolean close = packet.close();
+        ShopParser.GUI type = packet.type();
         context.taskQueue().execute(() -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
@@ -70,10 +66,5 @@ public final class IncomingToggleSellGuiPacketHandler extends ServerPacketHandle
                 }, 1);
             });
         });
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 }

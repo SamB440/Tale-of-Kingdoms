@@ -3,11 +3,10 @@ package com.convallyria.taleofkingdoms.common.kingdom.builds;
 import com.convallyria.taleofkingdoms.common.kingdom.KingdomTier;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import com.convallyria.taleofkingdoms.common.serialization.EnumCodec;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 
-public enum BuildCosts implements EnumCodec.Values {
+public enum BuildCosts {
     SMALL_HOUSE_1(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_SMALL_HOUSE_VARIANT_ONE, BlockRotation.COUNTERCLOCKWISE_90, KingdomPOI.TIER_ONE_SMALL_HOUSE_1, 192, 128),
     SMALL_HOUSE_2(Text.translatable("menu.taleofkingdoms.citybuilder.small_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_SMALL_HOUSE_VARIANT_TWO, BlockRotation.CLOCKWISE_180, KingdomPOI.TIER_ONE_SMALL_HOUSE_2, 192, 128),
     LARGE_HOUSE(Text.translatable("menu.taleofkingdoms.citybuilder.large_house"), KingdomTier.TIER_ONE, Schematic.TIER_1_LARGE_HOUSE, BlockRotation.COUNTERCLOCKWISE_90, KingdomPOI.TIER_ONE_LARGE_HOUSE, 192, 320),
@@ -76,10 +75,5 @@ public enum BuildCosts implements EnumCodec.Values {
 
     public int getStone() {
         return stone;
-    }
-
-    @Override
-    public String getSerializedName() {
-        return name();
     }
 }

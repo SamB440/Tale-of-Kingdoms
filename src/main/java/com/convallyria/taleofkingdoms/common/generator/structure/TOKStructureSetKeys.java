@@ -12,6 +12,6 @@ public class TOKStructureSetKeys {
     public static final RegistryKey<StructureSet> GATEWAYS = of("gateways");
 
     private static RegistryKey<StructureSet> of(String id) {
-        return RegistryKey.of(RegistryKeys.STRUCTURE_SET, new Identifier(TaleOfKingdoms.MODID, id));
+        return RegistryKey.of(RegistryKeys.STRUCTURE_SET, Identifier.of(TaleOfKingdoms.MODID, id));
     }
 }

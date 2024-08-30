@@ -71,6 +71,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.argument.TextArgumentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.structure.processor.StructureProcessorType;
@@ -109,13 +110,13 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final BlockEntityType<SellBlockEntity> SELL_BLOCK_ENTITY;
 
     // a public identifier for multiple parts of our bigger chest
-    public static final Identifier SELL_BLOCK_IDENTIFIER = new Identifier(MODID, "sell_block");
+    public static final Identifier SELL_BLOCK_IDENTIFIER = Identifier.of(MODID, "sell_block");
 
     static {
         //We use registerSimple here because our Entity is not an ExtendedScreenHandlerFactory
         //but a NamedScreenHandlerFactory.
         //In a later Tutorial you will see what ExtendedScreenHandlerFactory can do!
-        SELL_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER, new Identifier(TaleOfKingdoms.MODID, "sell_screen_handler"), new ScreenHandlerType<>(SellScreenHandler::new, FeatureFlags.VANILLA_FEATURES));
+        SELL_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER, Identifier.of(TaleOfKingdoms.MODID, "sell_screen_handler"), new ScreenHandlerType<>(SellScreenHandler::new, FeatureFlags.VANILLA_FEATURES));
 
         SELL_BLOCK = Registry.register(Registries.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
 
@@ -250,14 +251,14 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     public void registerFeatures() {
-        Registry.register(Registries.STRUCTURE_PIECE, new Identifier(MODID, "bandit_camp_piece"), TOKStructures.BANDIT_CAMP);
-        Registry.register(Registries.STRUCTURE_PIECE, new Identifier(MODID, "gateway_piece"), TOKStructures.GATEWAY);
-        Registry.register(Registries.STRUCTURE_PIECE, new Identifier(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
+        Registry.register(Registries.STRUCTURE_PIECE, Identifier.of(MODID, "bandit_camp_piece"), TOKStructures.BANDIT_CAMP);
+        Registry.register(Registries.STRUCTURE_PIECE, Identifier.of(MODID, "gateway_piece"), TOKStructures.GATEWAY);
+        Registry.register(Registries.STRUCTURE_PIECE, Identifier.of(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
     }
 
-    public static Text parse(StringReader stringReader) throws CommandSyntaxException {
+    public static Text parse(StringReader stringReader, RegistryWrapper.WrapperLookup registries) throws CommandSyntaxException {
         try {
-            Text text = Text.Serialization.fromJson(stringReader.getString());
+            Text text = Text.Serialization.fromJson(stringReader.getString(), registries);
             if (text == null) {
                 throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.createWithContext(stringReader, "empty");
             } else {

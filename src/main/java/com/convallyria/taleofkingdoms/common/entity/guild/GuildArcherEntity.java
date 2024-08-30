@@ -1,6 +1,5 @@
 package com.convallyria.taleofkingdoms.common.entity.guild;
 
-import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.States;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
@@ -8,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.CrossbowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
+import com.convallyria.taleofkingdoms.common.translation.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.CrossbowUser;
@@ -25,13 +25,11 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -95,8 +93,8 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityTag) {
-        EntityData entityReturnData = super.initialize(world, difficulty, spawnReason, entityData, entityTag);
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
+        EntityData entityReturnData = super.initialize(world, difficulty, spawnReason, entityData);
         int value = ThreadLocalRandom.current().nextInt(2);
         this.setStackInHand(Hand.MAIN_HAND, new ItemStack(value == 1 ? Items.BOW : Items.CROSSBOW));
         if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.BOW) {
@@ -151,8 +149,9 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
 
     @Override
     public void shootAt(LivingEntity target, float pullProgress) {
-        ItemStack itemStack = this.getProjectileType(this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW)));
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress);
+        final ItemStack shotFrom = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
+        ItemStack itemStack = this.getProjectileType(shotFrom);
+        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress, shotFrom);
         double d = target.getX() - this.getX();
         double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - this.getZ();
@@ -162,13 +161,8 @@ public class GuildArcherEntity extends TOKEntity implements CrossbowUser, Ranged
         this.getWorld().spawnEntity(persistentProjectileEntity);
     }
 
-    @Override
-    public void shoot(LivingEntity target, ItemStack crossbow, ProjectileEntity projectile, float multiShotSpray) {
-        this.shoot(this, target, projectile, multiShotSpray, 1.6F);
-    }
-
-    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier) {
-        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier);
+    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier, ItemStack shotFrom) {
+        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier, shotFrom.isEmpty() ? null : shotFrom);
     }
 
     @Override

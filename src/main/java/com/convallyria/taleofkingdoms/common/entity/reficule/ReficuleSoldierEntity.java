@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.TeleportTowardsPlayerGoal;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -15,6 +16,9 @@ import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +28,9 @@ public class ReficuleSoldierEntity extends TOKEntity implements Monster, Telepor
     public ReficuleSoldierEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
         super(entityType, world);
         ItemStack ironSword = new ItemStack(Items.IRON_SWORD);
-        ironSword.addEnchantment(Enchantments.MENDING, 1); // Want them to look fancy :)
+        DynamicRegistryManager dynamicRegistryManager = world.getRegistryManager();
+        RegistryEntry<Enchantment> enchant = dynamicRegistryManager.get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.MENDING).orElseThrow();
+        ironSword.addEnchantment(enchant, 1); // Want them to look fancy :)
         this.setStackInHand(Hand.MAIN_HAND, ironSword);
     }
 

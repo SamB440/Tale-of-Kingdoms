@@ -5,6 +5,8 @@ import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarWidget;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.ForemanEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryForemanEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ForemanBuyWorkerPacket;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ForemanCollectPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
@@ -76,8 +78,8 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(
             Components.button(Text.translatable("menu.taleofkingdoms.foreman.collect"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.FOREMAN_COLLECT)
-                            .handleOutgoingPacket(player, entity.getId());
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.FOREMAN_COLLECT)
+                            .sendPacket(player, new ForemanCollectPacket(entity.getId()));
                     return;
                 }
 
@@ -90,8 +92,8 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         rootComponent.child(
             Components.button(Text.translatable("menu.taleofkingdoms.foreman.buy_worker"), c -> {
                 if (MinecraftClient.getInstance().getServer() == null) {
-                    TaleOfKingdomsClient.getAPI().getClientPacketHandler(Packets.FOREMAN_BUY_WORKER)
-                            .handleOutgoingPacket(player, entity.getId());
+                    TaleOfKingdomsClient.getAPI().getClientPacket(Packets.FOREMAN_BUY_WORKER)
+                            .sendPacket(player, new ForemanBuyWorkerPacket(entity.getId()));
                     return;
                 }
 

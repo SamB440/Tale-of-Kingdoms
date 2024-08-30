@@ -5,32 +5,27 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.guild.BankerEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
+import com.convallyria.taleofkingdoms.common.packet.c2s.BankerInteractPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import com.convallyria.taleofkingdoms.server.packet.ServerPacketHandler;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public final class IncomingBankerInteractPacketHandler extends ServerPacketHandler {
+public final class IncomingBankerInteractPacketHandler extends InServerPacketHandler<BankerInteractPacket> {
 
     public IncomingBankerInteractPacketHandler() {
-        super(Packets.BANKER_INTERACT);
+        super(Packets.BANKER_INTERACT, BankerInteractPacket.CODEC);
     }
 
     @Override
-    public void handleIncomingPacket(PacketContext context, PacketByteBuf attachedData) {
+    public void handleIncomingPacket(PacketContext context, BankerInteractPacket packet) {
         ServerPlayerEntity player = (ServerPlayerEntity) context.player();
         UUID uuid = player.getUuid();
-        BankerMethod method = attachedData.readEnumConstant(BankerMethod.class);
-        int coins = attachedData.readInt();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
+            final int coins = packet.coins();
             if (!instance.isInGuild(player)) {
                 reject(player, "Not in guild.");
                 return;
@@ -49,7 +44,7 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
                 return;
             }
 
-            if (method == BankerMethod.DEPOSIT) {
+            if (packet.method() == BankerMethod.DEPOSIT) {
                 if (guildPlayer.getCoins() < coins) {
                     reject(player, "Not enough coins.");
                     return;
@@ -66,10 +61,5 @@ public final class IncomingBankerInteractPacketHandler extends ServerPacketHandl
             }
             ServerConquestInstance.sync(player, instance);
         }));
-    }
-
-    @Override
-    public void handleOutgoingPacket(@NotNull PlayerEntity player, @Nullable Object... data) {
-        throw new IllegalArgumentException("Not supported");
     }
 }

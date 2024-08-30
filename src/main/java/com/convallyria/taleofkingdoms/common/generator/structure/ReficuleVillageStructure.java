@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.generator.structure;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.structure.StructurePiecesCollector;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class ReficuleVillageStructure extends Structure {
 
-    public static final Codec<ReficuleVillageStructure> CODEC = createCodec(ReficuleVillageStructure::new);
+    public static final MapCodec<ReficuleVillageStructure> CODEC = createCodec(ReficuleVillageStructure::new);
 
     public ReficuleVillageStructure(Config config) {
         super(config);
