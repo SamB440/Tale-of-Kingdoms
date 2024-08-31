@@ -22,7 +22,7 @@ public final class IncomingInstanceSyncPacketHandler extends InClientPacketHandl
             MinecraftClient client = (MinecraftClient) context.taskQueue();
             if (TaleOfKingdoms.CONFIG.mainConfig.developerMode) {
                 final String text = "Received sync, " + instance;
-                System.out.println(text);
+                TaleOfKingdoms.LOGGER.info(text);
                 if (client.player != null) client.player.sendMessage(Text.literal(text));
             }
 

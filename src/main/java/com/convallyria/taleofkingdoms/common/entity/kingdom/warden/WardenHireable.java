@@ -90,12 +90,9 @@ public abstract class WardenHireable extends TOKEntity {
 
     @Override
     public boolean onKilledOther(ServerWorld world, LivingEntity other) {
-        System.out.println("killed another entity!");
         this.internalTotalExperience++;
         this.dataTracker.set(TOTAL_EXPERIENCE, this.internalTotalExperience);
-        System.out.println("total exp: " + internalTotalExperience);
         if (this.tryLevelUp()) {
-            System.out.println("level up!");
             this.updateLevelledAttributes();
             this.playLevelUpEffects();
             this.setHealth(this.getMaxHealth());
