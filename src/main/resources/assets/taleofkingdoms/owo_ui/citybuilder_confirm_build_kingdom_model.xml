@@ -5,7 +5,23 @@
             <children>
                 <flow-layout id="inner" direction="horizontal">
                     <children>
+                        <label id="build-confirm">
+                            <text translate="true">menu.taleofkingdoms.citybuilder.build_confirm</text>
+                            <color>white</color>
+                            <positioning type="relative">50,45</positioning>
+                        </label>
 
+                        <label id="destroy-area">
+                            <text translate="true">menu.taleofkingdoms.citybuilder.destroy</text>
+                            <color>red</color>
+                            <positioning type="relative">50,50</positioning>
+                        </label>
+
+                        <label id="destroy-items">
+                            <text translate="true">menu.taleofkingdoms.citybuilder.destroy_items</text>
+                            <color>red</color>
+                            <positioning type="relative">50,55</positioning>
+                        </label>
                     </children>
 
                     <sizing>

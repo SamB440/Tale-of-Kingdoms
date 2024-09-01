@@ -15,11 +15,7 @@ import com.convallyria.taleofkingdoms.managers.SoundManager;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.core.Color;
-import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.Positioning;
-import io.wispforest.owo.ui.core.Surface;
-import io.wispforest.owo.ui.core.VerticalAlignment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.integrated.IntegratedServer;
@@ -45,28 +41,6 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        rootComponent
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .horizontalAlignment(HorizontalAlignment.CENTER)
-                .verticalAlignment(VerticalAlignment.CENTER);
-
-        rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.build_confirm"))
-                        .positioning(Positioning.relative(50, 45))
-        );
-
-        rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy"))
-                        .color(Color.RED)
-                        .positioning(Positioning.relative(50, 50))
-        );
-
-        rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy_items"))
-                        .color(Color.RED)
-                        .positioning(Positioning.relative(50, 55))
-        );
-
         rootComponent.child(
             Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.build"), c -> {
                 // Close current screen, calculate paste position, and add their kingdom
