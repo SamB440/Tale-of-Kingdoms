@@ -9,6 +9,8 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -98,6 +100,11 @@ public abstract class TOKEntity extends PathAwareEntity implements MultiSkinned 
 
     @Override
     public void checkDespawn() { }
+
+    @Override
+    public ItemStack getProjectileType(ItemStack stack) {
+        return new ItemStack(Items.ARROW);
+    }
 
     @Override
     public Optional<Identifier> getSkin() {
