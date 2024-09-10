@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public abstract class InOutServerPacketHandler<T extends CustomPayload> extends PacketHandler<T> {
 
@@ -28,6 +29,6 @@ public abstract class InOutServerPacketHandler<T extends CustomPayload> extends 
 
     @Override
     public void sendPacket(PlayerEntity player, T packet) {
-        throw new UnsupportedOperationException();
+        ServerPlayNetworking.send((ServerPlayerEntity) player, packet);
     }
 }
