@@ -59,7 +59,7 @@ public class InnkeeperScreen extends ScreenTOK {
                 }
 
                 api.executeOnServerEnvironment((s) -> {
-                    server.getOverworld().setTimeOfDay(1000);
+                    adjustTime(server, 1000);
                     ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
                     if (serverPlayerEntity == null) return;
                     serverPlayerEntity.requestTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
@@ -91,13 +91,19 @@ public class InnkeeperScreen extends ScreenTOK {
                 return;
             }
 
-            server.getOverworld().setTimeOfDay(13000);
+            adjustTime(server, 13000);
             guildPlayer.setCoins(guildPlayer.getCoins() - 10);
         }).dimensions(this.width / 2 - 75, this.height / 4 + 75, 150, 20).build());
 
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.generic.exit"), widget -> {
             this.close();
         }).dimensions(this.width / 2 - 75, this.height / 4 + 100, 150, 20).build());
+    }
+
+    private void adjustTime(MinecraftServer server, long targetTime) {
+        long currentTime = server.getOverworld().getTimeOfDay() % 24000;
+        long newTime = (currentTime < targetTime) ? targetTime : 24000 + targetTime;
+        server.getOverworld().setTimeOfDay(server.getOverworld().getTimeOfDay() + (newTime - currentTime));
     }
 
     @Override
