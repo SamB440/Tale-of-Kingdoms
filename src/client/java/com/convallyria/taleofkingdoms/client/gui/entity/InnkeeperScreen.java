@@ -123,9 +123,4 @@ public class InnkeeperScreen extends ScreenTOK {
     public boolean shouldCloseOnEsc() {
         return true;
     }
-
-    @Override
-    public void close() {
-        super.close();
-    }
 }
