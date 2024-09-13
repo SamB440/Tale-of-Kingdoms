@@ -117,11 +117,6 @@ public class GuildMasterScreen extends ScreenTOK {
         final ButtonWidget fixWidget = this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.guild_master.fix_guild"), widget -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.executeOnMain(() -> {
-                if (instance.isUnderAttack()) {
-                    Translations.GUILDMASTER_UNDER_ATTACK.send(player);
-                    return;
-                }
-
                 if (stack == null || guildPlayer.getCoins() < 3000) {
                     Translations.GUILDMASTER_NOT_ENOUGH_RESOURCES.send(player);
                     return;

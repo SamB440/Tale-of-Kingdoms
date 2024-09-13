@@ -15,7 +15,6 @@ public enum Translations {
     GUILDMASTER_CONTRACT_CANCEL_AWAIT("entity_type.taleofkingdoms.guildmaster.contract.cancel.await"),
     GUILDMASTER_WELCOME("entity_type.taleofkingdoms.guildmaster.welcome"),
     GUILDMASTER_NOHUNTER("entity_type.taleofkingdoms.guildmaster.no_hunter"),
-    GUILDMASTER_UNDER_ATTACK("entity_type.taleofkingdoms.guildmaster.guild_under_attack"),
     GUILDMASTER_NOT_ENOUGH_RESOURCES("entity_type.taleofkingdoms.guildmaster.not_enough_resources"),
     GUILDMASTER_GOODHUNTING("entity_type.taleofkingdoms.guildmaster.good_hunting"),
     GUILDMASTER_HELP("entity_type.taleofkingdoms.guildmaster.help"),
