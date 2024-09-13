@@ -117,8 +117,16 @@ public class GuildMasterScreen extends ScreenTOK {
         final ButtonWidget fixWidget = this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.guild_master.fix_guild"), widget -> {
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             api.executeOnMain(() -> {
-                if (instance.isUnderAttack() || guildPlayer.getCoins() < 3000) return;
-                if (stack == null) return;
+                if (instance.isUnderAttack()) {
+                    Translations.GUILDMASTER_UNDER_ATTACK.send(player);
+                    return;
+                }
+
+                if (stack == null || guildPlayer.getCoins() < 3000) {
+                    Translations.GUILDMASTER_NOT_ENOUGH_RESOURCES.send(player);
+                    return;
+                }
+
                 if (MinecraftClient.getInstance().getServer() == null) {
                     ((TaleOfKingdomsClientAPI) api).getClientPacket(Packets.FIX_GUILD)
                             .sendPacket(player, new FixGuildPacket());
@@ -170,7 +178,7 @@ public class GuildMasterScreen extends ScreenTOK {
 
     @Override
     public boolean shouldCloseOnEsc() {
-        return false;
+        return true;
     }
 
     private void makeContractSignButton() {
@@ -225,7 +233,7 @@ public class GuildMasterScreen extends ScreenTOK {
         this.hireHuntersButton = this.addDrawableChild(ButtonWidget.builder(hunterText, widget -> {
             if (guildPlayer.getCoins() >= 1500) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-                Translations.SERVE.send(player);
+                Translations.HUNTER_SERVE.send(player);
                 if (MinecraftClient.getInstance().getServer() == null) {
                     api.getClientPacket(Packets.HIRE_HUNTER)
                             .sendPacket(player, new HireHunterPacket(false));
