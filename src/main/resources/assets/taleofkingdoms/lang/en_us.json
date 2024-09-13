@@ -50,7 +50,7 @@
     "menu.taleofkingdoms.innkeeper.wait": "Wait for night time.",
     "menu.taleofkingdoms.innkeeper.not_enough_coins": "House Keeper: You don't have enough coins to stay here!",
     "menu.taleofkingdoms.innkeeper.rest_success": "House Keeper: Sleep well!",
-    "menu.taleofkingdoms.innkeeper.wait_success": "House Keeper: Oh, how the time flies!",
+    "menu.taleofkingdoms.innkeeper.wait_success": "House Keeper: Oh, how the time flies! You're a great conversation.",
     "menu.taleofkingdoms.stock_market.stock_value": "Stock Market Value",
     "menu.taleofkingdoms.foreman.total_money": "Foreman Menu - Total Money: %d Gold Coins",
     "menu.taleofkingdoms.foreman.resources": "Resources",

@@ -48,10 +48,10 @@ public class InnkeeperScreen extends ScreenTOK {
 
                 final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUuid());
                 if (guildPlayer.getCoins() < 10) {
-                    player.sendMessage(Text.translatable("menu.taleofkingdoms.innkeeper.not_enough_coins"), false);
+                    Translations.INNKEEPER_NOT_ENOUGH_COINS.send(player);
                     return;
                 } else {
-                    player.sendMessage(Text.translatable("menu.taleofkingdoms.innkeeper.rest_success"), false);
+                    Translations.INNKEEPER_REST_SUCCESS.send(player);
                 }
 
                 MinecraftServer server = MinecraftClient.getInstance().getServer();
@@ -85,10 +85,10 @@ public class InnkeeperScreen extends ScreenTOK {
 
             final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUuid());
             if (guildPlayer.getCoins() < 10) {
-                player.sendMessage(Text.translatable("menu.taleofkingdoms.innkeeper.not_enough_coins"), false);
+                Translations.INNKEEPER_NOT_ENOUGH_COINS.send(player);
                 return;
             } else {
-                player.sendMessage(Text.translatable("menu.taleofkingdoms.innkeeper.wait_success"), false);
+                Translations.INNKEEPER_WAIT_SUCCESS.send(player);
             }
 
             if (server == null) {
