@@ -42,6 +42,7 @@ public enum Translations {
     BANK_INPUT("entity_type.taleofkingdoms.bank.input"),
     BANK_ZERO("entity_type.taleofkingdoms.bank.zero"),
     BANK_NO_SPEND("entity_type.taleofkingdoms.bank.no_spend"),
+    BANK_THERE("entity_type.taleofkingdoms.bank.there"),
     GUILDMEMBER_START("entity_type.taleofkingdoms.guildmember.first"),
     GUILDMEMBER_FIGHTER("entity_type.taleofkingdoms.guildmember.fighter"),
     GUILDMEMBER_START_FIGHT("entity_type.taleofkingdoms.guildmember.start_fight"),
