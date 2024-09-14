@@ -39,7 +39,7 @@
 
                         <button id="deposit-button">
                             <text translate="true">menu.taleofkingdoms.banker.deposit</text>
-                            <positioning type="relative">50,50</positioning>
+                            <positioning type="relative">50,30</positioning>
                             <sizing>
                                 <horizontal method="fixed">150</horizontal>
                                 <vertical method="fixed">20</vertical>
@@ -48,33 +48,73 @@
 
                         <button id="withdraw-button">
                             <text translate="true">menu.taleofkingdoms.banker.withdraw</text>
-                            <positioning type="relative">50,60</positioning>
+                            <positioning type="relative">50,40</positioning>
                             <sizing>
                                 <horizontal method="fixed">150</horizontal>
                                 <vertical method="fixed">20</vertical>
                             </sizing>
                         </button>
-                        <button id="percent-20-button">
+
+                        <label>
+                            <text>Deposit</text>
+                            <color>black</color>
+                            <positioning type="relative">15,70</positioning>
+                        </label>
+
+                        <button id="percent-20-button-you">
                             <text>20%</text>
-                            <positioning type="relative">35,30</positioning>
+                            <positioning type="relative">35,70</positioning>
                             <sizing>
                                 <horizontal method="fixed">45</horizontal>
                                 <vertical method="fixed">20</vertical>
                             </sizing>
                         </button>
 
-                        <button id="percent-50-button">
+                        <button id="percent-50-button-you">
                             <text>50%</text>
-                            <positioning type="relative">50,30</positioning>
+                            <positioning type="relative">50,70</positioning>
                             <sizing>
                                 <horizontal method="fixed">45</horizontal>
                                 <vertical method="fixed">20</vertical>
                             </sizing>
                         </button>
 
-                        <button id="percent-100-button">
+                        <button id="percent-100-button-you">
                             <text>100%</text>
-                            <positioning type="relative">65,30</positioning>
+                            <positioning type="relative">65,70</positioning>
+                            <sizing>
+                                <horizontal method="fixed">45</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <label>
+                            <text>Withdraw</text>
+                            <color>black</color>
+                            <positioning type="relative">15,80</positioning>
+                        </label>
+
+                        <button id="percent-20-button-bank">
+                            <text>20%</text>
+                            <positioning type="relative">35,80</positioning>
+                            <sizing>
+                                <horizontal method="fixed">45</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="percent-50-button-bank">
+                            <text>50%</text>
+                            <positioning type="relative">50,80</positioning>
+                            <sizing>
+                                <horizontal method="fixed">45</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="percent-100-button-bank">
+                            <text>100%</text>
+                            <positioning type="relative">65,80</positioning>
                             <sizing>
                                 <horizontal method="fixed">45</horizontal>
                                 <vertical method="fixed">20</vertical>
