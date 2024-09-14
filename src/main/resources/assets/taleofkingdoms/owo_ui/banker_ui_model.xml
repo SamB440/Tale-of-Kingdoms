@@ -10,19 +10,19 @@
 
                         <label>
                             <text>Bank Menu</text>
-                            <color>white</color>
+                            <color>black</color>
                             <positioning type="relative">50,5</positioning>
                         </label>
 
                         <label id="total-money">
                             <text translate="true">menu.taleofkingdoms.banker.total_money</text>
-                            <color>white</color>
+                            <color>black</color>
                             <positioning type="relative">50,8</positioning>
                         </label>
 
                         <label id="total-money-bank">
                             <text translate="true">menu.taleofkingdoms.banker.total_money_bank</text>
-                            <color>white</color>
+                            <color>black</color>
                             <positioning type="relative">50,12</positioning>
                         </label>
 
@@ -54,10 +54,36 @@
                                 <vertical method="fixed">20</vertical>
                             </sizing>
                         </button>
+                        <button id="percent-20-button">
+                            <text>20%</text>
+                            <positioning type="relative">35,30</positioning>
+                            <sizing>
+                                <horizontal method="fixed">45</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="percent-50-button">
+                            <text>50%</text>
+                            <positioning type="relative">50,30</positioning>
+                            <sizing>
+                                <horizontal method="fixed">45</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="percent-100-button">
+                            <text>100%</text>
+                            <positioning type="relative">65,30</positioning>
+                            <sizing>
+                                <horizontal method="fixed">45</horizontal>
+                                <vertical method="fixed">20</vertical>
+                            </sizing>
+                        </button>
 
                         <button id="exit-button">
                             <text translate="true">menu.taleofkingdoms.generic.exit</text>
-                            <positioning type="relative">50,85</positioning>
+                            <positioning type="relative">50,125</positioning>
                             <sizing>
                                 <horizontal method="fixed">150</horizontal>
                                 <vertical method="fixed">20</vertical>
