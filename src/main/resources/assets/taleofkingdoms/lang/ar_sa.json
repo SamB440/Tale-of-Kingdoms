@@ -1,8 +1,8 @@
 {
-    "text.autoconfig.taleofkingdoms.title": "Tale of Kingdoms Configuration",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "Show start kingdom GUI",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "Show continue conquest GUI",
-    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "Gateway spawn rate",
+    "text.autoconfig.taleofkingdoms.title": "تكوين قصة الممالك",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showStartKingdomGUI": "إظهار واجهة المستخدم لبدء المملكة",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.showContinueConquestGUI": "إظهار الاستمرار في واجهة الغزو",
+    "text.autoconfig.taleofkingdoms.option.mainConfig.gateWaySpawnRate": "معدل نشر البوابة",
     "text.autoconfig.taleofkingdoms.option.mainConfig.reficuleVillageSpawnRate": "Reficule Village spawn rate",
     "text.autoconfig.taleofkingdoms.option.mainConfig.banditCampSpawnRate": "Bandit Camp spawn rate",
     "text.autoconfig.taleofkingdoms.option.mainConfig.alwaysShowUpdatesGUI": "Always show updates GUI",
