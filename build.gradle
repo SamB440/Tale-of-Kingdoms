@@ -107,6 +107,10 @@ processResources {
         expand "version": project.version
     }
 
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand "version": project.version
+    }
+
     from("CHANGELOG.md") {
         include()
     }

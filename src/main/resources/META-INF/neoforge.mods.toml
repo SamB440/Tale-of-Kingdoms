@@ -1,0 +1,54 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+issueTrackerURL="https://github.com/SamB440/tale-of-kingdoms/issues"
+license = "GPL-3.0"
+
+[properties]
+"connector:placeholder"=true
+
+[[mods]]
+modId = "taleofkingdoms"
+version = "${version}"
+displayName = "Tale of Kingdoms: A new Conquest"
+authors = "SamB440"
+credits = "Marackai, Aksel0206, PyroPyxel, Sheepguard, michaelb229, Krol05, BeingAmazing(Ben)"
+description = '''
+This mod is in alpha. Use at your own risk!
+
+The Tale of Kingdoms mod, revived.
+
+Enter a dangerous realm of knights and honour, fight your way through the hordes of evil and forge your very own kingdom under your reign. Begin your adventure. Prove to the Guildmaster that you are worthy. Be the hero you were born for.
+'''
+logoFile = "assets/taleofkingdoms/logo.png"
+
+[[dependencies.taleofkingdoms]]
+modId="connector"
+type = "required"
+mandatory=true
+versionRange="*"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.taleofkingdoms]]
+modId = "owo"
+type = "required"
+versionRange = "[0.12.10,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.taleofkingdoms]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.taleofkingdoms]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "BOTH"
+
+[[mixins]]
+config = "taleofkingdoms.mixins.json"
