@@ -11,12 +11,7 @@
     The adventure RPG mod
     <br/>
     <br/>
-    <a href="#getting-started"><strong>Explore the docs »</strong></a>
-    <br/>
-    <br/>
-    <a href="/issues/new">Report Bug</a>
-    .
-    <a href="/issues/new">Request Feature</a>
+    <a href="/issues/new">Report Bug or Feature Request</a>
   </p>
 
 ![Build](https://img.shields.io/github/actions/workflow/status/SamB440/Tale-of-Kingdoms/build.yml?branch=master)
@@ -25,6 +20,8 @@
 ![Issues](https://img.shields.io/github/issues/SamB440/Tale-of-Kingdoms) 
 ![License](https://img.shields.io/github/license/SamB440/Tale-of-Kingdoms)
 [![Crowdin](https://badges.crowdin.net/tale-of-kingdoms/localized.svg)](https://crowdin.com/project/tale-of-kingdoms)
+
+**Requires [Connector](https://modrinth.com/mod/connector) and [FFAPI](https://modrinth.com/mod/forgified-fabric-api) on NeoForge.**
 </div>
 
 ## Table Of Contents
@@ -44,7 +41,6 @@
 * [Acknowledgements](#acknowledgements)
 * [Links](#links)
 * [FAQ](#faq)
-* [Copyright](#copyright)
 
 ## About The Project
 
@@ -58,15 +54,15 @@ Please note that this mod is a complete recode unlike previous Tale of Kingdoms 
 
 ## Getting Started
 
-Tale of Kingdoms builds on JDK 17 and uses Gradle to manage dependencies.
+Tale of Kingdoms builds on JDK 21 and uses Gradle to manage dependencies.
 
 ### Prerequisites
 
-You just need Java 17. If you don't have it:
+You just need Java 21. If you don't have it:
 
 Latest from https://adoptium.net, or;
 ```sh
-sudo apt install adoptopenjdk-17-hotspot
+sudo apt install adoptopenjdk-21-hotspot
 ```
 
 ### Installation
@@ -153,7 +149,7 @@ See the [open issues](/issues) for a list of proposed features (and known issues
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Any contributions you make are **greatly appreciated**.
 * If you have suggestions for adding or removing projects, feel free to [open an issue](/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
 * Please make sure you check your spelling and grammar.
 * Create individual PR for each suggestion.
@@ -168,8 +164,11 @@ Contributions are what make the open source community such an amazing place to b
 5. Open a Pull Request
 
 ## License
+Code contributions under GNU GPL v3, otherwise All Rights Reserved (C) Convallyria. Other files and/or contributions are under their own license.
 
-Distributed under the GNU GPL v3 License. See [LICENSE](LICENSE) for more information.
+Music is All Rights Reserved by the author(s) and is subject to the terms made by the author(s).
+
+See [LICENSE](LICENSE) for more information on the GNU GPL v3 license.
 
 ## Authors
 
@@ -190,8 +189,6 @@ Website: https://www.convallyria.com
 
 Discord: https://discord.gg/fh62mxU
 
-Server (Coming soon): beta.islandearth.net
-
 ## FAQ
 Q: Who is working on it? 
 A: There are only a few people working on this. As such, this is going to take quite a while! Contributions are extremely welcome.
@@ -199,16 +196,11 @@ A: There are only a few people working on this. As such, this is going to take q
 Q: How can I help? 
 A: To see what needs help with, check out the open issues. Clone the repository and make a merge request.
 
-Q: Will you be adding more to the mod? 
+Q: Will you be adding more to the mod than the original version? 
 A: Yes, we will be adding more to the mod.
 
 Q: Where can I donate? 
 A: Thanks for the consideration. You can donate at my ko-fi page: https://ko-fi.com/samb440
 
 Q: What versions will it be for? 
-A: As only a few people are working on it, only 1.16+ and Fabric will be supported.
-
-## Copyright
-Code is GNU GPL v3 unless otherwise specified in header of class file.
-
-All other content is subject to their own licence. Builds are All Rights Reserved by Convallyria. Music is All Rights Reserved by the author(s) and is subject to the terms made by the author(s).
+A: Only 1.21.1 is supported at this time.
