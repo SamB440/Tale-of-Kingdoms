@@ -16,12 +16,12 @@
     "Sheepguard",
     "michaelb229",
     "Krol05",
-    "BeingAmazing(Ben)#6423"
+    "BeingAmazing(Ben)"
   ],
   "contact": {
     "homepage": "https://www.convallyria.com",
-    "sources": "https://gitlab.com/SamB440/tale-of-kingdoms",
-    "issues": "https://gitlab.com/SamB440/tale-of-kingdoms/issues"
+    "sources": "https://github.com/SamB440/tale-of-kingdoms",
+    "issues": "https://github.com/SamB440/tale-of-kingdoms/issues"
   },
   "license": "Code contributions under GNU GPL v3, otherwise All Rights Reserved (C) Convallyria. Other files and/or contributions are under their own license. See README's for more info.",
 
