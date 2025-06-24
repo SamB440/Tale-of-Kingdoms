@@ -14,6 +14,6 @@ public record ForemanCollectPacket(int entityId) implements CustomPayload {
 
     @Override
     public Id<? extends CustomPayload> getId() {
-        return Packets.FOREMAN_BUY_WORKER;
+        return Packets.FOREMAN_COLLECT;
     }
 }
