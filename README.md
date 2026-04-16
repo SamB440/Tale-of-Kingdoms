@@ -31,7 +31,7 @@ Q: Where can I donate?
 A: Currently you cannot donate simply because I have not set anything up. However, in the future you will be able to.
 
 Q: What versions will it be for? 
-A: As only a few people are working on it, only 1.16+ and Fabric will be supported.
+A: As only a few people are working on it, only 1.16+ Forge and Fabric will be supported.
 
 Compiling
 =======
