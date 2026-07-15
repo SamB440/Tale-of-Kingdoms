@@ -1,9 +1,9 @@
 package com.convallyria.taleofkingdoms.datagen.worldgen;
 
 import com.convallyria.taleofkingdoms.common.generator.structure.TOKStructures;
-import net.minecraft.registry.Registerable;
-import net.minecraft.structure.StructureSet;
-import net.minecraft.world.gen.structure.Structure;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 public class TaleOfKingdomsModWorldGenBootstrap {
     private TaleOfKingdomsModWorldGenBootstrap() {
@@ -16,7 +16,7 @@ public class TaleOfKingdomsModWorldGenBootstrap {
      * See also <a href="https://minecraft.fandom.com/wiki/Custom_structure#Configured_Structure_Feature">Configured Structure Feature</a>
      * on the Minecraft Wiki and the <a href="https://misode.github.io/guides/adding-custom-structures/#the-structure">1.19 gist</a>.
      */
-    public static void structures(Registerable<Structure> registry) {
+    public static void structures(BootstrapContext<Structure> registry) {
         TOKStructures.registerStructureFeatures(registry);
     }
 
@@ -26,7 +26,7 @@ public class TaleOfKingdomsModWorldGenBootstrap {
      * See also <a href="https://minecraft.fandom.com/wiki/Custom_structure#Structure_Set">Structure Set</a>
      * on the Minecraft Wiki and the <a href="https://misode.github.io/guides/adding-custom-structures/#the-structure-set">1.19 gist</a>.
      */
-    public static void structureSets(Registerable<StructureSet> registry) {
+    public static void structureSets(BootstrapContext<StructureSet> registry) {
         // TOKStructures.registerStructureSets(registry);
     }
 

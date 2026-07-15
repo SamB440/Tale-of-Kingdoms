@@ -1,19 +1,19 @@
 package com.convallyria.taleofkingdoms.common.packet.both;
 
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record SignContractPacket(boolean signed) implements CustomPayload {
+public record SignContractPacket(boolean signed) implements CustomPacketPayload {
 
-    public static final PacketCodec<RegistryByteBuf, SignContractPacket> CODEC = PacketCodec.tuple(
-            PacketCodecs.BOOL, SignContractPacket::signed,
+    public static final StreamCodec<RegistryFriendlyByteBuf, SignContractPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL, SignContractPacket::signed,
             SignContractPacket::new);
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return Packets.SIGN_CONTRACT;
     }
 }

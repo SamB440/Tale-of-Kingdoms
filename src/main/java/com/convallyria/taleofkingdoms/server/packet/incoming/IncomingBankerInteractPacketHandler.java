@@ -9,10 +9,9 @@ import com.convallyria.taleofkingdoms.common.packet.c2s.BankerInteractPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.server.network.ServerPlayerEntity;
-
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.server.level.ServerPlayer;
 
 public final class IncomingBankerInteractPacketHandler extends InServerPacketHandler<BankerInteractPacket> {
 
@@ -22,8 +21,8 @@ public final class IncomingBankerInteractPacketHandler extends InServerPacketHan
 
     @Override
     public void handleIncomingPacket(PacketContext context, BankerInteractPacket packet) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        UUID uuid = player.getUuid();
+        ServerPlayer player = (ServerPlayer) context.player();
+        UUID uuid = player.getUUID();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             final int coins = packet.coins();
             if (!instance.isInGuild(player)) {
@@ -32,7 +31,7 @@ public final class IncomingBankerInteractPacketHandler extends InServerPacketHan
             }
 
             // Search for banker
-            Optional<BankerEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.BANKER);
+            Optional<BankerEntity> entity = instance.getGuildEntity(player.level(), EntityTypes.BANKER);
             if (entity.isEmpty()) {
                 reject(player, "Banker entity not present in guild.");
                 return;

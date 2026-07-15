@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface PlayerJoinWorldCallback {
 
@@ -13,5 +13,5 @@ public interface PlayerJoinWorldCallback {
                 }
             });
 
-    void onJoin(ServerPlayerEntity player);
+    void onJoin(ServerPlayer player);
 }

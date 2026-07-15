@@ -1,63 +1,63 @@
 package com.convallyria.taleofkingdoms.common.entity;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.GoalSelector;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
-public abstract class TOKEntity extends PathAwareEntity implements MultiSkinned {
+public abstract class TOKEntity extends PathfinderMob implements MultiSkinned {
 
-    protected TOKEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    protected TOKEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
     }
 
-    protected static Identifier identifier(String path) {
-        return Identifier.of(TaleOfKingdoms.MODID, path);
+    protected static ResourceLocation identifier(String path) {
+        return ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, path);
     }
 
     @Override
     public void tick() {
         super.tick();
-        this.tickHandSwing();
+        this.updateSwingTime();
     }
 
     /**
      * Applies default entity AI:
-     * <br>• {@link SwimGoal}
+     * <br>• {@link FloatGoal}
      */
-    protected void applyEntityAI() { this.goalSelector.add(1, new SwimGoal(this)); }
+    protected void applyEntityAI() { this.goalSelector.addGoal(1, new FloatGoal(this)); }
 
     /**
      * Registers the goals for this entity, along with the defaults specified in {@link #applyEntityAI()}
      */
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(Integer.MAX_VALUE, new LookAroundGoal(this));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(Integer.MAX_VALUE, new RandomLookAroundGoal(this));
         applyEntityAI();
     }
 
     /**
      * Registers default attributes for this entity:
-     * <br>• {@link EntityAttributes#GENERIC_MAX_HEALTH} (20.0D)
-     * <br>• {@link EntityAttributes#GENERIC_MOVEMENT_SPEED} (1.0D)
+     * <br>• {@link Attributes#MAX_HEALTH} (20.0D)
+     * <br>• {@link Attributes#MOVEMENT_SPEED} (1.0D)
      */
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
+    public static AttributeSupplier.Builder createMobAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D);
+                .add(Attributes.FOLLOW_RANGE)
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5D);
     }
 
     /**
@@ -89,12 +89,12 @@ public abstract class TOKEntity extends PathAwareEntity implements MultiSkinned 
     }
 
     @Override
-    public boolean cannotDespawn() {
+    public boolean requiresCustomPersistence() {
         return true;
     }
 
     @Override
-    public boolean canImmediatelyDespawn(double distanceSquared) {
+    public boolean removeWhenFarAway(double distanceSquared) {
         return false;
     }
 
@@ -102,12 +102,12 @@ public abstract class TOKEntity extends PathAwareEntity implements MultiSkinned 
     public void checkDespawn() { }
 
     @Override
-    public ItemStack getProjectileType(ItemStack stack) {
+    public ItemStack getProjectile(ItemStack stack) {
         return new ItemStack(Items.ARROW);
     }
 
     @Override
-    public Optional<Identifier> getSkin() {
+    public Optional<ResourceLocation> getSkin() {
         return Optional.empty();
     }
 

@@ -13,9 +13,8 @@ import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.network.ServerPlayerEntity;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import java.util.Optional;
 
 @Environment(EnvType.SERVER)
@@ -27,7 +26,7 @@ public final class IncomingHunterPacketHandler extends InServerPacketHandler<Hir
 
     @Override
     public void handleIncomingPacket(PacketContext context, HireHunterPacket packet) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
+        ServerPlayer player = (ServerPlayer) context.player();
         boolean retire = packet.retire();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             final GuildPlayer guildPlayer = instance.getPlayer(player);
@@ -37,7 +36,7 @@ public final class IncomingHunterPacketHandler extends InServerPacketHandler<Hir
             }
 
             // Search for banker
-            Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.GUILDMASTER);
+            Optional<GuildMasterEntity> entity = instance.getGuildEntity(player.level(), EntityTypes.GUILDMASTER);
             if (entity.isEmpty()) {
                 reject(player, "Guildmaster entity not present in guild.");
                 return;
@@ -54,7 +53,7 @@ public final class IncomingHunterPacketHandler extends InServerPacketHandler<Hir
                     return;
                 }
 
-                HunterEntity hunterEntity = (HunterEntity) player.getServerWorld().getEntity(guildPlayer.getHunters().get(0));
+                HunterEntity hunterEntity = (HunterEntity) player.serverLevel().getEntity(guildPlayer.getHunters().get(0));
                 //TODO we need to match client logic here
                 if (hunterEntity == null) {
                     reject(player, "Hunter entity returned null.");
@@ -62,7 +61,7 @@ public final class IncomingHunterPacketHandler extends InServerPacketHandler<Hir
                 }
 
                 TaleOfKingdomsServer.getAPI().executeOnDedicatedServer(() -> hunterEntity.remove(Entity.RemovalReason.DISCARDED));
-                guildPlayer.getHunters().remove(hunterEntity.getUuid());
+                guildPlayer.getHunters().remove(hunterEntity.getUUID());
                 guildPlayer.setCoins(guildPlayer.getCoins() + 750);
                 ServerConquestInstance.sync(player, instance);
                 return;
@@ -73,8 +72,8 @@ public final class IncomingHunterPacketHandler extends InServerPacketHandler<Hir
                 return;
             }
 
-            HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, player, entity.get().getBlockPos());
-            guildPlayer.getHunters().add(hunterEntity.getUuid());
+            HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER, player, entity.get().blockPosition());
+            guildPlayer.getHunters().add(hunterEntity.getUUID());
             guildPlayer.setCoins(guildPlayer.getCoins() - 1500);
             ServerConquestInstance.sync(player, instance);
         }));

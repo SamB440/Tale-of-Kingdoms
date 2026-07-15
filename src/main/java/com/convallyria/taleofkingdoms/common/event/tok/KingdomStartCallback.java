@@ -3,7 +3,7 @@ package com.convallyria.taleofkingdoms.common.event.tok;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface KingdomStartCallback {
 
@@ -14,5 +14,5 @@ public interface KingdomStartCallback {
                 }
             });
 
-    void kingdomStart(ServerPlayerEntity player, ConquestInstance instance);
+    void kingdomStart(ServerPlayer player, ConquestInstance instance);
 }

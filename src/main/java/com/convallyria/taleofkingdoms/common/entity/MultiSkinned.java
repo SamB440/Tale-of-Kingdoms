@@ -1,11 +1,10 @@
 package com.convallyria.taleofkingdoms.common.entity;
 
-import net.minecraft.util.Identifier;
-
 import java.util.Optional;
+import net.minecraft.resources.ResourceLocation;
 
 public interface MultiSkinned {
 
-    Optional<Identifier> getSkin();
+    Optional<ResourceLocation> getSkin();
 
 }

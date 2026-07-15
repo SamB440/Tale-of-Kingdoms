@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 public class WorldClose {
 
-	@Inject(method = "stop", at = @At("RETURN"))
+	@Inject(method = "halt", at = @At("RETURN"))
 	private void onStop(boolean stopImmediately, CallbackInfo ci) {
 		WorldStopCallback.EVENT.invoker().stop();
 	}

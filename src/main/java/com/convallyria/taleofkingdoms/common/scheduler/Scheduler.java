@@ -43,7 +43,7 @@ public class Scheduler {
 
 	public Scheduler() {
 		ServerTickEvents.START_SERVER_TICK.register(m -> {
-			this.currentTick = m.getTicks();
+			this.currentTick = m.getTickCount();
 			List<Consumer<MinecraftServer>> runnables = this.taskQueue.remove(this.currentTick);
 			if (runnables != null) for (Consumer<MinecraftServer> runnable : runnables) {
 				runnable.accept(m);

@@ -2,23 +2,23 @@ package com.convallyria.taleofkingdoms.common.packet;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
-public abstract class PacketHandler<T extends CustomPayload> {
+public abstract class PacketHandler<T extends CustomPacketPayload> {
 
-    protected final CustomPayload.Id<T> packet;
-    protected final PacketCodec<RegistryByteBuf, T> codec;
+    protected final CustomPacketPayload.Type<T> packet;
+    protected final StreamCodec<RegistryFriendlyByteBuf, T> codec;
 
     /**
      * Creates a new packet handler and registers it for incoming handling.
-     * @param packet the {@link Identifier} for the packet
+     * @param packet the {@link ResourceLocation} for the packet
      */
-    public PacketHandler(CustomPayload.Id<T> packet, PacketCodec<RegistryByteBuf, T> codec) {
+    public PacketHandler(CustomPacketPayload.Type<T> packet, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         TaleOfKingdoms.LOGGER.info("Registered packet handler [" + this.getClass().getSimpleName() + "]");
         this.packet = packet;
         this.codec = codec;
@@ -29,28 +29,28 @@ public abstract class PacketHandler<T extends CustomPayload> {
      * Gets the packet identifier.
      * @return the {@link CustomPayload.Id<T>}
      */
-    public CustomPayload.Id<T> getPacket() {
+    public CustomPacketPayload.Type<T> getPacket() {
         return packet;
     }
 
     /**
      * Handles a packet that is incoming (client receiving from server, or server receiving from client)
-     * @param context the {@link PlayerEntity}
-     * @param packet the {@link CustomPayload}
+     * @param context the {@link Player}
+     * @param packet the {@link CustomPacketPayload}
      */
     public void handleIncomingPacket(PacketContext context, T packet) {
         throw new UnsupportedOperationException("Not supported");
     }
 
-    public abstract void sendPacket(PlayerEntity player, T packet);
+    public abstract void sendPacket(Player player, T packet);
 
     /**
      * Registers the packet to receive incoming data.
      */
     protected abstract void register();
 
-    public void reject(ServerPlayerEntity player, String log) {
-        String playerContext = this.packet.toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
+    public void reject(ServerPlayer player, String log) {
+        String playerContext = this.packet.toString() + " @ <" + player.getName().getString() + ":" + player.getIpAddress() + ">";
         TaleOfKingdoms.LOGGER.info("Rejected " + playerContext + ": " + log);
     }
 }

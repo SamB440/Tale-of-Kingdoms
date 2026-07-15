@@ -5,15 +5,15 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
 @Environment(EnvType.CLIENT)
-public abstract class OutClientPacketHandler<T extends CustomPayload> extends PacketHandler<T> {
+public abstract class OutClientPacketHandler<T extends CustomPacketPayload> extends PacketHandler<T> {
 
-    public OutClientPacketHandler(CustomPayload.Id<T> packet, PacketCodec<RegistryByteBuf, T> codec) {
+    public OutClientPacketHandler(CustomPacketPayload.Type<T> packet, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         super(packet, codec);
     }
 
@@ -23,7 +23,7 @@ public abstract class OutClientPacketHandler<T extends CustomPayload> extends Pa
     }
 
     @Override
-    public void sendPacket(PlayerEntity player, T packet) {
+    public void sendPacket(Player player, T packet) {
         ClientPlayNetworking.send(packet);
     }
 }

@@ -10,39 +10,39 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
 public class ShopBuyUtil {
 
-    public static void buyItem(ConquestInstance instance, PlayerEntity player, ShopItem shopItem, int count, ShopEntity entity) {
+    public static void buyItem(ConquestInstance instance, Player player, ShopItem shopItem, int count, ShopEntity entity) {
         if (shopItem.canBuy(instance, player, count)) {
             final TaleOfKingdomsClientAPI api = TaleOfKingdomsClient.getAPI();
             api.executeOnMain(() -> {
-                MinecraftServer server = MinecraftClient.getInstance().getServer();
+                MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
                 if (server == null) {
                     api.getClientPacket(Packets.BUY_ITEM)
-                            .sendPacket(player, new BuyItemPacket(Registries.ITEM.getId(shopItem.getItem().asItem()).toString(), count, entity.getGUIType()));
+                            .sendPacket(player, new BuyItemPacket(BuiltInRegistries.ITEM.getKey(shopItem.getItem().asItem()).toString(), count, entity.getGUIType()));
                     return;
                 }
 
-                ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
+                ServerPlayer serverPlayerEntity = server.getPlayerList().getPlayer(player.getUUID());
                 if (serverPlayerEntity != null) {
                     final ItemStack stack = new ItemStack(shopItem.getItem(), count);
-                    final PlayerInventory inventory = serverPlayerEntity.getInventory();
-                    int slotWithRoom = inventory.getOccupiedSlotWithRoomForStack(stack);
+                    final Inventory inventory = serverPlayerEntity.getInventory();
+                    int slotWithRoom = inventory.getSlotWithRemainingSpace(stack);
                     // Try to get an empty slot instead...
-                    if (slotWithRoom == -1) slotWithRoom = inventory.getEmptySlot();
+                    if (slotWithRoom == -1) slotWithRoom = inventory.getFreeSlot();
                     if (slotWithRoom == -1) {
-                        serverPlayerEntity.dropItem(stack, true, true);
+                        serverPlayerEntity.drop(stack, true, true);
                     } else {
-                        inventory.insertStack(slotWithRoom, stack);
+                        inventory.add(slotWithRoom, stack);
                     }
                     int cost = shopItem.getCost() * count;
                     final GuildPlayer guildPlayer = instance.getPlayer(player);

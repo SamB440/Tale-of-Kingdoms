@@ -2,9 +2,8 @@ package com.convallyria.taleofkingdoms.client.gui;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.resource.ResourcePackManager;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
 public abstract class ScreenTOK extends Screen {
@@ -14,7 +13,7 @@ public abstract class ScreenTOK extends Screen {
      * @param translation the translation key
      */
     protected ScreenTOK(String translation) {
-        super(Text.translatable(translation));
+        super(Component.translatable(translation));
     }
 
     /**
@@ -31,7 +30,7 @@ public abstract class ScreenTOK extends Screen {
      * @return true if it pauses the game
      */
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return true;
     }
 }

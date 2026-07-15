@@ -3,13 +3,13 @@ package com.convallyria.taleofkingdoms.common.world.guild;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Uuids;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.core.UUIDUtil;
 
 public class GuildPlayer {
 
@@ -21,7 +21,7 @@ public class GuildPlayer {
                     Codec.INT.fieldOf("worthiness").forGetter(GuildPlayer::getWorthiness),
                     Codec.LONG.fieldOf("farmer_last_bread").forGetter(GuildPlayer::getFarmerLastBread),
                     PlayerKingdom.CODEC.optionalFieldOf("kingdom").forGetter(guildPlayer -> Optional.ofNullable(guildPlayer.getKingdom())),
-                    Uuids.CODEC.listOf().fieldOf("hunters").forGetter(GuildPlayer::getHunters),
+                    UUIDUtil.AUTHLIB_CODEC.listOf().fieldOf("hunters").forGetter(GuildPlayer::getHunters),
                     Codec.BOOL.fieldOf("has_rebuilt_guild").forGetter(GuildPlayer::hasRebuiltGuild)
             ).apply(instance, GuildPlayer::new)
     );

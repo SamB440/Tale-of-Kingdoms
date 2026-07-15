@@ -1,20 +1,20 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 public final class CommonSchematicHandler extends SchematicHandler {
 
     @Override
     @NotNull
-    public CompletableFuture<BlockBox> pasteSchematic(Schematic schematic, ServerPlayerEntity player, BlockPos position, BlockRotation rotation, SchematicOptions... options) {
-        CompletableFuture<BlockBox> cf = new CompletableFuture<>();
+    public CompletableFuture<BoundingBox> pasteSchematic(Schematic schematic, ServerPlayer player, BlockPos position, Rotation rotation, SchematicOptions... options) {
+        CompletableFuture<BoundingBox> cf = new CompletableFuture<>();
 
         // If on:
         // Dedicated Server --> WorldEdit requires actions to be done on the dedicated server thread.

@@ -5,24 +5,24 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.phys.Vec3;
 
 public class WanderAroundKingdomGoal extends WanderAroundGuildGoal {
 
-    public WanderAroundKingdomGoal(PathAwareEntity mob, double speed) { this(mob, speed, 50); }
+    public WanderAroundKingdomGoal(PathfinderMob mob, double speed) { this(mob, speed, 50); }
 
-    public WanderAroundKingdomGoal(PathAwareEntity pathAwareEntity, double speed, int chance) {
+    public WanderAroundKingdomGoal(PathfinderMob pathAwareEntity, double speed, int chance) {
         this(pathAwareEntity, speed, chance, 30, 7);
     }
 
-    public WanderAroundKingdomGoal(PathAwareEntity pathAwareEntity, double speed, int chance, int horizontalRange, int verticalRange) {
+    public WanderAroundKingdomGoal(PathfinderMob pathAwareEntity, double speed, int chance, int horizontalRange, int verticalRange) {
         super(pathAwareEntity, speed, chance, horizontalRange, verticalRange);
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
        if (!this.ignoringChance) {
            // if (this.field_24463 && this.mob.getDespawnCounter() >= 100) {
              //   return false;
@@ -33,7 +33,7 @@ public class WanderAroundKingdomGoal extends WanderAroundGuildGoal {
            }
        }
 
-        Vec3d vec3d = this.getWanderTarget();
+        Vec3 vec3d = this.getWanderTarget();
         if (vec3d == null) {
             return false;
         } else {

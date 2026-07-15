@@ -1,8 +1,8 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
 
 public class SelfExpiringWalkToTargetGoal extends WalkToTargetGoal {
 
@@ -18,23 +18,23 @@ public class SelfExpiringWalkToTargetGoal extends WalkToTargetGoal {
     @Override
     public void tick() {
         super.tick();
-        if (this.pos.isWithinDistance(this.mob.getPos(), this.getDesiredDistanceToTarget())) {
-            entity.getGoalSelector().remove(this);
+        if (this.pos.closerToCenterThan(this.mob.position(), this.acceptedDistance())) {
+            entity.getGoalSelector().removeGoal(this);
         }
     }
 
     @Override
-    public BlockPos getTargetPos() {
+    public BlockPos getMoveToTarget() {
         return this.pos;
     }
 
     @Override
-    protected boolean isTargetPos(WorldView world, BlockPos pos) {
+    protected boolean isValidTarget(LevelReader world, BlockPos pos) {
         return pos.equals(this.pos);
     }
 
     @Override
-    public double getDesiredDistanceToTarget() {
+    public double acceptedDistance() {
         return 0.5;
     }
 }

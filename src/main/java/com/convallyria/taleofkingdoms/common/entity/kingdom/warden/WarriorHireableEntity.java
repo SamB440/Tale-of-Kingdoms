@@ -1,27 +1,27 @@
 package com.convallyria.taleofkingdoms.common.entity.kingdom.warden;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.Optional;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 
 public class WarriorHireableEntity extends WardenHireable {
 
-    public WarriorHireableEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public WarriorHireableEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
     public WarriorLevel getLevel() {
@@ -45,7 +45,7 @@ public class WarriorHireableEntity extends WardenHireable {
     }
 
     @Override
-    public Optional<Identifier> getSkin() {
+    public Optional<ResourceLocation> getSkin() {
         final WarriorLevel level = getLevel();
         return Optional.of(
             switch (level) {
@@ -57,32 +57,32 @@ public class WarriorHireableEntity extends WardenHireable {
     }
 
     @Override
-    public Text getFollowText() {
-        return Text.translatable("entity_type.taleofkingdoms.warrior.follow", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
+    public Component getFollowText() {
+        return Component.translatable("entity_type.taleofkingdoms.warrior.follow", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
     }
 
     @Override
-    public Text getGuardText() {
-        return Text.translatable("entity_type.taleofkingdoms.warrior.guard", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
+    public Component getGuardText() {
+        return Component.translatable("entity_type.taleofkingdoms.warrior.guard", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
     }
 
     @Override
-    protected void initGoals() {
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));
-        super.initGoals();
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.6D, false));
+        super.registerGoals();
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
     @Override
     public void updateLevelledAttributes() {
-        final EntityAttributeInstance attackDamage = this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        final AttributeInstance attackDamage = this.getAttribute(Attributes.ATTACK_DAMAGE);
         attackDamage.setBaseValue(7f + (2f * getLevel().ordinal()));
         this.current = getLevel();
     }
 
     @Override
-    protected Text getDefaultName() {
-        return Text.translatable("entity.taleofkingdoms." + getLevel().name().toLowerCase(Locale.ROOT));
+    protected Component getTypeName() {
+        return Component.translatable("entity.taleofkingdoms." + getLevel().name().toLowerCase(Locale.ROOT));
     }
 
     public enum WarriorLevel {

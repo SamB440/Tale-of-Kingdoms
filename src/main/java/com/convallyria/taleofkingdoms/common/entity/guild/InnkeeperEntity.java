@@ -8,48 +8,48 @@ import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class InnkeeperEntity extends TOKEntity {
 
-    public InnkeeperEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public InnkeeperEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 15.0F, 100F));
-        this.goalSelector.add(2, new WanderAroundGuildGoal(this, 0.5, 25, 3, 1));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 15.0F, 100F));
+        this.goalSelector.addGoal(2, new WanderAroundGuildGoal(this, 0.5, 25, 3, 1));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND || player.level().isClientSide()) return InteractionResult.FAIL;
         ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
-        final GuildPlayer guildPlayer = instance.getPlayer(player.getUuid());
+        final GuildPlayer guildPlayer = instance.getPlayer(player.getUUID());
         if (!guildPlayer.hasSignedContract()) {
             Translations.NEED_CONTRACT.send(player);
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
-        if (player instanceof ServerPlayerEntity) {
+        if (player instanceof ServerPlayer) {
             TaleOfKingdoms.getAPI().getServerPacket(Packets.OPEN_CLIENT_SCREEN).sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.INNKEEPER, this.getId()));
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     // Disable jumping
     @Override
-    public void jump() {}
+    public void jumpFromGround() {}
 
     @Override
     public boolean isStationary() {

@@ -5,14 +5,14 @@ import com.convallyria.taleofkingdoms.common.packet.context.ServerPacketContext;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
-public abstract class InServerPacketHandler<T extends CustomPayload> extends PacketHandler<T> {
+public abstract class InServerPacketHandler<T extends CustomPacketPayload> extends PacketHandler<T> {
 
-    public InServerPacketHandler(CustomPayload.Id<T> packet, PacketCodec<RegistryByteBuf, T> codec) {
+    public InServerPacketHandler(CustomPacketPayload.Type<T> packet, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         super(packet, codec);
     }
 
@@ -26,7 +26,7 @@ public abstract class InServerPacketHandler<T extends CustomPayload> extends Pac
     }
 
     @Override
-    public void sendPacket(PlayerEntity player, T packet) {
+    public void sendPacket(Player player, T packet) {
         throw new UnsupportedOperationException();
     }
 }

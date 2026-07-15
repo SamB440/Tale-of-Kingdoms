@@ -9,12 +9,12 @@ import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public final class IncomingFixGuildPacketHandler extends InServerPacketHandler<FixGuildPacket> {
 
@@ -26,8 +26,8 @@ public final class IncomingFixGuildPacketHandler extends InServerPacketHandler<F
 
     @Override
     public void handleIncomingPacket(PacketContext context, FixGuildPacket packet) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
-        String playerContext = getPacket().toString() + " @ <" + player.getName().getString() + ":" + player.getIp() + ">";
+        ServerPlayer player = (ServerPlayer) context.player();
+        String playerContext = getPacket().toString() + " @ <" + player.getName().getString() + ":" + player.getIpAddress() + ">";
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         context.taskQueue().execute(() -> api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             if (instance.isUnderAttack()) {
@@ -35,7 +35,7 @@ public final class IncomingFixGuildPacketHandler extends InServerPacketHandler<F
                 return;
             }
 
-            PlayerInventory playerInventory = player.getInventory();
+            Inventory playerInventory = player.getInventory();
             ItemStack stack = InventoryUtils.getStack(playerInventory, ItemTags.LOGS, 64);
             if (stack == null) {
                 reject(player, "Inventory requirement not met. Data mismatch?");
@@ -54,11 +54,11 @@ public final class IncomingFixGuildPacketHandler extends InServerPacketHandler<F
             if (seconds <= 60) {
                 reject(player, "Rebuilt too recently.");
                 int secondsLeft = 60 - seconds;
-                player.sendMessage(Text.literal("The guild was only rebuilt " + seconds + " seconds ago! Please wait " + secondsLeft + " more seconds."), false);
+                player.displayClientMessage(Component.literal("The guild was only rebuilt " + seconds + " seconds ago! Please wait " + secondsLeft + " more seconds."), false);
                 return;
             }
 
-            playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
+            playerInventory.setItem(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
             guildPlayer.setCoins(guildPlayer.getCoins() - 3000);
             instance.rebuild(player, api, SchematicOptions.IGNORE_DEFENDERS);
             ServerConquestInstance.sync(player, instance);

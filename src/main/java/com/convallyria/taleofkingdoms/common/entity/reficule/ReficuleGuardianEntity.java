@@ -5,65 +5,65 @@ import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.TeleportTowardsPlayerGoal;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class ReficuleGuardianEntity extends TOKEntity implements Monster, TeleportAbility, RangedAttackMob {
+public class ReficuleGuardianEntity extends TOKEntity implements Enemy, TeleportAbility, RangedAttackMob {
 
-    public ReficuleGuardianEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public ReficuleGuardianEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
         ItemStack bow = new ItemStack(Items.BOW);
-        DynamicRegistryManager dynamicRegistryManager = world.getRegistryManager();
-        RegistryEntry<Enchantment> enchant = dynamicRegistryManager.get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.POWER).orElseThrow();
-        bow.addEnchantment(enchant, 1); // Want them to look fancy :)
-        this.setStackInHand(Hand.MAIN_HAND, bow);
+        RegistryAccess dynamicRegistryManager = world.registryAccess();
+        Holder<Enchantment> enchant = dynamicRegistryManager.registryOrThrow(Registries.ENCHANTMENT).getHolder(Enchantments.POWER).orElseThrow();
+        bow.enchant(enchant, 1); // Want them to look fancy :)
+        this.setItemInHand(InteractionHand.MAIN_HAND, bow);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.targetSelector.add(1, new TeleportTowardsPlayerGoal(this, entity -> {
-            return entity.squaredDistanceTo(this) < this.getAttributeValue(EntityAttributes.GENERIC_FOLLOW_RANGE);
+    protected void registerGoals() {
+        super.registerGoals();
+        this.targetSelector.addGoal(1, new TeleportTowardsPlayerGoal(this, entity -> {
+            return entity.distanceToSqr(this) < this.getAttributeValue(Attributes.FOLLOW_RANGE);
         }));
-        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true));
-        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.WARRIOR, true));
-        this.targetSelector.add(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.ARCHER, true));
-        this.targetSelector.add(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
-        this.targetSelector.add(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
-        this.targetSelector.add(7, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, false));
-        this.targetSelector.add(8, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
-        this.targetSelector.add(9, new ImprovedFollowTargetGoal<>(this, EntityTypes.BANDIT, true));
-        this.goalSelector.add(1, new BowAttackGoal<>(this, 0.6D, 20, 16.0F));
-        this.goalSelector.add(2, new WanderAroundGoal(this, 0.6D));
+        this.targetSelector.addGoal(2, new ImprovedFollowTargetGoal<>(this, EntityType.PLAYER, true));
+        this.targetSelector.addGoal(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.WARRIOR, true));
+        this.targetSelector.addGoal(4, new ImprovedFollowTargetGoal<>(this, EntityTypes.ARCHER, true));
+        this.targetSelector.addGoal(5, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDGUARD, true));
+        this.targetSelector.addGoal(6, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDARCHER, true));
+        this.targetSelector.addGoal(7, new ImprovedFollowTargetGoal<>(this, EntityTypes.GUILDVILLAGER, false));
+        this.targetSelector.addGoal(8, new ImprovedFollowTargetGoal<>(this, EntityTypes.HUNTER, true));
+        this.targetSelector.addGoal(9, new ImprovedFollowTargetGoal<>(this, EntityTypes.BANDIT, true));
+        this.goalSelector.addGoal(1, new BowAttackGoal<>(this, 0.6D, 20, 16.0F));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.6D));
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
+    public static AttributeSupplier.Builder createMobAttributes() {
         return TOKEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 40.0D)
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 30.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 9.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.5D);
+                .add(Attributes.FOLLOW_RANGE, 40.0D)
+                .add(Attributes.MAX_HEALTH, 30.0D)
+                .add(Attributes.ATTACK_DAMAGE, 9.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.5D);
     }
 
     @Override
@@ -71,11 +71,11 @@ public class ReficuleGuardianEntity extends TOKEntity implements Monster, Telepo
         double x = entity.getX();
         double y = entity.getY();
         double z = entity.getZ();
-        return this.teleport(x, y, z, true);
+        return this.randomTeleport(x, y, z, true);
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
@@ -90,25 +90,25 @@ public class ReficuleGuardianEntity extends TOKEntity implements Monster, Telepo
     }
 
     @Override
-    public void shootAt(LivingEntity target, float pullProgress) {
-        final ItemStack shotFrom = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
-        ItemStack itemStack = this.getProjectileType(shotFrom);
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress, shotFrom);
+    public void performRangedAttack(LivingEntity target, float pullProgress) {
+        final ItemStack shotFrom = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW));
+        ItemStack itemStack = this.getProjectile(shotFrom);
+        AbstractArrow persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress, shotFrom);
         double d = target.getX() - this.getX();
-        double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
+        double e = target.getY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
-        persistentProjectileEntity.setVelocity(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
-        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.getWorld().spawnEntity(persistentProjectileEntity);
+        persistentProjectileEntity.shoot(d, e + h * 0.20000000298023224D, g, 1.6F, (float)(14 - this.level().getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.level().addFreshEntity(persistentProjectileEntity);
     }
 
-    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier, ItemStack shotFrom) {
-        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier, shotFrom.isEmpty() ? null : shotFrom);
+    protected AbstractArrow createArrowProjectile(ItemStack arrow, float damageModifier, ItemStack shotFrom) {
+        return ProjectileUtil.getMobArrow(this, arrow, damageModifier, shotFrom.isEmpty() ? null : shotFrom);
     }
 
     @Override
-    public boolean canUseRangedWeapon(RangedWeaponItem weapon) {
+    public boolean canFireProjectileWeapon(ProjectileWeaponItem weapon) {
         return weapon == Items.BOW;
     }
 }

@@ -2,9 +2,9 @@ package com.convallyria.taleofkingdoms.client.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 
 public interface InventoryDrawCallback {
 
@@ -15,5 +15,5 @@ public interface InventoryDrawCallback {
                 }
             });
 
-    void render(InventoryScreen screen, DrawContext context, TextRenderer textRenderer);
+    void render(InventoryScreen screen, GuiGraphics context, Font textRenderer);
 }

@@ -11,21 +11,21 @@ import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Positioning;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 public class CityBuilderPriceListGui extends BaseCityBuilderScreen {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final CityBuilderEntity entity;
     private final ConquestInstance instance;
     private final PlayerKingdom kingdom;
 
-    public CityBuilderPriceListGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance, PlayerKingdom kingdom) {
-        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_price_list_model")));
+    public CityBuilderPriceListGui(Player player, CityBuilderEntity entity, ConquestInstance instance, PlayerKingdom kingdom) {
+        super(DataSource.asset(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "citybuilder_price_list_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -41,7 +41,7 @@ public class CityBuilderPriceListGui extends BaseCityBuilderScreen {
         // 16447734 = "pastel white"
         for (BuildCosts build : BuildCosts.values()) {
             if (!kingdom.getTier().isHigherThanOrEqual(build.getTier())) continue;
-            final MutableText text = build.getDisplayName().copy().append(": " + build.getWood() + " wood " + build.getStone() + " cobblestone");
+            final MutableComponent text = build.getDisplayName().copy().append(": " + build.getWood() + " wood " + build.getStone() + " cobblestone");
             rootComponent.child(
                 Components.label(text).color(Color.ofRgb(16447734))
                 .positioning(Positioning.relative(50, rootHeightPercent += 5))
@@ -50,10 +50,10 @@ public class CityBuilderPriceListGui extends BaseCityBuilderScreen {
 
         rootComponent.child(
             Components.button(
-                Text.translatable("menu.taleofkingdoms.generic.back"),
+                Component.translatable("menu.taleofkingdoms.generic.back"),
                 (ButtonComponent button) -> {
-                    this.close();
-                    MinecraftClient.getInstance().setScreen(new CityBuilderTierGui(player, entity, instance));
+                    this.onClose();
+                    Minecraft.getInstance().setScreen(new CityBuilderTierGui(player, entity, instance));
                 }
             )
             .positioning(Positioning.relative(50, 85))

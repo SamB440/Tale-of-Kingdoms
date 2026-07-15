@@ -7,24 +7,24 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundKingdomG
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAroundGoal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class KingdomVillagerEntity extends TOKEntity {
 
-    private static final List<Identifier> VALID_SKINS = List.of(
+    private static final List<ResourceLocation> VALID_SKINS = List.of(
             // So much for 50/50 gender distribution.
             identifier("textures/entity/updated_textures/woman1.png"),
             identifier("textures/entity/updated_textures/woman2.png"),
@@ -36,33 +36,33 @@ public class KingdomVillagerEntity extends TOKEntity {
             identifier("textures/entity/updated_textures/mansix.png")
     );
 
-    private final Identifier skin;
+    private final ResourceLocation skin;
 
-    public KingdomVillagerEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public KingdomVillagerEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
         this.skin = VALID_SKINS.get(ThreadLocalRandom.current().nextInt(VALID_SKINS.size()));
     }
 
     @Override
-    public Optional<Identifier> getSkin() {
+    public Optional<ResourceLocation> getSkin() {
         return Optional.of(skin);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new WanderAroundKingdomGoal(this, 0.6D));
-        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 5.0F, 60F));
-        this.goalSelector.add(3, new LookAroundGoal(this));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new WanderAroundKingdomGoal(this, 0.6D));
+        this.goalSelector.addGoal(2, new LookAtPlayerGoal(this, Player.class, 5.0F, 60F));
+        this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.getWorld().isClient) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND || player.level().isClientSide) return InteractionResult.FAIL;
 
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        if (api == null) return ActionResult.FAIL;
-        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
+        if (api == null) return InteractionResult.FAIL;
+        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return InteractionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         final GuildPlayer guildPlayer = instance.getPlayer(player);
@@ -70,7 +70,7 @@ public class KingdomVillagerEntity extends TOKEntity {
             //todo: convert to worker if items are given
             Translations.VILLAGER_ASK_TO_WORK.send(player);
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override

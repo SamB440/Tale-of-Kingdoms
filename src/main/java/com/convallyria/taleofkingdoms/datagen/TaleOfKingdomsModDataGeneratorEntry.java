@@ -6,8 +6,8 @@ import com.convallyria.taleofkingdoms.datagen.worldgen.TaleOfKingdomsModWorldGen
 import com.convallyria.taleofkingdoms.datagen.worldgen.TaleOfKingdomsModWorldGenProvider;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.registry.RegistryBuilder;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 
 public class TaleOfKingdomsModDataGeneratorEntry implements DataGeneratorEntrypoint {
     @Override
@@ -25,9 +25,9 @@ public class TaleOfKingdomsModDataGeneratorEntry implements DataGeneratorEntrypo
     }
 
     @Override
-    public void buildRegistry(RegistryBuilder registryBuilder) {
-        registryBuilder.addRegistry(RegistryKeys.STRUCTURE, TaleOfKingdomsModWorldGenBootstrap::structures);
-        registryBuilder.addRegistry(RegistryKeys.STRUCTURE_SET, TaleOfKingdomsModWorldGenBootstrap::structureSets);
+    public void buildRegistry(RegistrySetBuilder registryBuilder) {
+        registryBuilder.add(Registries.STRUCTURE, TaleOfKingdomsModWorldGenBootstrap::structures);
+        registryBuilder.add(Registries.STRUCTURE_SET, TaleOfKingdomsModWorldGenBootstrap::structureSets);
     }
 
     @Override

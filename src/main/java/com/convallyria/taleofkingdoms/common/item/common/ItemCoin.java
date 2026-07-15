@@ -1,10 +1,10 @@
 package com.convallyria.taleofkingdoms.common.item.common;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 
 public class ItemCoin extends Item {
 
-    public ItemCoin(Settings settings) {
+    public ItemCoin(Properties settings) {
         super(settings);
     }
 

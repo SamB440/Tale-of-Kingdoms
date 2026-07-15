@@ -21,26 +21,24 @@ import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Component;
 import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 
 public class CityBuilderTierGui extends BaseCityBuilderScreen {
 
-    private static final Identifier BACKGROUND = Identifier.of(TaleOfKingdoms.MODID, "textures/gui/menu.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "textures/gui/menu.png");
 
-    private final PlayerEntity player;
+    private final Player player;
     private final CityBuilderEntity entity;
     private final ConquestInstance instance;
     private ButtonComponent fixWholeKingdomButton;
@@ -50,8 +48,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
 
     private final Map<BuildCosts, ButtonComponent> buildButtons = new HashMap<>(BuildCosts.values().length);
 
-    public CityBuilderTierGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
-        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_tier_model")));
+    public CityBuilderTierGui(Player player, CityBuilderEntity entity, ConquestInstance instance) {
+        super(DataSource.asset(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "citybuilder_tier_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -68,9 +66,9 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         final float oakWoodPercent = oakWoodCount.get() * (100f / 320f);
         final float cobblestonePercent = cobblestoneCount.get() * (100f / 320f);
         woodBar.setBarProgress(oakWoodPercent / 100);
-        woodBar.tooltip(Text.literal(oakWoodCount.get() + " / 320"));
+        woodBar.tooltip(net.minecraft.network.chat.Component.literal(oakWoodCount.get() + " / 320"));
         stoneBar.setBarProgress(cobblestonePercent / 100);
-        stoneBar.tooltip(Text.literal(cobblestoneCount.get() + " / 320"));
+        stoneBar.tooltip(net.minecraft.network.chat.Component.literal(cobblestoneCount.get() + " / 320"));
 
         buildButtons.forEach((build, button) -> button.active(entity.canAffordBuild(kingdom, build) && kingdom.getTier() == build.getTier()));
 
@@ -88,7 +86,7 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         final PlayerKingdom kingdom = guildPlayer.getKingdom();
 
         inner.child(
-            Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.total_money", kingdom.getTier().getName(), guildPlayer.getCoins())).color(Color.ofDye(DyeColor.GRAY))
+            Components.label(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.total_money", kingdom.getTier().getName(), guildPlayer.getCoins())).color(Color.ofDye(DyeColor.GRAY))
             .positioning(Positioning.relative(50, 5))
         );
 
@@ -98,8 +96,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         //root.add(new WLabel(Text.literal("0      160      320")).setHorizontalAlignment(HorizontalAlignment.LEFT), 100, 30, 16, 2);
 
         inner.child(
-            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.give_wood"), c -> {
-                if (MinecraftClient.getInstance().getServer() == null) {
+            Components.button(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.give_wood"), c -> {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
                             .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.GIVE_64_WOOD, Optional.empty()));
                     return;
@@ -110,8 +108,8 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         );
 
         inner.child(
-            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.give_cobblestone"), c -> {
-                if (MinecraftClient.getInstance().getServer() == null) {
+            Components.button(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.give_cobblestone"), c -> {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
                             .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.GIVE_64_STONE, Optional.empty()));
                     return;
@@ -122,28 +120,28 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         );
 
         inner.child(
-            Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.wood_amount"))
+            Components.label(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.wood_amount"))
                     .positioning(Positioning.relative(76, 40))
         );
 
         final float oakWoodPercent = oakWoodCount.get() * (100f / 320f);
         inner.child(this.woodBar = (BarWidget) new BarWidget(0, 0, 100, 12, oakWoodPercent / 100)
                 .positioning(Positioning.relative(80, 45))
-                .tooltip(Text.literal(oakWoodCount.get() + " / 320")));
+                .tooltip(net.minecraft.network.chat.Component.literal(oakWoodCount.get() + " / 320")));
 
         inner.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.stone_amount"))
+                Components.label(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.stone_amount"))
                         .positioning(Positioning.relative(76, 53))
         );
 
         final float cobblestonePercent = cobblestoneCount.get() * (100f / 320f);
         inner.child(this.stoneBar = (BarWidget) new BarWidget(0, 0, 100, 12, cobblestonePercent / 100)
                 .positioning(Positioning.relative(80, 57))
-                .tooltip(Text.literal(cobblestoneCount.get() + " / 320")));
+                .tooltip(net.minecraft.network.chat.Component.literal(cobblestoneCount.get() + " / 320")));
 
         inner.child(
-            this.fixWholeKingdomButton = (ButtonComponent) Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.fix_kingdom"), c -> {
-                if (MinecraftClient.getInstance().getServer() == null) {
+            this.fixWholeKingdomButton = (ButtonComponent) Components.button(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.fix_kingdom"), c -> {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
                             .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.FIX_KINGDOM, Optional.empty()));
                     return;
@@ -151,16 +149,16 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
 
                 entity.fixKingdom(player, kingdom);
             }).tooltip(List.of(
-                  Text.literal("Repairing the kingdom costs:"),
-                  Text.literal(" - 320 oak wood"),
-                  Text.literal(" - 320 cobblestone")
+                  net.minecraft.network.chat.Component.literal("Repairing the kingdom costs:"),
+                  net.minecraft.network.chat.Component.literal(" - 320 oak wood"),
+                  net.minecraft.network.chat.Component.literal(" - 320 cobblestone")
             )).positioning(Positioning.relative(80, 70)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
 
         // Price list
         inner.child(
-            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.price_list"), c -> {
-                MinecraftClient.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance, kingdom));
+            Components.button(net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.citybuilder.price_list"), c -> {
+                Minecraft.getInstance().setScreen(new CityBuilderPriceListGui(player, entity, instance, kingdom));
             }).positioning(Positioning.relative(80, 80)).sizing(Sizing.fixed(100), Sizing.fixed(20))
         );
 
@@ -169,10 +167,10 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
         final boolean hasResources = entity.getWood() == 320 && entity.getStone() == 320;
         final KingdomTier nextTier = isMaxed ? kingdom.getTier() : KingdomTier.values()[kingdom.getTier().ordinal() + 1];
         inner.child(
-            this.tierUpgradeButton = (ButtonComponent) Components.button(Text
+            this.tierUpgradeButton = (ButtonComponent) Components.button(net.minecraft.network.chat.Component
                             .translatable("menu.taleofkingdoms.generic.build")
                             .append(" ").append(nextTier.getName()), c -> {
-                    MinecraftClient.getInstance().setScreen(new ConfirmUpgradeKingdomGui(player, entity, instance));
+                    Minecraft.getInstance().setScreen(new ConfirmUpgradeKingdomGui(player, entity, instance));
                 })
                 .active(!isMaxed && hasBuiltRequired && hasResources)
                 .positioning(Positioning.relative(80, 90)).sizing(Sizing.fixed(100), Sizing.fixed(20))
@@ -195,23 +193,23 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
             //todo: small houses / large houses require special changes
             final boolean hasBuilt = kingdom.hasBuilt(build);
             final boolean canAffordBuild = entity.canAffordBuild(kingdom, build);
-            final MutableText text = (hasBuilt ? Text.translatable("menu.taleofkingdoms.generic.fix") : Text.translatable("menu.taleofkingdoms.generic.build")).append(" ");
-            final MutableText pluralText = (hasBuilt ? Text.translatable("menu.taleofkingdoms.generic.repairing") : Text.translatable("menu.taleofkingdoms.generic.building")).append(" ");
+            final MutableComponent text = (hasBuilt ? net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.generic.fix") : net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.generic.build")).append(" ");
+            final MutableComponent pluralText = (hasBuilt ? net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.generic.repairing") : net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.generic.building")).append(" ");
 
             final Component button = Components.button(text.append(build.getDisplayName()), c -> {
-                if (MinecraftClient.getInstance().getServer() == null) {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CITYBUILDER_ACTION)
                             .sendPacket(player, new CityBuilderActionPacket(entity.getId(), CityBuilderAction.BUILD, Optional.of(build)));
                     return;
                 }
 
                 entity.build(player, build, kingdom);
-                MinecraftClient.getInstance().currentScreen.close();
+                Minecraft.getInstance().screen.onClose();
             }).active(canAffordBuild && kingdom.getTier() == build.getTier())
                     .tooltip(List.of(
-                        pluralText.append(build.getDisplayName()).append(Text.literal(" costs:")),
-                        Text.literal(" - " + build.getWood() + " oak wood"),
-                        Text.literal(" - " + build.getStone() + " cobblestone")
+                        pluralText.append(build.getDisplayName()).append(net.minecraft.network.chat.Component.literal(" costs:")),
+                        net.minecraft.network.chat.Component.literal(" - " + build.getWood() + " oak wood"),
+                        net.minecraft.network.chat.Component.literal(" - " + build.getStone() + " cobblestone")
                     ))
                     .positioning(Positioning.relative(currentX, currentY += 8))
                     .sizing(Sizing.fixed(100), Sizing.fixed(20));
@@ -224,9 +222,9 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
 
         inner.child(
             Components.button(
-                Text.translatable("menu.taleofkingdoms.generic.exit"),
+                net.minecraft.network.chat.Component.translatable("menu.taleofkingdoms.generic.exit"),
                 (ButtonComponent button) -> {
-                    this.close();
+                    this.onClose();
                     Translations.CITYBUILDER_GUI_CLOSE.send(player);
                 }
             ).positioning(Positioning.relative(50, 85))
@@ -234,7 +232,7 @@ public class CityBuilderTierGui extends BaseCityBuilderScreen {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.update();
     }

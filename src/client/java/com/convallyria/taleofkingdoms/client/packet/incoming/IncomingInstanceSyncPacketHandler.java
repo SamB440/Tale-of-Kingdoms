@@ -6,8 +6,8 @@ import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.packet.s2c.InstanceSyncPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public final class IncomingInstanceSyncPacketHandler extends InClientPacketHandler<InstanceSyncPacket> {
 
@@ -19,11 +19,11 @@ public final class IncomingInstanceSyncPacketHandler extends InClientPacketHandl
     public void handleIncomingPacket(PacketContext context, InstanceSyncPacket sync) {
         final ConquestInstance instance = sync.instance();
         context.taskQueue().execute(() -> {
-            MinecraftClient client = (MinecraftClient) context.taskQueue();
+            Minecraft client = (Minecraft) context.taskQueue();
             if (TaleOfKingdoms.CONFIG.mainConfig.developerMode) {
                 final String text = "Received sync, " + instance;
                 TaleOfKingdoms.LOGGER.info(text);
-                if (client.player != null) client.player.sendMessage(Text.literal(text));
+                if (client.player != null) client.player.sendSystemMessage(Component.literal(text));
             }
 
             final String id = client.getGameProfile().getId().toString();

@@ -1,0 +1,24 @@
+{
+  "name": "Guild Guard",
+  "icon": "minecraft:iron_sword",
+  "category": "taleofkingdoms:mobs",
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "taleofkingdoms:guild_guard",
+      "rotate": true,
+      "offset": 0.15
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Lore",
+      "text": "A member of the Guild Order who fights the reficules and defends the Guild. They specialise in sword combat and are happy to spar with you if they are given a wooden sword to do so."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "taleofkingdoms:structures/the_guild"
+      ]
+    }
+  ]
+}

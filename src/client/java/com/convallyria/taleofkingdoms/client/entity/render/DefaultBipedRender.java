@@ -3,28 +3,28 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 import com.convallyria.taleofkingdoms.common.entity.MultiSkinned;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.BipedEntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 
 @Environment(EnvType.CLIENT)
-public class DefaultBipedRender<T extends MobEntity & MultiSkinned, M extends BipedEntityModel<T>> extends BipedEntityRenderer<T, PlayerEntityModel<T>> {
+public class DefaultBipedRender<T extends Mob & MultiSkinned, M extends HumanoidModel<T>> extends HumanoidMobRenderer<T, PlayerModel<T>> {
 
-    private final Identifier defaultSkin;
+    private final ResourceLocation defaultSkin;
 
-    public DefaultBipedRender(EntityRendererFactory.Context context, PlayerEntityModel<T> modelBipedIn,
-                              float shadowSize, Identifier defaultSkin) {
+    public DefaultBipedRender(EntityRendererProvider.Context context, PlayerModel<T> modelBipedIn,
+                              float shadowSize, ResourceLocation defaultSkin) {
         super(context, modelBipedIn, shadowSize);
         this.defaultSkin = defaultSkin;
-        this.addFeature(new HeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()));
+        this.addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
     }
 
     @Override
-    public Identifier getTexture(MobEntity entity) {
+    public ResourceLocation getTextureLocation(Mob entity) {
         MultiSkinned multiSkinned = (MultiSkinned) entity;
         return multiSkinned.getSkin().orElse(defaultSkin);
     }

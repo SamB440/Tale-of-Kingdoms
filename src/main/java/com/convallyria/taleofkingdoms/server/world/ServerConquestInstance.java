@@ -8,7 +8,7 @@ import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServerAPI;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -16,13 +16,13 @@ import java.util.UUID;
 @Environment(EnvType.SERVER)
 public class ServerConquestInstance {
 
-    public static void sync(@NotNull ServerPlayerEntity player, @NotNull ConquestInstance instance) {
+    public static void sync(@NotNull ServerPlayer player, @NotNull ConquestInstance instance) {
         final TaleOfKingdomsServerAPI api = TaleOfKingdomsServer.getAPI();
         // Copy the instance but only make it reference the current player. We don't want to leak data (or waste bandwidth).
         ConquestInstance copy = new ConquestInstance(instance.getName(), instance.getStart(), instance.getEnd(), instance.getOrigin());
         copy.uploadData(instance);
         for (UUID uuid : copy.getGuildPlayers().keySet()) {
-            if (uuid.equals(player.getUuid())) continue;
+            if (uuid.equals(player.getUUID())) continue;
             copy.getGuildPlayers().remove(uuid);
         }
         PacketHandler<InstanceSyncPacket> packetHandler = api.getServerPacket(Packets.INSTANCE_SYNC);

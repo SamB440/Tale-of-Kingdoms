@@ -1,0 +1,34 @@
+{
+  "name": "The Guild",
+  "icon": "minecraft:writable_book",
+  "category": "taleofkingdoms:structures",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Guild is the place where you begin your journey. When starting a new world, you will be prompted to begin your adventure. Alternatively, you can delay this and later use `$(k:taleofkingdoms.startconquest)` to open the prompt again.$(br2)When this structure spawns, a collection of NPCs will spawn with it. This includes The Guild Master, who you will want to speak to first."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        ""
+      ],
+      "border": true
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Repairing",
+      "text": "To repair the guild, you may speak to the Guild Master. This requires 64 logs and 3000 coins. All blocks and entities will be respawned if they are missing.$(br2)Note: If the guild is under attack, you must speak to the Guild Master that was summoned with the attack, and this costs only 64 logs."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "taleofkingdoms:characters/guild_master",
+        "taleofkingdoms:characters/farmer",
+        "taleofkingdoms:characters/blacksmith",
+        "taleofkingdoms:mobs/guild_archer",
+        "taleofkingdoms:mobs/guild_guard",
+        "taleofkingdoms:mobs/guild_member"
+      ]
+    }
+  ]
+}

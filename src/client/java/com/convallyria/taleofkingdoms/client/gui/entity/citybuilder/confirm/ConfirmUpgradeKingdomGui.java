@@ -18,24 +18,24 @@ import io.wispforest.owo.ui.core.HorizontalAlignment;
 import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.core.VerticalAlignment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.server.IntegratedServer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 
 public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final CityBuilderEntity entity;
     private final ConquestInstance instance;
 
-    public ConfirmUpgradeKingdomGui(PlayerEntity player, CityBuilderEntity entity, ConquestInstance instance) {
-        super(DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "citybuilder_confirm_upgrade_kingdom_model")));
+    public ConfirmUpgradeKingdomGui(Player player, CityBuilderEntity entity, ConquestInstance instance) {
+        super(DataSource.asset(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "citybuilder_confirm_upgrade_kingdom_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -49,37 +49,37 @@ public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
                 .verticalAlignment(VerticalAlignment.CENTER);
 
         rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.build_confirm"))
+                Components.label(Component.translatable("menu.taleofkingdoms.citybuilder.build_confirm"))
                         .positioning(Positioning.relative(50, 45))
         );
 
         rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy"))
+                Components.label(Component.translatable("menu.taleofkingdoms.citybuilder.destroy"))
                         .color(Color.RED)
                         .positioning(Positioning.relative(50, 50))
         );
 
         rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.citybuilder.destroy_items"))
+                Components.label(Component.translatable("menu.taleofkingdoms.citybuilder.destroy_items"))
                         .color(Color.RED)
                         .positioning(Positioning.relative(50, 55))
         );
 
         rootComponent.child(
-            Components.button(Text.translatable("menu.taleofkingdoms.citybuilder.upgrade"), c -> {
+            Components.button(Component.translatable("menu.taleofkingdoms.citybuilder.upgrade"), c -> {
                 // Close current screen, calculate paste position, and upgrade their kingdom
-                MinecraftClient.getInstance().currentScreen.close();
-                if (MinecraftClient.getInstance().getServer() == null) {
+                Minecraft.getInstance().screen.onClose();
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.UPGRADE_KINGDOM)
                             .sendPacket(player, new UpgradeKingdomPacket(entity.getId()));
                     return;
                 }
 
-                entity.getInventory().removeItem(Items.OAK_LOG, 320);
-                entity.getInventory().removeItem(Items.COBBLESTONE, 320);
+                entity.getInventory().removeItemType(Items.OAK_LOG, 320);
+                entity.getInventory().removeItemType(Items.COBBLESTONE, 320);
 
-                final IntegratedServer server = MinecraftClient.getInstance().getServer();
-                final ServerPlayerEntity serverPlayer = server.getPlayerManager().getPlayer(player.getUuid());
+                final IntegratedServer server = Minecraft.getInstance().getSingleplayerServer();
+                final ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());
                 final PlayerKingdom kingdom = instance.getPlayer(player).getKingdom();
                 final BlockPos origin = kingdom.getOrigin();
 
@@ -91,20 +91,20 @@ public class ConfirmUpgradeKingdomGui extends BaseCityBuilderScreen {
                 // +15 on x
                 final BlockPos offsetPos = origin.subtract(next.getOffset());
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(next.getSchematic(), serverPlayer, offsetPos).thenAccept(box -> {
-                    BlockPos start = new BlockPos(box.getMaxX(), box.getMaxY(), box.getMaxZ());
-                    BlockPos end = new BlockPos(box.getMinX(), box.getMinY(), box.getMinZ());
+                    BlockPos start = new BlockPos(box.maxX(), box.maxY(), box.maxZ());
+                    BlockPos end = new BlockPos(box.minX(), box.minY(), box.minZ());
                     kingdom.setStart(start);
                     kingdom.setEnd(end);
                 });
-                player.playSoundToPlayer(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundCategory.MUSIC, 0.1f, 1f);
+                player.playNotifySound(TaleOfKingdoms.getAPI().getManager(SoundManager.class).getSound(SoundManager.TOKSound.TOKTHEME), SoundSource.MUSIC, 0.1f, 1f);
             })
             .positioning(Positioning.relative(50, 67))
         );
 
         rootComponent.child(
             Components.button(
-                Text.translatable("menu.taleofkingdoms.generic.cancel"),
-                (ButtonComponent button) -> this.close()
+                Component.translatable("menu.taleofkingdoms.generic.cancel"),
+                (ButtonComponent button) -> this.onClose()
             )
             .positioning(Positioning.relative(50, 75))
         );

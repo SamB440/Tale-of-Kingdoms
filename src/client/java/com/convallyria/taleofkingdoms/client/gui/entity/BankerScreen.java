@@ -14,24 +14,24 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final BankerEntity entity;
     private final ConquestInstance instance;
     private final GuildPlayer guildPlayer;
 
     private LabelComponent totalMoney, totalMoneyBank;
 
-    public BankerScreen(PlayerEntity player, BankerEntity entity, ConquestInstance instance) {
+    public BankerScreen(Player player, BankerEntity entity, ConquestInstance instance) {
         super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(
-                Identifier.of(TaleOfKingdoms.MODID, "banker_ui_model")));
+                ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "banker_ui_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -43,29 +43,29 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
     protected void build(FlowLayout rootComponent) {
 
         this.totalMoney = rootComponent.childById(LabelComponent.class, "total-money")
-                .text(Text.translatable(Translations.BANK_TOTAL_MONEY.getKey(), guildPlayer.getCoins()));
+                .text(Component.translatable(Translations.BANK_TOTAL_MONEY.getKey(), guildPlayer.getCoins()));
         this.totalMoneyBank = rootComponent.childById(LabelComponent.class, "total-money-bank")
-                .text(Text.translatable(Translations.BANK_TOTAL_MONEY_BANK.getKey(), guildPlayer.getBankerCoins()));
+                .text(Component.translatable(Translations.BANK_TOTAL_MONEY_BANK.getKey(), guildPlayer.getBankerCoins()));
 
         final TextBoxComponent textInput = rootComponent.childById(TextBoxComponent.class, "input-box");
 
         rootComponent.childById(ButtonComponent.class, "deposit-button").onPress(b -> {
             try {
-                int coins = Integer.parseInt(textInput.getText());
+                int coins = Integer.parseInt(textInput.getValue());
                 handleTransaction(coins, BankerMethod.DEPOSIT);
             } catch (NumberFormatException e) {
                 Translations.BANK_INPUT.send(player);
-                this.close();
+                this.onClose();
             }
         });
 
         rootComponent.childById(ButtonComponent.class, "withdraw-button").onPress(b -> {
             try {
-                int coins = Integer.parseInt(textInput.getText());
+                int coins = Integer.parseInt(textInput.getValue());
                 handleTransaction(coins, BankerMethod.WITHDRAW);
             } catch (NumberFormatException e) {
                 Translations.BANK_INPUT.send(player);
-                this.close();
+                this.onClose();
             }
         });
 
@@ -99,7 +99,7 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
             handleTransaction(amount, BankerMethod.WITHDRAW);
         });
 
-        rootComponent.childById(ButtonComponent.class, "exit-button").onPress(b -> this.close());
+        rootComponent.childById(ButtonComponent.class, "exit-button").onPress(b -> this.onClose());
     }
 
     private void handleTransaction(int coins, BankerMethod method) {
@@ -115,7 +115,7 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
 
         if (method == BankerMethod.DEPOSIT) {
             if (guildPlayer.getCoins() >= coins) {
-                if (MinecraftClient.getInstance().getServer() == null) {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.BANKER_INTERACT)
                             .sendPacket(player, new BankerInteractPacket(method, coins));
                 } else {
@@ -128,12 +128,12 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
             }
         } else if (method == BankerMethod.WITHDRAW) {
             if (guildPlayer.getBankerCoins() >= coins) {
-                if (MinecraftClient.getInstance().getServer() == null) {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.BANKER_INTERACT)
                             .sendPacket(player, new BankerInteractPacket(method, coins));
                 } else {
                     guildPlayer.setBankerCoins(guildPlayer.getBankerCoins() - coins);
-                    instance.addCoins(player.getUuid(), coins);
+                    instance.addCoins(player.getUUID(), coins);
                 }
             } else {
                 Translations.BANK_THERE.send(player);
@@ -142,21 +142,21 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
     }
 
     @Override
-    public void close() {
-        super.close();
+    public void onClose() {
+        super.onClose();
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        this.totalMoney.text(Text.translatable(
+        this.totalMoney.text(Component.translatable(
                 Translations.BANK_TOTAL_MONEY.getKey(), guildPlayer.getCoins()));
-        this.totalMoneyBank.text(Text.translatable(
+        this.totalMoneyBank.text(Component.translatable(
                 Translations.BANK_TOTAL_MONEY_BANK.getKey(), guildPlayer.getBankerCoins()));
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return false;
     }
 

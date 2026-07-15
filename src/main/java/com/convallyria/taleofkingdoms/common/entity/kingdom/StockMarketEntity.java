@@ -10,19 +10,18 @@ import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-
 import java.util.concurrent.ThreadLocalRandom;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class StockMarketEntity extends ShopEntity {
 
-    public StockMarketEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public StockMarketEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -32,23 +31,23 @@ public class StockMarketEntity extends ShopEntity {
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         // Check if there is at least 1 Minecraft day difference
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        if (api == null) return ActionResult.FAIL;
-        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
+        if (api == null) return InteractionResult.FAIL;
+        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return InteractionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         final GuildPlayer guildPlayer = instance.getPlayer(player);
         final PlayerKingdom kingdom = guildPlayer.getKingdom();
 
-        final long day = player.getWorld().getTimeOfDay() / 24000L;
+        final long day = player.level().getDayTime() / 24000L;
         if (kingdom != null && kingdom.getLastStockMarketUpdate() < day) {
             // Update all shop item modifiers if a day has passed
             // Wow this stock market is all over the place
@@ -60,9 +59,9 @@ public class StockMarketEntity extends ShopEntity {
             kingdom.setLastStockMarketUpdate(day);
         }
 
-        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+        if (hand == InteractionHand.OFF_HAND || player.level().isClientSide()) return InteractionResult.FAIL;
         TaleOfKingdoms.getAPI().getServerPacket(Packets.OPEN_CLIENT_SCREEN).sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.STOCK_MARKET, this.getId()));
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override

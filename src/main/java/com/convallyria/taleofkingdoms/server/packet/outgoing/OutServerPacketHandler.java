@@ -4,15 +4,15 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 
-public abstract class OutServerPacketHandler<T extends CustomPayload> extends PacketHandler<T> {
+public abstract class OutServerPacketHandler<T extends CustomPacketPayload> extends PacketHandler<T> {
 
-    public OutServerPacketHandler(CustomPayload.Id<T> packet, PacketCodec<RegistryByteBuf, T> codec) {
+    public OutServerPacketHandler(CustomPacketPayload.Type<T> packet, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         super(packet, codec);
     }
 
@@ -30,7 +30,7 @@ public abstract class OutServerPacketHandler<T extends CustomPayload> extends Pa
     }
 
     @Override
-    public void sendPacket(PlayerEntity player, T packet) {
-        ServerPlayNetworking.send((ServerPlayerEntity) player, packet);
+    public void sendPacket(Player player, T packet) {
+        ServerPlayNetworking.send((ServerPlayer) player, packet);
     }
 }

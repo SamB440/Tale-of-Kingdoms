@@ -1,32 +1,31 @@
 package com.convallyria.taleofkingdoms.common.generator.util;
 
 import com.convallyria.taleofkingdoms.common.generator.biome.TOKBiomeTags;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.world.StructureSpawns;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.StructureTerrainAdaptation;
-import net.minecraft.world.gen.structure.Structure;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
 
 public class StructureConfigCreator {
 
     private TagKey<Biome> biomes;
-    private final Map<SpawnGroup, StructureSpawns> spawns;
-    private GenerationStep.Feature step;
-    private StructureTerrainAdaptation terrainAdaptation;
+    private final Map<MobCategory, StructureSpawnOverride> spawns;
+    private GenerationStep.Decoration step;
+    private TerrainAdjustment terrainAdaptation;
 
     private StructureConfigCreator() {
         this.biomes = TOKBiomeTags.SOLID_SURFACE;
         this.spawns = new HashMap<>();
-        this.step = GenerationStep.Feature.SURFACE_STRUCTURES;
-        this.terrainAdaptation = StructureTerrainAdaptation.NONE;
+        this.step = GenerationStep.Decoration.SURFACE_STRUCTURES;
+        this.terrainAdaptation = TerrainAdjustment.NONE;
     }
 
     public static StructureConfigCreator create() {
@@ -38,18 +37,18 @@ public class StructureConfigCreator {
         return this;
     }
 
-    public StructureConfigCreator terrainAdaptation(StructureTerrainAdaptation terrainAdaptation) {
+    public StructureConfigCreator terrainAdaptation(TerrainAdjustment terrainAdaptation) {
         this.terrainAdaptation = terrainAdaptation;
         return this;
     }
 
-    public StructureConfigCreator step(GenerationStep.Feature step) {
+    public StructureConfigCreator step(GenerationStep.Decoration step) {
         this.step = step;
         return this;
     }
 
-    public Structure.Config build(Registerable<Structure> structureRegisterable) {
-        RegistryEntryLookup<Biome> registryEntryLookup = structureRegisterable.getRegistryLookup(RegistryKeys.BIOME);
-        return new Structure.Config(registryEntryLookup.getOrThrow(biomes), spawns, step, terrainAdaptation);
+    public Structure.StructureSettings build(BootstrapContext<Structure> structureRegisterable) {
+        HolderGetter<Biome> registryEntryLookup = structureRegisterable.lookup(Registries.BIOME);
+        return new Structure.StructureSettings(registryEntryLookup.getOrThrow(biomes), spawns, step, terrainAdaptation);
     }
 }

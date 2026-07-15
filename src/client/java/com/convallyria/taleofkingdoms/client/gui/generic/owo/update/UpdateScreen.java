@@ -9,21 +9,20 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 
 public class UpdateScreen extends BaseUIModelScreen<FlowLayout> {
 
     public UpdateScreen() {
-        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "update_ui_model")));
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "update_ui_model")));
     }
 
     @Override
@@ -41,18 +40,18 @@ public class UpdateScreen extends BaseUIModelScreen<FlowLayout> {
 
         rootComponent.childById(FlowLayout.class, "inner").child(
                 Containers.verticalScroll(Sizing.content(), Sizing.fill(50),
-                        Components.label(Text.literal(String.join("\n", updates))).color(Color.ofDye(DyeColor.GRAY)))
+                        Components.label(Component.literal(String.join("\n", updates))).color(Color.ofDye(DyeColor.GRAY)))
                 .positioning(Positioning.relative(50, 50)));
 
 //        rootComponent.childById(ScrollContainer.class, "scroll").child(Components.label(Text.literal(String.join("\n", updates))).color(Color.ofDye(DyeColor.GRAY)));
 
         rootComponent.childById(ButtonComponent.class, "exit-button").onPress(b -> {
-            this.close();
+            this.onClose();
         });
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return true;
     }
 

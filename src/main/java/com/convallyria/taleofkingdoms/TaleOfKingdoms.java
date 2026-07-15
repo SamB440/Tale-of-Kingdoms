@@ -65,18 +65,18 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.command.argument.TextArgumentType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.arguments.ComponentArgument;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -104,24 +104,24 @@ public class TaleOfKingdoms implements ModInitializer {
     public static final StructureProcessorType<?> GATEWAY_PROCESSOR = StructureProcessorType.register("taleofkingdoms:gateway", GatewayStructureProcessor.CODEC);
     public static final StructureProcessorType<?> KINGDOM_PROCESSOR = StructureProcessorType.register("taleofkingdoms:kingdom", PlayerKingdomStructureProcessor.CODEC);
 
-    public static final ScreenHandlerType<SellScreenHandler> SELL_SCREEN_HANDLER;
+    public static final MenuType<SellScreenHandler> SELL_SCREEN_HANDLER;
 
     public static final Block SELL_BLOCK;
     public static final BlockEntityType<SellBlockEntity> SELL_BLOCK_ENTITY;
 
     // a public identifier for multiple parts of our bigger chest
-    public static final Identifier SELL_BLOCK_IDENTIFIER = Identifier.of(MODID, "sell_block");
+    public static final ResourceLocation SELL_BLOCK_IDENTIFIER = ResourceLocation.fromNamespaceAndPath(MODID, "sell_block");
 
     static {
         //We use registerSimple here because our Entity is not an ExtendedScreenHandlerFactory
         //but a NamedScreenHandlerFactory.
         //In a later Tutorial you will see what ExtendedScreenHandlerFactory can do!
-        SELL_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER, Identifier.of(TaleOfKingdoms.MODID, "sell_screen_handler"), new ScreenHandlerType<>(SellScreenHandler::new, FeatureFlags.VANILLA_FEATURES));
+        SELL_SCREEN_HANDLER = Registry.register(BuiltInRegistries.MENU, ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "sell_screen_handler"), new MenuType<>(SellScreenHandler::new, FeatureFlags.VANILLA_SET));
 
-        SELL_BLOCK = Registry.register(Registries.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
+        SELL_BLOCK = Registry.register(BuiltInRegistries.BLOCK, SELL_BLOCK_IDENTIFIER, new SellBlock(FabricBlockSettings.copyOf(Blocks.CHEST)));
 
         //The parameter of build at the very end is always null, do not worry about it
-        SELL_BLOCK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, FabricBlockEntityTypeBuilder.create(SellBlockEntity::new, SELL_BLOCK).build(null));
+        SELL_BLOCK_ENTITY = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, SELL_BLOCK_IDENTIFIER, FabricBlockEntityTypeBuilder.create(SellBlockEntity::new, SELL_BLOCK).build(null));
     }
 
     public static void setAPI(TaleOfKingdomsAPI api) {
@@ -204,7 +204,7 @@ public class TaleOfKingdoms implements ModInitializer {
         FabricDefaultAttributeRegistry.register(EntityTypes.WARRIOR, WarriorHireableEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.ARCHER, ArcherHireableEntity.createMobAttributes());
         FabricDefaultAttributeRegistry.register(EntityTypes.BLOCK_SHOP, BlockShopEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(EntityTypes.HUMAN_FARMER, HumanFarmerEntity.createVillagerAttributes());
+        FabricDefaultAttributeRegistry.register(EntityTypes.HUMAN_FARMER, HumanFarmerEntity.createAttributes());
 
         // Load shop items
         new ShopParser().createShopItems();
@@ -251,22 +251,22 @@ public class TaleOfKingdoms implements ModInitializer {
     }
 
     public void registerFeatures() {
-        Registry.register(Registries.STRUCTURE_PIECE, Identifier.of(MODID, "bandit_camp_piece"), TOKStructures.BANDIT_CAMP);
-        Registry.register(Registries.STRUCTURE_PIECE, Identifier.of(MODID, "gateway_piece"), TOKStructures.GATEWAY);
-        Registry.register(Registries.STRUCTURE_PIECE, Identifier.of(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
+        Registry.register(BuiltInRegistries.STRUCTURE_PIECE, ResourceLocation.fromNamespaceAndPath(MODID, "bandit_camp_piece"), TOKStructures.BANDIT_CAMP);
+        Registry.register(BuiltInRegistries.STRUCTURE_PIECE, ResourceLocation.fromNamespaceAndPath(MODID, "gateway_piece"), TOKStructures.GATEWAY);
+        Registry.register(BuiltInRegistries.STRUCTURE_PIECE, ResourceLocation.fromNamespaceAndPath(MODID, "reficule_village_piece"), TOKStructures.REFICULE_VILLAGE);
     }
 
-    public static Text parse(StringReader stringReader, RegistryWrapper.WrapperLookup registries) throws CommandSyntaxException {
+    public static Component parse(StringReader stringReader, HolderLookup.Provider registries) throws CommandSyntaxException {
         try {
-            Text text = Text.Serialization.fromJson(stringReader.getString(), registries);
+            Component text = Component.Serializer.fromJson(stringReader.getString(), registries);
             if (text == null) {
-                throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.createWithContext(stringReader, "empty");
+                throw ComponentArgument.ERROR_INVALID_JSON.createWithContext(stringReader, "empty");
             } else {
                 return text;
             }
         } catch (JsonParseException var4) {
             String string = var4.getCause() != null ? var4.getCause().getMessage() : var4.getMessage();
-            throw TextArgumentType.INVALID_COMPONENT_EXCEPTION.createWithContext(stringReader, string);
+            throw ComponentArgument.ERROR_INVALID_JSON.createWithContext(stringReader, string);
         }
     }
 

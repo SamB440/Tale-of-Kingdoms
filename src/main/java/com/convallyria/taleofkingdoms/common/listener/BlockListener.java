@@ -3,10 +3,9 @@ package com.convallyria.taleofkingdoms.common.listener;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.event.BlockBreakCallback;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
 
 public class BlockListener extends Listener {
 
@@ -27,7 +26,7 @@ public class BlockListener extends Listener {
                 }
             }
 
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
         });
     }
 }

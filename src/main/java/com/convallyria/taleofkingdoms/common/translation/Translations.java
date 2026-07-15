@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.translation;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 public enum Translations {
     FOREMAN_NEED_RESOURCES("entity.foreman.need_resources"),
@@ -72,20 +72,20 @@ public enum Translations {
         this.key = key;
     }
     
-    public void send(PlayerEntity playerEntity) {
-        playerEntity.sendMessage(getTranslation(), false);
+    public void send(Player playerEntity) {
+        playerEntity.displayClientMessage(getTranslation(), false);
     }
 
-    public void send(PlayerEntity playerEntity, Object... values) {
+    public void send(Player playerEntity, Object... values) {
         send(playerEntity, false, values);
     }
 
-    public void send(PlayerEntity playerEntity, boolean actionbar, Object... values) {
-        playerEntity.sendMessage(Text.translatable(key, values), actionbar);
+    public void send(Player playerEntity, boolean actionbar, Object... values) {
+        playerEntity.displayClientMessage(Component.translatable(key, values), actionbar);
     }
 
-    public Text getTranslation() {
-        return Text.translatable(key);
+    public Component getTranslation() {
+        return Component.translatable(key);
     }
     
     public String getFormatted() {

@@ -10,10 +10,9 @@ import com.convallyria.taleofkingdoms.common.packet.c2s.CityBuilderActionPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.network.ServerPlayerEntity;
-
 import java.util.Optional;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 
 public final class IncomingCityBuilderActionPacketHandler extends InServerPacketHandler<CityBuilderActionPacket> {
 
@@ -23,12 +22,12 @@ public final class IncomingCityBuilderActionPacketHandler extends InServerPacket
 
     @Override
     public void handleIncomingPacket(PacketContext context, CityBuilderActionPacket packet) {
-        final ServerPlayerEntity player = (ServerPlayerEntity) context.player();
+        final ServerPlayer player = (ServerPlayer) context.player();
         final int entityId = packet.entityId();
         final CityBuilderAction action = packet.action();
         final Optional<BuildCosts> buildCosts = packet.costs();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-            final Entity entityById = player.getWorld().getEntityById(entityId);
+            final Entity entityById = player.level().getEntity(entityId);
             if (!(entityById instanceof CityBuilderEntity cityBuilderEntity) || entityById.distanceTo(player) > 5) {
                 reject(player, "Invalid entity ID / Distance");
                 return;
@@ -39,7 +38,7 @@ public final class IncomingCityBuilderActionPacketHandler extends InServerPacket
                 return;
             }
 
-            final GuildPlayer guildPlayer = instance.getPlayer(player.getUuid());
+            final GuildPlayer guildPlayer = instance.getPlayer(player.getUUID());
             if (guildPlayer == null) {
                 reject(player, "No player");
                 return;

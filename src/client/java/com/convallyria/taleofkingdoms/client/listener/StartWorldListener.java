@@ -16,9 +16,9 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -69,20 +69,20 @@ public class StartWorldListener extends Listener {
                     Runnable runnable = () -> api.executeOnMain(() -> {
                         // Check if file exists, but values don't. Game probably crashed?
                         if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
-                            PlayerEntity entity = MinecraftClient.getInstance().player;
+                            Player entity = Minecraft.getInstance().player;
                             if (entity == null) return;
 
                             if (TaleOfKingdoms.CONFIG.mainConfig.showStartKingdomGUI) {
-                                MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
+                                Minecraft.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
                             } else {
-                                Text keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getBoundKeyLocalizedText();
-                                entity.sendMessage(Text.translatable("menu.taleofkingdoms.startconquest.closed", keyName.getString()), false);
+                                Component keyName = TaleOfKingdomsClient.START_CONQUEST_KEYBIND.getTranslatedKeyMessage();
+                                entity.displayClientMessage(Component.translatable("menu.taleofkingdoms.startconquest.closed", keyName.getString()), false);
                             }
                         } else {
                             if (TaleOfKingdoms.CONFIG.mainConfig.alwaysShowUpdatesGUI || instance.didUpgrade()) {
-                                MinecraftClient.getInstance().setScreen(new UpdateScreen());
+                                Minecraft.getInstance().setScreen(new UpdateScreen());
                             } else if (TaleOfKingdoms.CONFIG.mainConfig.showContinueConquestGUI) {
-                                MinecraftClient.getInstance().setScreen(new ScreenContinueConquest(instance));
+                                Minecraft.getInstance().setScreen(new ScreenContinueConquest(instance));
                             }
 
                             if (api.getConquestInstanceStorage().getConquestInstance(worldName).isEmpty()) {
@@ -106,14 +106,14 @@ public class StartWorldListener extends Listener {
 
             // New world creation
             postJoin.add(() -> api.executeOnMain(() -> {
-                PlayerEntity entity = MinecraftClient.getInstance().player;
+                Player entity = Minecraft.getInstance().player;
                 if (entity == null) return;
-                MinecraftClient.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
+                Minecraft.getInstance().setScreen(new ScreenStartConquest(worldName, file, entity));
             }));
         });
 
         GameJoinCallback.EVENT.register(() -> {
-            if (!MinecraftClient.getInstance().getNetworkHandler().getConnection().isLocal()) {
+            if (!Minecraft.getInstance().getConnection().getConnection().isMemoryConnection()) {
                 postJoin.clear();
                 return;
             }

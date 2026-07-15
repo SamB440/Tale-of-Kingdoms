@@ -1,33 +1,33 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal;
 
-import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.level.LevelReader;
 
-public class WalkToTargetGoal extends MoveToTargetPosGoal {
+public class WalkToTargetGoal extends MoveToBlockGoal {
 
-    private final PathAwareEntity entity;
+    private final PathfinderMob entity;
     private final BlockPos pos;
 
-    public WalkToTargetGoal(PathAwareEntity entity, double speed, BlockPos pos) {
-        super(entity, speed, 100, entity.getWorld().getHeight());
+    public WalkToTargetGoal(PathfinderMob entity, double speed, BlockPos pos) {
+        super(entity, speed, 100, entity.level().getHeight());
         this.entity = entity;
         this.pos = pos;
     }
 
     @Override
-    public BlockPos getTargetPos() {
+    public BlockPos getMoveToTarget() {
         return this.pos;
     }
 
     @Override
-    protected boolean isTargetPos(WorldView world, BlockPos pos) {
+    protected boolean isValidTarget(LevelReader world, BlockPos pos) {
         return pos.equals(this.pos);
     }
 
     @Override
-    public double getDesiredDistanceToTarget() {
+    public double acceptedDistance() {
         return 0.5;
     }
 }

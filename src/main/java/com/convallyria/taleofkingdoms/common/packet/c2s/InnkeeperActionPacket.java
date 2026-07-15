@@ -1,19 +1,19 @@
 package com.convallyria.taleofkingdoms.common.packet.c2s;
 
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record InnkeeperActionPacket(boolean resting) implements CustomPayload {
+public record InnkeeperActionPacket(boolean resting) implements CustomPacketPayload {
 
-    public static final PacketCodec<RegistryByteBuf, InnkeeperActionPacket> CODEC = PacketCodec.tuple(
-            PacketCodecs.BOOL, InnkeeperActionPacket::resting,
+    public static final StreamCodec<RegistryFriendlyByteBuf, InnkeeperActionPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL, InnkeeperActionPacket::resting,
             InnkeeperActionPacket::new);
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return Packets.INNKEEPER_HIRE_ROOM;
     }
 }

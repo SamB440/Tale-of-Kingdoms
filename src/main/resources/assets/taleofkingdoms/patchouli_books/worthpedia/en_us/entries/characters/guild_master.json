@@ -1,0 +1,29 @@
+{
+  "name": "Guild Master",
+  "icon": "minecraft:writable_book",
+  "category": "taleofkingdoms:characters",
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "taleofkingdoms:guild_master",
+      "rotate": true,
+      "offset": 0.15
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Lore",
+      "text": "The Guild Master is a wise old man, who is in charge of The Guild. He oversees an order of warriors who safeguard the lands with their fight against the reficules and any foul evil that may threaten the lands of the overworld."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Contracts & Worthiness",
+      "text": "The most important thing to do is to sign a contract with the Guild Master. This allows you to gain worthiness and interact with other NPCs in the Guild.$(br2)You can view your worthiness towards the bottom of the screen when talking to the Guild Master, denoted as your 'Path to Kingship'. Once this bar reaches its maximum, you will have enough worthiness to speak to the City Builder and create your own kingdom. Be careful - some other things might happen during your adventure..."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "taleofkingdoms:structures/the_guild"
+      ]
+    }
+  ]
+}

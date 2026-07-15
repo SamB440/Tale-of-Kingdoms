@@ -5,72 +5,72 @@ import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.ImprovedFollowTargetGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.WanderAroundGuildGoal;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public abstract class WardenHireable extends TOKEntity {
 
     private int internalTotalExperience;
 
-    private static final TrackedData<Integer> TOTAL_EXPERIENCE;
+    private static final EntityDataAccessor<Integer> TOTAL_EXPERIENCE;
 
     static {
-        TOTAL_EXPERIENCE = DataTracker.registerData(WardenHireable.class, TrackedDataHandlerRegistry.INTEGER);
+        TOTAL_EXPERIENCE = SynchedEntityData.defineId(WardenHireable.class, EntityDataSerializers.INT);
     }
 
-    public WardenHireable(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public WardenHireable(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
     }
 
     public int getExperiencePoints() {
-        return this.dataTracker.get(TOTAL_EXPERIENCE);
+        return this.entityData.get(TOTAL_EXPERIENCE);
     }
 
     @Override
-    public abstract Optional<Identifier> getSkin();
+    public abstract Optional<ResourceLocation> getSkin();
 
     private Goal followGoal;
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.FAIL;
         this.toggleFollowGoal(player);
-        return super.interactMob(player, hand);
+        return super.mobInteract(player, hand);
     }
 
-    public void toggleFollowGoal(PlayerEntity cause) {
+    public void toggleFollowGoal(Player cause) {
         if (followGoal != null) {
-            if (!this.getWorld().isClient()) cause.sendMessage(getGuardText());
-            this.targetSelector.remove(followGoal);
+            if (!this.level().isClientSide()) cause.sendSystemMessage(getGuardText());
+            this.targetSelector.removeGoal(followGoal);
             this.followGoal = null;
         } else {
-            if (!this.getWorld().isClient()) cause.sendMessage(getFollowText());
-            this.targetSelector.add(5, followGoal = new FollowPlayerGoal(this, 0.6D, 2.5f, 30));
+            if (!this.level().isClientSide()) cause.sendSystemMessage(getFollowText());
+            this.targetSelector.addGoal(5, followGoal = new FollowPlayerGoal(this, 0.6D, 2.5f, 30));
         }
     }
 
@@ -78,26 +78,26 @@ public abstract class WardenHireable extends TOKEntity {
         return followGoal != null;
     }
 
-    public abstract Text getFollowText();
+    public abstract Component getFollowText();
 
-    public abstract Text getGuardText();
+    public abstract Component getGuardText();
 
     @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-        super.initDataTracker(builder);
-        builder.add(TOTAL_EXPERIENCE, internalTotalExperience);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(TOTAL_EXPERIENCE, internalTotalExperience);
     }
 
     @Override
-    public boolean onKilledOther(ServerWorld world, LivingEntity other) {
+    public boolean killedEntity(ServerLevel world, LivingEntity other) {
         this.internalTotalExperience++;
-        this.dataTracker.set(TOTAL_EXPERIENCE, this.internalTotalExperience);
+        this.entityData.set(TOTAL_EXPERIENCE, this.internalTotalExperience);
         if (this.tryLevelUp()) {
             this.updateLevelledAttributes();
             this.playLevelUpEffects();
             this.setHealth(this.getMaxHealth());
         }
-        return super.onKilledOther(world, other);
+        return super.killedEntity(world, other);
     }
 
     protected abstract boolean tryLevelUp();
@@ -107,29 +107,29 @@ public abstract class WardenHireable extends TOKEntity {
             double d = this.random.nextGaussian() * 0.02;
             double e = this.random.nextGaussian() * 0.02;
             double f = this.random.nextGaussian() * 0.02;
-            this.getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getParticleX(1.0), this.getRandomBodyY() + 1.0, this.getParticleZ(1.0), d, e, f);
+            this.level().addParticle(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 1.0, this.getRandomZ(1.0), d, e, f);
         }
-        this.getWorld().playSoundFromEntity(this, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 1f, 1f);
+        this.level().playLocalSound(this, SoundEvents.ANVIL_USE, SoundSource.PLAYERS, 1f, 1f);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(2, new WanderAroundGuildGoal(this, 0.6D));
-        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 30.0F));
-        this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
-        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
-        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
-        this.targetSelector.add(4, new ActiveTargetGoal<>(this, MobEntity.class, 100,
-                true, true, livingEntity -> livingEntity instanceof Monster));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(2, new WanderAroundGuildGoal(this, 0.6D));
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 30.0F));
+        this.targetSelector.addGoal(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
+        this.targetSelector.addGoal(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
+        this.targetSelector.addGoal(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Mob.class, 100,
+                true, true, livingEntity -> livingEntity instanceof Enemy));
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
+    public static AttributeSupplier.Builder createMobAttributes() {
         return TOKEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 60)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 7.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D);
+                .add(Attributes.MAX_HEALTH, 60)
+                .add(Attributes.FOLLOW_RANGE, 20)
+                .add(Attributes.ATTACK_DAMAGE, 7.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D);
     }
 
     @Override
@@ -145,16 +145,16 @@ public abstract class WardenHireable extends TOKEntity {
     public abstract void updateLevelledAttributes();
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.internalTotalExperience = nbt.getInt("XpTotal");
-        this.dataTracker.set(TOTAL_EXPERIENCE, internalTotalExperience);
+        this.entityData.set(TOTAL_EXPERIENCE, internalTotalExperience);
         this.updateLevelledAttributes();
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putInt("XpTotal", internalTotalExperience);
     }
 }

@@ -7,56 +7,55 @@ import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-
 import java.util.Optional;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class GuildMasterEntity extends TOKEntity {
 
-    public GuildMasterEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public GuildMasterEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes() {
+    public static AttributeSupplier.Builder createMobAttributes() {
         return TOKEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 15.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 1.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D);
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.FOLLOW_RANGE)
+                .add(Attributes.ATTACK_DAMAGE, 15.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.5D);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(3, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
 
-        if (player instanceof ServerPlayerEntity) {
+        if (player instanceof ServerPlayer) {
             api.getServerPacket(Packets.OPEN_CLIENT_SCREEN).sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.GUILD_MASTER, this.getId()));
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         if (api != null) {
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
@@ -68,7 +67,7 @@ public class GuildMasterEntity extends TOKEntity {
     }
 
     @Override
-    public boolean damage(DamageSource damageSource, float f) {
+    public boolean hurt(DamageSource damageSource, float f) {
         return !this.getType().equals(EntityTypes.GUILDMASTER);
     }
 

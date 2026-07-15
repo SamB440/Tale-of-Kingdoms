@@ -28,12 +28,11 @@ import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.Entity;
-import net.minecraft.text.Text;
-
 import java.util.Optional;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 
 public final class IncomingOpenScreenPacketHandler extends InClientPacketHandler<OpenScreenPacket> {
 
@@ -43,19 +42,19 @@ public final class IncomingOpenScreenPacketHandler extends InClientPacketHandler
 
     @Override
     public void handleIncomingPacket(PacketContext context, OpenScreenPacket openScreen) {
-        final OpenScreenPacket.ScreenTypes type = openScreen.type();
+        final OpenScreenPacket.ScreenTypes type = openScreen.screenType();
         final int entityId = openScreen.entityId();
         context.taskQueue().execute(() -> {
-            MinecraftClient client = (MinecraftClient) context.taskQueue();
+            Minecraft client = (Minecraft) context.taskQueue();
             if (TaleOfKingdoms.CONFIG.mainConfig.developerMode) {
                 final String text = "Received open screen, " + type;
                 TaleOfKingdoms.LOGGER.info(text);
-                if (client.player != null) client.player.sendMessage(Text.literal(text));
+                if (client.player != null) client.player.sendSystemMessage(Component.literal(text));
             }
 
             if (client.player == null) return;
 
-            final Entity entityById = client.world.getEntityById(entityId);
+            final Entity entityById = client.level.getEntity(entityId);
             if (entityById == null) {
                 TaleOfKingdoms.LOGGER.warn("Desync! {} was not found.", entityId);
                 return;

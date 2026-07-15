@@ -12,12 +12,11 @@ import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import java.util.Optional;
 
 @Environment(EnvType.SERVER)
@@ -29,7 +28,7 @@ public final class IncomingInnkeeperPacketHandler extends InServerPacketHandler<
 
     @Override
     public void handleIncomingPacket(PacketContext context, InnkeeperActionPacket packet) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
+        ServerPlayer player = (ServerPlayer) context.player();
         boolean resting = packet.resting();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             if (!instance.isInGuild(player)) {
@@ -38,7 +37,7 @@ public final class IncomingInnkeeperPacketHandler extends InServerPacketHandler<
             }
 
             // Search for innkeeper
-            Optional<InnkeeperEntity> entity = instance.getGuildEntity(player.getWorld(), EntityTypes.INNKEEPER);
+            Optional<InnkeeperEntity> entity = instance.getGuildEntity(player.level(), EntityTypes.INNKEEPER);
             if (entity.isEmpty()) {
                 reject(player, "Innkeeper entity not present in guild.");
                 return;
@@ -67,15 +66,15 @@ public final class IncomingInnkeeperPacketHandler extends InServerPacketHandler<
 
                 TaleOfKingdomsServer.getAPI().executeOnDedicatedServer(() -> {
                     MinecraftServer server = player.getServer();
-                    server.getOverworld().setTimeOfDay(1000);
-                    player.requestTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
-                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                    server.overworld().setDayTime(1000);
+                    player.teleportTo(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 1));
+                    player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
                 });
                 return;
             }
 
-            TaleOfKingdomsServer.getAPI().getServer().getOverworld().setTimeOfDay(13000);
+            TaleOfKingdomsServer.getAPI().getServer().overworld().setDayTime(13000);
             ServerConquestInstance.sync(player, instance);
         }));
     }

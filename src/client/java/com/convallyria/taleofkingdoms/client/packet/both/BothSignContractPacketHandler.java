@@ -6,7 +6,7 @@ import com.convallyria.taleofkingdoms.common.packet.both.SignContractPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 
 public final class BothSignContractPacketHandler extends InOutClientPacketHandler<SignContractPacket> {
 
@@ -18,7 +18,7 @@ public final class BothSignContractPacketHandler extends InOutClientPacketHandle
     public void handleIncomingPacket(PacketContext context, SignContractPacket packet) {
         boolean sign = packet.signed();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-            final PlayerEntity player = context.player();
+            final Player player = context.player();
             final GuildPlayer guildPlayer = instance.getPlayer(player);
             guildPlayer.setSignedContract(sign);
             if (sign) Translations.GUILDMASTER_CONTRACT_SIGN.send(player);

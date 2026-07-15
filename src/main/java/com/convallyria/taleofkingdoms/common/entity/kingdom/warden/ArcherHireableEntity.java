@@ -5,27 +5,27 @@ import com.convallyria.taleofkingdoms.common.entity.ai.goal.BowAttackGoal;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.CrossbowAttackGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.CrossbowUser;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.RangedAttackMob;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,12 +34,12 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class ArcherHireableEntity extends WardenHireable implements CrossbowUser, RangedAttackMob, States {
+public class ArcherHireableEntity extends WardenHireable implements CrossbowAttackMob, RangedAttackMob, States {
 
     private boolean charging;
     private boolean ticked;
 
-    public ArcherHireableEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public ArcherHireableEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
     }
 
@@ -49,13 +49,13 @@ public class ArcherHireableEntity extends WardenHireable implements CrossbowUser
     }
 
     @Override
-    public void setCharging(boolean charging) {
+    public void setChargingCrossbow(boolean charging) {
         this.charging = charging;
     }
 
     @Override
-    public void postShoot() {
-        this.despawnCounter = 0;
+    public void onCrossbowAttackPerformed() {
+        this.noActionTime = 0;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ArcherHireableEntity extends WardenHireable implements CrossbowUser
         } else if (this.isHolding(Items.CROSSBOW)) {
             return States.State.CROSSBOW_HOLD;
         } else {
-            return this.isAttacking() ? States.State.ATTACKING : States.State.NEUTRAL;
+            return this.isAggressive() ? States.State.ATTACKING : States.State.NEUTRAL;
         }
     }
 
@@ -90,7 +90,7 @@ public class ArcherHireableEntity extends WardenHireable implements CrossbowUser
     }
 
     @Override
-    public Optional<Identifier> getSkin() {
+    public Optional<ResourceLocation> getSkin() {
         final ArcherLevel level = getLevel();
         return Optional.of(
             switch (level) {
@@ -101,20 +101,20 @@ public class ArcherHireableEntity extends WardenHireable implements CrossbowUser
     }
 
     @Override
-    public Text getFollowText() {
-        return Text.translatable("entity_type.taleofkingdoms.archer.follow", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
+    public Component getFollowText() {
+        return Component.translatable("entity_type.taleofkingdoms.archer.follow", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
     }
 
     @Override
-    public Text getGuardText() {
-        return Text.translatable("entity_type.taleofkingdoms.archer.guard", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
+    public Component getGuardText() {
+        return Component.translatable("entity_type.taleofkingdoms.archer.guard", StringUtils.capitalize(getLevel().name().toLowerCase(Locale.ROOT)));
     }
 
     @Override
-    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData) {
-        EntityData entityReturnData = super.initialize(world, difficulty, spawnReason, entityData);
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData) {
+        SpawnGroupData entityReturnData = super.finalizeSpawn(world, difficulty, spawnReason, entityData);
         int value = ThreadLocalRandom.current().nextInt(2);
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(value == 1 ? Items.BOW : Items.CROSSBOW));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(value == 1 ? Items.BOW : Items.CROSSBOW));
         return entityReturnData;
     }
 
@@ -124,47 +124,47 @@ public class ArcherHireableEntity extends WardenHireable implements CrossbowUser
         if (this.ticked) return;
         this.ticked = true;
         // initGoals seems to be too early, soooo...
-        if (this.getStackInHand(Hand.MAIN_HAND).getItem() == Items.BOW) {
-            this.goalSelector.add(1, new BowAttackGoal<>(this, 0.7D, 10, 15.0F * (this.getLevel().ordinal() + 1)));
+        if (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.BOW) {
+            this.goalSelector.addGoal(1, new BowAttackGoal<>(this, 0.7D, 10, 15.0F * (this.getLevel().ordinal() + 1)));
         } else {
-            this.goalSelector.add(1, new CrossbowAttackGoal<>(this, 0.7D, 15.0F * (this.getLevel().ordinal() + 1)));
+            this.goalSelector.addGoal(1, new CrossbowAttackGoal<>(this, 0.7D, 15.0F * (this.getLevel().ordinal() + 1)));
         }
     }
 
     @Override
-    public void shootAt(LivingEntity target, float pullProgress) {
-        final ItemStack shotFrom = this.getStackInHand(ProjectileUtil.getHandPossiblyHolding(this, Items.BOW));
-        ItemStack itemStack = this.getProjectileType(shotFrom);
-        PersistentProjectileEntity persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress, shotFrom);
+    public void performRangedAttack(LivingEntity target, float pullProgress) {
+        final ItemStack shotFrom = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW));
+        ItemStack itemStack = this.getProjectile(shotFrom);
+        AbstractArrow persistentProjectileEntity = this.createArrowProjectile(itemStack, pullProgress, shotFrom);
         double d = target.getX() - this.getX();
-        double e = target.getBodyY(0.3333333333333333D) - persistentProjectileEntity.getY();
+        double e = target.getY(0.3333333333333333D) - persistentProjectileEntity.getY();
         double g = target.getZ() - this.getZ();
         double h = Math.sqrt(d * d + g * g);
-        persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() + ((this.getLevel().ordinal() + 1) * 2));
-        persistentProjectileEntity.setVelocity(d, e + h * 0.2f, g, 1.6F, (float)(14 - this.getWorld().getDifficulty().getId() * 4));
-        this.playSound(SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
-        this.getWorld().spawnEntity(persistentProjectileEntity);
+        persistentProjectileEntity.setBaseDamage(persistentProjectileEntity.getBaseDamage() + ((this.getLevel().ordinal() + 1) * 2));
+        persistentProjectileEntity.shoot(d, e + h * 0.2f, g, 1.6F, (float)(14 - this.level().getDifficulty().getId() * 4));
+        this.playSound(SoundEvents.SKELETON_SHOOT, 1.0F, 1.0F / (this.getRandom().nextFloat() * 0.4F + 0.8F));
+        this.level().addFreshEntity(persistentProjectileEntity);
     }
 
-    protected PersistentProjectileEntity createArrowProjectile(ItemStack arrow, float damageModifier, ItemStack shotFrom) {
-        return ProjectileUtil.createArrowProjectile(this, arrow, damageModifier, shotFrom.isEmpty() ? null : shotFrom);
+    protected AbstractArrow createArrowProjectile(ItemStack arrow, float damageModifier, ItemStack shotFrom) {
+        return ProjectileUtil.getMobArrow(this, arrow, damageModifier, shotFrom.isEmpty() ? null : shotFrom);
     }
 
     @Override
-    public boolean canUseRangedWeapon(RangedWeaponItem weapon) {
+    public boolean canFireProjectileWeapon(ProjectileWeaponItem weapon) {
         return weapon == Items.BOW || weapon == Items.CROSSBOW;
     }
 
     @Override
     public void updateLevelledAttributes() {
-        final EntityAttributeInstance attackDamage = this.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        final AttributeInstance attackDamage = this.getAttribute(Attributes.ATTACK_DAMAGE);
         attackDamage.setBaseValue(7f + (2f * getLevel().ordinal()));
         this.current = getLevel();
     }
 
     @Override
-    protected Text getDefaultName() {
-        return Text.translatable("entity.taleofkingdoms." + getLevel().name().toLowerCase(Locale.ROOT));
+    protected Component getTypeName() {
+        return Component.translatable("entity.taleofkingdoms." + getLevel().name().toLowerCase(Locale.ROOT));
     }
 
     public enum ArcherLevel {

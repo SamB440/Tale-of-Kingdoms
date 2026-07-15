@@ -3,63 +3,63 @@ package com.convallyria.taleofkingdoms.client.entity.render;
 import com.convallyria.taleofkingdoms.common.entity.States;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.entity.model.CrossbowPosing;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.AnimationUtils;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 
 @Environment(EnvType.CLIENT)
-public class ImprovedPlayerEntityModel<T extends LivingEntity> extends PlayerEntityModel<T> {
+public class ImprovedPlayerEntityModel<T extends LivingEntity> extends PlayerModel<T> {
 
     public ImprovedPlayerEntityModel(ModelPart modelPart, boolean bl) {
         super(modelPart, bl);
     }
 
     @Override
-    public void setAngles(T livingEntity, float f, float g, float h, float i, float j) {
-        super.setAngles(livingEntity, f, g, h, i, j);
+    public void setupAnim(T livingEntity, float f, float g, float h, float i, float j) {
+        super.setupAnim(livingEntity, f, g, h, i, j);
         if (livingEntity instanceof States states) {
             States.State state = states.getState();
             if (state == States.State.ATTACKING) {
-                if (livingEntity.getMainHandStack().isEmpty()) {
-                    CrossbowPosing.meleeAttack(this.leftArm, this.rightArm, true, this.handSwingProgress, h);
+                if (livingEntity.getMainHandItem().isEmpty()) {
+                    AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, h);
                 } else {
-                    CrossbowPosing.meleeAttack(this.rightArm, this.leftArm, (MobEntity) livingEntity, this.handSwingProgress, h);
+                    AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, (Mob) livingEntity, this.attackTime, h);
                 }
             } else if (state == States.State.SPELLCASTING) {
-                this.rightArm.pivotZ = 0.0F;
-                this.rightArm.pivotX = -5.0F;
-                this.leftArm.pivotZ = 0.0F;
-                this.leftArm.pivotX = 5.0F;
-                this.rightArm.pitch = MathHelper.cos(h * 0.6662F) * 0.25F;
-                this.leftArm.pitch = MathHelper.cos(h * 0.6662F) * 0.25F;
-                this.rightArm.roll = 2.3561945F;
-                this.leftArm.roll = -2.3561945F;
-                this.rightArm.yaw = 0.0F;
-                this.leftArm.yaw = 0.0F;
+                this.rightArm.z = 0.0F;
+                this.rightArm.x = -5.0F;
+                this.leftArm.z = 0.0F;
+                this.leftArm.x = 5.0F;
+                this.rightArm.xRot = Mth.cos(h * 0.6662F) * 0.25F;
+                this.leftArm.xRot = Mth.cos(h * 0.6662F) * 0.25F;
+                this.rightArm.zRot = 2.3561945F;
+                this.leftArm.zRot = -2.3561945F;
+                this.rightArm.yRot = 0.0F;
+                this.leftArm.yRot = 0.0F;
             } else if (state == States.State.BOW_AND_ARROW) {
-                this.rightArm.yaw = -0.1F + this.head.yaw;
-                this.rightArm.pitch = -1.5707964F + this.head.pitch;
-                this.leftArm.pitch = -0.9424779F + this.head.pitch;
-                this.leftArm.yaw = this.head.yaw - 0.4F;
-                this.leftArm.roll = 1.5707964F;
+                this.rightArm.yRot = -0.1F + this.head.yRot;
+                this.rightArm.xRot = -1.5707964F + this.head.xRot;
+                this.leftArm.xRot = -0.9424779F + this.head.xRot;
+                this.leftArm.yRot = this.head.yRot - 0.4F;
+                this.leftArm.zRot = 1.5707964F;
             } else if (state == States.State.CROSSBOW_HOLD) {
-                CrossbowPosing.hold(this.rightArm, this.leftArm, this.head, true);
+                AnimationUtils.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
             } else if (state == States.State.CROSSBOW_CHARGE) {
-                CrossbowPosing.charge(this.rightArm, this.leftArm, livingEntity, true);
+                AnimationUtils.animateCrossbowCharge(this.rightArm, this.leftArm, livingEntity, true);
             } else if (state == States.State.CELEBRATING) {
-                this.rightArm.pivotZ = 0.0F;
-                this.rightArm.pivotX = -5.0F;
-                this.rightArm.pitch = MathHelper.cos(h * 0.6662F) * 0.05F;
-                this.rightArm.roll = 2.670354F;
-                this.rightArm.yaw = 0.0F;
-                this.leftArm.pivotZ = 0.0F;
-                this.leftArm.pivotX = 5.0F;
-                this.leftArm.pitch = MathHelper.cos(h * 0.6662F) * 0.05F;
-                this.leftArm.roll = -2.3561945F;
-                this.leftArm.yaw = 0.0F;
+                this.rightArm.z = 0.0F;
+                this.rightArm.x = -5.0F;
+                this.rightArm.xRot = Mth.cos(h * 0.6662F) * 0.05F;
+                this.rightArm.zRot = 2.670354F;
+                this.rightArm.yRot = 0.0F;
+                this.leftArm.z = 0.0F;
+                this.leftArm.x = 5.0F;
+                this.leftArm.xRot = Mth.cos(h * 0.6662F) * 0.05F;
+                this.leftArm.zRot = -2.3561945F;
+                this.leftArm.yRot = 0.0F;
             }
 
             boolean bl = state == States.State.CROSSED;

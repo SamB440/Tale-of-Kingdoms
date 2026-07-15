@@ -5,11 +5,11 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.MultiSkinned;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 
 public record RenderSetup(TaleOfKingdoms mod) {
 
@@ -39,7 +39,7 @@ public record RenderSetup(TaleOfKingdoms mod) {
         register(EntityTypes.REFICULE_GUARDIAN, identifier("textures/entity/updated_textures/reficuleguardian.png"));
         EntityRendererRegistry.register(EntityTypes.REFICULE_MAGE, (context) ->
                 new ReficuleMageEntityRenderer<>(context,
-                        new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false)));
+                        new ImprovedPlayerEntityModel<>(context.bakeLayer(ModelLayers.PLAYER), false)));
 
         register(EntityTypes.BANDIT, identifier("textures/entity/bandit/archer_tok.png"));
 
@@ -58,23 +58,23 @@ public record RenderSetup(TaleOfKingdoms mod) {
         registerDefault(EntityTypes.HUMAN_FARMER, identifier("textures/entity/updated_textures/tok_farmer.png"));
     }
 
-    private void register(EntityType<? extends TOKEntity> type, Identifier defaultSkin) {
+    private void register(EntityType<? extends TOKEntity> type, ResourceLocation defaultSkin) {
         EntityRendererRegistry.register(type, (context) ->
-                new TOKBipedRender<TOKEntity, PlayerEntityModel<TOKEntity>>(context,
-                        new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
+                new TOKBipedRender<TOKEntity, PlayerModel<TOKEntity>>(context,
+                        new ImprovedPlayerEntityModel<>(context.bakeLayer(ModelLayers.PLAYER), false),
                         0.5F,
                         defaultSkin));
     }
 
-    private <T extends MobEntity & MultiSkinned> void  registerDefault(EntityType<T> type, Identifier defaultSkin) {
+    private <T extends Mob & MultiSkinned> void  registerDefault(EntityType<T> type, ResourceLocation defaultSkin) {
         EntityRendererRegistry.register(type, (context) ->
                 new DefaultBipedRender<>(context,
-                        new ImprovedPlayerEntityModel<>(context.getPart(EntityModelLayers.PLAYER), false),
+                        new ImprovedPlayerEntityModel<>(context.bakeLayer(ModelLayers.PLAYER), false),
                         0.5F,
                         defaultSkin));
     }
-    
-    public static Identifier identifier(String path) {
-        return Identifier.of(TaleOfKingdoms.MODID, path);
+
+    public static ResourceLocation identifier(String path) {
+        return ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, path);
     }
 }

@@ -7,25 +7,25 @@ import com.convallyria.taleofkingdoms.common.schematic.SchematicOptions;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.StructureBlock;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.StructureTemplate;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.StructureBlock;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.phys.Vec3;
 
 public class GuildStructureProcessor extends StructureProcessor {
 
@@ -40,9 +40,9 @@ public class GuildStructureProcessor extends StructureProcessor {
 
     @Nullable
     @Override
-    public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlacementData data) {
-        ServerWorldAccess serverWorldAccess = (ServerWorldAccess) world;
-        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos(), Blocks.AIR.getDefaultState(), new NbtCompound());
+    public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo currentBlockInfo, StructurePlaceSettings data) {
+        ServerLevelAccessor serverWorldAccess = (ServerLevelAccessor) world;
+        StructureTemplate.StructureBlockInfo air = new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos(), Blocks.AIR.defaultBlockState(), new CompoundTag());
         if (currentBlockInfo.state().getBlock() instanceof StructureBlock) {
             String metadata = currentBlockInfo.nbt().getString("metadata");
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
@@ -58,8 +58,8 @@ public class GuildStructureProcessor extends StructureProcessor {
 
             if (options.contains(SchematicOptions.NO_ENTITIES)) return air;
 
-            Vec3d spawnPos = currentBlockInfo.pos().toCenterPos();
-            final EntityType type = Registries.ENTITY_TYPE.getOrEmpty(Identifier.of(TaleOfKingdoms.MODID, metadata)).orElse(null);
+            Vec3 spawnPos = currentBlockInfo.pos().getCenter();
+            final EntityType type = BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, metadata)).orElse(null);
             if (type == null) {
                 TaleOfKingdoms.LOGGER.error("Unable to find entity {}", metadata);
                 return air;
@@ -71,15 +71,15 @@ public class GuildStructureProcessor extends StructureProcessor {
             }
 
             if (type != EntityTypes.GUILDGUARD && type != EntityTypes.GUILDARCHER && type != EntityTypes.GUILDVILLAGER) {
-                Optional guildEntity = instance.get().getGuildEntity(serverWorldAccess.toServerWorld(), type);
+                Optional guildEntity = instance.get().getGuildEntity(serverWorldAccess.getLevel(), type);
                 if (type == EntityTypes.GUILDMASTER) {
-                    guildEntity = instance.get().getGuildMaster(serverWorldAccess.toServerWorld());
+                    guildEntity = instance.get().getGuildMaster(serverWorldAccess.getLevel());
                 }
 
                 if (guildEntity.isEmpty()) {
-                    EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
+                    EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.containing(spawnPos));
                 }
-            } else EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.ofFloored(spawnPos));
+            } else EntityUtils.spawnEntity(type, serverWorldAccess, BlockPos.containing(spawnPos));
             return air;
         }
         return currentBlockInfo;

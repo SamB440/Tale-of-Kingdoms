@@ -19,20 +19,19 @@ import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Positioning;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.PageTurnWidget;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 
 public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> implements ShopScreenInterface {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final ShopEntity entity;
     private final ConquestInstance instance;
 
@@ -42,8 +41,8 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
 
     private LabelComponent coinsLabel, selectedItemLabel;
 
-    public DefaultShopScreen(PlayerEntity player, ShopEntity entity, ConquestInstance instance) {
-        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(Identifier.of(TaleOfKingdoms.MODID, "shop_ui_model")));
+    public DefaultShopScreen(Player player, ShopEntity entity, ConquestInstance instance) {
+        super(FlowLayout.class, BaseUIModelScreen.DataSource.asset(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "shop_ui_model")));
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -74,13 +73,13 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
         this.selectedItem = shopItems.get(0);
 
         inner.child(this.coinsLabel = (LabelComponent)
-            Components.label(Text.translatable("menu.taleofkingdoms.shop.total_money", guildPlayer.getCoins()))
+            Components.label(Component.translatable("menu.taleofkingdoms.shop.total_money", guildPlayer.getCoins()))
                 .color(Color.ofDye(DyeColor.GRAY))
                 .positioning(Positioning.relative(50, 5))
         );
 
         inner.child(this.selectedItemLabel = (LabelComponent)
-            Components.label(Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getItem().getName().getString(), this.selectedItem.getCost()))
+            Components.label(Component.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getItem().getDescription().getString(), this.selectedItem.getCost()))
                 .color(Color.ofDye(DyeColor.GRAY))
                 .positioning(Positioning.relative(50, 10))
         );
@@ -91,20 +90,20 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
 
         //todo page turn?
 
-        inner.childById(ButtonComponent.class, "exit-button").onPress(button -> this.close());
+        inner.childById(ButtonComponent.class, "exit-button").onPress(button -> this.onClose());
     }
 
     protected void buildShopPages(FlowLayout inner) {
         //todo: dynamically generate page turn widgets per-page? how?
         // Unsure how we can get custom widgets to work with owo dynamic ui
-        inner.child(new PageTurnWidget(0, 0, false, button -> {
+        inner.child(new PageButton(0, 0, false, button -> {
             shop.previousPage();
             this.changePage(shop.getCurrentPage());
         }, true)
                 .positioning(Positioning.relative(3, 18)))
                 .id("page-left");
 
-        inner.child(new PageTurnWidget(0, 0, true, button -> {
+        inner.child(new PageButton(0, 0, true, button -> {
             shop.nextPage();
             this.changePage(shop.getCurrentPage());
         }, true)
@@ -137,7 +136,7 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
                 pages.put(page, new ShopPage(page));
             }
 
-            final ShopButtonWidget widget = new ShopButtonWidget(shopItem, this, currentX, currentY, this.textRenderer);
+            final ShopButtonWidget widget = new ShopButtonWidget(shopItem, this, currentX, currentY, this.font);
             inner.child(widget.positioning(Positioning.relative(currentX, currentY)));
             pages.get(page).addItem(widget);
 
@@ -160,27 +159,27 @@ public abstract class DefaultShopScreen extends BaseUIModelScreen<FlowLayout> im
     protected void changePage(int newPage) {}
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        coinsLabel.text(Text.translatable("menu.taleofkingdoms.shop.total_money", instance.getPlayer(player).getCoins()));
+        coinsLabel.text(Component.translatable("menu.taleofkingdoms.shop.total_money", instance.getPlayer(player).getCoins()));
         if (this.selectedItem != null) {
-            MutableText text = Text.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getItem().getName().getString(), this.selectedItem.getCost());
+            MutableComponent text = Component.translatable("menu.taleofkingdoms.shop.select_item_cost", this.selectedItem.getItem().getDescription().getString(), this.selectedItem.getCost());
             if (this.selectedItem.getModifier() != 1) {
-                text.append(Text.literal(" "));
-                text.append(Text.translatable("menu.taleofkingdoms.shop.select_item_cost_modifier", String.format("%.2f", this.selectedItem.getModifier())));
+                text.append(Component.literal(" "));
+                text.append(Component.translatable("menu.taleofkingdoms.shop.select_item_cost_modifier", String.format("%.2f", this.selectedItem.getModifier())));
             }
             this.selectedItemLabel.text(text);
         }
     }
 
     @Override
-    public void close() {
-        super.close();
+    public void onClose() {
+        super.onClose();
         Translations.SHOP_CLOSE.send(player);
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return false;
     }
 

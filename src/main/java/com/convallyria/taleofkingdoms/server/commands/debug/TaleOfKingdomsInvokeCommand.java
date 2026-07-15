@@ -10,28 +10,27 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.api.EnvType;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Texts;
-
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import java.util.UUID;
 
-public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource> {
+public class TaleOfKingdomsInvokeCommand implements Command<CommandSourceStack> {
     @Override
-    public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Entity entity = context.getSource().getEntity();
         if (entity != null) {
             String message = "{\"text\":\"List of invoke events: saveVillagers, guildAttack\"}";
-            entity.sendMessage(Texts.parse(context.getSource(), TaleOfKingdoms.parse(new StringReader(message), entity.getRegistryManager()), entity, 0));
+            entity.sendSystemMessage(ComponentUtils.updateForEntity(context.getSource(), TaleOfKingdoms.parse(new StringReader(message), entity.registryAccess()), entity, 0));
             return 1;
         }
         return 0;
     }
 
-    public static int invokeSaveVillagers(CommandContext<ServerCommandSource> context) {
+    public static int invokeSaveVillagers(CommandContext<CommandSourceStack> context) {
         try {
-            ServerPlayerEntity player = context.getSource().getPlayer();
+            ServerPlayer player = context.getSource().getPlayer();
 
             Translations.LONE_HELP.send(player);
 
@@ -46,11 +45,11 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
         }
     }
 
-    public static int invokeGuildAttack(CommandContext<ServerCommandSource> context) {
+    public static int invokeGuildAttack(CommandContext<CommandSourceStack> context) {
         try {
             ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
-            ServerPlayerEntity player = context.getSource().getPlayer();
-            UUID playerUuid = player.getUuid();
+            ServerPlayer player = context.getSource().getPlayer();
+            UUID playerUuid = player.getUUID();
             final GuildPlayer guildPlayer = instance.getPlayer(playerUuid);
 
             // Pre-requisites for attack
@@ -63,7 +62,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<ServerCommandSource>
             // The guild must not be rebuilt
             guildPlayer.setHasRebuiltGuild(false);
 
-            instance.attack(player, player.getServerWorld());
+            instance.attack(player, player.serverLevel());
 
             guildPlayer.setWorthiness(guildPlayer.getWorthiness() - 750);
 

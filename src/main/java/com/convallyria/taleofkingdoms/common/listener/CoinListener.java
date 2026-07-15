@@ -14,14 +14,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.fabricmc.api.EnvType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,14 +46,14 @@ public class CoinListener extends Listener {
      * When an entity dies this event is called.
      * If the entity is a player then the player's coins are subtracted by the amount of their current coins divided by 20 and the method returns.
      * If the cause of death was a player then the {@link LivingEntity} drops their coins
-     * and the player gets worthiness added equal to the {@link CoinListener#getMobWorthiness(Entity)} times (*) the {@link CoinListener#getDifficultyWorthinessMultiplier(World)}
+     * and the player gets worthiness added equal to the {@link CoinListener#getMobWorthiness(Entity)} times (*) the {@link CoinListener#getDifficultyWorthinessMultiplier(Level)}
      */
     private void dropCoinsOnDeath() {
         EntityDeathCallback.EVENT.register((source, entity) -> {
             TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                PlayerEntity playerEntity = null;
-                if (entity instanceof PlayerEntity) {
-                    final GuildPlayer guildPlayer = instance.getPlayer(entity.getUuid());
+                Player playerEntity = null;
+                if (entity instanceof Player) {
+                    final GuildPlayer guildPlayer = instance.getPlayer(entity.getUUID());
                     int subtract = (guildPlayer.getCoins() / 20);
                     guildPlayer.setCoins(guildPlayer.getCoins() - subtract);
                     return;
@@ -64,39 +63,39 @@ public class CoinListener extends Listener {
                     for (UUID playerUuid : instance.getGuildPlayers().keySet()) {
                         final GuildPlayer loopPlayer = instance.getPlayer(playerUuid);
                         final List<UUID> hunterUuids = loopPlayer.getHunters();
-                        hunterUuids.remove(entity.getUuid());
-                        TaleOfKingdoms.LOGGER.info("Hunter {} died and was removed", entity.getUuid());
+                        hunterUuids.remove(entity.getUUID());
+                        TaleOfKingdoms.LOGGER.info("Hunter {} died and was removed", entity.getUUID());
                     }
                     return;
                 }
 
-                if (source.getSource() instanceof PlayerEntity
-                        || source.getSource() instanceof HunterEntity
-                        || source.getSource() instanceof GuildGuardEntity
-                        || source.getSource() instanceof ProjectileEntity) {
-                    if (source.getSource() instanceof ProjectileEntity projectileEntity) {
-                        if (projectileEntity.getOwner() instanceof PlayerEntity) {
-                            playerEntity = (PlayerEntity) projectileEntity.getOwner();
+                if (source.getDirectEntity() instanceof Player
+                        || source.getDirectEntity() instanceof HunterEntity
+                        || source.getDirectEntity() instanceof GuildGuardEntity
+                        || source.getDirectEntity() instanceof Projectile) {
+                    if (source.getDirectEntity() instanceof Projectile projectileEntity) {
+                        if (projectileEntity.getOwner() instanceof Player) {
+                            playerEntity = (Player) projectileEntity.getOwner();
                         }
 
-                        if (!(projectileEntity.getOwner() instanceof PlayerEntity)
+                        if (!(projectileEntity.getOwner() instanceof Player)
                                 && !(projectileEntity.getOwner() instanceof HunterEntity)) {
                             return;
                         }
-                    } else if (source.getSource() instanceof PlayerEntity) {
-                        playerEntity = (PlayerEntity) source.getSource();
+                    } else if (source.getDirectEntity() instanceof Player) {
+                        playerEntity = (Player) source.getDirectEntity();
                     }
 
                     //TODO associate owner with hunter entity
                     ItemHelper.dropCoins(entity);
 
-                    if (source.getSource() instanceof PlayerEntity) {
-                        final GuildPlayer guildPlayer = instance.getPlayer(source.getSource().getUuid());
-                        guildPlayer.setWorthiness(guildPlayer.getWorthiness() + (getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getSource().getWorld())));
+                    if (source.getDirectEntity() instanceof Player) {
+                        final GuildPlayer guildPlayer = instance.getPlayer(source.getDirectEntity().getUUID());
+                        guildPlayer.setWorthiness(guildPlayer.getWorthiness() + (getMobWorthiness(entity) * getDifficultyWorthinessMultiplier(source.getDirectEntity().level())));
                     }
 
-                    if (playerEntity instanceof ServerPlayerEntity serverPlayerEntity) {
-                        instance.attack(serverPlayerEntity, serverPlayerEntity.getServerWorld());
+                    if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+                        instance.attack(serverPlayerEntity, serverPlayerEntity.serverLevel());
                         if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER)
                             ServerConquestInstance.sync(serverPlayerEntity, instance);
                     }
@@ -110,13 +109,13 @@ public class CoinListener extends Listener {
             if (equalsCoin(item)) {
                 TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                     Random random = ThreadLocalRandom.current();
-                    instance.addCoins(player.getUuid(), random.nextInt(5));
+                    instance.addCoins(player.getUUID(), random.nextInt(5));
                     if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
-                        ServerConquestInstance.sync((ServerPlayerEntity) player, instance);
+                        ServerConquestInstance.sync((ServerPlayer) player, instance);
                     }
                 });
 
-                player.getInventory().remove(predicate -> predicate.getItem().equals(item.getItem()), -1, player.getInventory());
+                player.getInventory().clearOrCountMatchingItems(predicate -> predicate.getItem().equals(item.getItem()), -1, player.getInventory());
             }
         });
     }
@@ -158,7 +157,7 @@ public class CoinListener extends Listener {
      * @return the mob's worthiness if and only if the entry exists, else 1
      */
     public int getMobWorthiness(Entity mob) {
-        String mobType = mob.getType().getName().getString();
+        String mobType = mob.getType().getDescription().getString();
 
         if(worthinessJson.has(mobType)) {
             return worthinessJson.get(mobType).getAsInt();
@@ -169,14 +168,14 @@ public class CoinListener extends Listener {
 
     /**
      * Gets the difficulty worthiness from the json file
-     * @param world the {@link World} the entity died in
+     * @param world the {@link Level} the entity died in
      * @return the difficulty's worthiness if and only if the entry exists, else 1
      */
-    public int getDifficultyWorthinessMultiplier(World world) {
+    public int getDifficultyWorthinessMultiplier(Level world) {
         JsonObject difficulty = worthinessJson.getAsJsonObject("difficulty");
 
-        if(difficulty.has(world.getDifficulty().getName())) {
-            return difficulty.get(world.getDifficulty().getName()).getAsInt();
+        if(difficulty.has(world.getDifficulty().getKey())) {
+            return difficulty.get(world.getDifficulty().getKey()).getAsInt();
         } else {
             return 1;
         }

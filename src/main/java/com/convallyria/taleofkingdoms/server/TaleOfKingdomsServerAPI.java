@@ -5,14 +5,13 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-
+import net.minecraft.server.dedicated.DedicatedServer;
 import java.util.function.Consumer;
 
 @Environment(EnvType.SERVER)
 public class TaleOfKingdomsServerAPI extends TaleOfKingdomsAPI {
 
-    private MinecraftDedicatedServer minecraftServer;
+    private DedicatedServer minecraftServer;
 
     public TaleOfKingdomsServerAPI(TaleOfKingdoms mod) {
         super(mod);
@@ -36,11 +35,11 @@ public class TaleOfKingdomsServerAPI extends TaleOfKingdomsAPI {
         minecraftServer.execute(runnable);
     }
 
-    public MinecraftDedicatedServer getServer() {
+    public DedicatedServer getServer() {
         return minecraftServer;
     }
 
-    public void setServer(MinecraftDedicatedServer minecraftServer) {
+    public void setServer(DedicatedServer minecraftServer) {
         if (this.minecraftServer != null) {
             throw new IllegalStateException("Server already registered");
         }

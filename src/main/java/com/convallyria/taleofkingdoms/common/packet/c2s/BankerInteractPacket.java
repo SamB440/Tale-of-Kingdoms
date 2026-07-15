@@ -2,20 +2,20 @@ package com.convallyria.taleofkingdoms.common.packet.c2s;
 
 import com.convallyria.taleofkingdoms.common.entity.guild.banker.BankerMethod;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record BankerInteractPacket(BankerMethod method, int coins) implements CustomPayload {
+public record BankerInteractPacket(BankerMethod method, int coins) implements CustomPacketPayload {
 
-    public static final PacketCodec<RegistryByteBuf, BankerInteractPacket> CODEC = PacketCodec.tuple(
-            PacketCodecs.indexed(i -> BankerMethod.values()[i], BankerMethod::ordinal), BankerInteractPacket::method,
-            PacketCodecs.INTEGER, BankerInteractPacket::coins,
+    public static final StreamCodec<RegistryFriendlyByteBuf, BankerInteractPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.idMapper(i -> BankerMethod.values()[i], BankerMethod::ordinal), BankerInteractPacket::method,
+            ByteBufCodecs.INT, BankerInteractPacket::coins,
             BankerInteractPacket::new);
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return Packets.BANKER_INTERACT;
     }
 }

@@ -6,47 +6,46 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class LoneEntity extends TOKEntity {
 
-    public LoneEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public LoneEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
 //        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND || player.level().isClientSide()) return InteractionResult.FAIL;
         TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             BlockPos startPos = instance.getStart();
             BlockPos endPos = instance.getEnd();
-            Vec3d start = new Vec3d(startPos.getX(), startPos.getY(), startPos.getZ());
-            Vec3d end = new Vec3d(endPos.getX(), endPos.getY(), endPos.getZ());
-            Box region = new Box(start, end);
-            List<LoneVillagerEntity> loneVillagers = player.getWorld().getEntitiesByType(EntityTypes.LONEVILLAGER, region, predicate -> {
-                return instance.isInGuild(predicate.getBlockPos())
-                        && !instance.getLoneVillagersWithRooms().contains(predicate.getUuid());
+            Vec3 start = new Vec3(startPos.getX(), startPos.getY(), startPos.getZ());
+            Vec3 end = new Vec3(endPos.getX(), endPos.getY(), endPos.getZ());
+            AABB region = new AABB(start, end);
+            List<LoneVillagerEntity> loneVillagers = player.level().getEntities(EntityTypes.LONEVILLAGER, region, predicate -> {
+                return instance.isInGuild(predicate.blockPosition())
+                        && !instance.getLoneVillagersWithRooms().contains(predicate.getUUID());
             });
 
             if (!loneVillagers.isEmpty()) {
@@ -56,18 +55,18 @@ public class LoneEntity extends TOKEntity {
                     loneVillager.setMovementEnabled(false);
                     Random random = ThreadLocalRandom.current();
                     BlockPos sleepLocation = sleepLocations.get(random.nextInt(sleepLocations.size()));
-                    loneVillager.requestTeleport(sleepLocation.getX() + 0.5, sleepLocation.getY(), sleepLocation.getZ() + 0.5);
+                    loneVillager.teleportTo(sleepLocation.getX() + 0.5, sleepLocation.getY(), sleepLocation.getZ() + 0.5);
                 }
 
                 Translations.LONE_THANK.send(player);
                 final GuildPlayer guildPlayer = instance.getPlayer(player);
                 guildPlayer.setWorthiness(guildPlayer.getWorthiness() + loneVillagers.size() * 6);
-                player.sendMessage(Text.literal("+" + loneVillagers.size() * 6 + " worthiness"), true);
+                player.displayClientMessage(Component.literal("+" + loneVillagers.size() * 6 + " worthiness"), true);
             } else {
                 Translations.LONE_HELP.send(player);
             }
         });
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override

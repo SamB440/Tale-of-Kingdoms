@@ -6,16 +6,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 
 @Environment(EnvType.CLIENT)
-public abstract class InClientPacketHandler<T extends CustomPayload> extends PacketHandler<T> {
+public abstract class InClientPacketHandler<T extends CustomPacketPayload> extends PacketHandler<T> {
 
-    public InClientPacketHandler(CustomPayload.Id<T> packet, PacketCodec<RegistryByteBuf, T> codec) {
+    public InClientPacketHandler(CustomPacketPayload.Type<T> packet, StreamCodec<RegistryFriendlyByteBuf, T> codec) {
         super(packet, codec);
     }
 
@@ -23,13 +23,13 @@ public abstract class InClientPacketHandler<T extends CustomPayload> extends Pac
     protected void register() {
         PayloadTypeRegistry.playS2C().register(this.getPacket(), codec);
         ClientPlayNetworking.registerGlobalReceiver(getPacket(), (payload, ctx) -> {
-            ClientPacketContext context = new ClientPacketContext(EnvType.CLIENT, ctx.player(), MinecraftClient.getInstance());
+            ClientPacketContext context = new ClientPacketContext(EnvType.CLIENT, ctx.player(), Minecraft.getInstance());
             handleIncomingPacket(context, payload);
         });
     }
 
     @Override
-    public void sendPacket(PlayerEntity player, T packet) {
+    public void sendPacket(Player player, T packet) {
         throw new UnsupportedOperationException();
     }
 }

@@ -10,11 +10,10 @@ import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.shop.ShopParser;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
-
 import java.util.Optional;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 public final class IncomingBuyItemPacketHandler extends InServerPacketHandler<BuyItemPacket> {
 
@@ -24,10 +23,10 @@ public final class IncomingBuyItemPacketHandler extends InServerPacketHandler<Bu
 
     @Override
     public void handleIncomingPacket(PacketContext context, BuyItemPacket packet) {
-        ServerPlayerEntity player = (ServerPlayerEntity) context.player();
+        ServerPlayer player = (ServerPlayer) context.player();
         String itemName = packet.itemName();
         int count = packet.count();
-        ShopParser.GUI type = packet.type();
+        ShopParser.GUI type = packet.guiType();
         context.taskQueue().execute(() -> TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
             if (!instance.isInGuild(player)) {
                 reject(player, "Not in guild.");
@@ -37,9 +36,9 @@ public final class IncomingBuyItemPacketHandler extends InServerPacketHandler<Bu
             // Search for either foodshop, itemshop, or blacksmith in the guild
             Optional<? extends ShopEntity> entity = Optional.empty();
             switch (type) {
-                case BLACKSMITH -> entity = instance.search(player, player.getWorld(), EntityTypes.BLACKSMITH);
-                case FOOD -> entity = instance.search(player, player.getWorld(), EntityTypes.FOODSHOP);
-                case ITEM -> entity = instance.search(player, player.getWorld(), EntityTypes.ITEM_SHOP);
+                case BLACKSMITH -> entity = instance.search(player, player.level(), EntityTypes.BLACKSMITH);
+                case FOOD -> entity = instance.search(player, player.level(), EntityTypes.FOODSHOP);
+                case ITEM -> entity = instance.search(player, player.level(), EntityTypes.ITEM_SHOP);
             }
 
             if (entity.isEmpty()) {
@@ -62,14 +61,14 @@ public final class IncomingBuyItemPacketHandler extends InServerPacketHandler<Bu
 
             guildPlayer.setCoins(guildPlayer.getCoins() - cost);
             // Only give item after coins have been deducted. This means they cannot infinitely get items if our setCoins method is broken.
-            player.getInventory().insertStack(new ItemStack(shopItem.getItem(), count));
+            player.getInventory().add(new ItemStack(shopItem.getItem(), count));
             ServerConquestInstance.sync(player, instance);
         }));
     }
 
     private ShopItem getShopItem(String name, ShopEntity entity) {
         for (ShopItem shopItem : entity.getShopItems()) {
-            if (Registries.ITEM.getId(shopItem.getItem().asItem()).toString().equals(name)) return shopItem;
+            if (BuiltInRegistries.ITEM.getKey(shopItem.getItem().asItem()).toString().equals(name)) return shopItem;
         }
         return null; // Nothing found :(
     }

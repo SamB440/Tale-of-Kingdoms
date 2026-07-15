@@ -20,7 +20,7 @@ import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenP
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
 
@@ -80,7 +80,7 @@ public class TaleOfKingdomsServer implements DedicatedServerModInitializer {
                     final PlayerKingdom kingdom = guildPlayer.getKingdom();
                     if (kingdom == null) return;
                     kingdom.tryTaxCollection(guildPlayer);
-                    final ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
+                    final ServerPlayer player = server.getPlayerList().getPlayer(id);
                     if (player != null) {
                         ServerConquestInstance.sync(player, instance);
                     }

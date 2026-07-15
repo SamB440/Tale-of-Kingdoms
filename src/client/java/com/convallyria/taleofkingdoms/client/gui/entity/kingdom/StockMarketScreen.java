@@ -9,13 +9,12 @@ import com.convallyria.taleofkingdoms.common.shop.ShopItem;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.Positioning;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 public class StockMarketScreen extends DefaultShopScreen {
 
@@ -23,7 +22,7 @@ public class StockMarketScreen extends DefaultShopScreen {
 
     private FlowLayout inner;
 
-    public StockMarketScreen(PlayerEntity player, StockMarketEntity entity, ConquestInstance instance) {
+    public StockMarketScreen(Player player, StockMarketEntity entity, ConquestInstance instance) {
         super(player, entity, instance);
     }
 
@@ -43,8 +42,8 @@ public class StockMarketScreen extends DefaultShopScreen {
             final BarWidget component = (BarWidget) new BarWidget(100, 10, balancedCost)
                     .positioning(Positioning.relative(24 + 35, widget.getY()))
                     .tooltip(List.of(
-                            Text.translatable("menu.taleofkingdoms.stock_market.stock_value"),
-                            Text.literal("x" + String.format("%.2f", shopItem.getModifier()))
+                            Component.translatable("menu.taleofkingdoms.stock_market.stock_value"),
+                            Component.literal("x" + String.format("%.2f", shopItem.getModifier()))
                     ));
             component.visible = component.active = pageNumber == 0;
             inner.child(component);

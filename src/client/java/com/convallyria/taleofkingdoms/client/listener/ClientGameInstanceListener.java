@@ -14,7 +14,7 @@ public class ClientGameInstanceListener extends Listener {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         PlayerJoinWorldCallback.EVENT.register(player -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
-                if (!instance.hasPlayer(player.getUuid())) {
+                if (!instance.hasPlayer(player.getUUID())) {
                     instance.reset(player);
                 }
             });

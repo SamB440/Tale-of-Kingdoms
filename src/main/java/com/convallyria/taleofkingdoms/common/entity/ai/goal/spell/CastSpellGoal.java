@@ -1,9 +1,9 @@
 package com.convallyria.taleofkingdoms.common.entity.ai.goal.spell;
 
 import com.convallyria.taleofkingdoms.common.entity.generic.SpellcastingEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class CastSpellGoal extends Goal {
@@ -17,13 +17,13 @@ public abstract class CastSpellGoal extends Goal {
     }
 
     @Override
-    public boolean canStart() {
+    public boolean canUse() {
         LivingEntity livingEntity = spellCaster.getTarget();
         if (livingEntity != null && livingEntity.isAlive()) {
             if (spellCaster.isSpellcasting()) {
                 return false;
             } else {
-                return spellCaster.age >= this.startTime;
+                return spellCaster.tickCount >= this.startTime;
             }
         } else {
             return false;
@@ -31,7 +31,7 @@ public abstract class CastSpellGoal extends Goal {
     }
 
     @Override
-    public boolean shouldContinue() {
+    public boolean canContinueToUse() {
         LivingEntity livingEntity = spellCaster.getTarget();
         return livingEntity != null && livingEntity.isAlive() && this.spellCooldown > 0;
     }
@@ -41,7 +41,7 @@ public abstract class CastSpellGoal extends Goal {
         super.start();
         this.spellCooldown = this.getInitialCooldown();
         spellCaster.setSpellTicks(this.getSpellTicks());
-        this.startTime = spellCaster.age + this.startTimeDelay();
+        this.startTime = spellCaster.tickCount + this.startTimeDelay();
         SoundEvent soundEvent = this.getSoundPrepare();
         if (soundEvent != null) {
             spellCaster.playSound(soundEvent, 1.0F, 1.0F);

@@ -10,7 +10,7 @@ public abstract class BaseCityBuilderScreen extends BaseUIModelScreen<FlowLayout
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return false;
     }
 

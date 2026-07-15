@@ -1,0 +1,24 @@
+{
+  "name": "Guild Villager",
+  "icon": "minecraft:shield",
+  "category": "taleofkingdoms:mobs",
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "taleofkingdoms:guild_villager",
+      "rotate": true,
+      "offset": 0.15
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Lore",
+      "text": "A member of the Guild Order who has not yet been trained in the art of sword or bow."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "taleofkingdoms:structures/the_guild"
+      ]
+    }
+  ]
+}

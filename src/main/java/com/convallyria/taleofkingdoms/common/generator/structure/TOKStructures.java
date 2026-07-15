@@ -9,12 +9,12 @@ import com.convallyria.taleofkingdoms.common.generator.util.StructureConfigCreat
 import com.convallyria.taleofkingdoms.mixin.StructureTypeAccessor;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.registry.Registerable;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.structure.StructurePieceType;
-import net.minecraft.world.gen.StructureTerrainAdaptation;
-import net.minecraft.world.gen.structure.Structure;
-import net.minecraft.world.gen.structure.StructureType;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureType;
+import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
 public class TOKStructures {
 
@@ -38,7 +38,7 @@ public class TOKStructures {
 //                  new RandomSpreadStructurePlacement(32, 8, SpreadType.LINEAR, 2852022)));
 //     }
 
-     public static void registerStructureFeatures(Registerable<Structure> structureRegisterable) {
+     public static void registerStructureFeatures(BootstrapContext<Structure> structureRegisterable) {
           // Ignore this here for now, was just messing around with manually adding template pools for jigsaw structures.
 //          final Function<StructurePool.Projection, SinglePoolElement> single = SinglePoolElement.ofSingle("taleofkingdoms:gateway");
 //          final List<Pair<Function<StructurePool.Projection, ? extends StructurePoolElement>, Integer>> of = List.of(Pair.of(single, 1));
@@ -50,17 +50,17 @@ public class TOKStructures {
           registerStructure(structureRegisterable, TOKStructureKeys.BANDIT_CAMP, new BanditCampStructure(StructureConfigCreator
                   .create()
                   .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
-                  .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
+                  .terrainAdaptation(TerrainAdjustment.BEARD_THIN)
                   .build(structureRegisterable)));
           registerStructure(structureRegisterable, TOKStructureKeys.GATEWAY, new GatewayStructure(StructureConfigCreator
                   .create()
                   .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
-                  .terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN)
+                  .terrainAdaptation(TerrainAdjustment.BEARD_THIN)
                   .build(structureRegisterable)));
           registerStructure(structureRegisterable, TOKStructureKeys.REFICULE_VILLAGE, new ReficuleVillageStructure(StructureConfigCreator
                   .create()
                   .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
-                  .terrainAdaptation(StructureTerrainAdaptation.BEARD_BOX)
+                  .terrainAdaptation(TerrainAdjustment.BEARD_BOX)
                   .build(structureRegisterable)));
      }
 
@@ -68,7 +68,7 @@ public class TOKStructures {
           return StructureTypeAccessor.callRegister(TaleOfKingdoms.MODID + ":" + name, structure);
      }
 
-     private static void registerStructure(Registerable<Structure> structureRegisterable, RegistryKey<Structure> registryKey, Structure structure) {
+     private static void registerStructure(BootstrapContext<Structure> structureRegisterable, ResourceKey<Structure> registryKey, Structure structure) {
           structureRegisterable.register(registryKey, structure);
      }
 }

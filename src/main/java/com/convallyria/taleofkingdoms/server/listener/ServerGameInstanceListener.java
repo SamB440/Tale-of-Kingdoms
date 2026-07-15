@@ -18,11 +18,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerPlayer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -37,9 +36,9 @@ public class ServerGameInstanceListener extends Listener {
         GameInstanceCallback.EVENT.register(api::setServer);
 
         PlayerJoinCallback.EVENT.register((no, player) -> api.executeOnDedicatedServer(() -> {
-            MinecraftDedicatedServer server = api.getServer();
-            boolean loaded = load(server.getLevelName(), api);
-            File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelName() + ConquestInstance.FILE_TYPE);
+            DedicatedServer server = api.getServer();
+            boolean loaded = load(server.getLevelIdName(), api);
+            File conquestFile = new File(api.getDataFolder() + "worlds/" + server.getLevelIdName() + ConquestInstance.FILE_TYPE);
             if (loaded) {
                 // Already exists
                 Gson gson = api.getMod().getGson();
@@ -55,8 +54,8 @@ public class ServerGameInstanceListener extends Listener {
                     if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
                         this.create(api, player, server);
                     } else {
-                        if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).isEmpty()) {
-                            api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+                        if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelIdName()).isEmpty()) {
+                            api.getConquestInstanceStorage().addConquest(server.getLevelIdName(), instance, true);
                         }
                     }
                 } catch (JsonSyntaxException | JsonIOException e) {
@@ -68,7 +67,7 @@ public class ServerGameInstanceListener extends Listener {
         PlayerJoinWorldCallback.EVENT.register(player -> {
             api.getConquestInstanceStorage().mostRecentInstance().ifPresent(instance -> {
                 if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) {
-                    if (!instance.hasPlayer(player.getUuid())) {
+                    if (!instance.hasPlayer(player.getUUID())) {
                         instance.reset(player);
                     }
 
@@ -78,9 +77,9 @@ public class ServerGameInstanceListener extends Listener {
         });
 
         PlayerLeaveCallback.EVENT.register(player -> api.executeOnDedicatedServer(() -> {
-            final MinecraftDedicatedServer server = api.getServer();
-            api.getConquestInstanceStorage().getConquestInstance(server.getLevelName()).ifPresent(conquestInstance -> {
-                conquestInstance.save(server.getLevelName());
+            final DedicatedServer server = api.getServer();
+            api.getConquestInstanceStorage().getConquestInstance(server.getLevelIdName()).ifPresent(conquestInstance -> {
+                conquestInstance.save(server.getLevelIdName());
             });
         }));
     }
@@ -102,15 +101,15 @@ public class ServerGameInstanceListener extends Listener {
         }
     }
 
-    private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayerEntity player, MinecraftDedicatedServer server) {
+    private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayer player, DedicatedServer server) {
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
-        BlockPos pastePos = player.getBlockPos().subtract(new Vec3i(0, 20, 0));
-        ConquestInstance instance = new ConquestInstance(server.getName(), null, null, player.getBlockPos().add(0, 1, 0));
+        BlockPos pastePos = player.blockPosition().subtract(new Vec3i(0, 20, 0));
+        ConquestInstance instance = new ConquestInstance(server.name(), null, null, player.blockPosition().offset(0, 1, 0));
         instance.reset(player);
-        api.getConquestInstanceStorage().addConquest(server.getLevelName(), instance, true);
+        api.getConquestInstanceStorage().addConquest(server.getLevelIdName(), instance, true);
         return api.getSchematicHandler().pasteSchematic(Schematic.GUILD_CASTLE, player, pastePos).thenAccept(oi -> {
-            BlockPos start = new BlockPos(oi.getMaxX(), oi.getMaxY(), oi.getMaxZ());
-            BlockPos end = new BlockPos(oi.getMinX(), oi.getMinY(), oi.getMinZ());
+            BlockPos start = new BlockPos(oi.maxX(), oi.maxY(), oi.maxZ());
+            BlockPos end = new BlockPos(oi.minX(), oi.minY(), oi.minZ());
             instance.setStart(start);
             instance.setEnd(end);
             
@@ -119,7 +118,7 @@ public class ServerGameInstanceListener extends Listener {
             instance.setLoaded(true);
             /*instance.reset(player);
             instance.sync(player);*/
-            instance.save(server.getLevelName());
+            instance.save(server.getLevelIdName());
         }).exceptionally(error -> {
             error.printStackTrace();
             return null;

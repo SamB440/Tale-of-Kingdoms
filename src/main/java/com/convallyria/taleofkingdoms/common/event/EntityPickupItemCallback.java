@@ -2,8 +2,8 @@ package com.convallyria.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 public interface EntityPickupItemCallback {
 
@@ -14,5 +14,5 @@ public interface EntityPickupItemCallback {
                 }
             });
 
-    void pickup(PlayerEntity player, ItemStack item);
+    void pickup(Player player, ItemStack item);
 }

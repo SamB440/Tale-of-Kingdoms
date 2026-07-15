@@ -1,29 +1,28 @@
 package com.convallyria.taleofkingdoms.common.item.common;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
-
 import java.util.UUID;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class ItemPouch extends Item {
 
     private final int maxCoins = 1000;
 
-    public ItemPouch(Settings settings) {
+    public ItemPouch(Properties settings) {
         super(settings);
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        final UUID uuid = user.getUuid();
-        if (true || world.isClient()) return TypedActionResult.fail(user.getStackInHand(hand));
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        final UUID uuid = user.getUUID();
+        if (true || world.isClientSide()) return InteractionResultHolder.fail(user.getItemInHand(hand));
 //        ConquestInstance instance = TaleOfKingdoms.getAPI().getConquestInstanceStorage().mostRecentInstance().get();
 //        final GuildPlayer guildPlayer = instance.getPlayer(user);
-        ItemStack itemStack = user.getStackInHand(hand);
+        ItemStack itemStack = user.getItemInHand(hand);
 //        if (itemStack.hasNbt()) {
 //            NbtCompound compoundTag = itemStack.getNbt();
 //            if (compoundTag.contains("coins")) {
@@ -62,7 +61,7 @@ public class ItemPouch extends Item {
 //                itemStack.setNbt(compoundTag);
 //            }
 //        }
-        return TypedActionResult.pass(itemStack);
+        return InteractionResultHolder.pass(itemStack);
     }
 
 //    @Override

@@ -10,28 +10,28 @@ import com.convallyria.taleofkingdoms.common.packet.s2c.OpenScreenPacket;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class WardenEntity extends TOKEntity {
 
-    public WardenEntity(@NotNull EntityType<? extends PathAwareEntity> entityType, @NotNull World world) {
+    public WardenEntity(@NotNull EntityType<? extends PathfinderMob> entityType, @NotNull Level world) {
         super(entityType, world);
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
-    public void buySoldier(PlayerEntity player, ConquestInstance instance, byte index) {
+    public void buySoldier(Player player, ConquestInstance instance, byte index) {
         final GuildPlayer guildPlayer = instance.getPlayer(player);
         final int coins = guildPlayer.getCoins();
         if (coins < 1000) return;
@@ -43,44 +43,44 @@ public class WardenEntity extends TOKEntity {
 
         EntityType<? extends WardenHireable> type = index == 1 ? EntityTypes.WARRIOR : EntityTypes.ARCHER; // TODO
         TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
-            ServerPlayerEntity serverPlayerEntity = player instanceof ServerPlayerEntity ? (ServerPlayerEntity) player
-                    : server.getPlayerManager().getPlayer(player.getUuid());
+            ServerPlayer serverPlayerEntity = player instanceof ServerPlayer ? (ServerPlayer) player
+                    : server.getPlayerList().getPlayer(player.getUUID());
             if (serverPlayerEntity == null) return;
-            final WardenHireable wardenHireable = EntityUtils.spawnEntity(type, serverPlayerEntity, this.getBlockPos());
+            final WardenHireable wardenHireable = EntityUtils.spawnEntity(type, serverPlayerEntity, this.blockPosition());
             wardenHireable.toggleFollowGoal(player);
         });
     }
 
-    public void recallSoldiers(PlayerEntity player, ConquestInstance instance) {
+    public void recallSoldiers(Player player, ConquestInstance instance) {
         final GuildPlayer guildPlayer = instance.getPlayer(player);
         final PlayerKingdom kingdom = guildPlayer.getKingdom();
         if (kingdom == null) return;
 
         TaleOfKingdoms.getAPI().executeOnServerEnvironment(server -> {
-            ServerPlayerEntity serverPlayerEntity = player instanceof ServerPlayerEntity ? (ServerPlayerEntity) player
-                    : server.getPlayerManager().getPlayer(player.getUuid());
-            for (Entity entity : serverPlayerEntity.getServerWorld().iterateEntities()) {
+            ServerPlayer serverPlayerEntity = player instanceof ServerPlayer ? (ServerPlayer) player
+                    : server.getPlayerList().getPlayer(player.getUUID());
+            for (Entity entity : serverPlayerEntity.serverLevel().getAllEntities()) {
                 if (!(entity instanceof WardenHireable wardenHireable)) continue;
-                entity.requestTeleport(this.getX(), this.getY(), this.getZ());
+                entity.teleportTo(this.getX(), this.getY(), this.getZ());
                 if (!wardenHireable.isFollowingPlayer()) wardenHireable.toggleFollowGoal(serverPlayerEntity);
             }
         });
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        if (api == null) return ActionResult.FAIL;
-        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
-        if (hand == Hand.OFF_HAND || player.getWorld().isClient()) return ActionResult.FAIL;
+        if (api == null) return InteractionResult.FAIL;
+        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return InteractionResult.FAIL;
+        if (hand == InteractionHand.OFF_HAND || player.level().isClientSide()) return InteractionResult.FAIL;
         TaleOfKingdoms.getAPI().getServerPacket(Packets.OPEN_CLIENT_SCREEN).sendPacket(player, new OpenScreenPacket(OpenScreenPacket.ScreenTypes.WARDEN, this.getId()));
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
@@ -89,12 +89,12 @@ public class WardenEntity extends TOKEntity {
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         return true;
     }
 
     @Override
-    public boolean damage(DamageSource damageSource, float f) {
+    public boolean hurt(DamageSource damageSource, float f) {
         return false;
     }
 }

@@ -1,0 +1,24 @@
+{
+  "name": "Blacksmith",
+  "icon": "minecraft:iron_axe",
+  "category": "taleofkingdoms:characters",
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "taleofkingdoms:blacksmith",
+      "rotate": true,
+      "offset": 0.15
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Lore",
+      "text": "The blacksmith works hard, providing weapons and tools in the fight against the reficules.$(br2)He also operates a shop where you may exchange coins for these items."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "taleofkingdoms:structures/the_guild"
+      ]
+    }
+  ]
+}

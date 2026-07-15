@@ -8,31 +8,30 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServerAPI;
 import net.fabricmc.api.EnvType;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class FarmerEntity extends TOKEntity {
 
-    public FarmerEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public FarmerEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_HOE));
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F, 100F));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 10.0F, 100F));
     }
 
     @Override
@@ -41,21 +40,21 @@ public class FarmerEntity extends TOKEntity {
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || player.getWorld().isClient) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND || player.level().isClientSide) return InteractionResult.FAIL;
 
         // Check if there is at least 1 Minecraft day difference
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-        if (api == null) return ActionResult.FAIL;
-        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return ActionResult.FAIL;
+        if (api == null) return InteractionResult.FAIL;
+        if (api.getConquestInstanceStorage().mostRecentInstance().isEmpty()) return InteractionResult.FAIL;
 
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         final GuildPlayer guildPlayer = instance.getPlayer(player);
 
-        final long day = player.getWorld().getTimeOfDay() / 24000L;
+        final long day = player.level().getDayTime() / 24000L;
         if (guildPlayer.getFarmerLastBread() >= day) {
             Translations.FARMER_GOT_BREAD.send(player);
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
         // Set the current day and add bread to inventory
@@ -67,16 +66,16 @@ public class FarmerEntity extends TOKEntity {
             api.executeOnMain(() -> {
                 MinecraftServer server = player.getServer();
                 if (server != null) {
-                    ServerPlayerEntity serverPlayerEntity = server.getPlayerManager().getPlayer(player.getUuid());
+                    ServerPlayer serverPlayerEntity = server.getPlayerList().getPlayer(player.getUUID());
                     if (serverPlayerEntity != null) {
-                        serverPlayerEntity.getInventory().insertStack(new ItemStack(Items.BREAD, amount));
+                        serverPlayerEntity.getInventory().add(new ItemStack(Items.BREAD, amount));
                     }
                 }
             });
         } else {
-            ((TaleOfKingdomsServerAPI) api).executeOnDedicatedServer(() -> player.getInventory().insertStack(new ItemStack(Items.BREAD, amount)));
+            ((TaleOfKingdomsServerAPI) api).executeOnDedicatedServer(() -> player.getInventory().add(new ItemStack(Items.BREAD, amount)));
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override

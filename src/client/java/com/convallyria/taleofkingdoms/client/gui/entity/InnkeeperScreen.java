@@ -10,24 +10,24 @@ import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
 
 public class InnkeeperScreen extends ScreenTOK {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final InnkeeperEntity entity;
     private final ConquestInstance instance;
 
-    public InnkeeperScreen(PlayerEntity player, InnkeeperEntity entity, ConquestInstance instance) {
+    public InnkeeperScreen(Player player, InnkeeperEntity entity, ConquestInstance instance) {
         super("taleofkingdoms.menu.innkeeper.name");
         this.player = player;
         this.entity = entity;
@@ -38,15 +38,15 @@ public class InnkeeperScreen extends ScreenTOK {
     @Override
     public void init() {
         super.init();
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.innkeeper.rest"), widget -> {
-            this.close();
+        this.addRenderableWidget(Button.builder(Component.translatable("menu.taleofkingdoms.innkeeper.rest"), widget -> {
+            this.onClose();
             BlockPos rest = BlockUtils.locateRestingPlace(instance, player);
             if (rest != null) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
                 ConquestInstance conquestInstance = api.getConquestInstanceStorage().mostRecentInstance().orElse(null);
                 if (conquestInstance == null) return;
 
-                final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUuid());
+                final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUUID());
                 if (guildPlayer.getCoins() < 10) {
                     Translations.INNKEEPER_NOT_ENOUGH_COINS.send(player);
                     return;
@@ -54,7 +54,7 @@ public class InnkeeperScreen extends ScreenTOK {
                     Translations.INNKEEPER_REST_SUCCESS.send(player);
                 }
 
-                MinecraftServer server = MinecraftClient.getInstance().getServer();
+                MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
                 if (server == null) {
                     api.getClientPacket(Packets.INNKEEPER_HIRE_ROOM)
                             .sendPacket(player, new InnkeeperActionPacket(true));
@@ -63,27 +63,27 @@ public class InnkeeperScreen extends ScreenTOK {
 
                 api.executeOnServerEnvironment((s) -> {
                     adjustTime(server, 1000);
-                    ServerPlayerEntity serverPlayerEntity = MinecraftClient.getInstance().getServer().getPlayerManager().getPlayer(player.getUuid());
+                    ServerPlayer serverPlayerEntity = Minecraft.getInstance().getSingleplayerServer().getPlayerList().getPlayer(player.getUUID());
                     if (serverPlayerEntity == null) return;
-                    serverPlayerEntity.requestTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                    serverPlayerEntity.refreshPositionAfterTeleport(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
-                    serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 100, 1));
-                    serverPlayerEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200, 0));
+                    serverPlayerEntity.teleportTo(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                    serverPlayerEntity.moveTo(rest.getX() + 0.5, rest.getY(), rest.getZ() + 0.5);
+                    serverPlayerEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 1));
+                    serverPlayerEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
                     guildPlayer.setCoins(guildPlayer.getCoins() - 10);
                 });
             } else {
-                player.sendMessage(Text.translatable("menu.taleofkingdoms.innkeeper.no_rooms"));
+                player.sendSystemMessage(Component.translatable("menu.taleofkingdoms.innkeeper.no_rooms"));
             }
-        }).dimensions(this.width / 2 - 75, this.height / 4 + 50, 150, 20).build());
+        }).bounds(this.width / 2 - 75, this.height / 4 + 50, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.innkeeper.wait"), widget -> {
-            this.close();
-            MinecraftServer server = MinecraftClient.getInstance().getServer();
+        this.addRenderableWidget(Button.builder(Component.translatable("menu.taleofkingdoms.innkeeper.wait"), widget -> {
+            this.onClose();
+            MinecraftServer server = Minecraft.getInstance().getSingleplayerServer();
             final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
             ConquestInstance conquestInstance = api.getConquestInstanceStorage().mostRecentInstance().orElse(null);
             if (conquestInstance == null) return;
 
-            final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUuid());
+            final GuildPlayer guildPlayer = conquestInstance.getPlayer(player.getUUID());
             if (guildPlayer.getCoins() < 10) {
                 Translations.INNKEEPER_NOT_ENOUGH_COINS.send(player);
                 return;
@@ -99,29 +99,29 @@ public class InnkeeperScreen extends ScreenTOK {
 
             adjustTime(server, 13000);
             guildPlayer.setCoins(guildPlayer.getCoins() - 10);
-        }).dimensions(this.width / 2 - 75, this.height / 4 + 75, 150, 20).build());
+        }).bounds(this.width / 2 - 75, this.height / 4 + 75, 150, 20).build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.taleofkingdoms.generic.exit"), widget -> {
-            this.close();
+        this.addRenderableWidget(Button.builder(Component.translatable("menu.taleofkingdoms.generic.exit"), widget -> {
+            this.onClose();
             Translations.INNKEEPER_LEAVE.send(player);
-        }).dimensions(this.width / 2 - 75, this.height / 4 + 100, 150, 20).build());
+        }).bounds(this.width / 2 - 75, this.height / 4 + 100, 150, 20).build());
     }
 
     private void adjustTime(MinecraftServer server, long targetTime) {
-        long currentTime = server.getOverworld().getTimeOfDay() % 24000;
+        long currentTime = server.overworld().getDayTime() % 24000;
         long newTime = (currentTime < targetTime) ? targetTime : 24000 + targetTime;
-        server.getOverworld().setTimeOfDay(server.getOverworld().getTimeOfDay() + (newTime - currentTime));
+        server.overworld().setDayTime(server.overworld().getDayTime() + (newTime - currentTime));
     }
 
     @Override
-    public void render(DrawContext context, int par1, int par2, float par3) {
+    public void render(GuiGraphics context, int par1, int par2, float par3) {
         super.render(context, par1, par2, par3);
-        context.drawCenteredTextWithShadow(this.textRenderer, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
-        context.drawCenteredTextWithShadow(this.textRenderer, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
+        context.drawCenteredString(this.font, "Time flies when you rest...", this.width / 2, this.height / 4 - 25, 0xFFFFFF);
+        context.drawCenteredString(this.font, "Waiting or resting costs 10 coins.", this.width / 2, this.height / 2 + 100, 0XFFFFFF);
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return false;
     }
 

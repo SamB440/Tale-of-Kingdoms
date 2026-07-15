@@ -1,25 +1,25 @@
 package com.convallyria.taleofkingdoms.common.kingdom;
 
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.core.Vec3i;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public enum KingdomTier {
-    TIER_ONE(Text.translatable("menu.taleofkingdoms.generic.tier_one"), Schematic.TIER_1_KINGDOM, Vec3i.ZERO),
-    TIER_TWO(Text.translatable("menu.taleofkingdoms.generic.tier_two"), Schematic.TIER_2_KINGDOM, new Vec3i(16, 0, 49));
+    TIER_ONE(Component.translatable("menu.taleofkingdoms.generic.tier_one"), Schematic.TIER_1_KINGDOM, Vec3i.ZERO),
+    TIER_TWO(Component.translatable("menu.taleofkingdoms.generic.tier_two"), Schematic.TIER_2_KINGDOM, new Vec3i(16, 0, 49));
 
-    private final Text name;
+    private final Component name;
     private final Schematic schematic;
     private final Vec3i offset;
 
-    KingdomTier(Text name, Schematic schematic, Vec3i offset) {
+    KingdomTier(Component name, Schematic schematic, Vec3i offset) {
         this.name = name;
         this.schematic = schematic;
         this.offset = offset;
     }
 
-    public Text getName() {
+    public Component getName() {
         return name;
     }
 

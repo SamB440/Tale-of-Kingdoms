@@ -4,80 +4,80 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.generator.structure.TOKStructures;
 import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.structure.SimpleStructurePiece;
-import net.minecraft.structure.StructureContext;
-import net.minecraft.structure.StructurePiecesHolder;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.StructureTemplateManager;
-import net.minecraft.structure.processor.BlockIgnoreStructureProcessor;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.jetbrains.annotations.Nullable;
 
 public class ReficuleVillageGenerator {
 
-    private static final Identifier ONE = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_one");
-    private static final Identifier THREE = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_three");
-    private static final Identifier FOUR = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_four");
-    private static final Identifier MIDDLE = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle");
-    private static final Identifier MIDDLE_TWO = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
-    private static final Identifier TOWER = Identifier.of(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
+    private static final ResourceLocation ONE = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_village/reficule_village_one");
+    private static final ResourceLocation THREE = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_village/reficule_village_three");
+    private static final ResourceLocation FOUR = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_village/reficule_village_four");
+    private static final ResourceLocation MIDDLE = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle");
+    private static final ResourceLocation MIDDLE_TWO = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_village/reficule_village_middle_two");
+    private static final ResourceLocation TOWER = ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_village/reficule_village_tower");
 
-    public static void addPieces(StructureTemplateManager manager, BlockPos pos, BlockRotation blockRotation, StructurePiecesHolder structurePiecesHolder, Random random) {
-        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), BlockRotation.NONE, 0);
+    public static void addPieces(StructureTemplateManager manager, BlockPos pos, Rotation blockRotation, StructurePieceAccessor structurePiecesHolder, RandomSource random) {
+        ReficuleVillagePiece onePiece = new ReficuleVillagePiece(manager, ONE, pos.subtract(new Vec3i(0, 6, 0)), Rotation.NONE, 0);
         structurePiecesHolder.addPiece(onePiece);
 
-        BlockPos middlePos = pos.add(new Vec3i(48, 0, 0));
-        ReficuleVillagePiece middlePiece = new ReficuleVillagePiece(manager, MIDDLE, middlePos, BlockRotation.NONE, 0);
+        BlockPos middlePos = pos.offset(new Vec3i(48, 0, 0));
+        ReficuleVillagePiece middlePiece = new ReficuleVillagePiece(manager, MIDDLE, middlePos, Rotation.NONE, 0);
         structurePiecesHolder.addPiece(middlePiece);
 
-        BlockPos threePos = middlePos.add(new Vec3i(32, 0, 0));
-        ReficuleVillagePiece threePiece = new ReficuleVillagePiece(manager, THREE, threePos, BlockRotation.NONE, 0);
+        BlockPos threePos = middlePos.offset(new Vec3i(32, 0, 0));
+        ReficuleVillagePiece threePiece = new ReficuleVillagePiece(manager, THREE, threePos, Rotation.NONE, 0);
         structurePiecesHolder.addPiece(threePiece);
 
         BlockPos middleTwoPos = middlePos.subtract(new Vec3i(0, 0, 36));
-        ReficuleVillagePiece middleTwoPiece = new ReficuleVillagePiece(manager, MIDDLE_TWO, middleTwoPos, BlockRotation.NONE, 0);
+        ReficuleVillagePiece middleTwoPiece = new ReficuleVillagePiece(manager, MIDDLE_TWO, middleTwoPos, Rotation.NONE, 0);
         structurePiecesHolder.addPiece(middleTwoPiece);
 
-        BlockPos fourPos = middleTwoPos.add(new Vec3i(0, 0, 13)).add(new Vec3i(32, 0, 0));
-        ReficuleVillagePiece fourPiece = new ReficuleVillagePiece(manager, FOUR, fourPos, BlockRotation.NONE, 0);
+        BlockPos fourPos = middleTwoPos.offset(new Vec3i(0, 0, 13)).offset(new Vec3i(32, 0, 0));
+        ReficuleVillagePiece fourPiece = new ReficuleVillagePiece(manager, FOUR, fourPos, Rotation.NONE, 0);
         structurePiecesHolder.addPiece(fourPiece);
 
         BlockPos towerPos = pos.subtract(new Vec3i(0, 0, 32));
-        ReficuleVillagePiece towerPiece = new ReficuleVillagePiece(manager, TOWER, towerPos, BlockRotation.NONE, 0);
+        ReficuleVillagePiece towerPiece = new ReficuleVillagePiece(manager, TOWER, towerPos, Rotation.NONE, 0);
         structurePiecesHolder.addPiece(towerPiece);
     }
 
-    public static class ReficuleVillagePiece extends SimpleStructurePiece {
+    public static class ReficuleVillagePiece extends TemplateStructurePiece {
 
-        public ReficuleVillagePiece(StructureTemplateManager structureManager, Identifier identifier, BlockPos blockPos, BlockRotation blockRotation, int i) {
+        public ReficuleVillagePiece(StructureTemplateManager structureManager, ResourceLocation identifier, BlockPos blockPos, Rotation blockRotation, int i) {
             super(TOKStructures.REFICULE_VILLAGE, 0, structureManager, identifier, identifier.toString(), createPlacementData(blockRotation), blockPos);
         }
 
-        public ReficuleVillagePiece(StructureTemplateManager structureManager, NbtCompound nbtCompound) {
+        public ReficuleVillagePiece(StructureTemplateManager structureManager, CompoundTag nbtCompound) {
             super(TOKStructures.REFICULE_VILLAGE, nbtCompound, structureManager, (identifier) -> createPlacementData(null));
         }
 
-        public ReficuleVillagePiece(StructureContext structureContext, NbtCompound nbtCompound) {
+        public ReficuleVillagePiece(StructurePieceSerializationContext structureContext, CompoundTag nbtCompound) {
             super(TOKStructures.REFICULE_VILLAGE, nbtCompound, structureContext.structureTemplateManager(), (identifier) -> createPlacementData(null));
         }
 
-        private static StructurePlacementData createPlacementData(@Nullable BlockRotation rotation) {
-            return (new StructurePlacementData())
-                    .setRotation(rotation != null ? rotation : BlockRotation.random(Random.create()))
-                    .setMirror(BlockMirror.NONE)
-                    .addProcessor(BlockIgnoreStructureProcessor.IGNORE_STRUCTURE_BLOCKS);
+        private static StructurePlaceSettings createPlacementData(@Nullable Rotation rotation) {
+            return (new StructurePlaceSettings())
+                    .setRotation(rotation != null ? rotation : Rotation.getRandom(RandomSource.create()))
+                    .setMirror(Mirror.NONE)
+                    .addProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
         }
 
         @Override
-        protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, net.minecraft.util.math.random.Random random, BlockBox boundingBox) {
+        protected void handleDataMarker(String metadata, BlockPos pos, ServerLevelAccessor world, net.minecraft.util.RandomSource random, BoundingBox boundingBox) {
             double percent = Math.random() * 100;
             if (metadata.equals("Survivor")) {
                 if (percent > 20) {

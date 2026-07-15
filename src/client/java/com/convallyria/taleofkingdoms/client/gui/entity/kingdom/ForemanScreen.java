@@ -21,23 +21,23 @@ import io.wispforest.owo.ui.core.Positioning;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.core.Surface;
 import io.wispforest.owo.ui.core.VerticalAlignment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
-    private final PlayerEntity player;
+    private final Player player;
     private final ForemanEntity entity;
     private final ConquestInstance instance;
     private BarWidget resourcesBar;
 
-    public ForemanScreen(PlayerEntity player, ForemanEntity entity, ConquestInstance instance) {
+    public ForemanScreen(Player player, ForemanEntity entity, ConquestInstance instance) {
         this.player = player;
         this.entity = entity;
         this.instance = instance;
@@ -57,7 +57,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
                 .verticalAlignment(VerticalAlignment.CENTER);
 
         rootComponent.child(
-            Components.label(Text.translatable("menu.taleofkingdoms.foreman.total_money", instance.getPlayer(player).getCoins()))
+            Components.label(Component.translatable("menu.taleofkingdoms.foreman.total_money", instance.getPlayer(player).getCoins()))
                     .color(Color.ofDye(DyeColor.GRAY))
                     .positioning(Positioning.relative(50, 15))
         );
@@ -67,17 +67,17 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         final float resourcePercent = resourceCount * (100f / 1280f);
 
         rootComponent.child(
-                Components.label(Text.translatable("menu.taleofkingdoms.foreman.resources"))
+                Components.label(Component.translatable("menu.taleofkingdoms.foreman.resources"))
                         .positioning(Positioning.relative(50, 40))
         );
 
         rootComponent.child(this.resourcesBar = (BarWidget) new BarWidget(100, 12, resourcePercent / 100)
                 .positioning(Positioning.relative(50, 45))
-                .tooltip(Text.literal(resourceCount + " / 1280")));
+                .tooltip(Component.literal(resourceCount + " / 1280")));
 
         rootComponent.child(
-            Components.button(Text.translatable("menu.taleofkingdoms.foreman.collect"), c -> {
-                if (MinecraftClient.getInstance().getServer() == null) {
+            Components.button(Component.translatable("menu.taleofkingdoms.foreman.collect"), c -> {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.FOREMAN_COLLECT)
                             .sendPacket(player, new ForemanCollectPacket(entity.getId()));
                     return;
@@ -90,8 +90,8 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         );
 
         rootComponent.child(
-            Components.button(Text.translatable("menu.taleofkingdoms.foreman.buy_worker"), c -> {
-                if (MinecraftClient.getInstance().getServer() == null) {
+            Components.button(Component.translatable("menu.taleofkingdoms.foreman.buy_worker"), c -> {
+                if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     TaleOfKingdomsClient.getAPI().getClientPacket(Packets.FOREMAN_BUY_WORKER)
                             .sendPacket(player, new ForemanBuyWorkerPacket(entity.getId()));
                     return;
@@ -99,21 +99,21 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
 
                 entity.buyWorker(player, instance);
             })
-            .tooltip(Text.translatable("menu.taleofkingdoms.foreman.buy_worker_cost"))
+            .tooltip(Component.translatable("menu.taleofkingdoms.foreman.buy_worker_cost"))
             .sizing(Sizing.fixed(100), Sizing.fixed(20))
             .positioning(Positioning.relative(50, 75))
         );
 
         rootComponent.child(
             Components.button(
-                Text.translatable("menu.taleofkingdoms.generic.cancel"),
-                (ButtonComponent button) -> this.close()
+                Component.translatable("menu.taleofkingdoms.generic.cancel"),
+                (ButtonComponent button) -> this.onClose()
             ).positioning(Positioning.relative(50, 85))
         );
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         update();
     }
@@ -122,6 +122,6 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         final int resourceCount = entity instanceof QuarryForemanEntity ? entity.getStone() : entity.getWood();
         final float resourcePercent = resourceCount * (100f / 1280f);
         resourcesBar.setBarProgress(resourcePercent / 100);
-        resourcesBar.tooltip(Text.literal(resourceCount + " / 1280"));
+        resourcesBar.tooltip(Component.literal(resourceCount + " / 1280"));
     }
 }

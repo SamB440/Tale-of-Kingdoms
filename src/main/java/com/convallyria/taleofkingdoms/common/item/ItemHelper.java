@@ -2,14 +2,13 @@ package com.convallyria.taleofkingdoms.common.item;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.item.common.ItemCoin;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.village.VillagerProfession;
-
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.Item;
 import java.util.function.Consumer;
 
 public class ItemHelper {
@@ -20,7 +19,7 @@ public class ItemHelper {
      * @return true if entity is hostile
      */
     public static boolean isHostileEntity(Entity entityLiving) {
-        return entityLiving instanceof Monster;
+        return entityLiving instanceof Enemy;
     }
 
     /**
@@ -33,17 +32,17 @@ public class ItemHelper {
         Consumer<MinecraftServer> dropCoins = server -> dropItem(ItemRegistry.ITEMS.get(ItemRegistry.TOKItem.COIN), 1, entity);
         if (isHostileEntity(entity)) {
             TaleOfKingdoms.getAPI().getScheduler().repeatN(dropCoins, 25, 0, 1);
-        } else if (entity instanceof IronGolemEntity) {
+        } else if (entity instanceof IronGolem) {
             TaleOfKingdoms.getAPI().getScheduler().repeatN(dropCoins, 45, 0, 1);
-        } else if (entity instanceof VillagerEntity villagerEntity) {
+        } else if (entity instanceof Villager villagerEntity) {
             final VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
-            if (!profession.id().equals("nitwit") && !profession.id().equals("none")) {
+            if (!profession.name().equals("nitwit") && !profession.name().equals("none")) {
                 TaleOfKingdoms.getAPI().getScheduler().repeatN(dropCoins, 10, 0, 1);
             }
         }
     }
 
     private static void dropItem(Item item, int meta, Entity livingBase) {
-        livingBase.dropItem(item, meta);
+        livingBase.spawnAtLocation(item, meta);
     }
 }

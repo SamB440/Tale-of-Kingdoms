@@ -1,11 +1,11 @@
 package com.convallyria.taleofkingdoms.client.gui.generic.bar;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 
-public class BarWidget extends ButtonWidget {
+public class BarWidget extends Button {
 
     private final int borderColor = -10592674;
     private final int width;
@@ -19,7 +19,7 @@ public class BarWidget extends ButtonWidget {
     }
 
     public BarWidget(int x, int y, int width, int height, float progress) {
-        super(x, y, width, height, Text.empty(), (w) -> {}, (n) -> null);
+        super(x, y, width, height, Component.empty(), (w) -> {}, (n) -> null);
         if (progress >= 0.0F && progress <= 1.0F) {
             this.barProgress = progress;
         } else {
@@ -42,7 +42,7 @@ public class BarWidget extends ButtonWidget {
         }
     }
 
-    public void drawBar(DrawContext context) {
+    public void drawBar(GuiGraphics context) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.border) {
             context.fill(this.getX(),
@@ -64,7 +64,7 @@ public class BarWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
         drawBar(context);
     }

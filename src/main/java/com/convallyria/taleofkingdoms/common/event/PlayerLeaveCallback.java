@@ -2,7 +2,7 @@ package com.convallyria.taleofkingdoms.common.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface PlayerLeaveCallback {
 
@@ -13,5 +13,5 @@ public interface PlayerLeaveCallback {
                 }
             });
 
-    void onLeave(ServerPlayerEntity player);
+    void onLeave(ServerPlayer player);
 }

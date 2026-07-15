@@ -1,19 +1,19 @@
 package com.convallyria.taleofkingdoms.common.packet.c2s;
 
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record ForemanBuyWorkerPacket(int entityId) implements CustomPayload {
+public record ForemanBuyWorkerPacket(int entityId) implements CustomPacketPayload {
 
-    public static final PacketCodec<RegistryByteBuf, ForemanBuyWorkerPacket> CODEC = PacketCodec.tuple(
-            PacketCodecs.INTEGER, ForemanBuyWorkerPacket::entityId,
+    public static final StreamCodec<RegistryFriendlyByteBuf, ForemanBuyWorkerPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, ForemanBuyWorkerPacket::entityId,
             ForemanBuyWorkerPacket::new);
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return Packets.FOREMAN_BUY_WORKER;
     }
 }

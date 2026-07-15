@@ -9,7 +9,7 @@ import com.convallyria.taleofkingdoms.managers.IManager;
 import com.convallyria.taleofkingdoms.managers.SoundManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public abstract class TaleOfKingdomsAPI {
     private final TaleOfKingdoms mod;
     private final ConquestInstanceStorage cis;
     private final Map<Class<? extends IManager>, IManager> managers = new HashMap<>();
-    private final Map<EnvType, Map<CustomPayload.Id<?>, PacketHandler<?>>> packetHandlers = new HashMap<>();
+    private final Map<EnvType, Map<CustomPacketPayload.Type<?>, PacketHandler<?>>> packetHandlers = new HashMap<>();
 
     private final Scheduler scheduler;
 
@@ -86,7 +86,7 @@ public abstract class TaleOfKingdomsAPI {
     public abstract void executeOnMain(Runnable runnable);
 
     public void registerPacketHandler(EnvType envType, PacketHandler<?> packet) {
-        final Map<CustomPayload.Id<?>, PacketHandler<?>> handlers = packetHandlers.getOrDefault(envType, new HashMap<>());
+        final Map<CustomPacketPayload.Type<?>, PacketHandler<?>> handlers = packetHandlers.getOrDefault(envType, new HashMap<>());
         handlers.put(packet.getPacket(), packet);
         packetHandlers.put(envType, handlers);
     }
@@ -95,15 +95,15 @@ public abstract class TaleOfKingdomsAPI {
     // getServerPacket gets a packet sent/received by dedicated or integrated server
     // getClientPacket gets a packet sent/received by the client
 
-    public <T extends CustomPayload> PacketHandler<T> getServerPacket(CustomPayload.Id<T> packet) {
+    public <T extends CustomPacketPayload> PacketHandler<T> getServerPacket(CustomPacketPayload.Type<T> packet) {
         return getPacketHandler(EnvType.SERVER, packet);
     }
 
-    public <T extends CustomPayload> PacketHandler<T> getClientPacket(CustomPayload.Id<T> packet) {
+    public <T extends CustomPacketPayload> PacketHandler<T> getClientPacket(CustomPacketPayload.Type<T> packet) {
         return getPacketHandler(EnvType.CLIENT, packet);
     }
 
-    private <T extends CustomPayload> PacketHandler<T> getPacketHandler(EnvType envType, CustomPayload.Id<T> packet) {
+    private <T extends CustomPacketPayload> PacketHandler<T> getPacketHandler(EnvType envType, CustomPacketPayload.Type<T> packet) {
         final PacketHandler<?> packetHandler = packetHandlers.get(envType).get(packet);
         if (packetHandler == null) {
             throw new IllegalArgumentException("Failed to find packet '" + packet.id().toString() + "' on environment " + envType + "!");

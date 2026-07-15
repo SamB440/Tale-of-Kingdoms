@@ -2,8 +2,7 @@ package com.convallyria.taleofkingdoms.client.gui.generic.bar;
 
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
-//import org.lwjgl.opengl.GL40;
+import net.minecraft.client.gui.GuiGraphics;
 
 public class ScreenBar extends ScreenTOK {
 
@@ -42,7 +41,7 @@ public class ScreenBar extends ScreenTOK {
         }
     }
 
-    public void drawBar(DrawContext context) {
+    public void drawBar(GuiGraphics context) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         if (this.border) {
             context.fill(this.xPosition,

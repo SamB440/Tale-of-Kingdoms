@@ -6,10 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +17,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 public class ShopParser {
     public enum GUI {
@@ -95,7 +94,7 @@ public class ShopParser {
     }
 
     private Item getItem(String name) throws ReflectiveOperationException {
-        return Registries.ITEM.get(Identifier.of(name.toLowerCase(TaleOfKingdoms.DEFAULT_LOCALE)));
+        return BuiltInRegistries.ITEM.get(ResourceLocation.parse(name.toLowerCase(TaleOfKingdoms.DEFAULT_LOCALE)));
     }
 
     // Make recursive function to look for {} and split by ","

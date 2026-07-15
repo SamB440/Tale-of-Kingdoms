@@ -33,13 +33,12 @@ import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryWorker
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-
 import java.util.List;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 
 public class EntityTypes {
 
@@ -47,181 +46,181 @@ public class EntityTypes {
     private static final float HUMAN_HEIGHT = 1.8f;
 
     public static final EntityType<FarmerEntity> FARMER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "farmer"),
-            EntityType.Builder.create(FarmerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "farmer"),
+            EntityType.Builder.of(FarmerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<GuildMasterEntity> GUILDMASTER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "guild_master"),
-            EntityType.Builder.create(GuildMasterEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "guild_master"),
+            EntityType.Builder.of(GuildMasterEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<GuildMasterDefenderEntity> GUILDMASTER_DEFENDER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "guild_master_defender"),
-            EntityType.Builder.create(GuildMasterDefenderEntity::new, SpawnGroup.MISC).makeFireImmune().dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "guild_master_defender"),
+            EntityType.Builder.of(GuildMasterDefenderEntity::new, MobCategory.MISC).fireImmune().sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<BlacksmithEntity> BLACKSMITH = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "blacksmith"),
-            EntityType.Builder.create(BlacksmithEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "blacksmith"),
+            EntityType.Builder.of(BlacksmithEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<CityBuilderEntity> CITYBUILDER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "city_builder"),
-            EntityType.Builder.create(CityBuilderEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "city_builder"),
+            EntityType.Builder.of(CityBuilderEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<KnightEntity> KNIGHT = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "knight"),
-            EntityType.Builder.create(KnightEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "knight"),
+            EntityType.Builder.of(KnightEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<InnkeeperEntity> INNKEEPER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "innkeeper"),
-            EntityType.Builder.create(InnkeeperEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "innkeeper"),
+            EntityType.Builder.of(InnkeeperEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<HunterEntity> HUNTER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "hunter"),
-            EntityType.Builder.create(HunterEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "hunter"),
+            EntityType.Builder.of(HunterEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<GuildGuardEntity> GUILDGUARD = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "guild_guard"),
-            EntityType.Builder.create(GuildGuardEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "guild_guard"),
+            EntityType.Builder.of(GuildGuardEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<GuildVillagerEntity> GUILDVILLAGER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "guild_villager"),
-            EntityType.Builder.create(GuildVillagerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "guild_villager"),
+            EntityType.Builder.of(GuildVillagerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<GuildArcherEntity> GUILDARCHER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "guild_archer"),
-            EntityType.Builder.create(GuildArcherEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "guild_archer"),
+            EntityType.Builder.of(GuildArcherEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<LoneEntity> LONE = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "lone"),
-            EntityType.Builder.create(LoneEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "lone"),
+            EntityType.Builder.of(LoneEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<BankerEntity> BANKER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "banker"),
-            EntityType.Builder.create(BankerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "banker"),
+            EntityType.Builder.of(BankerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<FoodShopEntity> FOODSHOP = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "foodshop"),
-            EntityType.Builder.create(FoodShopEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "foodshop"),
+            EntityType.Builder.of(FoodShopEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<GuildCaptainEntity> GUILDCAPTAIN = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "guild_captain"),
-            EntityType.Builder.create(GuildCaptainEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "guild_captain"),
+            EntityType.Builder.of(GuildCaptainEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<LoneVillagerEntity> LONEVILLAGER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "lone_villager"),
-            EntityType.Builder.create(LoneVillagerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "lone_villager"),
+            EntityType.Builder.of(LoneVillagerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<ReficuleSoldierEntity> REFICULE_SOLDIER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "reficule_soldier"),
-            EntityType.Builder.create(ReficuleSoldierEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_soldier"),
+            EntityType.Builder.of(ReficuleSoldierEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<ReficuleGuardianEntity> REFICULE_GUARDIAN = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "reficule_guardian"),
-            EntityType.Builder.create(ReficuleGuardianEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_guardian"),
+            EntityType.Builder.of(ReficuleGuardianEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
     public static final EntityType<ReficuleMageEntity> REFICULE_MAGE = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "reficule_mage"),
-            EntityType.Builder.create(ReficuleMageEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "reficule_mage"),
+            EntityType.Builder.of(ReficuleMageEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<BanditEntity> BANDIT = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "bandit"),
-            EntityType.Builder.create(BanditEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "bandit"),
+            EntityType.Builder.of(BanditEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     // =========================
     // Player's kingdom entities
     // =========================
     public static final EntityType<ItemShopEntity> ITEM_SHOP = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "item_shop"),
-            EntityType.Builder.create(ItemShopEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "item_shop"),
+            EntityType.Builder.of(ItemShopEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<KingdomVillagerEntity> KINGDOM_VILLAGER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "kingdom_villager"),
-            EntityType.Builder.create(KingdomVillagerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "kingdom_villager"),
+            EntityType.Builder.of(KingdomVillagerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<StockMarketEntity> STOCK_MARKET = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "stock_market"),
-            EntityType.Builder.create(StockMarketEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "stock_market"),
+            EntityType.Builder.of(StockMarketEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<QuarryForemanEntity> QUARRY_FOREMAN = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "quarry_foreman"),
-            EntityType.Builder.create(QuarryForemanEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "quarry_foreman"),
+            EntityType.Builder.of(QuarryForemanEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<LumberForemanEntity> LUMBER_FOREMAN = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "lumber_foreman"),
-            EntityType.Builder.create(LumberForemanEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "lumber_foreman"),
+            EntityType.Builder.of(LumberForemanEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<QuarryWorkerEntity> QUARRY_WORKER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "quarry_worker"),
-            EntityType.Builder.create(QuarryWorkerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "quarry_worker"),
+            EntityType.Builder.of(QuarryWorkerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<LumberWorkerEntity> LUMBER_WORKER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "lumber_worker"),
-            EntityType.Builder.create(LumberWorkerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "lumber_worker"),
+            EntityType.Builder.of(LumberWorkerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<WardenEntity> WARDEN = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "warden"),
-            EntityType.Builder.create(WardenEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "warden"),
+            EntityType.Builder.of(WardenEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<WarriorHireableEntity> WARRIOR = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "warrior_mercenary"),
-            EntityType.Builder.create(WarriorHireableEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "warrior_mercenary"),
+            EntityType.Builder.of(WarriorHireableEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<ArcherHireableEntity> ARCHER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "archer_mercenary"),
-            EntityType.Builder.create(ArcherHireableEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "archer_mercenary"),
+            EntityType.Builder.of(ArcherHireableEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<BlockShopEntity> BLOCK_SHOP = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "block_shop"),
-            EntityType.Builder.create(BlockShopEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "block_shop"),
+            EntityType.Builder.of(BlockShopEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final EntityType<HumanFarmerEntity> HUMAN_FARMER = Registry.register(
-            Registries.ENTITY_TYPE,
-            Identifier.of(TaleOfKingdoms.MODID, "human_farmer"),
-            EntityType.Builder.create(HumanFarmerEntity::new, SpawnGroup.MISC).dimensions(HUMAN_WIDTH, HUMAN_HEIGHT).build()
+            BuiltInRegistries.ENTITY_TYPE,
+            ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, "human_farmer"),
+            EntityType.Builder.of(HumanFarmerEntity::new, MobCategory.MISC).sized(HUMAN_WIDTH, HUMAN_HEIGHT).build()
     );
 
     public static final List<EntityType<? extends ShopEntity>> SHOP_ENTITIES = List.of(EntityTypes.BLACKSMITH, EntityTypes.ITEM_SHOP, EntityTypes.FOODSHOP, EntityTypes.BLOCK_SHOP, EntityTypes.STOCK_MARKET);

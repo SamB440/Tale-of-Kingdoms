@@ -1,7 +1,7 @@
 package com.convallyria.taleofkingdoms.common.schematic;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * An enum of schematics, with file paths, that are available to paste.
@@ -26,17 +26,17 @@ public enum Schematic {
     TIER_2_BLOCK_SHOP("player_kingdom/block_shop/tier_two_block_shop");
     //GUILD_CASTLE_OLD(Identifier.of(TaleOfKingdoms.MODID, "/assets/schematics/GuildCastle.schematic"));
 
-    private final Identifier path;
+    private final ResourceLocation path;
 
     Schematic(String path) {
-        this(Identifier.of(TaleOfKingdoms.MODID, path));
+        this(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, path));
     }
 
-    Schematic(Identifier path) {
+    Schematic(ResourceLocation path) {
         this.path = path;
     }
 
-    public Identifier getPath() {
+    public ResourceLocation getPath() {
         return path;
     }
 }

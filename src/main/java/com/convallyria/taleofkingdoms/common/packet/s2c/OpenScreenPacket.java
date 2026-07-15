@@ -1,16 +1,16 @@
 package com.convallyria.taleofkingdoms.common.packet.s2c;
 
 import com.convallyria.taleofkingdoms.common.packet.Packets;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record OpenScreenPacket(ScreenTypes type, int entityId) implements CustomPayload {
+public record OpenScreenPacket(ScreenTypes screenType, int entityId) implements CustomPacketPayload {
 
-    public static final PacketCodec<RegistryByteBuf, OpenScreenPacket> CODEC = PacketCodec.tuple(
-            PacketCodecs.indexed(i -> ScreenTypes.values()[i], ScreenTypes::ordinal), OpenScreenPacket::type,
-            PacketCodecs.INTEGER, OpenScreenPacket::entityId,
+    public static final StreamCodec<RegistryFriendlyByteBuf, OpenScreenPacket> CODEC = StreamCodec.composite(
+            ByteBufCodecs.idMapper(i -> ScreenTypes.values()[i], ScreenTypes::ordinal), OpenScreenPacket::screenType,
+            ByteBufCodecs.INT, OpenScreenPacket::entityId,
             OpenScreenPacket::new);
 
     public enum ScreenTypes {
@@ -29,7 +29,7 @@ public record OpenScreenPacket(ScreenTypes type, int entityId) implements Custom
     }
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return Packets.OPEN_CLIENT_SCREEN;
     }
 }

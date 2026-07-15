@@ -1,0 +1,24 @@
+{
+  "name": "Farmer",
+  "icon": "minecraft:wooden_hoe",
+  "category": "taleofkingdoms:characters",
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "taleofkingdoms:farmer",
+      "rotate": true,
+      "offset": 0.15
+    },
+    {
+      "type": "patchouli:text",
+      "title": "Lore",
+      "text": "The Farmer has spent many years working at the guild providing food to those who reside there and the order of warriors fighting under The Guild Master.$(br2)Every day, you may ask for some free bread of which an amount will be given depending on the fruitfulness of the day's harvest."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "taleofkingdoms:structures/the_guild"
+      ]
+    }
+  ]
+}

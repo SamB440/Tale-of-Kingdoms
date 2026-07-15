@@ -12,55 +12,54 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.server.TaleOfKingdomsServerAPI;
 import net.fabricmc.api.EnvType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import java.util.Optional;
 import java.util.Set;
 
 public class GuildMasterDefenderEntity extends GuildMasterEntity {
     private boolean givenSword;
 
-    public GuildMasterDefenderEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
+    public GuildMasterDefenderEntity(EntityType<? extends PathfinderMob> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void initGoals() {
-        super.initGoals();
-        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(1000.0D);
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 0.6D, false));
-        this.goalSelector.add(2, new FollowPlayerGoal(this, 0.8F, 5F, 15F));
-        this.goalSelector.add(3, new HealPlayerGoal(this, 10F));
-        this.targetSelector.add(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
-        this.targetSelector.add(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
-        this.targetSelector.add(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
-        this.targetSelector.add(4, new ActiveTargetGoal<>(this, MobEntity.class, 100,
-                true, true, livingEntity -> livingEntity instanceof Monster));
-        this.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
+    protected void registerGoals() {
+        super.registerGoals();
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1000.0D);
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.6D, false));
+        this.goalSelector.addGoal(2, new FollowPlayerGoal(this, 0.8F, 5F, 15F));
+        this.goalSelector.addGoal(3, new HealPlayerGoal(this, 10F));
+        this.targetSelector.addGoal(1, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_SOLDIER, false));
+        this.targetSelector.addGoal(2, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_GUARDIAN, false));
+        this.targetSelector.addGoal(3, new ImprovedFollowTargetGoal<>(this, EntityTypes.REFICULE_MAGE, false));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Mob.class, 100,
+                true, true, livingEntity -> livingEntity instanceof Enemy));
+        this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
     }
 
     @Override
-    public boolean isFireImmune() {
+    public boolean fireImmune() {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         if (api != null) {
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
@@ -72,7 +71,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
     }
 
     @Override
-    public boolean damage(DamageSource damageSource, float f) {
+    public boolean hurt(DamageSource damageSource, float f) {
         final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         if (api != null) {
             if (api.getConquestInstanceStorage().mostRecentInstance().isPresent()) {
@@ -82,36 +81,36 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                 }
             }
         }
-        return super.damage(damageSource, f);
+        return super.hurt(damageSource, f);
     }
 
     @Override
-    protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-        if (hand == Hand.OFF_HAND || !(player instanceof ServerPlayerEntity serverPlayerEntity)) return ActionResult.FAIL;
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.OFF_HAND || !(player instanceof ServerPlayer serverPlayerEntity)) return InteractionResult.FAIL;
         TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
         ConquestInstance instance = api.getConquestInstanceStorage().mostRecentInstance().get();
         if (instance.isUnderAttack()) {
             Set<Item> swords = Set.of(Items.IRON_SWORD, Items.STONE_SWORD, Items.DIAMOND_SWORD, Items.GOLDEN_SWORD, Items.WOODEN_SWORD, Items.NETHERITE_SWORD);
-            if (!givenSword && !player.getInventory().containsAny(swords)) { // Use containsAny method as it is present on both server and client
+            if (!givenSword && !player.getInventory().hasAnyOf(swords)) { // Use containsAny method as it is present on both server and client
                 Runnable giveItem = () -> {
                     MinecraftServer server = player.getServer();
                     if (server != null) {
-                        serverPlayerEntity.getInventory().insertStack(new ItemStack(Items.IRON_SWORD));
+                        serverPlayerEntity.getInventory().add(new ItemStack(Items.IRON_SWORD));
                         this.givenSword = true;
                     }
                 };
                 api.executeOnMain(giveItem);
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
 
             if (instance.getReficuleAttackers().isEmpty()) {
                 final GuildPlayer guildPlayer = instance.getPlayer(player);
                 if (!guildPlayer.hasRebuiltGuild() && guildPlayer.getWorthiness() >= 750 && guildPlayer.getKingdom() == null) {
                     Runnable fixGuild = () -> {
-                        PlayerInventory playerInventory = serverPlayerEntity.getInventory();
+                        Inventory playerInventory = serverPlayerEntity.getInventory();
                         ItemStack stack = null;
-                        for (ItemStack itemStack : playerInventory.main) {
-                            if (itemStack.isIn(ItemTags.LOGS)) {
+                        for (ItemStack itemStack : playerInventory.items) {
+                            if (itemStack.is(ItemTags.LOGS)) {
                                 if (itemStack.getCount() == 64) {
                                     stack = itemStack;
                                     break;
@@ -120,12 +119,12 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                         }
 
                         if (stack != null) {
-                            playerInventory.setStack(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
+                            playerInventory.setItem(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
                             instance.rebuild(serverPlayerEntity, api);
                             guildPlayer.setHasRebuiltGuild(true);
                             instance.setUnderAttack(false);
-                            final Entity entity = serverPlayerEntity.getWorld().getEntityById(this.getId());
-                            entity.requestTeleport(entity.getX(), entity.getY() + 100, entity.getZ());
+                            final Entity entity = serverPlayerEntity.level().getEntity(this.getId());
+                            entity.teleportTo(entity.getX(), entity.getY() + 100, entity.getZ());
                             entity.remove(RemovalReason.DISCARDED);
                             Translations.GUILDMASTER_THANK_YOU.send(player);
                         } else {
@@ -133,8 +132,8 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                         }
                     };
                     if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER) ((TaleOfKingdomsServerAPI) api).executeOnDedicatedServer(fixGuild);
-                    else if (serverPlayerEntity.getServer() == null || !serverPlayerEntity.getServer().isDedicated()) api.executeOnMain(fixGuild);
-                    return ActionResult.SUCCESS;
+                    else if (serverPlayerEntity.getServer() == null || !serverPlayerEntity.getServer().isDedicatedServer()) api.executeOnMain(fixGuild);
+                    return InteractionResult.SUCCESS;
                 }
             } else if (instance.getReficuleAttackers().size() <= 4) {
                 Translations.GUILDMASTER_KILL_REFICULES.send(player);
@@ -142,18 +141,18 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                 Translations.GUILDMASTER_STAY_CLOSE.send(player);
             }
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public CompoundTag saveWithoutId(CompoundTag tag) {
         tag.putBoolean("givenSword", givenSword);
-        return super.writeNbt(tag);
+        return super.saveWithoutId(tag);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
+    public void load(CompoundTag tag) {
         this.givenSword = tag.getBoolean("givenSword");
-        super.readNbt(tag);
+        super.load(tag);
     }
 }
