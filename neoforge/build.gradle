@@ -60,6 +60,25 @@ dependencies {
     modApi "me.shedaniel.cloth:cloth-config-neoforge:${rootProject.cloth_version}"
     include "me.shedaniel.cloth:cloth-config-neoforge:${rootProject.cloth_version}"
 
+    // Dev-only compatibility-testing mods (see fabric/build.gradle for the Modrinth maven caveats;
+    // Modrinth version IDs pin the neoforge jars where the version number is shared across loaders).
+    // NO sodium here: its neoforge jar is a thin wrapper whose actual mod code is JiJ'd
+    // (…-service.jar, not published standalone), so Loom's nested-jar stripping leaves a shell that
+    // crashes at mixin apply (ClassNotFoundException: …Workarounds$Reference). Test sodium compat
+    // via the fabric module instead.
+    modLocalRuntime "maven.modrinth:lithium:mc1.21.1-0.15.4-neoforge"
+    modLocalRuntime "maven.modrinth:biomes-o-plenty:BtZKRp69"                  // 21.1.0.14
+    modLocalRuntime "maven.modrinth:terrablender:6e8GCrLb"                     // 4.1.0.8 — BOP dep
+    modLocalRuntime "maven.modrinth:farmers-delight:1.21.1-1.3.2"
+    modLocalRuntime "maven.modrinth:glitchcore:S2TfWrZR"                       // 2.1.0.2 — BOP dep
+    // Create JiJs Registrate, Flywheel and Ponder — stripped by Loom in dev (same problem as the
+    // owo note above), so they are supplied explicitly. Versions must match Create's
+    // META-INF/jarjar/metadata.json.
+    modLocalRuntime "maven.modrinth:create:6.0.10+mc1.21.1"
+    modLocalRuntime "com.tterrag.registrate:Registrate:MC1.21-1.3.0+67"
+    modLocalRuntime "dev.engine-room.flywheel:flywheel-neoforge-1.21.1:1.0.6"
+    modLocalRuntime "net.createmod.ponder:ponder-neoforge:1.0.82+mc1.21.1"
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ":common", configuration: "transformProductionNeoForge")
 }

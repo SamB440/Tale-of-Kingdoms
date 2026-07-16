@@ -73,6 +73,29 @@ dependencies {
     // Config screen hook (Fabric only).
     modImplementation "maven.modrinth:modmenu:${rootProject.modmenu_version}"
 
+    // Dev-only compatibility-testing mods: loaded by runClient, never compiled against and never
+    // shipped. The Modrinth maven publishes no transitive metadata, so BOP's required deps
+    // (TerraBlender + GlitchCore) are declared explicitly. BOP/TerraBlender/GlitchCore reuse the
+    // same version number for their fabric and neoforge jars, so those use Modrinth version IDs.
+    // Create has no 1.21.1 Fabric build — test Create compat via the neoforge module.
+    // Sodium pinned to 0.6.x: the 0.8.x jars are built with Loom 1.16 using static mixin remapping,
+    // which arch-loom 1.11 refuses to consume ("Mod was built with a newer version of Loom").
+    modLocalRuntime "maven.modrinth:sodium:mc1.21.1-0.6.13-fabric"
+    modLocalRuntime "maven.modrinth:lithium:mc1.21.1-0.15.4-fabric"
+    modLocalRuntime "maven.modrinth:biomes-o-plenty:fhyqphwv"                  // 21.1.0.14
+    modLocalRuntime "maven.modrinth:terrablender:XNtIBXyQ"                     // 4.1.0.8 — BOP dep
+    modLocalRuntime "maven.modrinth:glitchcore:sux8kYHe"                       // 2.1.0.2 — BOP dep
+    // TerraBlender/GlitchCore JiJ night-config and typetools, but Loom strips nested jars from mod
+    // dependencies in dev (crash: NoClassDefFoundError com.electronwill…/net.jodah…), so they are
+    // supplied on the dev runtime classpath explicitly. Versions match the stripped nested jars.
+    localRuntime "com.electronwill.night-config:core:3.6.7"
+    localRuntime "com.electronwill.night-config:toml:3.6.7"
+    localRuntime "net.jodah:typetools:0.6.3"
+    // Pinned to 3.2.2: 3.3.x replaced its access widener with a `classTweaker` (unparseable by
+    // Loom 1.11's transitive-AW scan) and 3.2.3+ are built with Loom 1.13 static mixin remapping
+    // (rejected by the same "newer version of Loom" check as sodium above).
+    modLocalRuntime "maven.modrinth:farmers-delight-refabricated:1.21.1-3.2.2"
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowBundle project(path: ":common", configuration: "transformProductionFabric")
 }
