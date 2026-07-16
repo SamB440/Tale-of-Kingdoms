@@ -15,6 +15,11 @@
     "minecraft:swamp",
     "minecraft:mangrove_swamp",
     "minecraft:savanna_plateau",
-    "minecraft:cherry_grove"
+    "minecraft:cherry_grove",
+    {"id": "#c:is_plains", "required": false},
+    {"id": "#c:is_swamp", "required": false},
+    {"id": "#c:is_magical", "required": false},
+    {"id": "#c:is_mushroom", "required": false},
+    {"id": "#c:is_spooky", "required": false}
   ]
 }
