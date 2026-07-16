@@ -15,6 +15,7 @@ import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -96,7 +97,7 @@ public class CityBuilderEntity extends TOKEntity implements InventoryCarrier {
                 BlockPos current = this.blockPosition();
                 int distance = (int) instance.getCentre().distanceTo(new Vec3(current.getX(), current.getY(), current.getZ()));
                 if (distance < 500) {
-                    if (!client) Translations.CITYBUILDER_DISTANCE.send(player, distance, 500);
+                    if (!client) Translations.CITYBUILDER_DISTANCE.send(player, guildPlayer.getTitle().getAddress(), distance, 500);
                     return;
                 }
 
@@ -107,10 +108,10 @@ public class CityBuilderEntity extends TOKEntity implements InventoryCarrier {
             }
 
             if (guildPlayer.getWorthiness() >= 1500) {
-                if (client) Translations.CITYBUILDER_BUILD.send(player);
+                if (client) Translations.CITYBUILDER_BUILD.send(player, guildPlayer.getTitle().getTranslation());
                 this.followPlayer();
             } else {
-                if (client) Translations.CITYBUILDER_MESSAGE.send(player);
+                if (client) Translations.CITYBUILDER_MESSAGE.send(player, guildPlayer.getTitle().getTranslation());
             }
         });
         return InteractionResult.PASS;

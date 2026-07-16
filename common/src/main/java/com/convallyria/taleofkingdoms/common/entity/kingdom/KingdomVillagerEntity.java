@@ -68,7 +68,7 @@ public class KingdomVillagerEntity extends TOKEntity {
         final GuildPlayer guildPlayer = instance.getPlayer(player);
         if (guildPlayer.getKingdom() != null) {
             //todo: convert to worker if items are given
-            Translations.VILLAGER_ASK_TO_WORK.send(player);
+            Translations.VILLAGER_ASK_TO_WORK.send(player, guildPlayer.getTitle().getTranslation());
         }
         return InteractionResult.PASS;
     }

@@ -136,7 +136,7 @@ public class BankerScreen extends BaseUIModelScreen<FlowLayout> {
                     instance.addCoins(player.getUUID(), coins);
                 }
             } else {
-                Translations.BANK_THERE.send(player);
+                Translations.BANK_THERE.send(player, guildPlayer.getTitle().getAddress());
             }
         }
     }

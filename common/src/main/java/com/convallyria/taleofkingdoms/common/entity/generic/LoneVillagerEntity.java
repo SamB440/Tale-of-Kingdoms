@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.entity.MovementVaried;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -82,7 +83,7 @@ public class LoneVillagerEntity extends TOKEntity implements MovementVaried {
             Optional<ConquestInstance> instance = api.getConquestInstanceStorage().mostRecentInstance();
             if (instance.isPresent()
                 && instance.get().isInGuild(this) && instance.get().getLoneVillagersWithRooms().contains(this.uuid)) {
-                if (player.level().isClientSide()) Translations.LOST_VILLAGER_GUILD_THANK.send(player);
+                if (player.level().isClientSide()) Translations.LOST_VILLAGER_GUILD_THANK.send(player, PlayerTitle.of(player).getTranslation());
                 return InteractionResult.PASS;
             }
         }

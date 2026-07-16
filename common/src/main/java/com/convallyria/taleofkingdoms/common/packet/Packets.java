@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.packet.c2s.BankerInteractPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.BuildKingdomPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.BuyItemPacket;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ChangeTitlePacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.CityBuilderActionPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.FixGuildPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.ForemanBuyWorkerPacket;
@@ -36,6 +37,7 @@ public class Packets {
     public static final CustomPacketPayload.Type<ForemanBuyWorkerPacket> FOREMAN_BUY_WORKER = register("foreman_buy_worker");
     public static final CustomPacketPayload.Type<ForemanCollectPacket> FOREMAN_COLLECT = register("foreman_collect");
     public static final CustomPacketPayload.Type<CityBuilderActionPacket> CITYBUILDER_ACTION = register("citybuilder_action");
+    public static final CustomPacketPayload.Type<ChangeTitlePacket> CHANGE_TITLE = register("change_title");
     
     private static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> register(String id) {
         return new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(TaleOfKingdoms.MODID, id));

@@ -22,7 +22,8 @@ public class GuildPlayer {
                     Codec.LONG.fieldOf("farmer_last_bread").forGetter(GuildPlayer::getFarmerLastBread),
                     PlayerKingdom.CODEC.optionalFieldOf("kingdom").forGetter(guildPlayer -> Optional.ofNullable(guildPlayer.getKingdom())),
                     UUIDUtil.AUTHLIB_CODEC.listOf().fieldOf("hunters").forGetter(GuildPlayer::getHunters),
-                    Codec.BOOL.fieldOf("has_rebuilt_guild").forGetter(GuildPlayer::hasRebuiltGuild)
+                    Codec.BOOL.fieldOf("has_rebuilt_guild").forGetter(GuildPlayer::hasRebuiltGuild),
+                    PlayerTitle.CODEC.optionalFieldOf("title", PlayerTitle.DEFAULT).forGetter(GuildPlayer::getTitle)
             ).apply(instance, GuildPlayer::new)
     );
 
@@ -34,13 +35,15 @@ public class GuildPlayer {
     private @Nullable PlayerKingdom kingdom;
     private final List<UUID> hunters;
     private boolean hasRebuiltGuild;
+    private PlayerTitle title;
 
     public GuildPlayer() {
         this.hunters = new ArrayList<>();
         this.farmerLastBread = -1;
+        this.title = PlayerTitle.DEFAULT;
     }
 
-    private GuildPlayer(boolean signedContract, int coins, int bankerCoins, int worthiness, long farmerLastBread, Optional<PlayerKingdom> kingdom, List<UUID> hunters, boolean hasRebuiltGuild) {
+    private GuildPlayer(boolean signedContract, int coins, int bankerCoins, int worthiness, long farmerLastBread, Optional<PlayerKingdom> kingdom, List<UUID> hunters, boolean hasRebuiltGuild, PlayerTitle title) {
         this.signedContract = signedContract;
         this.coins = coins;
         this.bankerCoins = bankerCoins;
@@ -49,6 +52,7 @@ public class GuildPlayer {
         this.kingdom = kingdom.orElse(null);
         this.hunters = new ArrayList<>(hunters);
         this.hasRebuiltGuild = hasRebuiltGuild;
+        this.title = title;
     }
 
     public boolean hasSignedContract() {
@@ -102,6 +106,15 @@ public class GuildPlayer {
 
     public List<UUID> getHunters() {
         return hunters;
+    }
+
+    public PlayerTitle getTitle() {
+        // Saves from before titles existed deserialise this field as null (Gson bypasses the constructor).
+        return title == null ? PlayerTitle.DEFAULT : title;
+    }
+
+    public void setTitle(PlayerTitle title) {
+        this.title = title;
     }
 
     public boolean hasRebuiltGuild() {

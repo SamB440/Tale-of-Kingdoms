@@ -1,6 +1,8 @@
 package com.convallyria.taleofkingdoms;
 
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import com.convallyria.taleofkingdoms.server.commands.TaleOfKingdomsCommand;
+import com.convallyria.taleofkingdoms.server.commands.TaleOfKingdomsTitleCommand;
 import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsAddCommand;
 import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsDebugCommand;
 import com.convallyria.taleofkingdoms.server.commands.debug.TaleOfKingdomsGetCommand;
@@ -124,9 +126,24 @@ public class TaleOfKingdomsCommands {
                     .executes(TaleOfKingdomsSetCommand::setWorthiness)
                     .build();
 
+            // Title node /taleofkingdoms title [king|queen|liege]
+
+            LiteralCommandNode<CommandSourceStack> titleNode = Commands
+                    .literal("title")
+                    .build();
+
             //Now stitch them together
             dispatcher.getRoot().addChild(baseNode);
             baseNode.addChild(debugNode);
+
+            // Title node
+            baseNode.addChild(titleNode);
+            for (PlayerTitle title : PlayerTitle.values()) {
+                titleNode.addChild(Commands
+                        .literal(title.getName())
+                        .executes(context -> TaleOfKingdomsTitleCommand.setTitle(context, title))
+                        .build());
+            }
 
             // Add node
             debugNode.addChild(addNode);

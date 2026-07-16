@@ -13,6 +13,7 @@ import com.convallyria.taleofkingdoms.client.packet.incoming.IncomingSignContrac
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBankerInteractPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuildKingdomPacket;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingBuyItemPacketHandler;
+import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingChangeTitlePacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingCityBuilderActionPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.client.packet.outgoing.OutgoingForemanBuyWorkerPacketHandler;
@@ -94,6 +95,7 @@ public class TaleOfKingdomsClient {
         registerHandler(new OutgoingBankerInteractPacketHandler());
         registerHandler(new OutgoingBuildKingdomPacket());
         registerHandler(new OutgoingBuyItemPacketHandler());
+        registerHandler(new OutgoingChangeTitlePacketHandler());
         registerHandler(new OutgoingCityBuilderActionPacketHandler());
         registerHandler(new OutgoingFixGuildPacketHandler());
         registerHandler(new OutgoingForemanBuyWorkerPacketHandler());

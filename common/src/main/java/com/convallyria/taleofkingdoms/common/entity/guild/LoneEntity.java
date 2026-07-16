@@ -6,6 +6,7 @@ import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.generic.LoneVillagerEntity;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -58,12 +59,12 @@ public class LoneEntity extends TOKEntity {
                     loneVillager.teleportTo(sleepLocation.getX() + 0.5, sleepLocation.getY(), sleepLocation.getZ() + 0.5);
                 }
 
-                Translations.LONE_THANK.send(player);
                 final GuildPlayer guildPlayer = instance.getPlayer(player);
+                Translations.LONE_THANK.send(player, guildPlayer.getTitle().getTranslation());
                 guildPlayer.setWorthiness(guildPlayer.getWorthiness() + loneVillagers.size() * 6);
                 player.displayClientMessage(Component.literal("+" + loneVillagers.size() * 6 + " worthiness"), true);
             } else {
-                Translations.LONE_HELP.send(player);
+                Translations.LONE_HELP.send(player, PlayerTitle.of(player).getTranslation());
             }
         });
         return InteractionResult.PASS;

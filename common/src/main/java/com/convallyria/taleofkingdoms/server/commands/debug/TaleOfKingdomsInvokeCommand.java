@@ -4,6 +4,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.StringReader;
@@ -32,7 +33,7 @@ public class TaleOfKingdomsInvokeCommand implements Command<CommandSourceStack> 
         try {
             ServerPlayer player = context.getSource().getPlayer();
 
-            Translations.LONE_HELP.send(player);
+            Translations.LONE_HELP.send(player, PlayerTitle.of(player).getTranslation());
 
             //BlockPos structureLocation = player.getWorld().locateStructure(TaleOfKingdoms.REFICULE_VILLAGE_STRUCTURE, player.getBlockPos(), 100, false);
             //String message = "[\"\",{\"text\":\"Do you wish to \"},{\"text\":\"teleport\",\"bold\":true,\"underlined\":true,\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/tp " + structureLocation.getX() + " 100 " + structureLocation.getZ() + "\"}},{\"text\":\" to the village?\"}]";

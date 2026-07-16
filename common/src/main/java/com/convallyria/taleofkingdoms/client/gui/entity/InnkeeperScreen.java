@@ -10,6 +10,7 @@ import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.utils.BlockUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -32,7 +33,7 @@ public class InnkeeperScreen extends ScreenTOK {
         this.player = player;
         this.entity = entity;
         this.instance = instance;
-        Translations.INNKEEPER_REST.send(player);
+        Translations.INNKEEPER_REST.send(player, PlayerTitle.of(player).getAddress());
     }
 
     @Override

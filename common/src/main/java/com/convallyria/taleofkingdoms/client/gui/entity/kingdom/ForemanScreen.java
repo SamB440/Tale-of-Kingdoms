@@ -9,6 +9,7 @@ import com.convallyria.taleofkingdoms.common.packet.c2s.ForemanBuyWorkerPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.ForemanCollectPacket;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.Components;
@@ -41,7 +42,7 @@ public class ForemanScreen extends BaseOwoScreen<FlowLayout> {
         this.player = player;
         this.entity = entity;
         this.instance = instance;
-        Translations.FOREMAN_NEED_RESOURCES.send(player);
+        Translations.FOREMAN_NEED_RESOURCES.send(player, PlayerTitle.of(player).getAddress());
     }
 
     @Override

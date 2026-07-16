@@ -64,7 +64,8 @@ public enum Translations {
     LOST_VILLAGER_THANK("entity_type.taleofkingdoms.lostvillager.thank"),
     LONE_THANK("entity_type.taleofkingdoms.lone.thank"),
     LOST_VILLAGER_GUILD_THANK("entity_type.taleofkingdoms.lostvillager.guild_thank"),
-    VILLAGER_ASK_TO_WORK("entity_type.taleofkingdoms.villager.ask_to_work");
+    VILLAGER_ASK_TO_WORK("entity_type.taleofkingdoms.villager.ask_to_work"),
+    TITLE_SET("generic.taleofkingdoms.title.set");
     
     private final String key;
     

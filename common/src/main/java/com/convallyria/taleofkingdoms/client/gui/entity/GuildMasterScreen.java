@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarColour;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.ScreenBar;
+import com.convallyria.taleofkingdoms.common.packet.c2s.ChangeTitlePacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.SignContractPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.FixGuildPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.HireHunterPacket;
@@ -20,6 +21,7 @@ import com.convallyria.taleofkingdoms.common.utils.EntityUtils;
 import com.convallyria.taleofkingdoms.common.utils.InventoryUtils;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import java.util.List;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
@@ -72,13 +74,14 @@ public class GuildMasterScreen extends ScreenTOK {
         }
 
         this.makeHireHuntersButton();
+        this.makeTitleButton();
 
         this.addRenderableWidget(Button.builder(Component.translatable("menu.taleofkingdoms.guild_master.retire_hunter"), widget -> {
             if (guildPlayer.getHunters().isEmpty()) {
                 Translations.GUILDMASTER_NOHUNTER.send(player);
             } else {
                 if (!guildPlayer.getHunters().isEmpty()) {
-                    Translations.HUNTER_THANK.send(player);
+                    Translations.HUNTER_THANK.send(player, PlayerTitle.of(player).getTranslation());
                     if (Minecraft.getInstance().getSingleplayerServer() == null) {
                         TaleOfKingdomsClient.getAPI().getClientPacket(Packets.HIRE_HUNTER)
                                 .sendPacket(player, new HireHunterPacket(true));
@@ -217,6 +220,23 @@ public class GuildMasterScreen extends ScreenTOK {
         }).bounds(this.width / 2 - 75, this.height / 2 - 46, 150, 20).build());
     }
 
+    private void makeTitleButton() {
+        this.addRenderableWidget(Button.builder(getTitleButtonText(), widget -> {
+            final PlayerTitle[] titles = PlayerTitle.values();
+            final PlayerTitle next = titles[(guildPlayer.getTitle().ordinal() + 1) % titles.length];
+            guildPlayer.setTitle(next);
+            if (Minecraft.getInstance().getSingleplayerServer() == null) {
+                TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CHANGE_TITLE)
+                        .sendPacket(player, new ChangeTitlePacket(next));
+            }
+            widget.setMessage(getTitleButtonText());
+        }).bounds(this.width / 2 - 75, this.height / 2 - 69, 150, 20).build());
+    }
+
+    private Component getTitleButtonText() {
+        return Component.translatable("menu.taleofkingdoms.guild_master.title", guildPlayer.getTitle().getTranslation());
+    }
+
     private void makeHireHuntersButton() {
         MutableComponent hunterText = Component.translatable("menu.taleofkingdoms.guild_master.hire_hunter").withStyle(guildPlayer.getCoins() >= 1500 ? ChatFormatting.GREEN : ChatFormatting.RED);
         if (this.hireHuntersButton != null) {
@@ -227,7 +247,7 @@ public class GuildMasterScreen extends ScreenTOK {
         this.hireHuntersButton = this.addRenderableWidget(Button.builder(hunterText, widget -> {
             if (guildPlayer.getCoins() >= 1500) {
                 final TaleOfKingdomsAPI api = TaleOfKingdoms.getAPI();
-                Translations.HUNTER_SERVE.send(player);
+                Translations.HUNTER_SERVE.send(player, PlayerTitle.of(player).getTranslation());
                 if (Minecraft.getInstance().getSingleplayerServer() == null) {
                     api.getClientPacket(Packets.HIRE_HUNTER)
                             .sendPacket(player, new HireHunterPacket(false));

@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.server.listener.ServerGameInstanceListener
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBankerInteractPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuildKingdomPacket;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingBuyItemPacketHandler;
+import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingChangeTitlePacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingCityBuilderActionPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingFixGuildPacketHandler;
 import com.convallyria.taleofkingdoms.server.packet.incoming.IncomingForemanBuyWorkerPacketHandler;
@@ -44,6 +45,7 @@ public class TaleOfKingdomsServer {
         registerHandler(new IncomingBankerInteractPacketHandler());
         registerHandler(new IncomingBuildKingdomPacket());
         registerHandler(new IncomingBuyItemPacketHandler());
+        registerHandler(new IncomingChangeTitlePacketHandler());
         registerHandler(new IncomingCityBuilderActionPacketHandler());
         registerHandler(new IncomingFixGuildPacketHandler());
         registerHandler(new IncomingForemanBuyWorkerPacketHandler());
