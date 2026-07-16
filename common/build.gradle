@@ -1,0 +1,63 @@
+architectury {
+    common rootProject.enabled_platforms.split(",")
+}
+
+sourceSets {
+    main {
+        resources {
+            // Raw structure schematics are build-time inputs, not shipped assets.
+            exclude "assets/schematics"
+
+            // Datagen output (loot tables + worldgen JSON) is committed and shipped as normal
+            // resources, so it flows into both loader jars via the usual transformProduction /
+            // shadowBundle path — no build-time dependency on runDatagen. To change the data,
+            // edit the datagen providers in :fabric, run `./gradlew runDatagen`, and commit the
+            // regenerated tree. The .cache dir is datagen's hash bookkeeping, not a shipped asset.
+            srcDir "src/main/generated"
+            exclude ".cache"
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+    }
+
+    // @Environment annotations + the Fabric event helper used by common code; each loader
+    // provides an implementation at runtime (Architectury remaps these on NeoForge).
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+
+    // Loader-agnostic abstractions (registries, networking, events, attributes, creative tabs).
+    modApi "dev.architectury:architectury:${rootProject.architectury_api_version}"
+
+    // GUI + config library API. Common compiles against these; the matching per-loader runtime
+    // build is supplied by the fabric / neoforge modules. owo must be a full modImplementation
+    // (not modCompileOnly) so Loom applies owo's injected interfaces — its UI makes vanilla
+    // widgets implement owo's Component, and its annotation processor needs the same classpath.
+    annotationProcessor modImplementation("io.wispforest:owo-lib:${rootProject.owo_fabric_version}")
+    // owo (Fabric build) references some Fabric API types in its public API surface (FabricItem,
+    // FabricScreenHandlerFactory, ...). Provide them at compile time only so common can type-check
+    // against owo; not bundled — each loader supplies its own runtime GUI stack.
+    modCompileOnly "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    compileOnly "org.jetbrains:annotations:24.0.0"
+
+    // Unit tests (translation completeness check) run against the common module.
+    testImplementation "org.junit.jupiter:junit-jupiter:5.9.0"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testImplementation "com.google.code.gson:gson:2.10"
+    testImplementation "org.reflections:reflections:0.10.2"
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}

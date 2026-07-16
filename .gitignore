@@ -31,4 +31,7 @@ bin/
 
 run/
 logs/
-/src/main/generated/
+# Generated data JSON is committed (see common/build.gradle); only datagen's hash cache is ignored.
+/common/src/main/generated/.cache/
+
+.architectury-transformer

@@ -1,0 +1,7 @@
+{
+  "type": "taleofkingdoms:gateway",
+  "biomes": "#taleofkingdoms:has_structure/no_mountains_deserts",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_thin"
+}

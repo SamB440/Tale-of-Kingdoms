@@ -1,0 +1,102 @@
+plugins {
+    id "com.gradleup.shadow"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+// Pre-computed outside the run-config closure (rootProject.file(...) does not resolve against the
+// RunConfigSettings delegate).
+def datagenOutputDir = rootProject.file("common/src/main/generated")
+def datagenModid = rootProject.findProperty("modid")
+
+loom {
+    runs {
+        // Fabric-only data generation, run manually (`./gradlew runDatagen`) when the datagen
+        // providers change. Writes into common/src/main/generated, which is committed and shipped
+        // as common resources (see common/build.gradle) — the build no longer triggers this task.
+        datagen {
+            inherit client
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=" + datagenOutputDir
+            vmArg "-Dfabric-api.datagen.modid=" + datagenModid
+            runDir "build/datagen"
+        }
+    }
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+    }
+
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
+
+    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_api_version}"
+
+    // oωo (Fabric build) + its annotation processor + JiJ sentinel.
+    annotationProcessor modImplementation("io.wispforest:owo-lib:${rootProject.owo_fabric_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    include("io.wispforest:owo-sentinel:${rootProject.owo_fabric_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+    include("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // Config screen hook (Fabric only).
+    modImplementation "maven.modrinth:modmenu:${rootProject.modmenu_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowBundle project(path: ":common", configuration: "transformProductionFabric")
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    archiveClassifier = null
+    dependsOn shadowJar
+}
+
+jar {
+    archiveClassifier = "dev"
+}

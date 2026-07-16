@@ -1,0 +1,92 @@
+plugins {
+    id "com.gradleup.shadow"
+}
+
+architectury {
+    // Loom's platform is selected via the module's gradle.properties (loom.platform=neoforge).
+    platformSetupLoomIde()
+    // Wires the Architectury dev-runtime transformer for runClient/runServer: transforms the
+    // :common jar (from the developmentNeoForge configuration) at launch — generating a fake FML
+    // mod for it (which is what makes the common mixin configs readable) and rewriting Fabric
+    // environment classes (EnvType -> Dist) in common bytecode. Without this, dev runs fail with
+    // "taleofkingdoms.mixins.json was invalid or could not be read" and later
+    // ClassNotFoundException: net.fabricmc.api.EnvType. Does NOT switch Loom's platform.
+    neoForge()
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    // Loom's NeoForge mode needs BOTH the base Minecraft jar and the neoForge patches declared.
+    minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+    }
+
+    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+
+    modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}"
+
+    // oωo NeoForge community fork (Modrinth-only) + Cloth Config NeoForge build, both JiJ'd.
+    modImplementation "maven.modrinth:owo-lib:${rootProject.owo_neoforge_version}"
+    include "maven.modrinth:owo-lib:${rootProject.owo_neoforge_version}"
+
+    // owo's NeoForge jar JiJs these (endec + Sinytra's forgified fabric-api-base), but Loom strips
+    // nested jars from mod dependencies in dev and the Modrinth maven publishes no transitives, so
+    // dev runs crash with ClassNotFoundException (io.wispforest.endec.*, net.fabricmc.fabric.api.event.Event)
+    // unless they are supplied explicitly. Dev-runtime only — production jars get them JiJ'd inside owo.
+    // Versions must match owo's META-INF/jarjar/metadata.json.
+    forgeRuntimeLibrary "io.wispforest:endec:0.1.8.1"
+    forgeRuntimeLibrary "io.wispforest.endec:gson:0.1.5.1"
+    forgeRuntimeLibrary "io.wispforest.endec:jankson:0.1.5.1"
+    forgeRuntimeLibrary "io.wispforest.endec:netty:0.1.4.1"
+    forgeRuntimeLibrary "blue.endless:jankson:1.2.2"
+    modLocalRuntime "org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308dedd1"
+
+    modApi "me.shedaniel.cloth:cloth-config-neoforge:${rootProject.cloth_version}"
+    include "me.shedaniel.cloth:cloth-config-neoforge:${rootProject.cloth_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowBundle project(path: ":common", configuration: "transformProductionNeoForge")
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand "version": project.version
+    }
+}
+
+// Generated data (loot tables + worldgen JSON) ships as committed common resources, so it reaches
+// this jar through the shadowBundle / transformProduction path like any other common resource —
+// no direct dependency on :fabric:runDatagen.
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    archiveClassifier = null
+    dependsOn shadowJar
+}
+
+jar {
+    archiveClassifier = "dev"
+}
