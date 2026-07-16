@@ -10,6 +10,9 @@
     "category.taleofkingdoms.keys": "Tale of Kingdoms: A new Conquest",
     "key.taleofkingdoms.startconquest": "Start Conquest",
 
+    "gamerule.autoGenerateGuild": "Automatically generate the Guild",
+    "gamerule.autoGenerateGuild.description": "When enabled, the Guild generates naturally within 2000 blocks of 0,0 and you name your conquest when signing the contract. When disabled, the start conquest screen lets you build the Guild manually.",
+
     "itemGroup.taleofkingdoms.general": "Tale of Kingdoms",
     "item.taleofkingdoms.coin": "Coin",
     "item.taleofkingdoms.pouch": "Pouch",
@@ -41,6 +44,10 @@
     "menu.taleofkingdoms.startconquest.delay": "Delay your adventure",
     "menu.taleofkingdoms.startconquest.exit": "Press ESC to manually generate the guild elsewhere.",
     "menu.taleofkingdoms.startconquest.closed": "Start conquest menu was closed. Press %s to open it again.",
+    "menu.taleofkingdoms.entername.name": "Sign the Contract",
+    "menu.taleofkingdoms.entername.prompt": "What name shall the annals of the Guild record?",
+    "menu.taleofkingdoms.entername.confirm": "Sign the contract",
+    "generic.taleofkingdoms.guild_will_generate": "The Guild lies somewhere in these lands. Seek it out, and sign the contract with the Guild Master!",
     "menu.taleofkingdoms.shop.total_money": "Shop Menu - Total Money: %s Gold Coins",
     "menu.taleofkingdoms.shop.select_item_cost": "Selected Item Cost: %s - %s Gold Coins",
     "menu.taleofkingdoms.shop.select_item_cost_modifier": "(x %s modifier)",

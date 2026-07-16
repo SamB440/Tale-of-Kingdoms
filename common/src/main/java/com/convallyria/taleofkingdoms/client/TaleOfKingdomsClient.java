@@ -77,7 +77,10 @@ public class TaleOfKingdomsClient {
                     return;
                 }
 
-                if (api.getConquestInstanceStorage().getConquestInstance(worldName).isPresent()) {
+                final var existing = api.getConquestInstanceStorage().getConquestInstance(worldName);
+                if (existing.isPresent()
+                        && (StartWorldListener.shouldAutoGenerateGuild() || existing.get().getStart() != null)) {
+                    // Block manual placement unless the guild neither exists nor will generate on its own.
                     TaleOfKingdoms.LOGGER.info("World already loaded");
                     return;
                 }

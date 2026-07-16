@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -53,19 +54,21 @@ public class ConquestInstance {
 
     public static final Codec<ConquestInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    Codec.STRING.fieldOf("name").forGetter(ConquestInstance::getName),
+                    // Name and positions are optional: with the autoGenerateGuild gamerule the instance
+                    // exists before the guild has generated and before the player has chosen a name.
+                    Codec.STRING.optionalFieldOf("name").forGetter(ci -> Optional.ofNullable(ci.getName())),
                     Codec.BOOL.fieldOf("has_loaded").forGetter(ConquestInstance::isLoaded),
-                    BlockPos.CODEC.fieldOf("start").forGetter(ConquestInstance::getStart),
-                    BlockPos.CODEC.fieldOf("end").forGetter(ConquestInstance::getEnd),
-                    BlockPos.CODEC.fieldOf("origin").forGetter(ConquestInstance::getOrigin),
+                    BlockPos.CODEC.optionalFieldOf("start").forGetter(ci -> Optional.ofNullable(ci.getStart())),
+                    BlockPos.CODEC.optionalFieldOf("end").forGetter(ci -> Optional.ofNullable(ci.getEnd())),
+                    BlockPos.CODEC.optionalFieldOf("origin").forGetter(ci -> Optional.ofNullable(ci.getOrigin())),
                     Codec.BOOL.fieldOf("under_attack").forGetter(ConquestInstance::isUnderAttack),
                     BlockPos.CODEC.listOf().fieldOf("reficule_attack_locations").forGetter(ConquestInstance::getReficuleAttackLocations),
                     UUIDUtil.AUTHLIB_CODEC.listOf().fieldOf("reficule_attackers").forGetter(ConquestInstance::getReficuleAttackers),
                     UUIDUtil.AUTHLIB_CODEC.listOf().optionalFieldOf("lone_villagers_with_rooms").forGetter(ci -> Optional.of(ci.getLoneVillagersWithRooms())),
                     Codec.unboundedMap(UUIDUtil.AUTHLIB_CODEC, GuildPlayer.CODEC).fieldOf("guild_players").forGetter(ConquestInstance::getGuildPlayers)
             ).apply(instance, (name, hasLoaded, start, end, origin, underAttack, attackLocations, attackers, lVWR, guildPlayers) -> {
-                ConquestInstance conquestInstance = new ConquestInstance(name, start, end, origin);
-                conquestInstance.uploadData(start, end, hasLoaded, underAttack, attackLocations, attackers, lVWR.orElse(new ArrayList<>()), guildPlayers);
+                ConquestInstance conquestInstance = new ConquestInstance(name.orElse(null), start.orElse(null), end.orElse(null), origin.orElse(null));
+                conquestInstance.uploadData(start.orElse(null), end.orElse(null), hasLoaded, underAttack, attackLocations, attackers, lVWR.orElse(new ArrayList<>()), guildPlayers);
                 return conquestInstance;
             }
     ));
@@ -85,12 +88,14 @@ public class ConquestInstance {
         this.getGuildPlayers().putAll(guildPlayers);
     }
 
-    private final String name;
+    // Null until the player signs the contract (autoGenerateGuild flow) - legacy flow sets it at world start.
+    private String name;
     @Deprecated(forRemoval = true)
     private boolean hasLoaded;
     private BlockPos start;
     private BlockPos end;
-    private final BlockPos origin;
+    // Null until the guild has generated (autoGenerateGuild flow).
+    private BlockPos origin;
     private boolean underAttack;
     private final List<BlockPos> reficuleAttackLocations;
     private final List<UUID> reficuleAttackers;
@@ -119,8 +124,13 @@ public class ConquestInstance {
         this.didUpgrade = didUpgrade;
     }
 
+    @Nullable
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isLoaded() {
@@ -149,6 +159,10 @@ public class ConquestInstance {
 
     public BlockPos getOrigin() {
         return origin;
+    }
+
+    public void setOrigin(BlockPos origin) {
+        this.origin = origin;
     }
 
     public Vec3 getCentre() {

@@ -1,0 +1,20 @@
+{
+  "structures": [
+    {
+      "structure": "taleofkingdoms:guild",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    // Ring placement (like strongholds) computes exact positions up front, so with count 1 the
+    // guild generates exactly once per world. distance 20 puts the single ring at a radius of
+    // 55-105 chunks, i.e. 880-1680 blocks from 0,0 - always within 2000 blocks.
+    // The position also snaps to the nearest preferred biome, keeping the guild out of oceans.
+    "type": "minecraft:concentric_rings",
+    "salt": 16072026,
+    "distance": 20,
+    "spread": 1,
+    "count": 1,
+    "preferred_biomes": "#taleofkingdoms:has_structure/guild"
+  }
+}

@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.world;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import org.jetbrains.annotations.Nullable;
 
 public class ConquestInstanceStorage {
 
@@ -24,5 +25,10 @@ public class ConquestInstanceStorage {
 
     public Optional<ConquestInstance> mostRecentInstance() {
         return Optional.ofNullable(this.currentWorldName != null ? conquests.get(this.currentWorldName) : null);
+    }
+
+    @Nullable
+    public String getCurrentWorldName() {
+        return currentWorldName;
     }
 }

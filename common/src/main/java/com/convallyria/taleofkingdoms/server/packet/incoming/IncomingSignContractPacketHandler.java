@@ -8,7 +8,9 @@ import com.convallyria.taleofkingdoms.common.packet.c2s.SignContractPacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
 import com.convallyria.taleofkingdoms.common.packet.s2c.SignContractResponsePacket;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
+import com.convallyria.taleofkingdoms.server.world.ServerConquestInstance;
 import java.util.Optional;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
 public final class IncomingSignContractPacketHandler extends InServerPacketHandler<SignContractPacket> {
@@ -35,7 +37,18 @@ public final class IncomingSignContractPacketHandler extends InServerPacketHandl
 
             final GuildPlayer guildPlayer = instance.getPlayer(player);
             TaleOfKingdoms.LOGGER.info("Handling contract sign for player {}: {}", player.getUUID(), sign);
+            boolean named = false;
+            if (sign && instance.getName() == null && packet.name().isPresent()) {
+                // First signing with an automatically generated guild: the player names the conquest.
+                final String name = packet.name().get().trim();
+                if (!name.isEmpty()) {
+                    instance.setName(name.substring(0, Math.min(name.length(), 32)));
+                    named = true;
+                }
+            }
             guildPlayer.setSignedContract(sign);
+            // Re-sync so the client's copy of the instance learns the chosen name.
+            if (named) ServerConquestInstance.sync((ServerPlayer) player, instance);
             TaleOfKingdoms.getAPI().getServerPacket(Packets.SIGN_CONTRACT_RESPONSE)
                     .sendPacket(player, new SignContractResponsePacket(true));
         }));

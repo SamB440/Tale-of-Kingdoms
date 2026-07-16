@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.common.generator.structure;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.common.generator.BanditCampGenerator;
 import com.convallyria.taleofkingdoms.common.generator.GatewayGenerator;
+import com.convallyria.taleofkingdoms.common.generator.GuildGenerator;
 import com.convallyria.taleofkingdoms.common.generator.ReficuleVillageGenerator;
 import com.convallyria.taleofkingdoms.common.generator.biome.TOKBiomeTags;
 import com.convallyria.taleofkingdoms.common.generator.util.StructureConfigCreator;
@@ -11,6 +12,7 @@ import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
@@ -30,6 +32,9 @@ public class TOKStructures {
 
      public static final RegistrySupplier<StructurePieceType> BANDIT_CAMP = STRUCTURE_PIECES.register("bandit_camp_piece", () -> (StructurePieceType) BanditCampGenerator.BanditCampPiece::new);
      public static final RegistrySupplier<StructureType<BanditCampStructure>> BANDIT_CAMP_TYPE = STRUCTURE_TYPES.register("bandit_camp", () -> (StructureType<BanditCampStructure>) () -> BanditCampStructure.CODEC);
+
+     public static final RegistrySupplier<StructurePieceType> GUILD = STRUCTURE_PIECES.register("guild_piece", () -> (StructurePieceType) GuildGenerator.GuildPiece::new);
+     public static final RegistrySupplier<StructureType<GuildStructure>> GUILD_TYPE = STRUCTURE_TYPES.register("guild", () -> (StructureType<GuildStructure>) () -> GuildStructure.CODEC);
 
      // This doesn't work. We use json files by default for now.
 //     public static void registerStructureSets(Registerable<StructureSet> structureSetRegisterable) {
@@ -64,6 +69,14 @@ public class TOKStructures {
           registerStructure(structureRegisterable, TOKStructureKeys.REFICULE_VILLAGE, new ReficuleVillageStructure(StructureConfigCreator
                   .create()
                   .biome(TOKBiomeTags.NO_MOUNTAINS_DESERTS)
+                  .terrainAdaptation(TerrainAdjustment.BEARD_BOX)
+                  .build(structureRegisterable)));
+          // The guild's biome gate is deliberately permissive (every biome mod adds its biomes to
+          // is_overworld); GuildStructure excludes water via TOKBiomeTags.GUILD_AVOID in code, so
+          // modded land biomes that carry no tags at all can still host the guild.
+          registerStructure(structureRegisterable, TOKStructureKeys.GUILD, new GuildStructure(StructureConfigCreator
+                  .create()
+                  .biome(BiomeTags.IS_OVERWORLD)
                   .terrainAdaptation(TerrainAdjustment.BEARD_BOX)
                   .build(structureRegisterable)));
      }

@@ -7,6 +7,7 @@ import com.convallyria.taleofkingdoms.common.event.PlayerJoinCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerJoinWorldCallback;
 import com.convallyria.taleofkingdoms.common.event.PlayerLeaveCallback;
 import com.convallyria.taleofkingdoms.common.event.tok.KingdomStartCallback;
+import com.convallyria.taleofkingdoms.common.gamerule.TOKGameRules;
 import com.convallyria.taleofkingdoms.common.listener.Listener;
 import com.convallyria.taleofkingdoms.common.schematic.Schematic;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
@@ -51,7 +52,7 @@ public class ServerGameInstanceListener extends Listener {
                         e.printStackTrace();
                     }
                     // Check if file exists, but values don't. Game probably crashed?
-                    if ((instance == null || instance.getName() == null) || !instance.isLoaded()) {
+                    if (instance == null || !instance.isLoaded()) {
                         this.create(api, player, server);
                     } else {
                         if (api.getConquestInstanceStorage().getConquestInstance(server.getLevelIdName()).isEmpty()) {
@@ -102,6 +103,18 @@ public class ServerGameInstanceListener extends Listener {
     }
 
     private CompletableFuture<Void> create(TaleOfKingdomsAPI api, ServerPlayer player, DedicatedServer server) {
+        if (server.getGameRules().getBoolean(TOKGameRules.AUTO_GENERATE_GUILD)) {
+            // The guild generates naturally as a structure; the conquest is named when a player
+            // signs the contract with the Guild Master.
+            TaleOfKingdoms.LOGGER.info("Guild will generate automatically; starting conquest for world: " + server.getLevelIdName());
+            ConquestInstance instance = new ConquestInstance(null, null, null, null);
+            instance.reset(player);
+            instance.setLoaded(true);
+            api.getConquestInstanceStorage().addConquest(server.getLevelIdName(), instance, true);
+            instance.save(server.getLevelIdName());
+            return CompletableFuture.completedFuture(null);
+        }
+
         // int topY = server.getOverworld().getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
         BlockPos pastePos = player.blockPosition().subtract(new Vec3i(0, 20, 0));
         ConquestInstance instance = new ConquestInstance(server.name(), null, null, player.blockPosition().offset(0, 1, 0));

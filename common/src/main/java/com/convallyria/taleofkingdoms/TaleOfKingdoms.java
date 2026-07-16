@@ -36,6 +36,7 @@ import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryWorker
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleGuardianEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleSoldierEntity;
+import com.convallyria.taleofkingdoms.common.gamerule.TOKGameRules;
 import com.convallyria.taleofkingdoms.common.generator.processor.GatewayStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.GuildStructureProcessor;
 import com.convallyria.taleofkingdoms.common.generator.processor.PlayerKingdomStructureProcessor;
@@ -145,6 +146,7 @@ public class TaleOfKingdoms {
         TOKStructures.STRUCTURE_PIECES.register();
         TOKStructures.STRUCTURE_TYPES.register();
         SoundManager.SOUND_EVENTS.register();
+        TOKGameRules.init();
 
         File file = new File(this.getDataFolder() + "worlds");
         if (!file.exists() && !file.mkdirs()) {

@@ -5,6 +5,7 @@ import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClientAPI;
 import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
+import com.convallyria.taleofkingdoms.client.gui.generic.ScreenEnterName;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarColour;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.ScreenBar;
 import com.convallyria.taleofkingdoms.common.packet.c2s.ChangeTitlePacket;
@@ -23,8 +24,10 @@ import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.common.world.guild.GuildPlayer;
 import com.convallyria.taleofkingdoms.common.world.guild.PlayerTitle;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -186,17 +189,28 @@ public class GuildMasterScreen extends ScreenTOK {
         }
 
         this.signContractButton = this.addRenderableWidget(Button.builder(Translations.GUILDMASTER_CONTRACT_SIGN_UP.getTranslation(), widget -> {
-            if (Minecraft.getInstance().getSingleplayerServer() != null) {
-                guildPlayer.setSignedContract(true);
-                Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
-            } else {
-                TaleOfKingdomsClient.getAPI().getClientPacket(Packets.SIGN_CONTRACT)
-                        .sendPacket(player, new SignContractPacket(true));
+            if (instance.getName() == null) {
+                // The guild generated automatically, so no name was chosen at world start;
+                // ask for it now, then sign the contract.
+                Minecraft.getInstance().setScreen(new ScreenEnterName(this::signContract));
+                return;
             }
+            this.signContract(null);
             widget.visible = false;
             widget.active = false;
             this.makeCancelContractButton();
         }).bounds(this.width / 2 - 75, this.height / 2 - 46, 150, 20).build());
+    }
+
+    private void signContract(@Nullable String name) {
+        if (Minecraft.getInstance().getSingleplayerServer() != null) {
+            if (name != null) instance.setName(name);
+            guildPlayer.setSignedContract(true);
+            Translations.GUILDMASTER_CONTRACT_SIGN.send(player);
+        } else {
+            TaleOfKingdomsClient.getAPI().getClientPacket(Packets.SIGN_CONTRACT)
+                    .sendPacket(player, new SignContractPacket(true, Optional.ofNullable(name)));
+        }
     }
 
     private void makeCancelContractButton() {
