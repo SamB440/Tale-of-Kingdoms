@@ -26,7 +26,6 @@ import com.convallyria.taleofkingdoms.common.packet.PacketHandler;
 import com.convallyria.taleofkingdoms.common.world.ConquestInstance;
 import com.convallyria.taleofkingdoms.server.packet.outgoing.OutgoingOpenScreenPacketHandler;
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -61,10 +60,13 @@ public class TaleOfKingdomsClient {
         registerPacketHandlers();
         registerEvents();
         registerTasks();
-        // Deferred to client setup: this init runs during mod construction on NeoForge, before the
-        // deferred menu registration commits, so SELL_SCREEN_HANDLER.get() would throw here.
-        ClientLifecycleEvent.CLIENT_SETUP.register(client ->
-                MenuRegistry.registerScreenFactory(TaleOfKingdoms.SELL_SCREEN_HANDLER.get(), ScreenSellItem::new));
+        // listen() defers until the menu type commits: this init runs during mod construction on
+        // NeoForge, before the deferred registration, so SELL_SCREEN_HANDLER.get() would throw here.
+        // Note CLIENT_SETUP is too late for this on both loaders: architectury fires it before our
+        // Fabric entrypoint runs, and on NeoForge it maps to FMLClientSetupEvent, which fires after
+        // RegisterMenuScreensEvent (where architectury actually registers the factory).
+        TaleOfKingdoms.SELL_SCREEN_HANDLER.listen(menuType ->
+                MenuRegistry.registerScreenFactory(menuType, ScreenSellItem::new));
 
         ClientTickEvent.CLIENT_POST.register(client -> {
             while (START_CONQUEST_KEYBIND.consumeClick()) {
