@@ -106,11 +106,8 @@ public class TaleOfKingdoms {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MODID, Registries.BLOCK);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(MODID, Registries.BLOCK_ENTITY_TYPE);
 
-    @SuppressWarnings("unchecked")
     public static final RegistrySupplier<StructureProcessorType<GuildStructureProcessor>> GUILD_PROCESSOR = STRUCTURE_PROCESSORS.register("guild", () -> (StructureProcessorType<GuildStructureProcessor>) () -> GuildStructureProcessor.CODEC);
-    @SuppressWarnings("unchecked")
     public static final RegistrySupplier<StructureProcessorType<GatewayStructureProcessor>> GATEWAY_PROCESSOR = STRUCTURE_PROCESSORS.register("gateway", () -> (StructureProcessorType<GatewayStructureProcessor>) () -> GatewayStructureProcessor.CODEC);
-    @SuppressWarnings("unchecked")
     public static final RegistrySupplier<StructureProcessorType<PlayerKingdomStructureProcessor>> KINGDOM_PROCESSOR = STRUCTURE_PROCESSORS.register("kingdom", () -> (StructureProcessorType<PlayerKingdomStructureProcessor>) () -> PlayerKingdomStructureProcessor.CODEC);
 
     // a public identifier for multiple parts of our bigger chest
@@ -179,42 +176,42 @@ public class TaleOfKingdoms {
         registerEvents();
         registerCommands();
 
-        EntityAttributeRegistry.register(EntityTypes.INNKEEPER, () -> InnkeeperEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.FARMER, () -> FarmerEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.GUILDMASTER, () -> GuildMasterEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.GUILDMASTER_DEFENDER, () -> GuildMasterDefenderEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.BLACKSMITH, () -> BlacksmithEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.CITYBUILDER, () -> CityBuilderEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.KNIGHT, () -> KnightEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.HUNTER, () -> HunterEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.GUILDGUARD, () -> GuildGuardEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.GUILDVILLAGER, () -> GuildVillagerEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.GUILDARCHER, () -> GuildArcherEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.BANKER, () -> BankerEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.LONE, () -> LoneEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.FOODSHOP, () -> FoodShopEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.GUILDCAPTAIN, () -> GuildCaptainEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.LONEVILLAGER, () -> LoneVillagerEntity.createMobAttributes());
+        EntityAttributeRegistry.register(EntityTypes.INNKEEPER, InnkeeperEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.FARMER, FarmerEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.GUILDMASTER, GuildMasterEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.GUILDMASTER_DEFENDER, GuildMasterDefenderEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.BLACKSMITH, BlacksmithEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.CITYBUILDER, CityBuilderEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.KNIGHT, KnightEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.HUNTER, HunterEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.GUILDGUARD, GuildGuardEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.GUILDVILLAGER, GuildVillagerEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.GUILDARCHER, GuildArcherEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.BANKER, BankerEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.LONE, LoneEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.FOODSHOP, FoodShopEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.GUILDCAPTAIN, GuildCaptainEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.LONEVILLAGER, LoneVillagerEntity::createMobAttributes);
 
-        EntityAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, () -> ReficuleSoldierEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, () -> ReficuleGuardianEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.REFICULE_MAGE, () -> ReficuleMageEntity.createMobAttributes());
+        EntityAttributeRegistry.register(EntityTypes.REFICULE_SOLDIER, ReficuleSoldierEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.REFICULE_GUARDIAN, ReficuleGuardianEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.REFICULE_MAGE, ReficuleMageEntity::createMobAttributes);
 
-        EntityAttributeRegistry.register(EntityTypes.BANDIT, () -> BanditEntity.createMobAttributes());
+        EntityAttributeRegistry.register(EntityTypes.BANDIT, BanditEntity::createMobAttributes);
 
         // Player's kingdom entities
-        EntityAttributeRegistry.register(EntityTypes.ITEM_SHOP, () -> ItemShopEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.KINGDOM_VILLAGER, () -> KingdomVillagerEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.STOCK_MARKET, () -> StockMarketEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.QUARRY_FOREMAN, () -> QuarryForemanEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.LUMBER_FOREMAN, () -> LumberForemanEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.QUARRY_WORKER, () -> QuarryWorkerEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.LUMBER_WORKER, () -> LumberWorkerEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.WARDEN, () -> WardenEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.WARRIOR, () -> WarriorHireableEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.ARCHER, () -> ArcherHireableEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.BLOCK_SHOP, () -> BlockShopEntity.createMobAttributes());
-        EntityAttributeRegistry.register(EntityTypes.HUMAN_FARMER, () -> HumanFarmerEntity.createAttributes());
+        EntityAttributeRegistry.register(EntityTypes.ITEM_SHOP, ItemShopEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.KINGDOM_VILLAGER, KingdomVillagerEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.STOCK_MARKET, StockMarketEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.QUARRY_FOREMAN, QuarryForemanEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.LUMBER_FOREMAN, LumberForemanEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.QUARRY_WORKER, QuarryWorkerEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.LUMBER_WORKER, LumberWorkerEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.WARDEN, WardenEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.WARRIOR, WarriorHireableEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.ARCHER, ArcherHireableEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.BLOCK_SHOP, BlockShopEntity::createMobAttributes);
+        EntityAttributeRegistry.register(EntityTypes.HUMAN_FARMER, HumanFarmerEntity::createAttributes);
 
         // Load shop items
         new ShopParser().createShopItems();
