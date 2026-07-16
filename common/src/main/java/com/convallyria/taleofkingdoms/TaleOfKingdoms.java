@@ -149,28 +149,8 @@ public class TaleOfKingdoms {
         SoundManager.SOUND_EVENTS.register();
 
         File file = new File(this.getDataFolder() + "worlds");
-        if (!file.exists()) file.mkdirs();
-
-        File legacy = new File(this.getLegacyDataFolder() + "worlds");
-        if (legacy.exists()) {
-            LOGGER.warn("Copying legacy worlds folder to new folder...");
-            boolean success = true;
-            for (File oldWorld : legacy.listFiles()) {
-                if (oldWorld.getName().endsWith(".conquestworld")) {
-                    LOGGER.warn("Copying {}...", oldWorld.getName());
-                    try {
-                        Files.move(oldWorld, new File(file + File.separator + oldWorld.getName().replace(".conquestworld", ConquestInstance.FILE_TYPE)));
-                    } catch (IOException e) {
-                        LOGGER.error("Error copying old world {}", oldWorld.getName(), e);
-                        success = false;
-                    }
-                }
-            }
-
-            if (success) {
-                legacy.delete();
-                new File(this.getLegacyDataFolder()).delete();
-            }
+        if (!file.exists() && !file.mkdirs()) {
+            LOGGER.error("Failed to create worlds folder");
         }
 
         registerEvents();
@@ -227,11 +207,6 @@ public class TaleOfKingdoms {
     @NotNull
     public String getDataFolder() {
         return new File(".").getAbsolutePath() + File.separator + "config" + File.separator + TaleOfKingdoms.MODID + File.separator;
-    }
-
-    @Deprecated
-    public String getLegacyDataFolder() {
-        return new File(".").getAbsolutePath() + File.separator + "mods" + File.separator + TaleOfKingdoms.MODID + File.separator;
     }
 
     /**
