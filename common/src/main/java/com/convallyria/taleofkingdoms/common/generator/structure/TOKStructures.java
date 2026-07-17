@@ -77,7 +77,7 @@ public class TOKStructures {
           registerStructure(structureRegisterable, TOKStructureKeys.GUILD, new GuildStructure(StructureConfigCreator
                   .create()
                   .biome(BiomeTags.IS_OVERWORLD)
-                  .terrainAdaptation(TerrainAdjustment.BEARD_BOX)
+                  .terrainAdaptation(TerrainAdjustment.BEARD_THIN)
                   .build(structureRegisterable)));
      }
 

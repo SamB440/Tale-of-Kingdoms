@@ -67,6 +67,10 @@ dependencies {
     // crashes at mixin apply (ClassNotFoundException: …Workarounds$Reference). Test sodium compat
     // via the fabric module instead.
     modLocalRuntime "maven.modrinth:lithium:mc1.21.1-0.15.4-neoforge"
+    // WorldEdit ships one multi-loader "worldedit-mod" jar (fabric + neoforge in the same file) with
+    // its libraries shaded in rather than JiJ'd, so the version number resolves unambiguously and
+    // nothing is stripped in dev.
+    modLocalRuntime "maven.modrinth:worldedit:7.3.8"
     modLocalRuntime "maven.modrinth:biomes-o-plenty:BtZKRp69"                  // 21.1.0.14
     modLocalRuntime "maven.modrinth:terrablender:6e8GCrLb"                     // 4.1.0.8 — BOP dep
     modLocalRuntime "maven.modrinth:farmers-delight:1.21.1-1.3.2"

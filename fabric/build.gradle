@@ -82,6 +82,10 @@ dependencies {
     // which arch-loom 1.11 refuses to consume ("Mod was built with a newer version of Loom").
     modLocalRuntime "maven.modrinth:sodium:mc1.21.1-0.6.13-fabric"
     modLocalRuntime "maven.modrinth:lithium:mc1.21.1-0.15.4-fabric"
+    // WorldEdit ships one multi-loader "worldedit-mod" jar (fabric + neoforge in the same file) with
+    // its libraries shaded in rather than JiJ'd, so the version number resolves unambiguously and
+    // nothing is stripped in dev.
+    modLocalRuntime "maven.modrinth:worldedit:7.3.8"
     modLocalRuntime "maven.modrinth:biomes-o-plenty:fhyqphwv"                  // 21.1.0.14
     modLocalRuntime "maven.modrinth:terrablender:XNtIBXyQ"                     // 4.1.0.8 — BOP dep
     modLocalRuntime "maven.modrinth:glitchcore:sux8kYHe"                       // 2.1.0.2 — BOP dep
