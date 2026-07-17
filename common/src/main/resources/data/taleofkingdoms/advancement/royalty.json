@@ -1,0 +1,31 @@
+{
+  "parent": "taleofkingdoms:build_kingdom",
+  "display": {
+    "icon": {
+      "id": "minecraft:golden_helmet"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.royalty.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.royalty.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "code": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "code"
+    ]
+  ],
+  "rewards": {
+    "experience": 500
+  }
+}

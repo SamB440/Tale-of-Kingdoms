@@ -1,0 +1,42 @@
+{
+  "parent": "taleofkingdoms:sign_contract",
+  "display": {
+    "icon": {
+      "id": "minecraft:wither_rose"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.reficule_village.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.reficule_village.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_reficule_village": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": [
+                  "taleofkingdoms:reficule_village"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "enter_reficule_village"
+    ]
+  ]
+}

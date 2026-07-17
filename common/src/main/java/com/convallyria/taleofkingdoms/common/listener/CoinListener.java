@@ -1,8 +1,10 @@
 package com.convallyria.taleofkingdoms.common.listener;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildGuardEntity;
+import com.convallyria.taleofkingdoms.common.entity.reficule.ReficuleMageEntity;
 import com.convallyria.taleofkingdoms.common.event.EntityDeathCallback;
 import com.convallyria.taleofkingdoms.common.event.EntityPickupItemCallback;
 import com.convallyria.taleofkingdoms.common.event.ItemMergeCallback;
@@ -95,6 +97,14 @@ public class CoinListener extends Listener {
                     }
 
                     if (playerEntity instanceof ServerPlayer serverPlayerEntity) {
+                        final GuildPlayer killerPlayer = instance.getPlayer(serverPlayerEntity.getUUID());
+                        // 1500 worthiness is also the threshold required to found a kingdom.
+                        if (killerPlayer.getWorthiness() >= 1500) {
+                            TOKAdvancements.award(serverPlayerEntity, TOKAdvancements.PROVEN_WORTHY);
+                        }
+                        if (entity instanceof ReficuleMageEntity) {
+                            TOKAdvancements.award(serverPlayerEntity, TOKAdvancements.SLAY_REFICULE_MAGE);
+                        }
                         instance.attack(serverPlayerEntity, serverPlayerEntity.serverLevel());
                         if (TaleOfKingdoms.getAPI().getEnvironment() == EnvType.SERVER)
                             ServerConquestInstance.sync(serverPlayerEntity, instance);

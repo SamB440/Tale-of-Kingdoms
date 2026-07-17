@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
 import com.convallyria.taleofkingdoms.common.packet.c2s.ChangeTitlePacket;
 import com.convallyria.taleofkingdoms.common.packet.context.PacketContext;
@@ -26,6 +27,7 @@ public final class IncomingChangeTitlePacketHandler extends InServerPacketHandle
 
             TaleOfKingdoms.LOGGER.info("Handling title change for player {}: {}", player.getUUID(), packet.title());
             guildPlayer.setTitle(packet.title());
+            TOKAdvancements.award(player, TOKAdvancements.ROYALTY);
             ServerConquestInstance.sync(player, instance);
         }));
     }

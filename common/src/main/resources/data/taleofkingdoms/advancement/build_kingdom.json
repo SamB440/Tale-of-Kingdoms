@@ -1,0 +1,31 @@
+{
+  "parent": "taleofkingdoms:proven_worthy",
+  "display": {
+    "icon": {
+      "id": "minecraft:bricks"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.build_kingdom.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.build_kingdom.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "code": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "code"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}

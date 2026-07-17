@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.generic.HunterEntity;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
@@ -75,6 +76,7 @@ public final class IncomingHunterPacketHandler extends InServerPacketHandler<Hir
             HunterEntity hunterEntity = EntityUtils.spawnEntity(EntityTypes.HUNTER.get(), player, entity.get().blockPosition());
             guildPlayer.getHunters().add(hunterEntity.getUUID());
             guildPlayer.setCoins(guildPlayer.getCoins() - 1500);
+            TOKAdvancements.award(player, TOKAdvancements.HIRE_HUNTER);
             ServerConquestInstance.sync(player, instance);
         }));
     }

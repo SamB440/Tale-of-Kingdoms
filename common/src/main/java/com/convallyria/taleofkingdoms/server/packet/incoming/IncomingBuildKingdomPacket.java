@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
@@ -57,6 +58,7 @@ public final class IncomingBuildKingdomPacket extends InServerPacketHandler<Buil
                 BlockPos pos = player.blockPosition().subtract(new Vec3i(0, 25, 85));
                 final PlayerKingdom playerKingdom = new PlayerKingdom(pos);
                 guildPlayer.setKingdom(playerKingdom);
+                TOKAdvancements.award(player, TOKAdvancements.BUILD_KINGDOM);
 
                 // Paste their kingdom
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, player, pos).thenAccept(box -> {

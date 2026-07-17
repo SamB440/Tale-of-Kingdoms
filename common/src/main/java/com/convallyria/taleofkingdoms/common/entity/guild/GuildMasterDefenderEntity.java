@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.guild;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.translation.Translations;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.ai.goal.FollowPlayerGoal;
@@ -122,6 +123,7 @@ public class GuildMasterDefenderEntity extends GuildMasterEntity {
                             playerInventory.setItem(InventoryUtils.getSlotWithStack(playerInventory, stack), new ItemStack(Items.AIR));
                             instance.rebuild(serverPlayerEntity, api);
                             guildPlayer.setHasRebuiltGuild(true);
+                            TOKAdvancements.award(serverPlayerEntity, TOKAdvancements.REBUILD_GUILD);
                             instance.setUnderAttack(false);
                             final Entity entity = serverPlayerEntity.level().getEntity(this.getId());
                             entity.teleportTo(entity.getX(), entity.getY() + 100, entity.getZ());

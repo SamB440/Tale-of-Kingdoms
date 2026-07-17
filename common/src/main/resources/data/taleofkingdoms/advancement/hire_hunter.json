@@ -1,0 +1,27 @@
+{
+  "parent": "taleofkingdoms:sign_contract",
+  "display": {
+    "icon": {
+      "id": "minecraft:bow"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.hire_hunter.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.hire_hunter.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "code": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "code"
+    ]
+  ]
+}

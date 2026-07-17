@@ -2,6 +2,7 @@ package com.convallyria.taleofkingdoms.common.entity.kingdom;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.TaleOfKingdomsAPI;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.TOKEntity;
 import com.convallyria.taleofkingdoms.common.entity.kingdom.workers.QuarryForemanEntity;
@@ -94,6 +95,7 @@ public abstract class ForemanEntity extends TOKEntity implements InventoryCarrie
                     : server.getPlayerList().getPlayer(player.getUUID());
             if (serverPlayerEntity == null) return;
             EntityUtils.spawnEntity(type, serverPlayerEntity, poi);
+            TOKAdvancements.award(serverPlayerEntity, TOKAdvancements.HIRE_WORKER);
             Translations.FOREMAN_BUY_WORKER.send(player);
         });
     }

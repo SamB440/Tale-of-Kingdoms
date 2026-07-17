@@ -1,0 +1,42 @@
+{
+  "parent": "taleofkingdoms:root",
+  "display": {
+    "icon": {
+      "id": "minecraft:iron_axe"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.bandit_camp.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.bandit_camp.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_bandit_camp": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": [
+                  "taleofkingdoms:bandit_camp"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "enter_bandit_camp"
+    ]
+  ]
+}

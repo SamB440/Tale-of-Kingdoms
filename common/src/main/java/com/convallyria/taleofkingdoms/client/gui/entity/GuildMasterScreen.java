@@ -8,6 +8,7 @@ import com.convallyria.taleofkingdoms.client.gui.ScreenTOK;
 import com.convallyria.taleofkingdoms.client.gui.generic.ScreenEnterName;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.BarColour;
 import com.convallyria.taleofkingdoms.client.gui.generic.bar.ScreenBar;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.packet.c2s.ChangeTitlePacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.SignContractPacket;
 import com.convallyria.taleofkingdoms.common.packet.c2s.FixGuildPacket;
@@ -211,6 +212,10 @@ public class GuildMasterScreen extends ScreenTOK {
             TaleOfKingdomsClient.getAPI().getClientPacket(Packets.SIGN_CONTRACT)
                     .sendPacket(player, new SignContractPacket(true, Optional.ofNullable(name)));
         }
+        // Singleplayer signs directly above without a packet, so grant here; on a multiplayer client
+        // this no-ops and IncomingSignContractPacketHandler awards server-side instead.
+        TOKAdvancements.awardOnServer(player, TOKAdvancements.ROOT);
+        TOKAdvancements.awardOnServer(player, TOKAdvancements.SIGN_CONTRACT);
     }
 
     private void makeCancelContractButton() {
@@ -243,6 +248,7 @@ public class GuildMasterScreen extends ScreenTOK {
                 TaleOfKingdomsClient.getAPI().getClientPacket(Packets.CHANGE_TITLE)
                         .sendPacket(player, new ChangeTitlePacket(next));
             }
+            TOKAdvancements.awardOnServer(player, TOKAdvancements.ROYALTY);
             widget.setMessage(getTitleButtonText());
         }).bounds(this.width / 2 - 75, this.height / 2 - 69, 150, 20).build());
     }
@@ -276,6 +282,8 @@ public class GuildMasterScreen extends ScreenTOK {
                     guildPlayer.setCoins(guildPlayer.getCoins() - 1500);
                 });
 
+                // Only reached in singleplayer (multiplayer returns above after sending the packet).
+                TOKAdvancements.awardOnServer(player, TOKAdvancements.HIRE_HUNTER);
                 this.makeHireHuntersButton();
             }
         }).bounds(this.width / 2 - 75, this.height / 2 - 23, 150, 20).build());

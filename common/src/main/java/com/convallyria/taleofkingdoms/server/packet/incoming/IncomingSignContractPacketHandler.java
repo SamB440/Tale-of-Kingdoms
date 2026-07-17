@@ -1,6 +1,7 @@
 package com.convallyria.taleofkingdoms.server.packet.incoming;
 
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.entity.EntityTypes;
 import com.convallyria.taleofkingdoms.common.entity.guild.GuildMasterEntity;
 import com.convallyria.taleofkingdoms.common.packet.Packets;
@@ -47,6 +48,13 @@ public final class IncomingSignContractPacketHandler extends InServerPacketHandl
                 }
             }
             guildPlayer.setSignedContract(sign);
+            if (sign && player instanceof ServerPlayer serverPlayer) {
+                // The location trigger grants the root when entering an auto-generated guild; grant it
+                // here too so a legacy manually-placed guild (which isn't a registered structure) still
+                // completes the root for anyone who signs the contract at it.
+                TOKAdvancements.award(serverPlayer, TOKAdvancements.ROOT);
+                TOKAdvancements.award(serverPlayer, TOKAdvancements.SIGN_CONTRACT);
+            }
             // Re-sync so the client's copy of the instance learns the chosen name.
             if (named) ServerConquestInstance.sync((ServerPlayer) player, instance);
             TaleOfKingdoms.getAPI().getServerPacket(Packets.SIGN_CONTRACT_RESPONSE)

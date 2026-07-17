@@ -3,6 +3,7 @@ package com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.confirm;
 import com.convallyria.taleofkingdoms.TaleOfKingdoms;
 import com.convallyria.taleofkingdoms.client.TaleOfKingdomsClient;
 import com.convallyria.taleofkingdoms.client.gui.entity.citybuilder.BaseCityBuilderScreen;
+import com.convallyria.taleofkingdoms.common.advancement.TOKAdvancements;
 import com.convallyria.taleofkingdoms.common.entity.guild.CityBuilderEntity;
 import com.convallyria.taleofkingdoms.common.kingdom.PlayerKingdom;
 import com.convallyria.taleofkingdoms.common.kingdom.poi.KingdomPOI;
@@ -57,6 +58,9 @@ public class ConfirmBuildKingdomGui extends BaseCityBuilderScreen {
                 final PlayerKingdom playerKingdom = new PlayerKingdom(pos);
                 final GuildPlayer guildPlayer = instance.getPlayer(player);
                 guildPlayer.setKingdom(playerKingdom);
+                // Only reached in singleplayer (multiplayer returns above after sending the packet);
+                // IncomingBuildKingdomPacket awards the server-side case.
+                TOKAdvancements.awardOnServer(player, TOKAdvancements.BUILD_KINGDOM);
 
                 // Paste their kingdom
                 TaleOfKingdoms.getAPI().getSchematicHandler().pasteSchematic(Schematic.TIER_1_KINGDOM, serverPlayer, pos).thenAccept(box -> {

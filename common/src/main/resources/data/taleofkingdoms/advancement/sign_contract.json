@@ -1,0 +1,27 @@
+{
+  "parent": "taleofkingdoms:root",
+  "display": {
+    "icon": {
+      "id": "minecraft:writable_book"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.sign_contract.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.sign_contract.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "code": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "code"
+    ]
+  ]
+}

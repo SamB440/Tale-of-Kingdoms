@@ -1,0 +1,42 @@
+{
+  "parent": "taleofkingdoms:root",
+  "display": {
+    "icon": {
+      "id": "minecraft:mossy_stone_bricks"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.gateway.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.gateway.description"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_gateway": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": [
+                  "taleofkingdoms:gateway"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "enter_gateway"
+    ]
+  ]
+}

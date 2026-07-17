@@ -1,0 +1,28 @@
+{
+  "parent": "taleofkingdoms:sign_contract",
+  "display": {
+    "icon": {
+      "id": "minecraft:iron_sword"
+    },
+    "title": {
+      "translate": "advancements.taleofkingdoms.proven_worthy.title"
+    },
+    "description": {
+      "translate": "advancements.taleofkingdoms.proven_worthy.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "code": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "code"
+    ]
+  ]
+}
