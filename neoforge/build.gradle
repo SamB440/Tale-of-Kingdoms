@@ -88,10 +88,16 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    def expandProps = [
+        "version"                 : project.version,
+        "minecraft_version"       : rootProject.minecraft_version,
+        "neoforge_version"        : rootProject.neoforge_version,
+        "architectury_api_version": rootProject.architectury_api_version
+    ]
+    inputs.properties expandProps
 
     filesMatching("META-INF/neoforge.mods.toml") {
-        expand "version": project.version
+        expand expandProps
     }
 }
 

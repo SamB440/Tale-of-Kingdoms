@@ -60,10 +60,10 @@
   },
 
   "depends": {
-    "fabricloader": ">=0.15.0",
-    "fabric-api": "*",
-    "architectury": ">=13.0.0",
-    "minecraft": "~1.21",
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "architectury": ">=${architectury_api_version}",
+    "minecraft": "${minecraft_version}",
     "java": ">=21",
     "owo": "^0.12.10 <0.13.0"
   },

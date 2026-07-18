@@ -21,21 +21,21 @@ logoFile = "assets/taleofkingdoms/logo.png"
 [[dependencies.taleofkingdoms]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.1,)"
+versionRange = "[${neoforge_version},)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.taleofkingdoms]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.1]"
+versionRange = "[${minecraft_version}]"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.taleofkingdoms]]
 modId = "architectury"
 type = "required"
-versionRange = "[13.0.0,)"
+versionRange = "[${architectury_api_version},)"
 ordering = "NONE"
 side = "BOTH"
 
